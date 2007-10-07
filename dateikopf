@@ -1,0 +1,56 @@
+# Wortliste deutscher Wörter mit Trennungen
+#
+# Version @version@
+#
+# kompiliert von Werner Lemberg <wl@gnu.org>
+#
+# Bedeutung der Felder:
+#
+#   1 Wort ungetrennt
+#   2 Wort mit Trennungen, falls für alle Varianten identisch,
+#     anderenfalls leer
+#   3 falls Feld 2 leer, Trennung nach alter Rechtschreibung
+#   4 falls Feld 2 leer, Trennung nach neuer Rechtschreibung (2006)
+#   5 falls Feld 2 leer, Trennung für Wortform, die entweder in
+#     der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird
+#     und für alte und neue Rechtschreibung identisch sind
+#   6 falls Feld 5 leer, Trennung für Wortform, die entweder in
+#     der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
+#     alte Rechtschreibung
+#   7 falls Feld 5 leer, Trennung für Wortform, die entweder in
+#     der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
+#     neue Rechtschreibung (2006)
+#
+# Leere Felder sind mit `---' markiert; Felder 3 und 4 als auch Felder 6
+# und 7 treten immer paarig auf, um die Lesbarkeit zu erhöhen.
+#
+# Zur Erstellung von Trennmustern für die alte Rechtschreibung benötigt man
+# Felder 2, 3, 5 und 6; für die neue Rechtschreibung die Felder 2, 4, 5
+# und 7.
+#
+# Folgende Notation wird verwendet, um spezielle Trennungen (für die alte
+# Rechstschreibung) zu kennzeichnen:
+#
+#   Ab-fa{ll|ll-l}a-ger
+#
+# Die gleiche Konstruktion wird verwendet, um Trennungen von `ck'
+# darzustellen:
+#
+#   Dru{ck|k-k}er
+#
+# Um z.B. eine Wortliste für TeX zu konstruieren (alte Rechtschreibung), das
+# solche speziellen Trennungen nicht benutzen kann, ist folgender regulärer
+# Ausdruck in sed anzuwenden:
+#
+#   s/{\([^|]*\)|[^}]*}/\1/g
+#
+# Ungünstige Trennstellen sind mit `.' markiert (Beispiel: Ur-in.stinkt).
+#
+# Doppeldeutige Trennstellen werden folgendermaßen deklariert:
+#
+#   er[b-|-b]recht
+#
+# Für TeX-Trennmuster ist es vielleicht am besten, solche Einträge zu
+# entfernen und die häufigeren Fälle in einem \hyphenation-Block zu
+# behandeln.
+#
