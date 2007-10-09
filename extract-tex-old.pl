@@ -8,14 +8,9 @@
 # Aufruf:  perl extract-tex-alt.pl < wortliste > input.patgen
 
 use strict;
-use locale;
-use POSIX qw(locale_h);
 
 my $prog = $0;
 $prog =~ s@.*/@@;
-
-setlocale(LC_CTYPE, "de_DE.ISO8859-1");
-setlocale(LC_COLLATE, "de_DE.ISO8859-1");
 
 while (<>) {
   chop;
