@@ -76,8 +76,9 @@ open STDERR, '>&', \*STDERR_ALT
 die "$prog: Aufruf von patgen fehlgeschlagen: $fehler\n" if $status;
 
 my @muster;
-open PATGEN, "pattmp.8"
-|| die "$prog: Kann von patgen erzeugte Datei `pattmp.8' nicht öffnen: $!\n";
+my ($pattmp) = <pattmp.*>;
+open PATGEN, $pattmp
+|| die "$prog: Kann von patgen erzeugte Datei `$pattmp' nicht öffnen: $!\n";
 while (<PATGEN>) {
   s/\./-/g;
   s/^(.)-/$1/;
