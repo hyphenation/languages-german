@@ -20,16 +20,20 @@
 #   7 falls Feld 5 leer, Trennung für Wortform, die entweder in
 #     der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
 #     neue Rechtschreibung (2006)
+#   8 Wortformen der alten Rechtschreibung mit `sss' gefolgt von einem
+#     Vokal, die im schweizer Gebrauchsdeutsch wie andere
+#     Dreifachkonsonanten gehandhabt wurden (also anders, als der Duden
+#     früher vorgeschrieben hat)
 #
 # Leere Felder sind mit `---' markiert; Felder 3 und 4 als auch Felder 6
 # und 7 treten immer paarig auf, um die Lesbarkeit zu erhöhen.
 #
 # Zur Erstellung von Trennmustern für die alte Rechtschreibung benötigt man
-# Felder 2, 3, 5 und 6; für die neue Rechtschreibung die Felder 2, 4, 5
+# Felder 2, 3, 5, 6 und 8; für die neue Rechtschreibung die Felder 2, 4, 5
 # und 7.
 #
 # Folgende Notation wird verwendet, um spezielle Trennungen (für die alte
-# Rechstschreibung) zu kennzeichnen:
+# Rechtschreibung) zu kennzeichnen:
 #
 #   Ab-fa{ll|ll-l}a-ger
 #
