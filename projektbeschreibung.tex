@@ -89,17 +89,17 @@ Es ist geplant irgendwann mit allem fertig zu werden.
 \section{Ressourcen}
 \subsection{Auf welche Wortlisten können wir zurückgreifen?}
 
-\lrand{\medskip Werners Liste}
+\lrand{\medskip Lembergs Liste}
 \begin{tabularx}{\linewidth}[t]{lL}
   \toprule\addlinespace
-  Quelle & Werner Lemberg\\
-  Lizenz & \ldots\\
+  Urheber & Werner Lemberg\\
+  Rechte & \ldots\\
   Wortformen & 380.000\\
   Sortierkriterium & alphabetisch\\
   Rechtschreibung & gut\\
   Bemerkung & manuell gepflegt\\
   Zugriff & \Programm{git}-Repositorium: \verb+git clone git://repo.or.cz/wortliste.git+\\
-  Stand & 2.~Januar~2008\\
+  Stand & 2.\,1.\,2008\\
   \addlinespace\bottomrule
 \end{tabularx}
 
@@ -107,15 +107,15 @@ Es ist geplant irgendwann mit allem fertig zu werden.
 \noindent\lrand{\medskip Leipziger Liste}
 \begin{tabularx}{\linewidth}[t]{lL}
   \toprule\addlinespace
-  Quelle & Liste des Wortschatzprojekts der Universität Leipzig%
+  Urheber & Liste des Wortschatzprojekts der Universität Leipzig%
   \footnote{\url{http://wortschatz.uni-leipzig.de/}}\\
-  Lizenz & \ldots\\
+  Rechte & \ldots\\
   Wortformen & 2.000.000\\
   Sortierkriterium & Häufigkeit\\
   Rechtschreibung & mangelhaft\\
   Bemerkung & automatische Internetsuche (Datenbanken, Zeitungsarchive usw.)\\
   Zugriff & \ldots\\
-  Stand & \ldots\\
+  Stand & 18.\,2.\,2006\\
   \addlinespace\bottomrule
 \end{tabularx}
 
@@ -123,14 +123,14 @@ Es ist geplant irgendwann mit allem fertig zu werden.
 \noindent\lrand{\medskip Mannheimer Liste}
 \begin{tabularx}{\linewidth}[t]{lL}
   \toprule\addlinespace
-  Quelle & Korpus des Instituts für Deutsche Sprache (\Abk{IDS})%
+  Urheber & Korpus des Instituts für Deutsche Sprache (\Abk{IDS})%
     \footnote{\url{http://www.ids-mannheim.de/kl/}}\\
-  Lizenz & \ldots\\
-  Wortformen & 4.400.000\\
+  Rechte & ">Darf in ihrer Gesamtheit -- wie vereinbart -- nicht veröffentlicht oder an Dritte weitergegeben werden."<  Abgeleitete Werke können nach unserer Wahl behandelt werden.\\
+  Wortformen & 4.000.000\\
   Sortierkriterium & Häufigkeitsklassen\\
   Rechtschreibung & mittel\\
   Zugriff & nicht öffentlich\\
-  Stand & Oktober~2007\\
+  Stand & 9.\,10.\,2007\\
   \addlinespace\bottomrule
 \end{tabularx}
 
@@ -140,9 +140,9 @@ Es ist geplant irgendwann mit allem fertig zu werden.
 \lrand{\medskip Berliner Liste}
 \begin{tabularx}{\linewidth}[t]{lL}
   \toprule\addlinespace
-  Quelle & Kernkorpus des Projekts Digitales Wörterbuch der Deutschen Sprache (\Abk{DWDS})%
+  Urheber & Kernkorpus des Projekts Digitales Wörterbuch der Deutschen Sprache (\Abk{DWDS})%
     \footnote{\url{http://www.dwdscorpus.de/}}\\
-  Lizenz & \ldots\\
+  Rechte & \ldots\\
   Wortformen & 2.000.000\\
   Sortierkriterium & \ldots\\ 
   Rechtschreibung & \ldots\\
@@ -159,23 +159,26 @@ Dieser Abschnitt enthält eine Zusammenstellung von anstehenden Aufgaben.  Die Li
 \begin{itemize}
 \item  Umzug auf einen anderen Host (BerliOS, Sourceforge o.\,ä.)
 \item  Reservierung einer eigenen Domain
-\item  Spezifikation und Gestaltung des Eingabemaske (Frontend)
+\item  Spezifikation und Gestaltung der Eingabemaske (Frontend)
 \item  Spezifikation und Implementierung der Datenbankanbindung (Backend)
 \item  Kontrolle von Rechtschreibung und Trennung des Wortbestands
 \item  Generierung neuer Trennmuster
-\item  Erweiterung von \TeX\ um die Möglichkeit Trennmuster dynamisch zu laden
+\item  \TeX\ um die Möglichkeit erweitern Trennmuster dynamisch zu laden
+\item  Unterscheidung von Haupt- und Nebentrennstellen im von \TeX\ verwendeten Trennalgorithmus 
 \end{itemize}
 
 
 
 \section{Bisherige Ergebnisse}
-\subsection{Wortlisten} Die von Werner Lemberg erstellte und kontrollierte Liste mit etwa 300.000 Wortformen steht in einem öffentlich zugänglichen \Programm{git}-Repositorium.%
-\footnote{\url{http://repo.or.cz/} (Ein \Programm{MinGW}-Port für Windows ist unter \url{http://code.google.com/p/msysgit/downloads/list} erhältlich, Datei \Datei{Git-1.5.4-rc2-preview20071228.exe}.)}
+\subsection{Wortlisten} Die von Werner Lemberg erstellte und kontrollierte Liste mit etwa 380.000 Wortformen steht in einem öffentlich zugänglichen \Programm{git}-Repositorium.%
+\footnote{\url{http://repo.or.cz/}}
 Eine Kopie kann mit
 \begin{verbatim}
 git clone git://repo.or.cz/wortliste.git
 \end{verbatim}
-bezogen werden.  Aktualisiert wird das lokale Repositorium mit
+bezogen werden.%
+\footnote{Eine \Programm{Git}-Version für Windows ist unter \url{http://code.google.com/p/msysgit/downloads/list} erhältlich, Datei \Datei{Git-1.5.4-rc2-preview20071228.exe} (Stand: 4.\,1.\,2007).}
+Aktualisiert wird das lokale Repositorium mit
 \begin{verbatim}
 git pull
 \end{verbatim}
@@ -185,9 +188,13 @@ Im Repositorium sind auch einige Skripten zur Bearbeitung der Wortliste enthalte
 Es existiert ein Entwurf für eine interaktive Maske zur Kontrolle der Rechtschreibung von Wortlisten und der Eingabe korrekter Trennungen.%
 \footnote{\url{http://www.mnn.ch/opendehyph/index.php}}
 
-\subsection{Trennmuster} Die bisherigen Trennmusterdateien für die traditionelle und neue Rechtschreibung, die Dateien \Datei{dehypht.tex} und \Datei{dehyphn.tex}, können am \Abk{CTAN}%
+\subsection{Trennmusterdateien}
+Die bisherigen Trennmusterdateien für die traditionelle und neue Rechtschreibung, die Dateien \Datei{dehypht.tex} und \Datei{dehyphn.tex}, können am \Abk{CTAN}%
 \footnote{Comprehensive \TeX\ Archive Network, \url{http://ctan.tug.org/}}
 bezogen werden.  Sie sind \emph{nicht} im Zuge dieses Projekts entstanden.
+
+Im Dateibereich der Google-Gruppe \Programm{Trennmuster-Opensource} sind Trennmuster verfügbar, die aus Werner Lembergs Liste generiert wurden.%
+\footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}
 
 \raggedright
 \bibliography{projektbeschreibung}
