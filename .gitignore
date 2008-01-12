@@ -1,0 +1,13 @@
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.pdf
+*.toc
+
+auto
+*.bib~
+*.tex~
+
+*.diff
