@@ -99,7 +99,9 @@ Es ist geplant irgendwann mit allem fertig zu werden.
   Sortierkriterium & alphabetisch\\
   Rechtschreibung & gut\\
   Bemerkung & manuell gepflegt\\
-  Zugriff & \Programm{git}-Repositorium: \verb+git clone git://repo.or.cz/wortliste.git+\\
+  Zugriff & \Programm{git}-Repositorium:
+  \verb+git clone git://repo.or.cz/wortliste.git+\newline
+  \verb+git clone http://repo.or.cz/r/wortliste.git+\\
   Stand & 2.\,1.\,2008\\
   \addlinespace\bottomrule
 \end{tabularx}
@@ -172,18 +174,24 @@ Dieser Abschnitt enthält eine Zusammenstellung von anstehenden Aufgaben.  Die Li
 
 \section{Bisherige Ergebnisse}
 \subsection{Wortlisten} Die von Werner Lemberg erstellte und kontrollierte Liste mit etwa 380.000 Wortformen steht in einem öffentlich zugänglichen \Programm{git}-Repositorium.%
-\footnote{\url{http://repo.or.cz/}}
+\footnote{\url{http://repo.or.cz/}\qquad Eine \Programm{Git}-Version für Windows ist unter \url{http://code.google.com/p/msysgit/downloads/list} erhältlich, Datei \Datei{Git-1.5.4-rc3-preview20080113.exe} (Stand: 16.\,1.\,2007).}
 Eine Kopie kann mit
 \begin{verbatim}
 git clone git://repo.or.cz/wortliste.git
 \end{verbatim}
+oder
+\begin{verbatim}
+git clone http://repo.or.cz/r/wortliste.git
+\end{verbatim}
 bezogen werden.%
-\footnote{Eine \Programm{Git}-Version für Windows ist unter \url{http://code.google.com/p/msysgit/downloads/list} erhältlich, Datei \Datei{Git-1.5.4-rc2-preview20071228.exe} (Stand: 4.\,1.\,2007).}
-Aktualisiert wird das lokale Repositorium mit
+\footnote{Neben dem Protokoll unterscheiden sich auch die
+  Adressen!}
+Im Repositorium sind auch einige Skripten zur Bearbeitung der
+Wortliste enthalten.  Aktualisiert wird die Wortliste
+(das gesamte lokale Repositorium) mit
 \begin{verbatim}
 git pull
 \end{verbatim}
-Im Repositorium sind auch einige Skripten zur Bearbeitung der Wortliste enthalten.
 
 \subsection{HTML-Frontend}
 Es existiert ein Entwurf für eine interaktive Maske zur Kontrolle der Rechtschreibung von Wortlisten und der Eingabe korrekter Trennungen.%
