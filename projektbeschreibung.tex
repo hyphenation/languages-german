@@ -1,19 +1,31 @@
+%%% Artikelklasse mit
+%%% * Grundschriftgröße 11 Punkt,
+%%% * klassischem Satzspiegel,
+%%% * flachem Inhaltsverzeichnis.
 \documentclass[11pt,DIV9,tocleft]{scrartcl}
+%%% Eingabekodierung ist ISO-8859-15.
 \usepackage[ansinew]{inputenc}
+%%% Schrifteinstellung.
+%%% * Grundschrift Palatino,
+%%% * Akzidenzschrift Bera Sans,
+%%% * Schreibmaschinenschrift Luxi Mono.
 \usepackage[T1]{fontenc}
 \usepackage[osf]{mathpazo}
 \usepackage[scaled]{berasans}
 \usepackage[scaled]{luximono}
 \usepackage{textcomp}
+%%% Lade einige Pakete.
 \usepackage{multicol}
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{natbib}
 \bibliographystyle{plain}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
+%%% Bette Quellkode in PDF-Ausgabe ein.
 \usepackage{embedfile}
 \embedfile{\jobname.tex}
 \usepackage[ngerman]{babel}
+%%% Einstellungen für interaktive PDF-Dokumente.
 \usepackage[rgb,x11names]{xcolor}
 \usepackage{hyperref}
 \hypersetup{
@@ -27,10 +39,13 @@
   urlcolor=Chocolate4,
   citecolor=SpringGreen3
 }
+%%% Überschriften in fetter Grundschrift.
 \setkomafont{sectioning}{\normalcolor\normalfont\bfseries}
+%%% Einige Makros für logische Auszeichnungen definieren.
 \newcommand*{\Abk}[1]{\textsc{#1}}
 \newcommand*{\Programm}[1]{\textsc{#1}}
 \newcommand*{\Datei}[1]{\texttt{#1}}
+%%% Randnotiz am linken Rand.
 \newcommand{\lrand}[1]{%
   \mbox{}%
   \marginpar{%
@@ -47,17 +62,20 @@
   }%
   \ignorespaces%
 }
+%%% Satzspiegel erneut berechnen.
 \typearea{last}
-
+%%% Trennausnahmen definieren.
 \hyphenation{
 Back-end
 }
 
 \begin{document}
+%%% Dokumenttitel.
 \author{Die deutschsprachige Trennmustermannschaft}
 \title{Freie Wortlisten und Trennmuster für die deutsche Sprache}
 \subtitle{Eine kurze Projektbeschreibung}
 \maketitle
+%%% Zweispaltiges Inhaltsverzeichnis.
 \begin{multicols}{2}
 \tableofcontents
 \end{multicols}
