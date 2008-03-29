@@ -27,7 +27,7 @@ while (<>) {
   next if $zeile eq "---";
 
   # entferne Doppeldeutigkeiten ganz
-  next if /[\[\]]/;
+  next if $zeile =~ /[\[\]]/;
   # entferne Markierungen für schlechte Trennungen
   $zeile =~ s/\.//g;
   print "$zeile\n";
