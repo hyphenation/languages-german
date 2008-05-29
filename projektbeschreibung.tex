@@ -24,7 +24,10 @@
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 %%% Bette Quellkode in PDF-Ausgabe ein.
 \usepackage{embedfile}
-\embedfile{\jobname.tex}
+\embedfile[%
+mimetype=plain/text,%
+desc={LaTeX-Quelltext der Datei \jobname.pdf}%
+]{\jobname.tex}
 \usepackage[ngerman]{babel}
 %%% Einstellungen für interaktive PDF-Dokumente.
 \usepackage[rgb,x11names]{xcolor}
