@@ -1,0 +1,154 @@
+Package: german-x (experimental German hyphenation patterns)
+Version: v0.1
+Date: 2008-06-10
+Author: Werner Lemberg
+Email: wl@gnu.org
+URL: http://groups.google.de/group/trennmuster-opensource
+
+
+English:
+This package provides experimental hyphenation patterns for
+German language (traditional and reformed orthography).  The
+patterns are maintained at
+<URL:http://groups.google.de/group/trennmuster-opensource>
+and can be used with packages Babel and hyphsubst from the
+Oberdiek bundle.  Remaining documentation is in German only.
+
+
+Deutsch:
+Dieses Paket enthält experimentelle Trennmuster für die
+traditionelle und reformierte deutsche Rechtschreibung.
+Die Trennmuster können mit den Paketen Babel und hyphsubst
+aus dem Oberdiek-Bündel verwendet werden.
+
+Im folgenden ist <datum> jeweils durch die ISO-Notation des
+Paketdatums zu ersetzen (JJJJ-MM-TT).
+
+
+********************
+**   Dateiliste   **
+********************
+
+dehyphn-x-<datum>.tex
+dehypht-x-<datum>.tex
+german-x.pdf
+german-x.tex
+README
+
+
+********************
+**  Installation  **
+********************
+
+Die Installation der experimentellen Trennmuster erfordert
+drei Schritte:
+
+A. Die Trennmusterdateien sollten in die folgenden Verzeichnisse
+   innerhalb eines lokalen TEXMF-Baums kopiert werden:
+
+      tex/generic/hyphen/dehyphn-x-<datum>.tex
+      tex/generic/hyphen/dehypht-x-<datum>.tex
+  
+  Die verbleibenden Dateien können in das Verzeichnis
+      
+      tex/doc/generic/hyphen/
+      
+  kopiert werden.
+
+
+B. Aktualisieren der File Name Database:
+
+  Für TeX Live:
+  --------------------
+
+  Für MiKTeX (mit GUI):
+  --------------------
+    Programm 'Settings'
+      -->  Reiter 'General'
+        -->  Knopf 'Refresh FNDB'
+
+  Für MiKTeX (ohne GUI):
+  --------------------
+    Kommando
+    
+      >initexmf --update-fndb
+      
+    aufrufen.
+  --------------------
+
+
+C. Anlegen der Sprachen und Erstellen der Formatdateien:
+
+  Für TeX Live:
+  --------------------
+
+  Für MiKTeX (mit GUI):
+  --------------------
+    Programm 'Settings'
+      -->  Reiter 'Languages'
+        -->  Knopf 'New'
+          -->  Feld 'Language Name' : german-x-<datum>
+          -->  Feld 'Synonyms' : german-x-latest
+          -->  Feld 'Hyphenation File' : <texmfbaum>\tex\generic\babel\hyphen\dehypht-x-<datum>.tex
+          -->  Box 'Load the hyphenation file' : aktiv
+          -->  Knopf 'OK'
+        -->  Knopf 'New'
+          -->  Feld 'Language Name' : ngerman-x-<datum>
+          -->  Feld 'Synonyms' : ngerman-x-latest
+          -->  Feld 'Hyphenation File' : <texmfbaum>\tex\generic\babel\hyphen\dehyphn-x-<datum>.tex
+          -->  Box 'Load the hyphenation file' : aktiv
+          -->  Knopf 'OK'
+        Vorhandene Synonyme [n]german-x-latest anderer Sprachen
+          sind gegebenenfalls zu entfernen.
+        -->  Knopf 'Ok'
+      -->  Meldung 'To apply the new settings, it is necessary to rebuild the format files.'
+        -->  Knopf 'OK'
+
+  Für MiKTeX (ohne GUI):
+  --------------------
+  1. Ermitteln des Pfades der Datei language.dat:
+
+      >findtexmf language.dat
+    
+     Falls das Ergebnis des obigen Kommandos ein Pfad zu einem
+     *lokalen* TEXMF-Baum ist, existiert bereits eine lokale
+     Kopie der Datei language.dat.  Springe zu Punkt 3.
+
+  2. Eine lokale Kopie von language.dat existiert bisher nicht.
+     Kopiere die Datei aus dem oben erhaltenen Pfad in einen
+     lokalen TEXMF-Baum, zum Beispiel nach
+     
+       C:\Dokumente und Einstellungen\All Users\Anwendungsdaten\MiKTeX\2.7\tex\generic\config\language.dat
+
+  3. Öffne die Datei language.dat aus dem *lokalen* TEXMF-Baum.
+
+  4. Falls vorhanden, entferne Zeilen
+
+  =german-x-latest
+  =ngerman-x-latest
+
+  5. Füge am Ende der Datei die folgenden Zeilen hinzu:
+
+  german-x-<datum> dehypht-x-<datum>.tex
+  =german-x-latest
+  ngerman-x-<datum> dehyphn-x-<datum>.tex
+  =ngerman-x-latest
+
+  6. Datei language.dat speichern und schließen.
+
+  7. Kommando
+
+      >initexmf --dump
+      
+     aufrufen.
+  --------------------
+
+
+********************
+**   Verwendung   **
+********************
+
+Hinweise zur Verwendung entnehmen Sie bitte der Datei german-x.pdf.
+
+
+Ende.

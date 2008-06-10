@@ -1,0 +1,252 @@
+%%% Artikelklasse mit:
+%%% * Grundschriftgröße 11 Punkt,
+%%% * klassischem Satzspiegel,
+%%% * flachem Inhaltsverzeichnis.
+\documentclass[11pt,DIV8,tocleft,abstracton]{scrartcl}
+%%% Eingabekodierung ist ISO-8859-15.
+\usepackage[ansinew]{inputenc}
+%%% Schrifteinstellung:
+%%% * Grundschrift Palatino,
+%%% * Akzidenzschrift Bera Sans,
+%%% * Schreibmaschinenschrift Latin Modern Typewriter.
+\usepackage[T1]{fontenc}
+\usepackage[osf]{mathpazo}
+\usepackage[scaled]{berasans}
+\renewcommand*{\ttdefault}{lmtt}
+\linespread{1.02}
+\usepackage{textcomp}
+%%% Lade einige Pakete.
+\usepackage{multicol}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\usepackage{listings}
+\lstloadlanguages{[LaTeX]TeX}
+\lstset{basicstyle=\ttfamily, keywordstyle={}, commentstyle={},
+  columns=flexible, showspaces=false, showstringspaces=false,
+%  aboveskip=12pt, belowskip=12pt, frame=tb,
+%  framesep=8pt, framerule=2pt,
+  xleftmargin=6pt, xrightmargin=6pt,
+% framexleftmargin=6pt, framexrightmargin=6pt
+}
+\lstdefinestyle{LaTeX}{language=[LaTeX]TeX, basicstyle=\ttfamily,
+  keywordstyle={}, commentstyle={\itshape}}
+\usepackage[UKenglish, ngerman]{babel}
+%%% Einstellungen für interaktive PDF-Dokumente.
+\usepackage[rgb,x11names]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={german-x},
+  pdfauthor={Die deutschsprachige Trennmustermannschaft},
+  pdfkeywords={TeX, deutsche Rechtschreibung, Trennmuster,
+    computergestützte Worttrennung}
+}
+\hypersetup{
+  pdfstartview={XYZ null null null},% Zoom factor is determined by viewer.
+  colorlinks,
+  linkcolor=RoyalBlue3,
+  urlcolor=Chocolate4,
+  citecolor=SpringGreen3
+}
+%%% Überschriften in fetter Grundschrift.
+\setkomafont{sectioning}{\normalcolor\normalfont\bfseries}
+%%% Einige Makros für logische Auszeichnungen definieren.
+\newcommand*{\Abk}[1]{\textsc{#1}}
+\newcommand*{\Programm}[1]{\textsc{#1}}
+\newcommand*{\Datei}[1]{\texttt{#1}}
+%%% Randnotiz am linken Rand.
+\newcommand{\lrand}[1]{%
+  \mbox{}%
+  \marginpar{%
+    \hspace*{-2\marginparsep}%
+    \hspace*{-\textwidth}%
+    \hspace*{-\marginparwidth}%
+    \parbox[t]{\marginparwidth}{%
+      \raggedright%
+      \small%
+      \sffamily%
+      \bfseries%
+      #1%
+    }%
+  }%
+  \ignorespaces%
+}
+%%% Satzspiegel erneut berechnen.
+\typearea{last}
+%%% Trennausnahmen definieren.
+\hyphenation{
+Back-end hyph-subst
+}
+
+\begin{document}
+%%% Dokumenttitel.
+\author{Die deutschsprachige Trennmustermannschaft}
+\title{\texttt{german-x}\thanks{This document describes the
+    \texttt{german-x} package v0.1.}}
+\subtitle{Experimentelle Trennmuster für die deutsche Sprache}
+\setkomafont{title}{\normalcolor\normalfont}
+\maketitle
+
+
+%%% Zweisprachige Zusammenfassung.
+\selectlanguage{UKenglish}
+\begin{abstract}
+  This package provides experimental hyphenation patterns for German
+  language (traditional and reformed orthography).  The patterns are
+  maintained at
+  \url{http://groups.google.de/group/trennmuster-opensource} and can be
+  used with packages \texttt{Babel} and \texttt{hyphsubst} from the
+  \Programm{Oberdiek bundle}.
+\end{abstract}
+
+\selectlanguage{ngerman}
+\begin{abstract}
+  Dieses Paket enthält experimentelle Trennmuster für die traditionelle
+  und reformierte deutsche Rechtschreibung.  Die Trennmuster können mit
+  den Paketen \texttt{Babel} und \texttt{hyphsubst} aus dem
+  \Programm{Oberdiek-Bündel} verwendet werden.
+\end{abstract}
+
+
+%%% Zweispaltiges Inhaltsverzeichnis.
+\begin{multicols}{2}
+\tableofcontents
+\end{multicols}
+
+
+\section{Installation}
+Die Installation der Trennmuster ist in der Datei \Datei{README} beschrieben.
+
+Aktuelle Trennmuster sind unter der Projekt-URL
+\url{http://groups.google.de/group/trennmuster-opensource?hl=de} im
+Dateibereich erhältlich.
+
+
+\section{Verwenden der Trennmuster}
+Die experimentellen Trennmuster können mit den Paketen \texttt{Babel}
+und \texttt{hyphsubst} aus dem \Programm{Oberdiek-Bündel} aktiviert
+werden.
+
+Das folgende Beispiel zeigt eine \LaTeX-Präambel für die Aktivierung der
+experimentellen Trennmuster für die reformierte Rechtschreibung.
+Beachte, \verb+<datum>+ ist durch das bei der Installation angegebene
+Datum in ISO-Notation zu ersetzen (JJJJ-MM-TT)!
+
+\begin{lstlisting}[style=LaTeX]
+\RequirePackage[ngerman=ngerman-x-<datum>]{hyphsubst}% Ersetze <datum>.
+% \RequirePackage[ngerman=ngerman-x-latest]{hyphsubst}% Alternative.
+\documentclass{article}
+\usepackage[ngerman]{babel}
+\begin{document}
+\end{lstlisting}
+
+Weitere Hinweise sind der Dokumentation des Pakets \texttt{hyphsubst} zu
+entnehmen.
+
+
+\section{Trennregeln}
+Die den Trennmustern zugrundeliegende Wortliste enthält sämtliche Wörter
+in zwei Schreib- beziehungsweise Trennvarianten:%
+\footnote{Tatsächlich ist die Wortliste noch etwas komplizierter
+aufgebaut.}%
+\begin{enumerate}
+\item der amtlichen Rechtschreibung vor der Rechtschreibreform und
+\item der amtlichen Rechtschreibung nach der Reform mit Stand 2006. 
+\end{enumerate}
+
+Die Rechtschreibreform hat zusätzliche Freiheiten bei der Schreibung
+und Trennung von Wörtern eingeführt, die sich nicht ohne weiteres auf
+die maschinelle Worttrennung übertragen lassen.  Daher wurden bezüglich
+der Trennregeln für die Trennmuster der reformierten Rechtschreibung die
+folgenden Konventionen getroffen (grüne Variante):
+\begin{enumerate}
+\item Falls die Trennung nach Sprechsilben und die etymologische
+  Trennung (nach Wortherkunft) kollidieren, wurde weitgehend die
+  etymologische Trennung gewählt (R~129, R~132):
+
+  \begin{tabular}[t]{>{\color{red!60!black}}l>{\color{green!60!black}}l}
+    Heli-kop-ter & Heli-ko-pter\\
+    in-ter-vie-wen & in-ter-view-en\\
+    Pä-da-go-ge & Päd-ago-ge\\    
+     po-e-tisch & poe-tisch\\
+  \end{tabular}
+
+\item In Fremdwörtern bleiben die Konsonantenverbindungen bl, pl, fl,
+  gl, cl, kl, phl; br, pr, dr, tr, fr, vr, gr, cr, kr, phr, str, thr;
+  gn, kn ungetrennt (R~130):
+
+  \begin{tabular}[t]{>{\color{red!60!black}}l>{\color{green!60!black}}l}
+    Cog-nac & Co-gnac\\
+    Dip-lom & Di-plom\\
+    Feb-ru-ar & Fe-bru-ar\\
+    In-teg-ral & In-te-gral\\
+  \end{tabular}
+\end{enumerate}
+
+
+\section{Fehltrennungen}
+Der in \TeX\ implementierte, musterbasierte Trennalgorithmus kann
+prinzipiell nicht alle möglichen Wörter korrekt trennen.  Diesen
+Trennmustern liegt eine Wortliste mit den grob fünfhunderttausend
+häufigsten deutschen Wörtern zugrunde -- erheblich mehr als bei den
+herkömmlichen Trennmustern.  Damit sollte für nicht-fachsprachliche
+Wörter eine sehr gute Trennqualität erreicht werden.  Für dennoch
+auftretende Trennfehler gibt es zwei mögliche Ursachen:
+
+\begin{enumerate}
+\item\label{enum:wfehlt} Das betreffende Wort ist in der
+  zugrundeliegenden Wortliste nicht enthalten.
+\item\label{enum:wfehlerhaft} Die zugrundeliegende Wortliste enthält
+  einen Fehler.
+\end{enumerate}
+
+Da der Umfang der Wortliste nicht beliebig erweitert werden kann,
+sollten durch Punkt~\ref{enum:wfehlt} verursachte Fehltrennungen
+nur dann gemeldet werden, wenn das betreffende Wort mit den
+herkömmlichen Trennmustern korrekt getrennt wird.  Korrekt bedeutet
+hier: Nicht alle möglichen Trennstellen müssen erkannt werden; es werden
+jedoch in keinem Fall falsche Trennstellen ermittelt.
+
+Zum Testen kann der folgende Aufruf verwendet werden (die Ausgabe
+erfolgt in der \Abk{log}-Datei):
+\begin{lstlisting}[style=LaTeX]
+\showhyphens{durch Leerzeichen getrennte Wörter}
+\end{lstlisting}
+
+Falls das betreffende Wort mit den herkömmlichen Trennmustern ebenfalls
+fehlerhaft getrennt wird, muss diese Trennung mit Hilfe einer privaten
+Ausnahmeliste korrigiert werden:
+\begin{lstlisting}[style=LaTeX]
+\hyphenation{durch Leer-zei-chen ge-trenn-te Wör-ter}
+\end{lstlisting}
+
+Durch Punkt~\ref{enum:wfehlerhaft} verursachte Fehltrennungen sollten in
+jedem Fall gemeldet werden.  Ein Link zum Herunterladen der jeweils
+zugrundeliegenden Wortliste (ca. 15\,MB) kann dem Kopf der Dateien
+\Datei{dehyphn-x-<datum>.tex} und \Datei{dehypht-x-<datum>.tex}
+entnommen werden.
+
+Falsche und fehlende Worttrennungen können an die folgenden
+E-Mail-Adressen berichtet werden:
+\begin{itemize}
+\item
+  \href{mailto:trennmuster-opensource@googlegroups.com}{trennmuster-opensource@googlegroups.com}
+  (Anmeldung erforderlich),
+\item \href{mailto:wl@gnu.org}{wl@gnu.org} (Werner Lemberg).
+\end{itemize}
+
+\vspace{\baselineskip}
+\nobreak
+\raggedright
+\itshape
+Happy \TeX ing!\par\nobreak
+Die deutschsprachige Trennmustermannschaft\par\nobreak
+\url{http://groups.google.de/group/trennmuster-opensource?hl=de}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-PDF-mode: t
+%%% TeX-master: t
+%%% End: 
