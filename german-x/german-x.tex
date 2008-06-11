@@ -202,11 +202,14 @@ Wörter eine sehr gute Trennqualität erreicht werden.  Für dennoch
 auftretende Trennfehler gibt es zwei mögliche Ursachen:
 
 \begin{enumerate}
-\item\label{enum:wfehlt} Das betreffende Wort ist in der
-  zugrundeliegenden Wortliste nicht enthalten.
 \item\label{enum:wfehlerhaft} Die zugrundeliegende Wortliste enthält
   einen Fehler.
+\item\label{enum:wfehlt} Das betreffende Wort ist in der
+  zugrundeliegenden Wortliste nicht enthalten.
 \end{enumerate}
+
+Durch Punkt~\ref{enum:wfehlerhaft} verursachte Fehltrennungen sollten in
+jedem Fall gemeldet werden.
 
 Da der Umfang der Wortliste nicht beliebig erweitert werden kann,
 sollten durch Punkt~\ref{enum:wfehlt} verursachte Fehltrennungen
@@ -227,9 +230,6 @@ Ausnahmeliste korrigiert werden:
 \begin{lstlisting}[style=LaTeX]
 \hyphenation{durch Leer-zei-chen ge-trenn-te Wör-ter}
 \end{lstlisting}
-
-Durch Punkt~\ref{enum:wfehlerhaft} verursachte Fehltrennungen sollten in
-jedem Fall gemeldet werden.
 
 Falsche und fehlende Worttrennungen können an die folgenden
 E-Mail-Adressen berichtet werden:
