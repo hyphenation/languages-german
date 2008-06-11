@@ -115,15 +115,16 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
     
      Falls das Ergebnis des obigen Kommandos ein Pfad zu einem
      *lokalen* TEXMF-Baum ist, existiert bereits eine lokale
-     Kopie der Datei language.dat.  Springe zu Punkt 3.
+     Kopie der Datei language.dat.  Springe zu Punkt C.3.
 
   2. Eine lokale Kopie von language.dat existiert bisher nicht.
-     Kopiere die Datei aus dem oben erhaltenen Pfad in einen
-     lokalen TEXMF-Baum, zum Beispiel nach
+     Kopiere die Datei aus dem in Schritt C.1 erhaltenen Pfad
+     in einen lokalen TEXMF-Baum, zum Beispiel nach
      
        C:\Dokumente und Einstellungen\All Users\Anwendungsdaten\MiKTeX\2.7\tex\generic\config\language.dat
 
   3. Öffne die Datei language.dat aus dem *lokalen* TEXMF-Baum.
+     in einem Editor.
 
   4. Falls vorhanden, entferne Zeilen
 
@@ -161,7 +162,7 @@ Hinweise zur Verwendung entnehmen Sie bitte der Datei german-x.pdf.
 
 Installation of the german-x package requires three steps.
 Note, in the remaining text <date> refers to the package date
-in ISO notation (YYYY-MM-TT).  Distribution dependent
+in ISO notation (YYYY-MM-DD).  Distribution dependent
 commands are marked (*).
 
 A. Copy pattern files to the following location within a *local*
@@ -170,14 +171,15 @@ A. Copy pattern files to the following location within a *local*
       tex/generic/hyphen/dehyphn-x-<datum>.tex
       tex/generic/hyphen/dehypht-x-<datum>.tex
   
-   Remaining files can be copied to
+   The remaining files can be copied to
       
       tex/doc/generic/hyphen/
   
 
 B. Refresh file name database.  See documentation of your
-   distribution to learn how to do this.  The command should
-   be similar to
+   TeX distribution to learn how to do this.  The command
+   should be similar to
+
       >initexmf --update-fndb      (*)
 
 
@@ -187,17 +189,17 @@ C. Modifiy language.dat and rebuild format files.
 
       >findtexmf language.dat      (*)
     
-     If the resulting path points to a *local* tree, jump
-     right to step 3.
+     If the resulting path already points to a *local* tree,
+     jump right to step C.3.
      
   2. A local copy of language.dat doesn't exist, yet.  Copy
-     that file from the path shown in step 1 to a *local*
+     that file from the path shown in step C.1 into a local
      texmf tree.  Below is an example path for MiKTeX:
      
        C:\Documents and Settings\All Users\Application Data\MiKTeX\2.7\tex\generic\config\language.dat
 
   3. Open the copy of language.dat from the *local* texmf
-     tree.
+     tree into an editor.
 
   4. If existent, remove the following lines
 
