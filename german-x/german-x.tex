@@ -143,6 +143,13 @@ Datum in ISO-Notation zu ersetzen (JJJJ-MM-TT)!
 Weitere Hinweise sind der Dokumentation des Pakets \texttt{hyphsubst} zu
 entnehmen.
 
+\subsection*{Achtung!}
+Diese Trennmuster befinden sich im experimentellen Status.  Sie sollten
+nicht für Zwecke eingesetzt werden, die einen dauerhaft stabilen Umbruch
+erfordern.  Diese Trennmuster können jederzeit durch inkompatible
+Versionen ersetzt werden oder vom \Abk{ctan} oder aus \TeX-Verteilungen
+entfernt werden.
+
 
 \section{Trennregeln}
 Die den Trennmustern zugrundeliegende Wortliste enthält sämtliche Wörter
@@ -221,9 +228,24 @@ Ausnahmeliste korrigiert werden:
 \end{lstlisting}
 
 Durch Punkt~\ref{enum:wfehlerhaft} verursachte Fehltrennungen sollten in
-jedem Fall gemeldet werden.  Ein Link zum Herunterladen der jeweils
-zugrundeliegenden Wortliste (ca. 15\,MB) kann dem Kopf der Dateien
+jedem Fall gemeldet werden.  Die Wortliste ist über das öffentliche
+\Programm{git}-Repositorium%
+\footnote{\url{http://repo.or.cz/}\qquad Eine \Programm{Git}-Version für
+  Windows ist unter
+  \url{http://code.google.com/p/msysgit/downloads/list} erhältlich,
+  Datei \Datei{Git-1.5.5-preview20080413.exe} (Stand: 11.\,6.\,2008).}
+dieses Projekts erhältlich.  Eine Kopie kann mit
+\begin{lstlisting}
+git clone git://repo.or.cz/wortliste.git
+\end{lstlisting}
+oder
+\begin{lstlisting}
+git clone http://repo.or.cz/r/wortliste.git
+\end{lstlisting}
+bezogen werden.  Der \Abk{sha1}-Commit-Hash, der den Dateien
 \Datei{dehyphn-x-<datum>.tex} und \Datei{dehypht-x-<datum>.tex}
+zugrundeliegenden Repositoryversion, sowie eine \Abk{URL} zum direkten
+Herunterladen der Wortliste (ca. 15\,MB) kann dem Kopf beider Dateien
 entnommen werden.
 
 Falsche und fehlende Worttrennungen können an die folgenden
