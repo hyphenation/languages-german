@@ -115,9 +115,10 @@ Back-end hyph-subst
 
 
 \section{Installation}
-Die Installation der Trennmuster ist in der Datei \Datei{README} beschrieben.
+Die Installation der Trennmuster ist in der Datei \Datei{README}
+beschrieben.
 
-Aktuelle Trennmuster sind unter der Projekt-URL
+Aktuelle Trennmuster sind unter der Projekt-\Abk{url}
 \url{http://groups.google.de/group/trennmuster-opensource?hl=de} im
 Dateibereich erhältlich.
 
@@ -130,7 +131,7 @@ werden.
 Das folgende Beispiel zeigt eine \LaTeX-Präambel für die Aktivierung der
 experimentellen Trennmuster für die reformierte Rechtschreibung.
 Beachte, \verb+<datum>+ ist durch das bei der Installation angegebene
-Datum in ISO-Notation zu ersetzen (JJJJ-MM-TT)!
+Datum in \Abk{iso}-Notation zu ersetzen (JJJJ-MM-TT)!
 
 \begin{lstlisting}[style=LaTeX]
 \RequirePackage[ngerman=ngerman-x-<datum>]{hyphsubst}% Ersetze <datum>.
@@ -229,12 +230,9 @@ Ausnahmeliste korrigiert werden:
 
 Durch Punkt~\ref{enum:wfehlerhaft} verursachte Fehltrennungen sollten in
 jedem Fall gemeldet werden.  Die Wortliste ist über das öffentliche
-\Programm{git}-Repositorium%
-\footnote{\url{http://repo.or.cz/}\qquad Eine \Programm{Git}-Version für
-  Windows ist unter
-  \url{http://code.google.com/p/msysgit/downloads/list} erhältlich,
-  Datei \Datei{Git-1.5.5-preview20080413.exe} (Stand: 11.\,6.\,2008).}
-dieses Projekts erhältlich.  Eine Kopie kann mit
+Entwicklerrepositorium des Projekts erhältlich.%
+\footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}
+Eine Kopie kann mit
 \begin{lstlisting}
 git clone git://repo.or.cz/wortliste.git
 \end{lstlisting}
@@ -242,11 +240,19 @@ oder
 \begin{lstlisting}
 git clone http://repo.or.cz/r/wortliste.git
 \end{lstlisting}
-bezogen werden.  Der \Abk{sha1}-Commit-Hash, der den Dateien
-\Datei{dehyphn-x-<datum>.tex} und \Datei{dehypht-x-<datum>.tex}
-zugrundeliegenden Repositoryversion, sowie eine \Abk{URL} zum direkten
-Herunterladen der Wortliste (ca. 15\,MB) kann dem Kopf beider Dateien
-entnommen werden.
+bezogen werden.%
+\footnote{\url{http://repo.or.cz/}\qquad Eine \Programm{Git}-Version für
+Windows ist unter \url{http://code.google.com/p/msysgit/downloads/list}
+erhältlich, Datei \Datei{Git-1.5.5-preview20080413.exe} (Stand:
+11.\,6.\,2008).}
+
+Der \Abk{sha1}-Commit-Hash der Repositoryversion, die den Dateien
+\begin{lstlisting}
+dehyphn-x-<datum>.tex
+dehypht-x-<datum>.tex
+\end{lstlisting}
+zugrundeliegt, sowie eine \Abk{url} zum direkten Herunterladen der
+Wortliste (ca. 15\,MB) kann dem Kopf beider Dateien entnommen werden.
 
 Falsche und fehlende Worttrennungen können an die folgenden
 E-Mail-Adressen berichtet werden:
@@ -263,7 +269,6 @@ E-Mail-Adressen berichtet werden:
 \itshape
 Happy \TeX ing!\par\nobreak
 Die deutschsprachige Trennmustermannschaft\par\nobreak
-\url{http://groups.google.de/group/trennmuster-opensource?hl=de}
 
 \end{document}
 
