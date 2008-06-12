@@ -19,6 +19,19 @@
 \usepackage{multicol}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{listings}
+\lstloadlanguages{[LaTeX]TeX, sh}
+\lstset{basicstyle=\ttfamily, keywordstyle={}, commentstyle={},
+  columns=flexible, showspaces=false, showstringspaces=false,
+%  aboveskip=12pt, belowskip=12pt, frame=tb,
+%  framesep=8pt, framerule=2pt,
+  xleftmargin=6pt, xrightmargin=6pt,
+% framexleftmargin=6pt, framexrightmargin=6pt
+}
+\lstdefinestyle{LaTeX}{language=[LaTeX]TeX, basicstyle=\ttfamily,
+  keywordstyle={}, commentstyle={\itshape}}
+\lstdefinestyle{shell}{language=sh, basicstyle=\ttfamily,
+  keywordstyle={}, commentstyle={\itshape}}
 \usepackage{natbib}
 \bibliographystyle{plain}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
@@ -219,28 +232,25 @@ Wer Interesse oder Ideen hat, wende sich bitte an die Gruppe.\newline
 
 \section{Bisherige Ergebnisse}
 \subsection{Wortlisten}
-Die von Werner Lemberg erstellte und kontrollierte Liste steht in einem
-öffentlich zugänglichen \Programm{git}-Repositorium.%
+Die von Werner Lemberg erstellte und kontrollierte Liste steht im
+öffentlich zugänglichen Entwicklerrepositorium.%
 \footnote{\url{http://repo.or.cz/}\qquad Eine \Programm{Git}-Version für
   Windows ist unter
   \url{http://code.google.com/p/msysgit/downloads/list} erhältlich,
   Datei \Datei{Git-1.5.5-preview20080413.exe} (Stand: 30.\,5.\,2008).}
 Eine Kopie kann mit
-\begin{verbatim}
-git clone git://repo.or.cz/wortliste.git
-\end{verbatim}
-oder
-\begin{verbatim}
+\begin{lstlisting}[style=shell,escapechar=\$]
+git clone git://repo.or.cz/wortliste.git $\qquad\emph{oder}$
 git clone http://repo.or.cz/r/wortliste.git
-\end{verbatim}
+\end{lstlisting}
 bezogen werden.%
 \footnote{Neben dem Protokoll unterscheiden sich auch die Adressen!}  Im
 Repositorium sind auch einige Skripten zur Bearbeitung der Wortliste
 enthalten.  Aktualisiert wird die Wortliste (das gesamte lokale
 Repositorium) mit
-\begin{verbatim}
+\begin{lstlisting}[style=shell]
 git pull
-\end{verbatim}
+\end{lstlisting}
 
 \subsection{HTML-Frontend}
 Es existiert ein Entwurf für eine interaktive Maske zur Kontrolle der
