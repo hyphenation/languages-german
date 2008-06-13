@@ -63,32 +63,27 @@ A. Die Trennmusterdateien sollten in die folgenden Verzeichnisse
 
 B. Aktualisieren der File Name Database:
 
-  Für TeX Live:
-  --------------------
-
-  Für MiKTeX (mit GUI):
-  --------------------
+  MiKTeX mit GUI:
+  ------------------------------------
     Programm 'Settings'
       -->  Reiter 'General'
         -->  Knopf 'Refresh FNDB'
 
-  Für MiKTeX (ohne GUI):
-  --------------------
+  Kommandozeile (MiKTeX und TeX Live):
+  ------------------------------------
     Kommando
-    
-      >initexmf --update-fndb
-      
+
+      MiKTeX:      >initexmf --update-fndb
+      TeX Live:    >mktexlsr
+
     aufrufen.
-  --------------------
+  ------------------------------------
 
 
 C. Anlegen der Sprachen und Erstellen der Formatdateien:
 
-  Für TeX Live:
-  --------------------
-
-  Für MiKTeX (mit GUI):
-  --------------------
+  MiKTeX mit GUI:
+  ------------------------------------
     Programm 'Settings'
       -->  Reiter 'Languages'
         -->  Knopf 'New'
@@ -109,11 +104,12 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
       -->  Meldung 'To apply the new settings, it is necessary to rebuild the format files.'
         -->  Knopf 'OK'
 
-  Für MiKTeX (ohne GUI):
-  --------------------
+  Kommandozeile (MiKTeX und TeX Live):
+  ------------------------------------
   1. Ermitteln des Pfades der Datei language.dat:
 
-      >findtexmf language.dat
+      MiKTeX:      >findtexmf language.dat
+      TeX Live:    >kpsewhich language.dat
     
      Falls das Ergebnis des obigen Kommandos ein Pfad zu einem
      *lokalen* TEXMF-Baum ist, existiert bereits eine lokale
@@ -123,7 +119,8 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
      Kopiere die Datei aus dem in Schritt C.1 erhaltenen Pfad
      in einen lokalen TEXMF-Baum, zum Beispiel nach
      
-       C:\Dokumente und Einstellungen\All Users\Anwendungsdaten\MiKTeX\2.7\tex\generic\config\language.dat
+       MiKTeX:     C:\Dokumente und Einstellungen\All Users\Anwendungsdaten\MiKTeX\2.7\tex\generic\config\language.dat
+       TeX Live:   <TeXLiveWurzel>/texmf-local/tex/generic/config/language.dat
 
   3. Öffne die Datei language.dat aus dem *lokalen* TEXMF-Baum.
      in einem Editor.
@@ -144,10 +141,11 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
 
   7. Kommando
 
-      >initexmf --dump
-      
+      MiKTeX:      >initexmf --dump
+      TeX Live:    >fmtutil --refresh
+
      aufrufen.
-  --------------------
+  ------------------------------------
 
 
 ********************
@@ -182,23 +180,23 @@ B. Refresh file name database.  See documentation of your
    TeX distribution to learn how to do this.  The command
    should be similar to
 
-      >initexmf --update-fndb      (*)
+      >mktexlsr                    (*)
 
 
 C. Modifiy language.dat and rebuild format files.
 
   1. Determine the location of language.dat:
 
-      >findtexmf language.dat      (*)
+      >kpsewhich language.dat      (*)
     
      If the resulting path already points to a *local* tree,
      jump right to step C.3.
      
   2. A local copy of language.dat doesn't exist, yet.  Copy
      that file from the path shown in step C.1 into a local
-     texmf tree.  Below is an example path for MiKTeX:
+     texmf tree.  Below is an example path for TeX Live:
      
-       C:\Documents and Settings\All Users\Application Data\MiKTeX\2.7\tex\generic\config\language.dat
+       <TeXLiveRoot>/texmf-local/tex/generic/config/language.dat
 
   3. Open the copy of language.dat from the *local* texmf
      tree into an editor.
@@ -219,7 +217,7 @@ C. Modifiy language.dat and rebuild format files.
 
   7. Rebuild format files:
 
-      >initexmf --dump             (*)
+      >fmtutil --refresh           (*)
 
 
 End.
