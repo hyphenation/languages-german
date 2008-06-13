@@ -138,31 +138,31 @@ Datum in \Abk{iso}-Notation zu ersetzen (JJJJ-MM-TT)!
 % \RequirePackage[ngerman=ngerman-x-latest]{hyphsubst}% Alternative.
 \documentclass{article}
 \usepackage[ngerman]{babel}
-\begin{document}
 \end{lstlisting}
 
 Weitere Hinweise sind der Dokumentation des Pakets \texttt{hyphsubst} zu
 entnehmen.
 
 Ob die experimentellen Trennmuster korrekt aktiviert werden, kann mit
-folgendem Beispiel getestet werden:
+dem folgenden Beispiel getestet werden.  Die Ausgabe für die
+traditionelle und reformierte Rechtschreibung mit herkömmlichen und
+experimentellen Trennmustern ist in Tabelle~\ref{fig:trennvarianten}
+zusammengefasst.
 \begin{lstlisting}[style=LaTeX]
-\showhyphens{Fassade  Gymnasiasten Abendstern Mordopfer} 
+\begin{document}
+\showhyphens{Fassade modernste Abendstern Mordopfer} 
 \end{lstlisting}
-Die Ausgabe für traditionelle und reformierte Rechtschreibung mit
-herkömmlichen und experimentellen Trennmustern ist in
-Tabelle~\ref{fig:trennvarianten} zusammengefasst.
 
-\suppressfloats
+\suppressfloats[t]
 \begin{table}
   \centering
   \begin{tabular}{llll}
-    \multicolumn{2}{c}{traditionelle Rechtschreibung} &
-    \multicolumn{2}{c}{reformierte Rechtschreibung}\\
+    \multicolumn{2}{c}{\itshape traditionelle Rechtschreibung} &
+    \multicolumn{2}{c}{\itshape reformierte Rechtschreibung}\\
     herkömmlich & experimentell & herkömmlich &
     experimentell\\\addlinespace\toprule\addlinespace
-    Fas-sade & Fas-sade & Fassade & Fas-sade\\
-    Gym-na-sia-sten & Gym-na-si-asten & Gym-na-sias-ten & Gym-na-si-as-ten\\
+    Fas-sa-de & Fas-sa-de & Fassa-de & Fas-sa-de\\
+    mo-d-ern-ste & mo-dern-ste & mo-d-erns-te & mo-derns-te\\
     Abend-stern & Abend-stern & Abends-tern & Abend-stern\\
     Mor-dop-fer & Mord-op-fer & Mor-dop-fer & Mord-op-fer\\
   \end{tabular}
@@ -225,7 +225,8 @@ Trennmustern liegt eine Wortliste mit den grob fünfhunderttausend
 häufigsten deutschen Wörtern zugrunde -- erheblich mehr als bei den
 herkömmlichen Trennmustern.  Damit sollte für nicht-fachsprachliche
 Wörter eine sehr gute Trennqualität erreicht werden.  Für dennoch
-auftretende Trennfehler gibt es zwei mögliche Ursachen:
+auftretende Trennfehler (falsche und ausgelassene Trennungen) gibt es
+zwei mögliche Ursachen:
 
 \begin{enumerate}
 \item\label{enum:wfehlerhaft} Die zugrundeliegende Wortliste enthält
