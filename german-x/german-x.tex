@@ -144,6 +144,32 @@ Datum in \Abk{iso}-Notation zu ersetzen (JJJJ-MM-TT)!
 Weitere Hinweise sind der Dokumentation des Pakets \texttt{hyphsubst} zu
 entnehmen.
 
+Ob die experimentellen Trennmuster korrekt aktiviert werden, kann mit
+folgendem Beispiel getestet werden:
+\begin{lstlisting}[style=LaTeX]
+\showhyphens{Fassade  Gymnasiasten Abendstern Mordopfer} 
+\end{lstlisting}
+Die Ausgabe für traditionelle und reformierte Rechtschreibung mit
+herkömmlichen und experimentellen Trennmustern ist in
+Tabelle~\ref{fig:trennvarianten} zusammengefasst.
+
+\suppressfloats
+\begin{table}
+  \centering
+  \begin{tabular}{llll}
+    \multicolumn{2}{c}{traditionelle Rechtschreibung} &
+    \multicolumn{2}{c}{reformierte Rechtschreibung}\\
+    herkömmlich & experimentell & herkömmlich &
+    experimentell\\\addlinespace\toprule\addlinespace
+    Fas-sade & Fas-sade & Fassade & Fas-sade\\
+    Gym-na-sia-sten & Gym-na-si-asten & Gym-na-sias-ten & Gym-na-si-as-ten\\
+    Abend-stern & Abend-stern & Abends-tern & Abend-stern\\
+    Mor-dop-fer & Mord-op-fer & Mor-dop-fer & Mord-op-fer\\
+  \end{tabular}
+  \caption{Trennvarianten}
+  \label{fig:trennvarianten}
+\end{table}
+
 \subsection*{Achtung!}
 Diese Trennmuster befinden sich im experimentellen Status.  Sie sollten
 nicht für Zwecke eingesetzt werden, die einen dauerhaft stabilen Umbruch
