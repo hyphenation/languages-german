@@ -154,6 +154,9 @@ zusammengefasst.
 \showhyphens{Fassade modernste Abendstern Mordopfer} 
 \end{lstlisting}
 
+
+\newcommand*{\fehltr}[1]{\textcolor{red!70!black}{\bfseries#1}}
+
 \suppressfloats[t]
 \begin{table}
   \centering
@@ -162,10 +165,10 @@ zusammengefasst.
     \multicolumn{2}{c}{\itshape reformierte Rechtschreibung}\\
     herkömmlich & experimentell & herkömmlich &
     experimentell\\\addlinespace\toprule\addlinespace
-    Fas-sa-de & Fas-sa-de & Fassa-de & Fas-sa-de\\
-    mo-d-ern-ste & mo-dern-ste & mo-d-erns-te & mo-derns-te\\
-    Abend-stern & Abend-stern & Abends-tern & Abend-stern\\
-    Mor-dop-fer & Mord-op-fer & Mor-dop-fer & Mord-op-fer\\
+    Fas-sa-de & Fas-sa-de & Fa\fehltr{ss}a-de & Fas-sa-de\\
+    mo-\fehltr{d-e}rn-ste & mo-dern-ste & mo-\fehltr{d-e}rns-te & mo-derns-te\\
+    Abend-stern & Abend-stern & Aben\fehltr{ds-t}ern & Abend-stern\\
+    Mo\fehltr{r-do}p-fer & Mord-op-fer & Mo\fehltr{r-do}p-fer & Mord-op-fer\\
   \end{tabular}
   \caption{Trennvarianten}
   \label{fig:trennvarianten}
