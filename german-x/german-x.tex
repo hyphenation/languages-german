@@ -20,6 +20,7 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\usepackage[sort&compress]{natbib}
 \usepackage{listings}
 \lstloadlanguages{[LaTeX]TeX}
 \lstset{basicstyle=\ttfamily, keywordstyle={}, commentstyle={},
@@ -46,7 +47,7 @@
   colorlinks,
   linkcolor=RoyalBlue3,
   urlcolor=Chocolate4,
-  citecolor=SpringGreen3
+  citecolor=DeepPink2
 }
 %%% Überschriften in fetter Grundschrift.
 \setkomafont{sectioning}{\normalcolor\normalfont\bfseries}
@@ -196,7 +197,8 @@ folgenden Konventionen getroffen (grüne Spalte):
 \begin{enumerate}
 \item Falls die Trennung nach Sprechsilben und die etymologische
   Trennung (nach Wortherkunft) kollidieren, wurde weitgehend die
-  etymologische Trennung gewählt (R~129, R~132):
+  etymologische Trennung gewählt \cite[\S~107,
+  \S~111, \S~112]{duden:21}:
 
   \begin{tabular}[t]{>{\color{red!60!black}}l>{\color{green!60!black}}l}
     Heli-kop-ter & Heli-ko-pter\\
@@ -207,7 +209,7 @@ folgenden Konventionen getroffen (grüne Spalte):
 
 \item In Fremdwörtern bleiben die Konsonantenverbindungen bl, pl, fl,
   gl, cl, kl, phl; br, pr, dr, tr, fr, vr, gr, cr, kr, phr, str, thr;
-  gn, kn ungetrennt (R~130):
+  gn, kn ungetrennt \cite[\S~108, \S~110]{duden:21}:
 
   \begin{tabular}[t]{>{\color{red!60!black}}l>{\color{green!60!black}}l}
     Cog-nac & Co-gnac\\
@@ -276,6 +278,10 @@ E-Mail-Adressen berichtet werden:
 Happy \TeX ing!\par\nobreak
 Die deutschsprachige Trennmustermannschaft\par\nobreak
 \endgroup
+
+
+\bibliographystyle{alphadin}
+\bibliography{german-x}
 
 
 \appendix
