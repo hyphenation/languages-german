@@ -33,7 +33,7 @@
 \lstdefinestyle{shell}{language=sh, basicstyle=\ttfamily,
   keywordstyle={}, commentstyle={\itshape}}
 \usepackage{natbib}
-\bibliographystyle{plain}
+\bibliographystyle{alphadin}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 %%% Bette Quellkode in PDF-Ausgabe ein.
 \usepackage{embedfile}
@@ -54,7 +54,7 @@ desc={LaTeX-Quelltext der Datei \jobname.pdf}%
   colorlinks,
   linkcolor=RoyalBlue3,
   urlcolor=Chocolate4,
-  citecolor=SpringGreen3
+  citecolor=DeepPink2
 }
 %%% Überschriften in fetter Grundschrift.
 \setkomafont{sectioning}{\normalcolor\normalfont\bfseries}
@@ -103,8 +103,10 @@ Back-end
 \section{Ziele}
 Dieses Projekt beabsichtigt hochqualitative Wortlisten,
 Trennmuster~\cite{liang:1983} und Ausnahmelisten für die deutsche
-Sprache zu schaffen.  Teil des Projekts ist eine Infrastruktur, die die
-Kontrolle der Listen in verteilter Arbeit ermöglicht.  Wortlisten,
+Sprache auf Grundlage der amtlichen Regeln der deutschen Rechtschreibung
+in der Fassung von~2006 zu schaffen~\cite{amtlRegeln:2006,
+  amtlRegeln:2006:duden}.  Teil des Projekts ist eine Infrastruktur, die
+die Kontrolle der Listen in verteilter Arbeit ermöglicht.  Wortlisten,
 Trennmuster und Ausnahmelisten sollen unter freien Lizenzen jedermann
 zugänglich gemacht werden.
 
