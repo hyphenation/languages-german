@@ -189,7 +189,7 @@ in zwei Schreib- beziehungsweise Trennvarianten:%
 aufgebaut.}%
 \begin{enumerate}
 \item der amtlichen Rechtschreibung vor der Rechtschreibreform und
-\item der amtlichen Rechtschreibung nach der Reform mit Stand 2006. 
+\item der amtlichen Rechtschreibung nach der Reform mit Stand 2006.
 \end{enumerate}
 
 Die Rechtschreibreform hat zusätzliche Freiheiten bei der Schreibung
@@ -207,7 +207,7 @@ folgenden Konventionen getroffen (grüne Spalte):
     Heli-kop-ter & Heli-ko-pter\\
     in-ter-vie-wen & in-ter-view-en\\
     Pä-da-go-ge & Päd-ago-ge\\    
-     po-e-tisch & poe-tisch\\
+    po-e-tisch & poe-tisch\\
   \end{tabular}
 
 \item In Fremdwörtern bleiben die Konsonantenverbindungen bl, pl, fl,
@@ -220,6 +220,15 @@ folgenden Konventionen getroffen (grüne Spalte):
     Dip-lom & Di-plom\\
     Feb-ru-ar & Fe-bru-ar\\
     In-teg-ral & In-te-gral\\
+  \end{tabular}
+
+\item Sinnentstellende und irreführende Trennungen werden möglichst
+  vermieden \cite[\S~107]{amtlRegeln:2006, amtlRegeln:2006:duden}:
+
+  \begin{tabular}[t]{>{\color{red!60!black}}l>{\color{green!60!black}}l}
+    Anal-phabet & An-alpha-bet\\
+    Kafkaken-ner & Kaf-ka-kenner\\
+    Talent-wässerung & Tal-entwäs-se-rung\\
   \end{tabular}
 \end{enumerate}
 
@@ -263,6 +272,12 @@ Ausnahmeliste korrigiert werden:
 \begin{lstlisting}[style=LaTeX]
 \hyphenation{durch Leer-zei-chen ge-trenn-te Wör-ter}
 \end{lstlisting}
+
+Sinnentstellende oder irreführende Trennungen, für die
+Punkt~\ref{enum:wfehlt} zutrifft, sollten nur dann gemeldet werden, wenn
+das betreffende Wort nicht aus mehr als zwei (prä- und suffigierten)
+Wörtern zusammengesetzt ist, zum Beispiel ">Talent-wässerung"<.  Nicht
+berücksichtigt wird hingegen die ">Talent-wässerungsanlage"<.
 
 Falsche und fehlende Worttrennungen können an die folgenden
 E-Mail-Adressen berichtet werden:
