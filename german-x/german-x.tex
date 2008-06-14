@@ -17,6 +17,7 @@
 \usepackage{textcomp}
 %%% Lade einige Pakete.
 \usepackage{multicol}
+\usepackage{paralist}
 \usepackage{tabularx}
 \usepackage{booktabs}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
@@ -240,53 +241,56 @@ Trennmustern liegt eine Wortliste mit den grob fünfhunderttausend
 häufigsten deutschen Wörtern zugrunde -- erheblich mehr als bei den
 herkömmlichen Trennmustern.  Damit sollte für nicht-fachsprachliche
 Wörter eine sehr gute Trennqualität erreicht werden.  Für dennoch
-auftretende Trennfehler (falsche und ausgelassene Trennungen) gibt es
-zwei mögliche Ursachen:
+auftretende Trennfehler (falsche, ausgelassene oder unerwünschte
+Trennungen) gibt es zwei mögliche Ursachen:
 
 \begin{enumerate}
-\item\label{enum:wfehlerhaft} Die zugrundeliegende Wortliste enthält
+\item\label{enum:WLfehlerhaft} Die zugrundeliegende Wortliste enthält
   einen Fehler.
-\item\label{enum:wfehlt} Das betreffende Wort ist in der
+\item\label{enum:WLfehlt} Das betreffende Wort ist in der
   zugrundeliegenden Wortliste nicht enthalten.
 \end{enumerate}
 
-Durch Punkt~\ref{enum:wfehlerhaft} verursachte Fehltrennungen sollten in
-jedem Fall gemeldet werden.
-
 Da der Umfang der Wortliste nicht beliebig erweitert werden kann,
-sollten durch Punkt~\ref{enum:wfehlt} verursachte Fehltrennungen
-nur dann gemeldet werden, wenn das betreffende Wort mit den
-herkömmlichen Trennmustern korrekt getrennt wird.  Korrekt bedeutet
-hier: Nicht alle möglichen Trennstellen müssen erkannt werden; es werden
-jedoch in keinem Fall falsche Trennstellen ermittelt.
+sollten Fehltrennungen nur dann gemeldet werden, wenn eines der
+folgenden Kriterien erfüllt ist:
+\begin{enumerate}[\hspace{1em}A.]
+\item\label{enum:kritHerkTM} Das betreffende Wort wird mit den
+  herkömmlichen Trennmustern für die traditionelle oder reformierte
+  Rechtschreibung korrekt getrennt.  Korrekt bedeutet hier: Nicht alle
+  möglichen Trennstellen müssen erkannt werden; es werden jedoch in
+  keinem Fall falsche Trennstellen ermittelt.
 
-Zum Testen kann der folgende Aufruf verwendet werden (die Ausgabe
-erfolgt in der \Abk{log}-Datei):
+  Zum Testen kann der folgende Aufruf verwendet werden (die Ausgabe
+  erfolgt in der \Abk{log}-Datei):
 \begin{lstlisting}[style=LaTeX]
 \showhyphens{durch Leerzeichen getrennte Wörter}
 \end{lstlisting}
+  
+\item\label{enum:kritSinn} Es handelt sich um eine sinnentstellende oder
+  irreführende Trennung eines Wortes, das nicht aus mehr als zwei prä-
+  und suffigierten Wörtern zusammengesetzt ist, zum Beispiel
+  ">Talent-wässerung"<.  Nicht berücksichtigt wird hingegen die
+  ">Talent-wässerungsanlage"<.
 
-Falls das betreffende Wort mit den herkömmlichen Trennmustern ebenfalls
-fehlerhaft getrennt wird, muss diese Trennung mit Hilfe einer privaten
-Ausnahmeliste korrigiert werden:
-\begin{lstlisting}[style=LaTeX]
-\hyphenation{durch Leer-zei-chen ge-trenn-te Wör-ter}
-\end{lstlisting}
+\item\label{enum:kritWLfehlerhaft} Das Wort ist bereits in der Wortliste
+  enthalten und Punkt~\ref{enum:WLfehlerhaft} trifft zu.
+\end{enumerate}
 
-Sinnentstellende oder irreführende Trennungen, für die
-Punkt~\ref{enum:wfehlt} zutrifft, sollten nur dann gemeldet werden, wenn
-das betreffende Wort nicht aus mehr als zwei (prä- und suffigierten)
-Wörtern zusammengesetzt ist, zum Beispiel ">Talent-wässerung"<.  Nicht
-berücksichtigt wird hingegen die ">Talent-wässerungsanlage"<.
-
-Falsche und fehlende Worttrennungen können an die folgenden
-E-Mail-Adressen berichtet werden:
+Falsche, fehlende und unerwünschte Worttrennungen können an die
+folgenden E-Mail-Adressen gerichtet werden:
 \begin{itemize}
 \item
   \href{mailto:trennmuster-opensource@googlegroups.com}{trennmuster-opensource@googlegroups.com}
   (Anmeldung erforderlich),
 \item \href{mailto:wl@gnu.org}{wl@gnu.org} (Werner Lemberg).
 \end{itemize}
+
+Fehltrennungen, die in den Trennmustern nicht korrigiert werden können,
+können mit Hilfe einer privaten Ausnahmeliste behandelt werden:
+\begin{lstlisting}[style=LaTeX]
+\hyphenation{Tal-entwäs-se-rungs-an-la-ge Kaf-ka-kenner-klub}
+\end{lstlisting}
 
 
 \vspace{\baselineskip}
