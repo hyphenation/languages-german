@@ -1,5 +1,6 @@
 # This Makefile prepares documentation for package german-x.
 
+BIBTEX = bibtex
 PDFLATEX = pdflatex
 RM = rm -f
 
@@ -17,10 +18,12 @@ all: doc
 doc: german-x.pdf
 
 clean:
-	$(RM) *.aux *.log *.out *.toc
+	$(RM) *.aux *.bbl *.blg *.log *.out *.toc
 
-german-x.pdf: german-x.tex
-	$(PDFLATEX) $<
-	$(PDFLATEX) $<
+german-x.pdf: german-x.tex german-x.bib
+	$(PDFLATEX) german-x
+	$(BIBTEX) german-x
+	$(PDFLATEX) german-x
+	$(PDFLATEX) german-x
 
 # EOF
