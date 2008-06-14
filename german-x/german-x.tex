@@ -73,6 +73,8 @@
   }%
   \ignorespaces%
 }
+\colorlet{richtigcol}{green!60!black}
+\colorlet{falschcol}{red!60!black}
 %%% Satzspiegel erneut berechnen.
 \typearea{last}
 %%% Trennausnahmen definieren.
@@ -156,7 +158,14 @@ zusammengefasst.
 \end{lstlisting}
 
 
-\newcommand*{\fehltr}[1]{\textcolor{red!70!black}{\bfseries#1}}
+\newcommand*{\trennung}[2]{%
+\begingroup%
+\setlength{\fboxsep}{0pt}%
+\colorbox{#1}{\strut#2}%
+\endgroup%
+}
+\newcommand*{\ftr}[1]{\trennung{falschcol!20}{#1}}
+\newcommand*{\rtr}[1]{\trennung{richtigcol!20}{#1}}
 
 \suppressfloats[t]
 \begin{table}
@@ -166,10 +175,10 @@ zusammengefasst.
     \multicolumn{2}{c}{\itshape reformierte Rechtschreibung}\\
     herkömmlich & experimentell & herkömmlich &
     experimentell\\\addlinespace\toprule\addlinespace
-    Fas-sa-de & Fas-sa-de & Fa\fehltr{ss}a-de & Fas-sa-de\\
-    mo-\fehltr{d-e}rn-ste & mo-dern-ste & mo-\fehltr{d-e}rns-te & mo-derns-te\\
-    Abend-stern & Abend-stern & Aben\fehltr{ds-t}ern & Abend-stern\\
-    Mo\fehltr{r-do}p-fer & Mord-op-fer & Mo\fehltr{r-do}p-fer & Mord-op-fer\\
+    Fas-sa-de & Fas-sa-de & Fa\ftr{ss}a-de & Fas-sa-de\\
+    mo-\ftr{d-e}rn-ste & mo-dern-ste & mo-\ftr{d-e}rns-te & mo-derns-te\\
+    Abend-stern & Abend-stern & Aben\ftr{ds-t}ern & Abend-stern\\
+    Mo\ftr{r-do}p-fer & Mord-op-fer & Mo\ftr{r-do}p-fer & Mord-op-fer\\
   \end{tabular}
   \caption{Trennvarianten}
   \label{fig:trennvarianten}
@@ -204,7 +213,7 @@ folgenden Konventionen getroffen (grüne Spalte):
   etymologische Trennung gewählt \cite[\S~113]{amtlRegeln:2006,
     amtlRegeln:2006:duden}:
 
-  \begin{tabular}[t]{>{\color{red!60!black}}l>{\color{green!60!black}}l}
+  \begin{tabular}[t]{>{\color{falschcol}}l>{\color{richtigcol}}l}
     Heli-kop-ter & Heli-ko-pter\\
     in-ter-vie-wen & in-ter-view-en\\
     Pä-da-go-ge & Päd-ago-ge\\    
@@ -216,7 +225,7 @@ folgenden Konventionen getroffen (grüne Spalte):
   gn, kn ungetrennt \cite[\S~110, \S~112]{amtlRegeln:2006,
     amtlRegeln:2006:duden}:
 
-  \begin{tabular}[t]{>{\color{red!60!black}}l>{\color{green!60!black}}l}
+  \begin{tabular}[t]{>{\color{falschcol}}l>{\color{richtigcol}}l}
     Cog-nac & Co-gnac\\
     Dip-lom & Di-plom\\
     Feb-ru-ar & Fe-bru-ar\\
@@ -226,7 +235,7 @@ folgenden Konventionen getroffen (grüne Spalte):
 \item Sinnentstellende und irreführende Trennungen werden möglichst
   vermieden \cite[\S~107]{amtlRegeln:2006, amtlRegeln:2006:duden}:
 
-  \begin{tabular}[t]{>{\color{red!60!black}}l>{\color{green!60!black}}l}
+  \begin{tabular}[t]{>{\color{falschcol}}l>{\color{richtigcol}}l}
     Anal-phabet & An-alpha-bet\\
     Kafkaken-ner & Kaf-ka-kenner\\
     Talent-wässerung & Tal-entwäs-se-rung\\
