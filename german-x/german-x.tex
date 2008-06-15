@@ -118,13 +118,60 @@ Back-end hyph-subst
 \end{multicols}
 
 
+\section{Einleitung}
+Der in \TeX\ implementierte Trennalgorithmus arbeitet
+musterbasiert~\cite{liang:1983}.  Prinzipiell können mit einem solchen
+Algorithmus nicht alle möglichen Wörter korrekt getrennt werden.  Die
+Qualität der Trennmuster einer Sprache wird jedoch maßgeblich von der
+Qualität der Wortliste beeinflusst, aus der sie berechnet werden.
+
+Leider ist die Wortliste, die den herkömmlichen Trennmustern für die
+traditionelle deutsche Rechtschreibung zugrundeliegt, verschollen.  Dies
+hat mehrere Konsequenzen:
+\begin{itemize}
+\item Die Trennmuster lassen sich nicht reproduzieren.  Die Pflege der
+  herkömmlichen Trennmuster ist daher schwierig bis unmöglich.  Für
+  freie Software ist dies kein zufriedenstellender Zustand.
+
+\item Die Qualität der ursprünglichen Wortliste und die der Trennmuster
+  kann nur schlecht eingeschätzt werden.  Für die traditionelle
+  Rechtschreibung existiert jedoch inzwischen eine Ausnahmeliste mit
+  über 3500 korrigierten Trennungen (Datei \Datei{dehyphtex.tex}).
+
+\item Für die Berechnung der Trennmuster für die reformierte deutsche
+  Rechtschreibung stand keine Wortliste zur Verfügung.  Diese
+  Trennmuster entstanden durch manuelle Anpassung der Trennmuster für
+  die traditionelle Rechtschreibung an die reformierten Regeln.  Aus
+  diesem Grund ist die Qualität der Trennmuster für die reformierte
+  Rechtschreibung noch etwas schlechter als die der Trennmuster für die
+  traditionelle Rechtschreibung.
+\end{itemize}
+
+Das Projekt \emph{Freie Wortlisten und Trennmuster für die deutsche
+  Sprache} hat sich deshalb das Ziel gesetzt neue, hochqualitative
+Trennmuster für die Benutzung in \TeX\ und OpenOffice zu schaffen.
+
+Den experimentellen Trennmustern dieses Pakets liegt eine Wortliste mit
+den etwa fünfhunderttausend häufigsten deutschen Wörtern zugrunde.
+Diese Liste ist vermutlich erheblich umfangreicher als die ursprüngliche
+Wortliste.  Außerdem wurden Worthäufigkeiten in der ursprünglichen
+Wortliste wahrscheinlich überhaupt nicht berücksichtigt.
+
+Mit den vorliegenden Trennmustern sollte für nicht-fachsprachliche
+Wörter eine sehr gute Trennqualität erreicht werden.  Insbesondere
+sollte sich die Trennung häufig auftretender zusammengesetzter Wörter
+verbessern.
+
+Aktuelle Trennmuster sind im Dateibereich unter der Projekt-\Abk{url}%
+\footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}
+oder am \Abk{ctan} erhältlich.  Weitere Informationen sowie eine
+Aufgabenliste können der Projektbeschreibung entnommen werden.\newline
+\indent\emph{Dieses Projekt benötigt Deine Hilfe!}
+
+
 \section{Installation}
 Die Installation der Trennmuster ist in der Datei \Datei{README}
 beschrieben.
-
-Aktuelle Trennmuster sind unter der Projekt-\Abk{url}
-\url{http://groups.google.de/group/trennmuster-opensource?hl=de} im
-Dateibereich erhältlich.
 
 
 \section{Verwenden der Trennmuster}
@@ -156,7 +203,6 @@ zusammengefasst.
 \begin{document}
 \showhyphens{löste Fassade modernste Abendstern} 
 \end{lstlisting}
-
 
 \newcommand*{\trennung}[2]{%
 \begingroup%
@@ -193,15 +239,6 @@ und vom \Abk{ctan} oder aus \TeX-Vertei\-lun\-gen entfernt werden.}
 
 
 \section{Trennregeln}
-Die den Trennmustern zugrundeliegende Wortliste enthält sämtliche Wörter
-in zwei Schreib- beziehungsweise Trennvarianten:%
-\footnote{Tatsächlich ist die Wortliste noch etwas komplizierter
-aufgebaut.}%
-\begin{enumerate}
-\item der amtlichen Rechtschreibung vor der Rechtschreibreform und
-\item der amtlichen Rechtschreibung nach der Reform mit Stand 2006.
-\end{enumerate}
-
 Die Rechtschreibreform hat zusätzliche Freiheiten bei der Schreibung
 und Trennung von Wörtern eingeführt, die sich nicht ohne weiteres auf
 die maschinelle Worttrennung übertragen lassen.  Daher wurden bezüglich
@@ -244,13 +281,7 @@ folgenden Konventionen getroffen (grüne Spalte):
 
 
 \section{Fehltrennungen}
-Der in \TeX\ implementierte, musterbasierte Trennalgorithmus kann
-prinzipiell nicht alle möglichen Wörter korrekt trennen.  Diesen
-Trennmustern liegt eine Wortliste mit den grob fünfhunderttausend
-häufigsten deutschen Wörtern zugrunde -- erheblich mehr als bei den
-herkömmlichen Trennmustern.  Damit sollte für nicht-fachsprachliche
-Wörter eine sehr gute Trennqualität erreicht werden.  Für dennoch
-auftretende Trennfehler (falsche, ausgelassene oder unerwünschte
+Für auftretende Trennfehler (falsche, ausgelassene oder unerwünschte
 Trennungen) gibt es zwei mögliche Ursachen:
 
 \begin{enumerate}
