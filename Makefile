@@ -28,6 +28,7 @@ GIT_VERSION := `$(CHDIR) $(SRCDIR); \
                 $(GIT) log --pretty=oneline -1 $(WORDLIST) \
                 | $(SED) 's/ .*//'`
 PATTERNS = $(OLD)/$(OLD)-$(DATE).tex $(NEW)/$(NEW)-$(DATE).tex
+WRAPPERS = $(OLD)/$(OLD).tex $(NEW)/$(NEW).tex
 
 
 .PHONY: pre tex
@@ -37,7 +38,7 @@ all: pre tex
 pre:
 	$(MKDIR) $(OLD) $(NEW)
 
-tex: $(PATTERNS)
+tex: $(PATTERNS) $(WRAPPERS)
 
 
 $(OLD)/$(OLD)-$(DATE).tex: $(OLD)/words.hyphenated.old
@@ -73,5 +74,13 @@ $(NEW)/words.hyphenated.new: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
           | $(PERL) $(SRCDIR)/extract-tex-new.pl \
           | $(SORT) > $@
+
+$(OLD)/$(OLD).tex: $(SRCDIR)/$(OLD).tex.in
+	$(CAT) $< \
+          | $(SED) -e "s/@DATE@/$(DATE)/" > $@
+
+$(NEW)/$(NEW).tex: $(SRCDIR)/$(NEW).tex.in
+	$(CAT) $< \
+          | $(SED) -e "s/@DATE@/$(DATE)/" > $@
 
 # EOF
