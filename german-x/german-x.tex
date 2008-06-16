@@ -13,10 +13,12 @@
 \usepackage[osf]{mathpazo}
 \usepackage[scaled]{berasans}
 \renewcommand*{\ttdefault}{lmtt}
-\linespread{1.05}
 \usepackage{textcomp}
+\linespread{1.05}
+\usepackage[expansion=true]{microtype}
 %%% Lade einige Pakete.
 \usepackage{multicol}
+\usepackage{paralist}
 \usepackage{tabularx}
 \usepackage{booktabs}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
@@ -72,6 +74,8 @@
   }%
   \ignorespaces%
 }
+\colorlet{richtigcol}{green!60!black}
+\colorlet{falschcol}{red!60!black}
 %%% Satzspiegel erneut berechnen.
 \typearea{last}
 %%% Trennausnahmen definieren.
@@ -115,17 +119,69 @@ Back-end hyph-subst
 \end{multicols}
 
 
-\section{Installation}
-Die Installation der Trennmuster ist in der Datei \Datei{README}
-beschrieben.
+\section{Einleitung}
+Der in \TeX\ implementierte Trennalgorithmus arbeitet
+musterbasiert~\cite{liang:1983}.  Prinzipiell können mit einem solchen
+Algorithmus nicht alle möglichen Wörter korrekt getrennt werden.  Die
+Qualität der Trennmuster einer Sprache wird jedoch maßgeblich von der
+Qualität der Wortliste beeinflusst, aus der sie berechnet werden.
 
-Aktuelle Trennmuster sind unter der Projekt-\Abk{url}
-\url{http://groups.google.de/group/trennmuster-opensource?hl=de} im
-Dateibereich erhältlich.
+Leider ist die Wortliste, die den herkömmlichen Trennmustern für die
+traditionelle deutsche Rechtschreibung zugrundeliegt, verschollen.  Dies
+hat mehrere Konsequenzen:
+\begin{itemize}
+\item Die Trennmuster lassen sich nicht reproduzieren.  Die Pflege der
+  herkömmlichen Trennmuster ist daher schwierig bis unmöglich.  Für
+  freie Software ist dies kein zufriedenstellender Zustand.
+
+\item Die Qualität der ursprünglichen Wortliste und die der Trennmuster
+  kann nur schlecht eingeschätzt werden.  Für die traditionelle
+  Rechtschreibung existiert jedoch inzwischen eine Ausnahmeliste mit
+  über 3500 korrigierten Trennungen (Datei \Datei{dehyphtex.tex}).
+
+\item Für die Berechnung der Trennmuster für die reformierte deutsche
+  Rechtschreibung stand keine Wortliste zur Verfügung.  Diese
+  Trennmuster entstanden durch manuelle Anpassung der Trennmuster für
+  die traditionelle Rechtschreibung an die reformierten Regeln.  Aus
+  diesem Grund ist die Qualität der Trennmuster für die reformierte
+  Rechtschreibung noch etwas schlechter als die der Trennmuster für die
+  traditionelle Rechtschreibung.
+
+\item Eine Besonderheit der (deutsch)schweizerischen Rechtschreibung,
+  der konsequente Ersatz des ">ß"< durch ">ss"<, wird mit den
+  herkömmlichen Trennmustern nicht berücksichtigt.
+\end{itemize}
+
+Das Projekt \emph{Freie Wortlisten und Trennmuster für die deutsche
+  Sprache} hat sich deshalb das Ziel gesetzt neue, hochqualitative
+Trennmuster für die Benutzung in \TeX\ und OpenOffice zu schaffen.
+
+Den experimentellen Trennmustern dieses Pakets liegt eine Wortliste mit
+den etwa fünfhunderttausend häufigsten deutschen Wörtern in deutscher
+und (deutsch)schweizerischer%
+\footnote{Die Berücksichtigung dieser Schreibweise kommt auch dem
+  Versalsatz zugute.  Wenngleich auf Trennungen dabei möglichst
+  verzichtet werden sollte.}
+Schreibung zugrunde.  Diese Liste ist vermutlich erheblich umfangreicher
+als die ursprüngliche Wortliste.  Außerdem wurden Worthäufigkeiten in
+der ursprünglichen Wortliste wahrscheinlich überhaupt nicht
+berücksichtigt.
+
+Mit den vorliegenden Trennmustern sollte für nicht-fachsprachliche
+Wörter eine sehr gute Trennqualität erreicht werden.  Insbesondere
+sollte sich die Trennung häufig auftretender zusammengesetzter Wörter
+verbessern.
+
+Aktuelle Trennmuster sind im Dateibereich unter der Projekt-\Abk{url}%
+\footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}
+oder am \Abk{ctan} erhältlich.  Weitere Informationen sowie eine
+Aufgabenliste können der Projektbeschreibung entnommen werden.\newline
+\indent\emph{Dieses Projekt benötigt Deine Hilfe!}
 
 
 \section{Verwenden der Trennmuster}
-Die experimentellen Trennmuster können mit den Paketen \texttt{Babel}
+Die Installation der experimentellen Trennmuster ist in der Datei
+\Datei{README} beschrieben.  Sie können mit den Paketen \texttt{Babel}
 und \texttt{hyphsubst} aus dem \Programm{Oberdiek-Bündel} aktiviert
 werden.
 
@@ -151,8 +207,17 @@ experimentellen Trennmustern ist in Tabelle~\ref{fig:trennvarianten}
 zusammengefasst.
 \begin{lstlisting}[style=LaTeX]
 \begin{document}
-\showhyphens{Fassade modernste Abendstern Mordopfer} 
+\showhyphens{löste Fassade modernste Abendstern Mordopfer}
 \end{lstlisting}
+
+\newcommand*{\trennung}[2]{%
+\begingroup%
+\setlength{\fboxsep}{0pt}%
+\colorbox{#1}{\strut#2}%
+\endgroup%
+}
+\newcommand*{\ftr}[1]{\trennung{falschcol!20}{#1}}
+\newcommand*{\rtr}[1]{\trennung{richtigcol!20}{#1}}
 
 \suppressfloats[t]
 \begin{table}
@@ -162,112 +227,121 @@ zusammengefasst.
     \multicolumn{2}{c}{\itshape reformierte Rechtschreibung}\\
     herkömmlich & experimentell & herkömmlich &
     experimentell\\\addlinespace\toprule\addlinespace
-    Fas-sa-de & Fas-sa-de & Fassa-de & Fas-sa-de\\
-    mo-d-ern-ste & mo-dern-ste & mo-d-erns-te & mo-derns-te\\
-    Abend-stern & Abend-stern & Abends-tern & Abend-stern\\
-    Mor-dop-fer & Mord-op-fer & Mor-dop-fer & Mord-op-fer\\
+    l\ftr{ös-t}e & lö-ste & lös-te & lös-te\\
+    Fas-sa-de & Fas-sa-de & Fa\ftr{ss}a-de & Fas-sa-de\\
+    mo-\ftr{d-e}rn-ste & mo-dern-ste & mo-\ftr{d-e}rns-te & mo-derns-te\\
+    Abend-stern & Abend-stern & Aben\ftr{ds-t}ern & Abend-stern\\
+    Mo\ftr{r-do}p-fer & Mord-op-fer & Mo\ftr{r-do}p-fer & Mord-op-fer\\
   \end{tabular}
   \caption{Trennvarianten}
   \label{fig:trennvarianten}
 \end{table}
 
-\subsection*{Achtung!}
-Diese Trennmuster befinden sich im experimentellen Status.  Sie sollten
-nicht für Zwecke eingesetzt werden, die einen dauerhaft stabilen Umbruch
-erfordern.  Diese Trennmuster können jederzeit durch inkompatible
-Versionen ersetzt werden oder vom \Abk{ctan} oder aus \TeX-Verteilungen
-entfernt werden.
+\emph{Diese Trennmuster befinden sich im experimentellen Status.  Sie
+sollten ausgiebig getestet werden!  Sie sind jedoch noch nicht für
+Zwecke geeignet, die einen dauerhaft stabilen Umbruch erfordern.  Diese
+Trennmuster können jederzeit durch umbruchinkompatible Versionen ersetzt
+und vom \Abk{ctan} oder aus \TeX-Vertei\-lun\-gen entfernt werden.}
 
 
 \section{Trennregeln}
-Die den Trennmustern zugrundeliegende Wortliste enthält sämtliche Wörter
-in zwei Schreib- beziehungsweise Trennvarianten:%
-\footnote{Tatsächlich ist die Wortliste noch etwas komplizierter
-aufgebaut.}%
-\begin{enumerate}
-\item der amtlichen Rechtschreibung vor der Rechtschreibreform und
-\item der amtlichen Rechtschreibung nach der Reform mit Stand 2006. 
-\end{enumerate}
+Es werden zwei Trennmuster bereitgestellt, entsprechend den
+traditionellen und den reformierten%
+\footnote{in der Fassung von~2006~\cite{amtlRegeln:2006,
+amtlRegeln:2006:duden}}
+amtlichen Regeln für die Rechtschreibung der deutschen Sprache.
 
-Die Rechtschreibreform hat zusätzliche Freiheiten bei der Schreibung
-und Trennung von Wörtern eingeführt, die sich nicht ohne weiteres auf
-die maschinelle Worttrennung übertragen lassen.  Daher wurden bezüglich
-der Trennregeln für die Trennmuster der reformierten Rechtschreibung die
-folgenden Konventionen getroffen (grüne Spalte):
+Da sich Freiheiten bei der Schreibung und Trennung von Wörtern nicht
+ohne weiteres auf die maschinelle Worttrennung übertragen lassen, wurden
+die folgenden Konventionen getroffen (grüne Spalte).  Hauptsächlich
+betreffen diese die reformierte Rechtschreibung:
 \begin{enumerate}
 \item Falls die Trennung nach Sprechsilben und die etymologische
   Trennung (nach Wortherkunft) kollidieren, wurde weitgehend die
-  etymologische Trennung gewählt \cite[\S~107,
-  \S~111, \S~112]{duden:21}:
+  etymologische Trennung gewählt \cite[\S~113]{amtlRegeln:2006,
+    amtlRegeln:2006:duden}:
 
-  \begin{tabular}[t]{>{\color{red!60!black}}l>{\color{green!60!black}}l}
+  \begin{tabular}[t]{>{\color{falschcol}}l>{\color{richtigcol}}l}
     Heli-kop-ter & Heli-ko-pter\\
     in-ter-vie-wen & in-ter-view-en\\
     Pä-da-go-ge & Päd-ago-ge\\    
-     po-e-tisch & poe-tisch\\
+    po-e-tisch & poe-tisch\\
   \end{tabular}
 
 \item In Fremdwörtern bleiben die Konsonantenverbindungen bl, pl, fl,
   gl, cl, kl, phl; br, pr, dr, tr, fr, vr, gr, cr, kr, phr, str, thr;
-  gn, kn ungetrennt \cite[\S~108, \S~110]{duden:21}:
+  gn, kn ungetrennt \cite[\S~110, \S~112]{amtlRegeln:2006,
+    amtlRegeln:2006:duden}:
 
-  \begin{tabular}[t]{>{\color{red!60!black}}l>{\color{green!60!black}}l}
+  \begin{tabular}[t]{>{\color{falschcol}}l>{\color{richtigcol}}l}
     Cog-nac & Co-gnac\\
     Dip-lom & Di-plom\\
     Feb-ru-ar & Fe-bru-ar\\
     In-teg-ral & In-te-gral\\
   \end{tabular}
+
+\item Sinnentstellende und irreführende Trennungen werden möglichst
+  vermieden \cite[\S~107]{amtlRegeln:2006, amtlRegeln:2006:duden}:
+
+  \begin{tabular}[t]{>{\color{falschcol}}l>{\color{richtigcol}}l}
+    Anal-phabet & An-alpha-bet\\
+    Kafkaken-ner & Kaf-ka-kenner\\
+    Talent-wässerung & Tal-entwäs-se-rung\\
+  \end{tabular}
 \end{enumerate}
 
 
 \section{Fehltrennungen}
-Der in \TeX\ implementierte, musterbasierte Trennalgorithmus kann
-prinzipiell nicht alle möglichen Wörter korrekt trennen.  Diesen
-Trennmustern liegt eine Wortliste mit den grob fünfhunderttausend
-häufigsten deutschen Wörtern zugrunde -- erheblich mehr als bei den
-herkömmlichen Trennmustern.  Damit sollte für nicht-fachsprachliche
-Wörter eine sehr gute Trennqualität erreicht werden.  Für dennoch
-auftretende Trennfehler (falsche und ausgelassene Trennungen) gibt es
-zwei mögliche Ursachen:
+Für auftretende Trennfehler (falsche, ausgelassene oder unerwünschte
+Trennungen) gibt es zwei mögliche Ursachen:
 
 \begin{enumerate}
-\item\label{enum:wfehlerhaft} Die zugrundeliegende Wortliste enthält
+\item\label{enum:WLfehlerhaft} Die zugrundeliegende Wortliste enthält
   einen Fehler.
-\item\label{enum:wfehlt} Das betreffende Wort ist in der
+\item\label{enum:WLfehlt} Das betreffende Wort ist in der
   zugrundeliegenden Wortliste nicht enthalten.
 \end{enumerate}
 
-Durch Punkt~\ref{enum:wfehlerhaft} verursachte Fehltrennungen sollten in
-jedem Fall gemeldet werden.
-
 Da der Umfang der Wortliste nicht beliebig erweitert werden kann,
-sollten durch Punkt~\ref{enum:wfehlt} verursachte Fehltrennungen
-nur dann gemeldet werden, wenn das betreffende Wort mit den
-herkömmlichen Trennmustern korrekt getrennt wird.  Korrekt bedeutet
-hier: Nicht alle möglichen Trennstellen müssen erkannt werden; es werden
-jedoch in keinem Fall falsche Trennstellen ermittelt.
+sollten Fehltrennungen nur dann gemeldet werden, wenn eines der
+folgenden Kriterien erfüllt ist:
+\begin{enumerate}[\hspace{1em}A.]
+\item\label{enum:kritHerkTM} Das betreffende Wort wird mit den
+  herkömmlichen Trennmustern für die traditionelle oder reformierte
+  Rechtschreibung korrekt getrennt.  Korrekt bedeutet hier: Nicht alle
+  möglichen Trennstellen müssen erkannt werden; es werden jedoch in
+  keinem Fall falsche Trennstellen ermittelt.
 
-Zum Testen kann der folgende Aufruf verwendet werden (die Ausgabe
-erfolgt in der \Abk{log}-Datei):
+  Zum Testen kann der folgende Aufruf verwendet werden (die Ausgabe
+  erfolgt in der \Abk{log}-Datei):
 \begin{lstlisting}[style=LaTeX]
 \showhyphens{durch Leerzeichen getrennte Wörter}
 \end{lstlisting}
+  
+\item\label{enum:kritSinn} Es handelt sich um eine sinnentstellende oder
+  irreführende Trennung eines Wortes, das nicht aus mehr als zwei prä-
+  und suffigierten Wörtern zusammengesetzt ist, zum Beispiel
+  ">Talent-wässerung"<.  Nicht berücksichtigt wird hingegen die
+  ">Talent-wässerungsanlage"<.
 
-Falls das betreffende Wort mit den herkömmlichen Trennmustern ebenfalls
-fehlerhaft getrennt wird, muss diese Trennung mit Hilfe einer privaten
-Ausnahmeliste korrigiert werden:
-\begin{lstlisting}[style=LaTeX]
-\hyphenation{durch Leer-zei-chen ge-trenn-te Wör-ter}
-\end{lstlisting}
+\item\label{enum:kritWLfehlerhaft} Das Wort ist bereits in der Wortliste
+  enthalten und Punkt~\ref{enum:WLfehlerhaft} trifft zu.
+\end{enumerate}
 
-Falsche und fehlende Worttrennungen können an die folgenden
-E-Mail-Adressen berichtet werden:
+Falsche, fehlende und unerwünschte Worttrennungen können an die
+folgenden E-Mail-Adressen gerichtet werden:
 \begin{itemize}
 \item
   \href{mailto:trennmuster-opensource@googlegroups.com}{trennmuster-opensource@googlegroups.com}
   (Anmeldung erforderlich),
 \item \href{mailto:wl@gnu.org}{wl@gnu.org} (Werner Lemberg).
 \end{itemize}
+
+Fehltrennungen, die in den Trennmustern nicht korrigiert werden können,
+können mit Hilfe einer privaten Ausnahmeliste behandelt werden:
+\begin{lstlisting}[style=LaTeX]
+\hyphenation{Tal-entwäs-se-rungs-an-la-ge Kaf-ka-kenner-klub}
+\end{lstlisting}
 
 
 \vspace{\baselineskip}
