@@ -162,11 +162,10 @@ und (deutsch)schweizerischer%
 \footnote{Die Berücksichtigung dieser Schreibweise kommt auch dem
   Versalsatz zugute.  Wenngleich auf Trennungen dabei möglichst
   verzichtet werden sollte.}
-Schreibung und Trennung nach traditioneller sowie reformierter
-Rechtschreibung (Stand 2006) zugrunde.  Diese Liste ist vermutlich
-erheblich umfangreicher als die ursprüngliche Wortliste.  Außerdem
-wurden Worthäufigkeiten in der ursprünglichen Wortliste wahrscheinlich
-überhaupt nicht berücksichtigt.
+Schreibung zugrunde.  Diese Liste ist vermutlich erheblich umfangreicher
+als die ursprüngliche Wortliste.  Außerdem wurden Worthäufigkeiten in
+der ursprünglichen Wortliste wahrscheinlich überhaupt nicht
+berücksichtigt.
 
 Mit den vorliegenden Trennmustern sollte für nicht-fachsprachliche
 Wörter eine sehr gute Trennqualität erreicht werden.  Insbesondere
@@ -208,7 +207,7 @@ experimentellen Trennmustern ist in Tabelle~\ref{fig:trennvarianten}
 zusammengefasst.
 \begin{lstlisting}[style=LaTeX]
 \begin{document}
-\showhyphens{löste Fassade modernste Abendstern} 
+\showhyphens{löste Fassade modernste Abendstern Mordopfer}
 \end{lstlisting}
 
 \newcommand*{\trennung}[2]{%
@@ -232,7 +231,7 @@ zusammengefasst.
     Fas-sa-de & Fas-sa-de & Fa\ftr{ss}a-de & Fas-sa-de\\
     mo-\ftr{d-e}rn-ste & mo-dern-ste & mo-\ftr{d-e}rns-te & mo-derns-te\\
     Abend-stern & Abend-stern & Aben\ftr{ds-t}ern & Abend-stern\\
-%    Mo\ftr{r-do}p-fer & Mord-op-fer & Mo\ftr{r-do}p-fer & Mord-op-fer\\
+    Mo\ftr{r-do}p-fer & Mord-op-fer & Mo\ftr{r-do}p-fer & Mord-op-fer\\
   \end{tabular}
   \caption{Trennvarianten}
   \label{fig:trennvarianten}
@@ -246,11 +245,16 @@ und vom \Abk{ctan} oder aus \TeX-Vertei\-lun\-gen entfernt werden.}
 
 
 \section{Trennregeln}
-Die Rechtschreibreform hat zusätzliche Freiheiten bei der Schreibung
-und Trennung von Wörtern eingeführt, die sich nicht ohne weiteres auf
-die maschinelle Worttrennung übertragen lassen.  Daher wurden bezüglich
-der Trennregeln für die Trennmuster der reformierten Rechtschreibung die
-folgenden Konventionen getroffen (grüne Spalte):
+Es werden zwei Trennmuster bereitgestellt, entsprechend den
+traditionellen und den reformierten%
+\footnote{in der Fassung von~2006~\cite{amtlRegeln:2006,
+amtlRegeln:2006:duden}}
+amtlichen Regeln für die Rechtschreibung der deutschen Sprache.
+
+Da sich Freiheiten bei der Schreibung und Trennung von Wörtern nicht
+ohne weiteres auf die maschinelle Worttrennung übertragen lassen, wurden
+die folgenden Konventionen getroffen (grüne Spalte).  Hauptsächlich
+betreffen diese die reformierte Rechtschreibung:
 \begin{enumerate}
 \item Falls die Trennung nach Sprechsilben und die etymologische
   Trennung (nach Wortherkunft) kollidieren, wurde weitgehend die
