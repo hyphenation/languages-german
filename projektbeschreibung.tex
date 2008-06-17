@@ -33,8 +33,8 @@
   keywordstyle={}, commentstyle={\itshape}}
 \lstdefinestyle{shell}{language=sh, basicstyle=\ttfamily,
   keywordstyle={}, commentstyle={\itshape}}
-\usepackage{natbib}
-\bibliographystyle{alphadin}
+\usepackage[fixlanguage]{babelbib}
+\bibliographystyle{babalpha}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 %%% Bette Quellkode in PDF-Ausgabe ein.
 \usepackage{embedfile}
@@ -42,7 +42,7 @@
 mimetype=plain/text,%
 desc={LaTeX-Quelltext der Datei \jobname.pdf}%
 ]{\jobname.tex}
-\usepackage[ngerman]{babel}
+\usepackage[english, ngerman]{babel}
 %%% Einstellungen für interaktive PDF-Dokumente.
 \usepackage[rgb,x11names]{xcolor}
 \usepackage{hyperref}
