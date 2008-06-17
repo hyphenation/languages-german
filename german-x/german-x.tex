@@ -26,14 +26,14 @@
 \bibliographystyle{babalpha}
 \usepackage{listings}
 \lstloadlanguages{[LaTeX]TeX}
-\lstset{basicstyle=\ttfamily, keywordstyle={}, commentstyle={},
+\lstset{basicstyle=\small\ttfamily, keywordstyle={}, commentstyle={},
   columns=flexible, showspaces=false, showstringspaces=false,
 %  aboveskip=12pt, belowskip=12pt, frame=tb,
 %  framesep=8pt, framerule=2pt,
   xleftmargin=6pt, xrightmargin=6pt,
 % framexleftmargin=6pt, framexrightmargin=6pt
 }
-\lstdefinestyle{LaTeX}{language=[LaTeX]TeX, basicstyle=\ttfamily,
+\lstdefinestyle{LaTeX}{language=[LaTeX]TeX, basicstyle=\small\ttfamily,
   keywordstyle={}, commentstyle={\itshape}}
 \usepackage[english, ngerman]{babel}
 %%% Einstellungen für interaktive PDF-Dokumente.
@@ -192,8 +192,8 @@ Beachte, \verb+<datum>+ ist durch das bei der Installation angegebene
 Datum in \Abk{iso}-Notation zu ersetzen (JJJJ-MM-TT)!
 
 \begin{lstlisting}[style=LaTeX]
-\RequirePackage[ngerman=ngerman-x-<datum>]{hyphsubst}% Ersetze <datum>.
-% \RequirePackage[ngerman=ngerman-x-latest]{hyphsubst}% Alternative.
+\RequirePackage[ngerman=ngerman-x-<datum>]{hyphsubst}% ersetze <datum>
+% \RequirePackage[ngerman=ngerman-x-latest]{hyphsubst}% Alternative
 \documentclass{article}
 \usepackage[ngerman]{babel}
 \end{lstlisting}
