@@ -22,7 +22,8 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
-\usepackage[sort&compress]{natbib}
+\usepackage[fixlanguage]{babelbib}
+\bibliographystyle{babalpha}
 \usepackage{listings}
 \lstloadlanguages{[LaTeX]TeX}
 \lstset{basicstyle=\ttfamily, keywordstyle={}, commentstyle={},
@@ -34,7 +35,7 @@
 }
 \lstdefinestyle{LaTeX}{language=[LaTeX]TeX, basicstyle=\ttfamily,
   keywordstyle={}, commentstyle={\itshape}}
-\usepackage[UKenglish, ngerman]{babel}
+\usepackage[english, ngerman]{babel}
 %%% Einstellungen für interaktive PDF-Dokumente.
 \usepackage[rgb,x11names]{xcolor}
 \usepackage{hyperref}
@@ -94,7 +95,7 @@ Back-end hyph-subst
 
 
 %%% Zweisprachige Zusammenfassung.
-\selectlanguage{UKenglish}
+\selectlanguage{english}
 \begin{abstract}
   This package provides experimental hyphenation patterns for German
   language (traditional and reformed orthography).  The patterns are
@@ -354,7 +355,6 @@ Die deutschsprachige Trennmustermannschaft\par\nobreak
 \endgroup
 
 
-\bibliographystyle{alphadin}
 \bibliography{german-x}
 
 
