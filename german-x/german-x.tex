@@ -191,8 +191,9 @@ werden.
 Das folgende Beispiel zeigt eine \LaTeX-Präambel für die Aktivierung der
 experimentellen Trennmuster für die reformierte Rechtschreibung.
 Beachte, \verb+<datum>+ ist durch das bei der Installation angegebene
-Datum in \Abk{iso}-Notation zu ersetzen (JJJJ-MM-TT) oder die
-Zeichenkette \verb+latest+!
+Datum in \Abk{iso}-Notation (\verb+JJJJ-MM-TT+) oder die Zeichenkette
+\verb+latest+ zu ersetzen!  Weitere Hinweise können der Dokumentation
+des Pakets \texttt{hyphsubst} entnommen werden.
 
 \begin{lstlisting}[style=LaTeX]
 \RequirePackage[ngerman=ngerman-x-<datum>]{hyphsubst}
@@ -200,9 +201,6 @@ Zeichenkette \verb+latest+!
 \documentclass{article}
 \usepackage[ngerman]{babel}
 \end{lstlisting}
-
-Weitere Hinweise sind der Dokumentation des Pakets \texttt{hyphsubst} zu
-entnehmen.
 
 Ob die experimentellen Trennmuster korrekt aktiviert werden, kann mit
 dem folgenden Beispiel getestet werden.  Die Ausgabe für die
@@ -331,7 +329,8 @@ folgenden Kriterien erfüllt ist:
   ">Talent-wässerungsanlage"<.
 
 \item\label{enum:kritWLfehlerhaft} Das Wort ist bereits in der Wortliste
-  enthalten und Punkt~\ref{enum:WLfehlerhaft} trifft zu.
+  enthalten (siehe Anhang~\ref{sec:wortliste}) und
+  Punkt~\ref{enum:WLfehlerhaft} trifft zu.
 \end{enumerate}
 
 Falsche, fehlende und unerwünschte Worttrennungen können an die
