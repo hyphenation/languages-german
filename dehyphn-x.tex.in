@@ -1,4 +1,4 @@
-% dehyphn-x.tex (@DATE@)
+% dehyphn-x-@DATE@.tex
 %
 % Copyright 2008 Werner Lemberg <wl@gnu.org>
 % You may freely use, modify and/or distribute this file.
@@ -101,7 +101,7 @@
     \lccode"FF="FF % ß - U+00DF - germandbls
   \fi
 %
-  \input dehyphn-x-@DATE@.tex
+  \input dehyphn-x-@DATE@.pat
 \endgroup
 %
 \endinput

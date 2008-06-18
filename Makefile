@@ -27,8 +27,8 @@ SORT = $(LC_ENVVARS) sort -d \
 GIT_VERSION := `$(CHDIR) $(SRCDIR); \
                 $(GIT) log --pretty=oneline -1 $(WORDLIST) \
                 | $(SED) 's/ .*//'`
-PATTERNS = $(OLD)/$(OLD)-$(DATE).tex $(NEW)/$(NEW)-$(DATE).tex
-WRAPPERS = $(OLD)/$(OLD).tex $(NEW)/$(NEW).tex
+PATTERNS = $(OLD)/$(OLD)-$(DATE).pat $(NEW)/$(NEW)-$(DATE).pat
+WRAPPERS = $(OLD)/$(OLD)-$(DATE).tex $(NEW)/$(NEW)-$(DATE).tex
 
 
 .PHONY: pre tex
@@ -41,29 +41,33 @@ pre:
 tex: $(PATTERNS) $(WRAPPERS)
 
 
-$(OLD)/$(OLD)-$(DATE).tex: $(OLD)/words.hyphenated.old
+$(OLD)/pattern.8 $(OLD)/pattern.rules: $(OLD)/words.hyphenated.old
 	$(CHDIR) $(OLD); \
-          $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr; \
-          $(CAT) $(SRCDIR)/$(OLD).1 \
-            | $(SED) -e "s/@DATE@/$(DATE)/" \
-                     -e "s/@GIT_VERSION@/$(GIT_VERSION)/" > $(@F); \
-          $(CAT) pattern.rules >> $(@F); \
-          $(CAT) $(SRCDIR)/$(OLD).2 >> $(@F); \
-          $(CAT) pattern.8 \
-            | $(ICONV) >> $(@F); \
-          $(CAT) $(SRCDIR)/$(OLD).3 >> $(@F)
+          $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
 
-$(NEW)/$(NEW)-$(DATE).tex: $(NEW)/words.hyphenated.new
+$(OLD)/$(OLD)-$(DATE).pat : $(OLD)/pattern.8 $(OLD)/pattern.rules
+	$(CAT) $(SRCDIR)/$(OLD).1 \
+          | $(SED) -e "s/@DATE@/$(DATE)/" \
+                   -e "s/@GIT_VERSION@/$(GIT_VERSION)/" > $@; \
+        $(CAT) $(OLD)/pattern.rules >> $@; \
+        $(CAT) $(SRCDIR)/$(OLD).2 >> $@; \
+        $(CAT) $(OLD)/pattern.8 \
+          | $(ICONV) >> $@; \
+        $(CAT) $(SRCDIR)/$(OLD).3 >> $@
+
+$(NEW)/pattern.8 $(NEW)/pattern.rules: $(NEW)/words.hyphenated.new
 	$(CHDIR) $(NEW); \
-          $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr; \
-          $(CAT) $(SRCDIR)/$(NEW).1 \
-            | $(SED) -e "s/@DATE@/$(DATE)/" \
-                     -e "s/@GIT_VERSION@/$(GIT_VERSION)/" > $(@F); \
-          $(CAT) pattern.rules >> $(@F); \
-          $(CAT) $(SRCDIR)/$(NEW).2 >> $(@F); \
-          $(CAT) pattern.8 \
-            | $(ICONV) >> $(@F); \
-          $(CAT) $(SRCDIR)/$(NEW).3 >> $(@F)
+          $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
+
+$(NEW)/$(NEW)-$(DATE).pat: $(NEW)/pattern.8 $(NEW)/pattern.rules
+	$(CAT) $(SRCDIR)/$(NEW).1 \
+          | $(SED) -e "s/@DATE@/$(DATE)/" \
+                   -e "s/@GIT_VERSION@/$(GIT_VERSION)/" > $@; \
+        $(CAT) $(NEW)/pattern.rules >> $@; \
+        $(CAT) $(SRCDIR)/$(NEW).2 >> $@; \
+        $(CAT) $(NEW)/pattern.8 \
+          | $(ICONV) >> $@; \
+        $(CAT) $(SRCDIR)/$(NEW).3 >> $@
 
 $(OLD)/words.hyphenated.old: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
@@ -75,11 +79,11 @@ $(NEW)/words.hyphenated.new: $(SRCDIR)/$(WORDLIST)
           | $(PERL) $(SRCDIR)/extract-tex-new.pl \
           | $(SORT) > $@
 
-$(OLD)/$(OLD).tex: $(SRCDIR)/$(OLD).tex.in
+$(OLD)/$(OLD)-$(DATE).tex: $(SRCDIR)/$(OLD).tex.in
 	$(CAT) $< \
           | $(SED) -e "s/@DATE@/$(DATE)/" > $@
 
-$(NEW)/$(NEW).tex: $(SRCDIR)/$(NEW).tex.in
+$(NEW)/$(NEW)-$(DATE).tex: $(SRCDIR)/$(NEW).tex.in
 	$(CAT) $< \
           | $(SED) -e "s/@DATE@/$(DATE)/" > $@
 
