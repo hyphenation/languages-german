@@ -219,8 +219,8 @@ zusammengefasst.
 \colorbox{#1}{\strut#2}%
 \endgroup%
 }
-\newcommand*{\ftr}[1]{\trennung{falschcol!20}{#1}}
-\newcommand*{\rtr}[1]{\trennung{richtigcol!20}{#1}}
+\newcommand*{\ftr}[1]{\trennung{falschcol!20}{#1}}% Falsche Trennung.
+\newcommand*{\rtr}[1]{\trennung{richtigcol!20}{#1}}% Richtige Trennung.
 
 \suppressfloats[t]
 \begin{table}
@@ -246,6 +246,12 @@ Zwecke geeignet, die einen dauerhaft stabilen Umbruch erfordern.  Diese
 Trennmuster können jederzeit durch umbruchinkompatible Versionen ersetzt
 und vom \Abk{ctan} oder aus \TeX-Vertei\-lun\-gen entfernt werden.}
 
+% Traditionelle Trennung.
+\newcommand*{\trtr}[1]{\trennung{sekundaercol!20}{#1}}
+% Reformierte Trennung nach Konvention.
+\newcommand*{\rktr}[1]{\trennung{richtigcol!20}{#1}}
+% Alternative reformierte Trennung.
+\newcommand*{\ratr}[1]{\trennung{falschcol!20}{#1}}
 
 \section{Trennregeln}
 \label{sec:trennregeln}
@@ -288,7 +294,7 @@ Hauptsächlich betreffen diese die reformierte Rechtschreibung:
     Di-plom & Di-plom & Dip-lom\\
 %    Fe-bru-ar & Fe-bru-ar & Feb-ru-ar\\
 %    In-te-gral & In-te-gral & In-teg-ral\\
-    Ma-gi-stra-le & Ma-gis-tra-le & Ma-gi-stra-le\\
+    Ma-gi\trtr{-str}a-le & Ma-gi\rktr{s-tr}a-le & Ma-gi-stra-le\\
   \end{tabular}
 
 \item Sinnentstellende und irreführende Trennungen werden möglichst
