@@ -1,6 +1,6 @@
 Package: german-x (experimental German hyphenation patterns)
 Version: v0.1
-Date: 2008-06-11
+Date: 2008-06-19
 License: LPPL
 Author: Werner Lemberg
 Email: wl@gnu.org
@@ -24,7 +24,7 @@ Die Trennmuster können mit den Paketen Babel und hyphsubst
 aus dem Oberdiek-Bündel verwendet werden.
 
 Im folgenden ist <datum> jeweils durch die ISO-Notation des
-Paketdatums zu ersetzen (JJJJ-MM-TT).
+Datums der Trennmusterdateien zu ersetzen (JJJJ-MM-TT).
 
 
 ********************
@@ -32,7 +32,9 @@ Paketdatums zu ersetzen (JJJJ-MM-TT).
 ********************
 
 dehyphn-x-<datum>.tex
+dehyphn-x-<datum>.pat
 dehypht-x-<datum>.tex
+dehypht-x-<datum>.pat
 german-x.pdf
 german-x.tex
 LICENSE
@@ -48,15 +50,18 @@ README
 Die Installation der experimentellen Trennmuster erfordert
 drei Schritte:
 
-A. Die Trennmusterdateien sollten in die folgenden Verzeichnisse
-   innerhalb eines lokalen TEXMF-Baums kopiert werden:
+A. Die Trennmuster- und Wrapperdateien sollten in die
+   folgenden Verzeichnisse innerhalb eines lokalen
+   TEXMF-Baums kopiert werden:
 
-      tex/generic/hyphen/dehyphn-x-<datum>.tex
-      tex/generic/hyphen/dehypht-x-<datum>.tex
+      tex/generic/german-x/dehyphn-x-<datum>.pat
+      tex/generic/german-x/dehyphn-x-<datum>.tex
+      tex/generic/german-x/dehypht-x-<datum>.pat
+      tex/generic/german-x/dehypht-x-<datum>.tex
   
   Die verbleibenden Dateien können in das Verzeichnis
       
-      tex/doc/generic/hyphen/
+      doc/generic/german-x/
       
   kopiert werden.
 
@@ -161,19 +166,21 @@ Hinweise zur Verwendung entnehmen Sie bitte der Datei german-x.pdf.
 ********************
 
 Installation of the german-x package requires three steps.
-Note, in the remaining text <date> refers to the package date
-in ISO notation (YYYY-MM-DD).  Distribution dependent
+Note, in the remaining text <date> refers to the pattern file
+date in ISO notation (YYYY-MM-DD).  Distribution dependent
 commands are marked (*).
 
-A. Copy pattern files to the following location within a *local*
-   texmf tree:
+A. Copy pattern and wrapper files to the following location
+   within a *local* texmf tree:
 
-      tex/generic/hyphen/dehyphn-x-<datum>.tex
-      tex/generic/hyphen/dehypht-x-<datum>.tex
+      tex/generic/german-x/dehyphn-x-<date>.pat
+      tex/generic/german-x/dehyphn-x-<date>.tex
+      tex/generic/german-x/dehypht-x-<date>.pat
+      tex/generic/german-x/dehypht-x-<date>.tex
   
    The remaining files can be copied to
       
-      tex/doc/generic/hyphen/
+      doc/generic/german-x/
   
 
 B. Refresh file name database.  See documentation of your
@@ -208,9 +215,9 @@ C. Modifiy language.dat and rebuild format files.
 
   5. Add the following lines to the end of language.dat:
 
-  german-x-<datum> dehypht-x-<datum>.tex
+  german-x-<date> dehypht-x-<date>.tex
   =german-x-latest
-  ngerman-x-<datum> dehyphn-x-<datum>.tex
+  ngerman-x-<date> dehyphn-x-<date>.tex
   =ngerman-x-latest
 
   6. Save language.dat and close the editor.
