@@ -77,7 +77,9 @@
 }
 \colorlet{richtigcol}{green!60!black}
 \colorlet{falschcol}{red!60!black}
-\colorlet{sekundaercol}{white!60!black}
+\colorlet{tradcol}{green!75!black}
+\colorlet{reformcol}{green!50!black}
+\colorlet{unerwcol}{red!60!black}
 %%% Satzspiegel erneut berechnen.
 \typearea{last}
 %%% Trennausnahmen definieren.
@@ -246,12 +248,12 @@ Zwecke geeignet, die einen dauerhaft stabilen Umbruch erfordern.  Diese
 Trennmuster können jederzeit durch umbruchinkompatible Versionen ersetzt
 und vom \Abk{ctan} oder aus \TeX-Vertei\-lun\-gen entfernt werden.}
 
-% Traditionelle Trennung.
-\newcommand*{\trtr}[1]{\trennung{sekundaercol!20}{#1}}
-% Reformierte Trennung nach Konvention.
-\newcommand*{\rktr}[1]{\trennung{richtigcol!20}{#1}}
-% Alternative reformierte Trennung.
-\newcommand*{\ratr}[1]{\trennung{falschcol!20}{#1}}
+% Trennung mit Mustern für traditionelle Rechtschreibung.
+\newcommand*{\trtr}[1]{\trennung{tradcol!20}{#1}}
+% Trennung mit Mustern für reformierte Rechtschreibung.
+\newcommand*{\retr}[1]{\trennung{reformcol!20}{#1}}
+% Unerwünschte Trennung.
+\newcommand*{\untr}[1]{\trennung{unerwcol!20}{#1}}
 
 \section{Trennregeln}
 \label{sec:trennregeln}
@@ -263,17 +265,17 @@ amtlichen Regeln für die Rechtschreibung der deutschen Sprache.
 
 Da sich Freiheiten bei der Schreibung und Trennung von Wörtern nicht
 ohne weiteres auf die maschinelle Worttrennung übertragen lassen, wurden
-die folgenden Konventionen getroffen (graue und grüne Spalte).
-Hauptsächlich betreffen diese die reformierte Rechtschreibung:
+die folgenden Konventionen getroffen. Hauptsächlich betreffen diese die
+reformierte Rechtschreibung.  Die grünen Spalten zeigen die Trennung mit
+Trennmustern für die traditionelle und reformierte Rechtschreibung.  Rot
+werden alternative oder unerwünschte Trennungen dargestellt:
 \begin{enumerate}
 \item Falls die Trennung nach Sprechsilben und die etymologische
   Trennung (nach Wortherkunft) kollidieren, wurde weitgehend die
   etymologische Trennung gewählt \cite[\S~113]{amtlRegeln:2006,
     amtlRegeln:2006:duden}:
 
-  \begin{tabular}[t]{>{\color{sekundaercol}}l>{\color{richtigcol}}l>{\color{falschcol}}l}
-    \multicolumn{1}{c}{\itshape traditionell} &
-    \multicolumn{2}{c}{\itshape reformiert}\\
+  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{reformcol}}l>{\color{unerwcol}}l}
     Heli-ko-pter & Heli-ko-pter & Heli-kop-ter\\
 %    in-ter-view-en & in-ter-view-en & in-ter-vie-wen\\
     Päd-ago-ge & Päd-ago-ge & Pä-da-go-ge\\    
@@ -286,24 +288,23 @@ Hauptsächlich betreffen diese die reformierte Rechtschreibung:
   \emph{str}) \cite[\S~110, \S~112]{amtlRegeln:2006,
     amtlRegeln:2006:duden}:
 
-  \begin{tabular}[t]{>{\color{sekundaercol}}l>{\color{richtigcol}}l>{\color{falschcol}}l}
-    \multicolumn{1}{c}{\itshape traditionell} &
-    \multicolumn{2}{c}{\itshape reformiert}\\
+  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{reformcol}}l>{\color{unerwcol}}l}
     Ar-thri-tis & Ar-thri-tis & Arth-ri-tis\\
     Co-gnac & Co-gnac & Cog-nac\\
     Di-plom & Di-plom & Dip-lom\\
 %    Fe-bru-ar & Fe-bru-ar & Feb-ru-ar\\
 %    In-te-gral & In-te-gral & In-teg-ral\\
-    Ma-gi\trtr{-str}a-le & Ma-gi\rktr{s-tr}a-le & Ma-gi-stra-le\\
+    In-du\trtr{-str}ie & In-du\retr{s-tr}ie & In-du-strie\\
+%    Ma-gi\trtr{-str}a-le & Ma-gi\retr{s-tr}a-le & Ma-gi-stra-le\\
   \end{tabular}
 
 \item Sinnentstellende und irreführende Trennungen werden möglichst
   vermieden \cite[\S~107]{amtlRegeln:2006, amtlRegeln:2006:duden}:
 
-  \begin{tabular}[t]{>{\color{richtigcol}}l>{\color{falschcol}}l}
-    An-alpha-bet & Anal-phabet\\
-    Kaf-ka-kenner & Kafkaken-ner\\
-    Tal-entwäs-se-rung & Talent-wässerung\\
+  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{reformcol}}l>{\color{unerwcol}}l}
+    An-alpha-bet & An-alpha-bet & Anal-phabet\\
+    Kaf-ka-kenner & Kaf-ka-kenner & Kafkaken-ner\\
+    Tal-entwäs-se-rung & Tal-entwäs-se-rung & Talent-wässerung\\
   \end{tabular}
 \end{enumerate}
 
