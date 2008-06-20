@@ -8,15 +8,10 @@ URL: http://groups.google.de/group/trennmuster-opensource
 
 
 English:
-This package provides new, experimental hyphenation patterns for the
-German language, covering traditional and reformed orthography. The
-patterns can be used with packages Babel and hyphsubst from the
-Oberdiek bundle.
-
-This package provides experimental hyphenation patterns for
-the German language (traditional and reformed orthography).
-The patterns can be used with packages Babel and hyphsubst
-from the Oberdiek bundle.
+This package provides new, experimental hyphenation patterns
+for the German language, covering traditional and reformed
+orthography. The patterns can be used with packages Babel
+and hyphsubst from the Oberdiek bundle.
 
 For English installation instructions see end of file.  Note,
 in the remaining text <date> refers to the pattern file date
