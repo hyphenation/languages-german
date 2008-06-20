@@ -40,7 +40,7 @@
 \usepackage[rgb,x11names]{xcolor}
 \usepackage{hyperref}
 \hypersetup{
-  pdftitle={german-x},
+  pdftitle={dehyph-exptl},
   pdfauthor={Die deutschsprachige Trennmustermannschaft},
   pdfkeywords={TeX, deutsche Rechtschreibung, Trennmuster,
     computergestützte Worttrennung}
@@ -90,8 +90,8 @@ Back-end hyph-subst
 \begin{document}
 %%% Dokumenttitel.
 \author{Die deutschsprachige Trennmustermannschaft}
-\title{\texttt{german-x}\thanks{This document describes the
-    \texttt{german-x} package v0.1.}}
+\title{\texttt{dehyph-exptl}\thanks{This document describes the
+    \texttt{dehyph-exptl} package v0.1.}}
 \subtitle{Experimentelle Trennmuster für die deutsche Sprache}
 \setkomafont{title}{\normalcolor\normalfont}
 \maketitle
@@ -100,12 +100,12 @@ Back-end hyph-subst
 %%% Zweisprachige Zusammenfassung.
 \selectlanguage{english}
 \begin{abstract}
-  This package provides experimental hyphenation patterns for German
-  language (traditional and reformed orthography).  The patterns are
-  maintained at
-  \url{http://groups.google.de/group/trennmuster-opensource} and can be
-  used with packages \texttt{Babel} and \texttt{hyphsubst} from the
-  \Programm{Oberdiek bundle}.
+  This package provides new, experimental hyphenation patterns for the
+  German language, covering traditional and reformed orthography. The
+  patterns can be used with packages \texttt{Babel} and
+  \texttt{hyphsubst} from the \Programm{Oberdiek bundle}.
+  Project-\Abk{url} is
+  \url{http://groups.google.de/group/trennmuster-opensource}.
 \end{abstract}
 
 \selectlanguage{ngerman}
@@ -374,7 +374,7 @@ Die deutschsprachige Trennmustermannschaft\par\nobreak
 \endgroup
 
 
-\bibliography{german-x}
+\bibliography{dehyph-exptl}
 
 
 \appendix
@@ -398,8 +398,8 @@ erhältlich, Datei \Datei{Git-1.5.5-preview20080413.exe} (Stand:
 
 Der \Abk{sha1}-Commit-Hash der Repositoryversion, die den Dateien
 \begin{lstlisting}
-dehyphn-x-<datum>.tex
-dehypht-x-<datum>.tex
+dehyphn-x-<datum>.pat
+dehypht-x-<datum>.pat
 \end{lstlisting}
 zugrundeliegt, sowie eine \Abk{url} zum direkten Herunterladen der
 Wortliste (ca. 15\,MB) kann dem Kopf beider Dateien entnommen werden.

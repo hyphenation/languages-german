@@ -1,4 +1,4 @@
-Package: german-x (experimental German hyphenation patterns)
+Package: dehyph-exptl (experimental German hyphenation patterns)
 Version: v0.1
 Date: 2008-06-19
 License: LPPL
@@ -8,13 +8,32 @@ URL: http://groups.google.de/group/trennmuster-opensource
 
 
 English:
+This package provides new, experimental hyphenation patterns for the
+German language, covering traditional and reformed orthography. The
+patterns can be used with packages Babel and hyphsubst from the
+Oberdiek bundle.
+
 This package provides experimental hyphenation patterns for
-German language (traditional and reformed orthography).  The
-patterns are maintained at
-<URL:http://groups.google.de/group/trennmuster-opensource>
-and can be used with packages Babel and hyphsubst from the
-Oberdiek bundle.  For English installation instructions see
-end of file.
+the German language (traditional and reformed orthography).
+The patterns can be used with packages Babel and hyphsubst
+from the Oberdiek bundle.
+
+For English installation instructions see end of file.  Note,
+in the remaining text <date> refers to the pattern file date
+in ISO notation (YYYY-MM-DD)!
+
+File list:
+LICENSE                  - documentation
+README                   - documentation
+dehyph-exptl.bib         - documentation
+dehyph-exptl.pdf         - documentation
+dehyph-exptl.tex         - documentation
+dehyphn-x-<date>.pat     - UTF-8 patterns (reformed orthography)
+dehyphn-x-<date>.tex     - wrapper for 8-bit TeX
+dehypht-x-<date>.pat     - UTF-8 patterns (traditional orthography)
+dehypht-x-<date>.tex     - wrapper for 8-bit TeX
+projektbeschreibung.pdf  - documentation
+projektbeschreibung.tex  - documentation
 
 
 Deutsch:
@@ -23,25 +42,10 @@ traditionelle und reformierte deutsche Rechtschreibung.
 Die Trennmuster können mit den Paketen Babel und hyphsubst
 aus dem Oberdiek-Bündel verwendet werden.
 
-Im folgenden ist <datum> jeweils durch die ISO-Notation des
+Es folgen Installationshinweise für MiKTeX mit graphischer
+Oberfläche sowie MiKTeX und TeX Live auf der Kommandozeile.
+Nachfolgend ist <datum> jeweils durch die ISO-Notation des
 Datums der Trennmusterdateien zu ersetzen (JJJJ-MM-TT).
-
-
-********************
-**   Dateiliste   **
-********************
-
-dehyphn-x-<datum>.tex
-dehyphn-x-<datum>.pat
-dehypht-x-<datum>.tex
-dehypht-x-<datum>.pat
-german-x.bib
-german-x.pdf
-german-x.tex
-LICENSE
-projektbeschreibung.pdf
-projektbeschreibung.tex
-README
 
 
 ********************
@@ -55,14 +59,14 @@ A. Die Trennmuster- und Wrapperdateien sollten in die
    folgenden Verzeichnisse innerhalb eines lokalen
    TEXMF-Baums kopiert werden:
 
-      tex/generic/german-x/dehyphn-x-<datum>.pat
-      tex/generic/german-x/dehyphn-x-<datum>.tex
-      tex/generic/german-x/dehypht-x-<datum>.pat
-      tex/generic/german-x/dehypht-x-<datum>.tex
+      tex/generic/hyphen/dehyph-exptl/dehyphn-x-<datum>.pat
+      tex/generic/hyphen/dehyph-exptl/dehyphn-x-<datum>.tex
+      tex/generic/hyphen/dehyph-exptl/dehypht-x-<datum>.pat
+      tex/generic/hyphen/dehyph-exptl/dehypht-x-<datum>.tex
   
   Die verbleibenden Dateien können in das Verzeichnis
       
-      doc/generic/german-x/
+      doc/generic/hyphen/dehyph-exptl/
       
   kopiert werden.
 
@@ -158,7 +162,7 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
 **   Verwendung   **
 ********************
 
-Hinweise zur Verwendung entnehmen Sie bitte der Datei german-x.pdf.
+Hinweise zur Verwendung entnehmen Sie bitte der Datei dehyph-exptl.pdf.
 
 
 
@@ -166,22 +170,20 @@ Hinweise zur Verwendung entnehmen Sie bitte der Datei german-x.pdf.
 **  Installation  **
 ********************
 
-Installation of the german-x package requires three steps.
-Note, in the remaining text <date> refers to the pattern file
-date in ISO notation (YYYY-MM-DD).  Distribution dependent
-commands are marked (*).
+Installation of the dehyph-exptl package requires three steps.
+Distribution dependent commands are marked (*).
 
 A. Copy pattern and wrapper files to the following location
    within a *local* texmf tree:
 
-      tex/generic/german-x/dehyphn-x-<date>.pat
-      tex/generic/german-x/dehyphn-x-<date>.tex
-      tex/generic/german-x/dehypht-x-<date>.pat
-      tex/generic/german-x/dehypht-x-<date>.tex
+      tex/generic/hyphen/dehyph-exptl/dehyphn-x-<date>.pat
+      tex/generic/hyphen/dehyph-exptl/dehyphn-x-<date>.tex
+      tex/generic/hyphen/dehyph-exptl/dehypht-x-<date>.pat
+      tex/generic/hyphen/dehyph-exptl/dehypht-x-<date>.tex
   
    The remaining files can be copied to
       
-      doc/generic/german-x/
+      doc/generic/hyphen/dehyph-exptl/
   
 
 B. Refresh file name database.  See documentation of your
