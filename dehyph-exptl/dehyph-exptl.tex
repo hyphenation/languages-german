@@ -196,13 +196,27 @@ Das folgende Beispiel zeigt eine \LaTeX-Präambel für die Aktivierung der
 experimentellen Trennmuster für die reformierte Rechtschreibung.
 Beachte, \verb+<datum>+ ist durch das bei der Installation angegebene
 Datum in \Abk{iso}-Notation (\verb+JJJJ-MM-TT+) oder die Zeichenkette
-\verb+latest+ zu ersetzen!  Weitere Hinweise können der Dokumentation
-des Pakets \texttt{hyphsubst} entnommen werden.
+\verb+latest+ zu ersetzen!
 
 \begin{lstlisting}[style=LaTeX]
 \RequirePackage[ngerman=ngerman-x-<datum>]{hyphsubst}
 % \RequirePackage[ngerman=ngerman-x-latest]{hyphsubst}
 \documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\end{lstlisting}
+
+Die folgende Variante erleichtert das schnelle Umschalten zwischen
+verschiedenen Trennmustern im Editor.  Weitere Hinweise können der
+Dokumentation des Pakets \texttt{hyphsubst} entnommen werden.
+
+\begin{lstlisting}[style=LaTeX]
+\RequirePackage{hyphsubst}
+\documentclass{article}
+\usepackage[T1]{fontenc}
+% \HyphSubstLet{german}{german-x-<datum>}
+% \usepackage[german]{babel}
+\HyphSubstLet{ngerman}{ngerman-x-<datum>}
 \usepackage[ngerman]{babel}
 \end{lstlisting}
 
@@ -225,7 +239,7 @@ zusammengefasst.
 \newcommand*{\ftr}[1]{\trennung{falschcol!20}{#1}}% Falsche Trennung.
 \newcommand*{\rtr}[1]{\trennung{richtigcol!20}{#1}}% Richtige Trennung.
 
-\suppressfloats[t]
+%\suppressfloats[t]
 \begin{table}
   \centering
   \begin{tabular}{llll}
