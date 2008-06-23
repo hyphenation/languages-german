@@ -368,8 +368,8 @@ Trennungen.
 
 \section{Fehltrennungen}
 \label{sec:fehltrennungen}
-Für auftretende Trennfehler (falsche, ausgelassene oder unerwünschte
-Trennungen) gibt es zwei mögliche Ursachen:
+Für fehlerhafte (falsche, ausgelassene oder unerwünschte) Trennungen
+gibt es zwei mögliche Ursachen:
 
 \begin{enumerate}
 \item\label{enum:WLfehlerhaft} Die zugrundeliegende Wortliste enthält
@@ -420,15 +420,14 @@ können mit Hilfe einer privaten Ausnahmeliste behandelt werden:
 \hyphenation{Tal-entwäs-se-rungs-an-la-ge Kaf-ka-kenner-klub}
 \end{lstlisting}
 
-
-\vspace{\baselineskip}
 \nobreak
-\begingroup
-\raggedright
-\itshape
-Happy \TeX ing!\par\nobreak
-Die deutschsprachige Trennmustermannschaft\par\nobreak
-\endgroup
+\parbox{\linewidth}{%
+  \vspace*{\baselineskip}
+  \raggedright
+  \itshape
+  Happy \TeX ing!\newline
+  Die deutschsprachige Trennmustermannschaft
+}
 
 
 \bibliography{dehyph-exptl}
