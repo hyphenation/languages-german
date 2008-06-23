@@ -274,53 +274,93 @@ Umbruch erfordern.  Ausgiebige Tests sind jedoch erwünscht!}
 \label{sec:trennregeln}
 Es werden zwei Trennmuster bereitgestellt, entsprechend den
 traditionellen und den reformierten%
-\footnote{in der Fassung von~2006~\cite{amtlRegeln:2006,
-amtlRegeln:2006:duden}}
-amtlichen Regeln für die Rechtschreibung der deutschen Sprache.
+\footnote{in der Fassung von~2006}
+%
+amtlichen Regeln für die Rechtschreibung der deutschen
+Sprache~\cite{amtlRegeln:2006, amtlRegeln:2006:duden}.
 
 Da sich Freiheiten bei der Schreibung und Trennung von Wörtern nicht
 ohne weiteres auf die maschinelle Worttrennung übertragen lassen, wurden
-die folgenden Konventionen getroffen. Hauptsächlich betreffen diese die
-reformierte Rechtschreibung.  Die grünen Spalten zeigen die Trennung mit
-Trennmustern für die traditionelle und reformierte Rechtschreibung.  Rot
-werden alternative oder unerwünschte Trennungen dargestellt:
-\begin{enumerate}
-\item Falls die Trennung nach Sprechsilben und die etymologische
-  Trennung (nach Wortherkunft) kollidieren, wurde weitgehend die
-  etymologische Trennung gewählt \cite[\S~113]{amtlRegeln:2006,
-    amtlRegeln:2006:duden}:
+die folgenden Konventionen getroffen.  Hauptsächlich betreffen diese die
+reformierte Rechtschreibung, die zusätzliche Freiheiten eingeführt hat.
 
-  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{reformcol}}l>{\color{unerwcol}}l}
-    Heli-ko-pter & Heli-ko-pter & Heli-kop-ter\\
-%    in-ter-view-en & in-ter-view-en & in-ter-vie-wen\\
-    Päd-ago-ge & Päd-ago-ge & Pä-da-go-ge\\    
-    poe-tisch & poe-tisch & po-e-tisch\\
+Die linke Spalte zeigt jeweils die Trennung mit den experimentellen
+Trennmustern, die rechte Spalte zeigt alternative oder unerwünschte
+Trennungen.
+
+\subsection{Traditionelle Rechtschreibung}
+\label{sec:tradRS}
+\begin{enumerate}[\hspace{1em}\itshape T1]
+
+\item Sinnentstellende und irreführende Trennungen werden möglichst
+  vermieden \cite[]{}:\par\nobreak
+
+  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l}
+    An-alpha-bet & Anal-phabet\\
+    Kaf-ka-kenner & Kafkaken-ner\\
+    Tal-entwäs-se-rung & Talent-wässerung\\
+  \end{tabular}
+
+\item In Ableitungen von Namen auf \emph{-ow} wird die Nottrennung der
+  Ableitungssilben \emph{-er}, \emph{-ern}, \emph{-ers} unterdrückt
+  \cite[]{}:\par\nobreak
+
+  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l}
+    Tel-tower & Tel-tow-er\\
+    Pan-kowers & Pan-kow-ers\\
+    Trep-towern & Trep-tow-ern\\
+  \end{tabular}
+
+\end{enumerate}
+
+\subsection{Reformierte Rechtschreibung}
+\label{sec:reformRS}
+\begin{enumerate}[\hspace{1em}\itshape R1]
+
+\item Sinnentstellende und irreführende Trennungen werden möglichst
+  vermieden \cite[\S~107]{amtlRegeln:2006,
+    amtlRegeln:2006:duden}:\par\nobreak
+
+  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
+    An-alpha-bet & Anal-phabet\\
+    Kaf-ka-kenner & Kafkaken-ner\\
+    Tal-entwäs-se-rung & Talent-wässerung\\
   \end{tabular}
 
 \item In Fremdwörtern bleiben die Verbindungen aus Buchstaben für einen
-  Konsonanten + \emph{l}, \emph{n} und \emph{r} ungetrennt,
-  einschließlich \emph{phl}, \emph{phr}, \emph{thr} (Ausnahme:
-  \emph{str}) \cite[\S~110, \S~112]{amtlRegeln:2006,
-    amtlRegeln:2006:duden}:
+  Konsonanten + \emph{l} und \emph{r} ungetrennt, wenn keine Wortfuge
+  vorliegt.  Dies schließt \emph{phl}, \emph{phr}, \emph{thr} ein; nicht
+  jedoch \emph{str}.  Des weiteren bleiben die Buchstabenverbindungen
+  \emph{gn} und \emph{kn} ungetrennt \cite[\S~112]{amtlRegeln:2006,
+    amtlRegeln:2006:duden}:\par\nobreak
 
-  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{reformcol}}l>{\color{unerwcol}}l}
-    Ar-thri-tis & Ar-thri-tis & Arth-ri-tis\\
-    Co-gnac & Co-gnac & Cog-nac\\
-    Di-plom & Di-plom & Dip-lom\\
-%    Fe-bru-ar & Fe-bru-ar & Feb-ru-ar\\
-%    In-te-gral & In-te-gral & In-teg-ral\\
-    In-du\trtr{-str}ie & In-du\retr{s-tr}ie & In-du-strie\\
-%    Ma-gi\trtr{-str}a-le & Ma-gi\retr{s-tr}a-le & Ma-gi-stra-le\\
+  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
+    Ar-thri-tis & Arth-ri-tis\\
+    Co-gnac & Cog-nac\\
+    Di-plom & Dip-lom\\
+%    Fe-bru-ar & Feb-ru-ar\\
+%    In-te-gral & In-teg-ral\\
+  \end{tabular}
+  \quad\textit{aber:}\quad
+  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
+    In-dus-trie & In-du-strie\\
+%    Ma-gi\retr{s-tr}a-le & Ma-gi-stra-le\\
+    Bank-no-te\\
+    sub-lim\\
   \end{tabular}
 
-\item Sinnentstellende und irreführende Trennungen werden möglichst
-  vermieden \cite[\S~107]{amtlRegeln:2006, amtlRegeln:2006:duden}:
+\item Falls die Trennung nach Sprechsilben und die etymologische
+  Trennung (nach Wortherkunft) kollidieren, wurde weitgehend die
+  etymologische Trennung gewählt \cite[\S~113]{amtlRegeln:2006,
+    amtlRegeln:2006:duden}:\par\nobreak
 
-  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{reformcol}}l>{\color{unerwcol}}l}
-    An-alpha-bet & An-alpha-bet & Anal-phabet\\
-    Kaf-ka-kenner & Kaf-ka-kenner & Kafkaken-ner\\
-    Tal-entwäs-se-rung & Tal-entwäs-se-rung & Talent-wässerung\\
+  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
+    Heli-ko-pter & Heli-kop-ter\\
+%    in-ter-view-en & in-ter-vie-wen\\
+    Päd-ago-ge & Pä-da-go-ge\\
+    poe-tisch & po-e-tisch\\
   \end{tabular}
+
 \end{enumerate}
 
 
