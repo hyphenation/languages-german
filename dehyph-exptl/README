@@ -112,6 +112,12 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
 
   Kommandozeile (MiKTeX und TeX Live):
   ------------------------------------
+  Achtung: Die manuelle Installation wird nicht empfohlen,
+  da die Datei language.dat in der Regel automatisch
+  verwaltet wird, hier jedoch von Hand Änderungen
+  vorgenommen werden.  Es kann daher bei späteren
+  (unabhängigen) Updates zu Problemen kommen!
+  
   1. Ermitteln des Pfades der Datei language.dat:
 
       MiKTeX:      >findtexmf language.dat
@@ -190,6 +196,11 @@ B. Refresh file name database.  See documentation of your
 
 
 C. Modifiy language.dat and rebuild format files.
+
+  Note, manual installation is not recommended, for file
+  language.dat is an automatically generated file in
+  general, but needs some manual modifications.  This can
+  cause problems with later (unrelated) updates!
 
   1. Determine the location of language.dat:
 
