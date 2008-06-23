@@ -53,7 +53,10 @@
   citecolor=DeepPink2
 }
 %%% Überschriften in fetter Grundschrift.
-\setkomafont{sectioning}{\normalcolor\normalfont\bfseries}
+\setkomafont{title}{\normalcolor\normalfont}
+\setkomafont{sectioning}{\normalcolor\normalfont}
+\setkomafont{section}{\Large}
+\setkomafont{subsection}{\Large\itshape}
 %%% Einige Makros für logische Auszeichnungen definieren.
 \newcommand*{\Abk}[1]{\textsc{#1}}
 \newcommand*{\Programm}[1]{\textsc{#1}}
@@ -93,7 +96,6 @@ Back-end hyph-subst
 \title{\texttt{dehyph-exptl}\thanks{This document describes the
     \texttt{dehyph-exptl} package v0.1.}}
 \subtitle{Experimentelle Trennmuster für die deutsche Sprache}
-\setkomafont{title}{\normalcolor\normalfont}
 \maketitle
 
 
