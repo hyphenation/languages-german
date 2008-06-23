@@ -57,8 +57,11 @@ desc={LaTeX-Quelltext der Datei \jobname.pdf}%
   urlcolor=Chocolate4,
   citecolor=DeepPink2
 }
-%%% Überschriften in fetter Grundschrift.
-\setkomafont{sectioning}{\normalcolor\normalfont\bfseries}
+%%% Schriftfestlegungen.
+\setkomafont{title}{\normalcolor\normalfont}
+\setkomafont{sectioning}{\normalcolor\normalfont}
+\setkomafont{section}{\Large}
+\setkomafont{subsection}{\Large\itshape}
 %%% Einige Makros für logische Auszeichnungen definieren.
 \newcommand*{\Abk}[1]{\textsc{#1}}
 \newcommand*{\Programm}[1]{\textsc{#1}}
@@ -92,7 +95,6 @@ Back-end
 \author{Die deutschsprachige Trennmustermannschaft}
 \title{Freie Wortlisten und Trennmuster\linebreak[1] für die deutsche Sprache}
 \subtitle{\bigskip Eine kurze Projektbeschreibung}
-\setkomafont{title}{\normalcolor\normalfont}
 \maketitle
 %%% Zweispaltiges Inhaltsverzeichnis.
 \begin{multicols}{2}
