@@ -195,7 +195,7 @@ B. Refresh file name database.  See documentation of your
       >mktexlsr                    (*)
 
 
-C. Modifiy language.dat and rebuild format files.
+C. Modify language.dat and rebuild format files.
 
   Note, manual installation is not recommended, for file
   language.dat is an automatically generated file in
