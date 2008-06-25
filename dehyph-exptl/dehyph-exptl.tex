@@ -22,8 +22,6 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
-\usepackage[fixlanguage]{babelbib}
-\bibliographystyle{babalpha}
 \usepackage{listings}
 \lstloadlanguages{[LaTeX]TeX}
 \lstset{basicstyle=\ttfamily, keywordstyle={}, commentstyle={},
@@ -35,7 +33,11 @@
 }
 \lstdefinestyle{LaTeX}{language=[LaTeX]TeX, basicstyle=\ttfamily,
   keywordstyle={}, commentstyle={\itshape}}
-\usepackage[english, ngerman]{babel}
+%%% Literaturverzeichnis mit Sprachunterstützung.
+\usepackage[fixlanguage]{babelbib}
+\bibliographystyle{babalpha}
+%%% Babelbib fordert trotz fixlanguage zuviele Sprachen an.
+\usepackage[english, german, ngerman]{babel}
 %%% Einstellungen für interaktive PDF-Dokumente.
 \usepackage[rgb,x11names]{xcolor}
 \usepackage{hyperref}
@@ -274,28 +276,32 @@ Umbruch erfordern.  Ausgiebige Tests sind erwünscht!}
 
 \section{Trennregeln}
 \label{sec:trennregeln}
-Es werden zwei Trennmuster bereitgestellt, entsprechend den
-traditionellen und den reformierten%
-\footnote{in der Fassung von~2006}
-%
-amtlichen Regeln für die Rechtschreibung der deutschen
-Sprache~\cite{amtlRegeln:2006, amtlRegeln:2006:duden}.
+Es werden zwei Trennmuster bereitgestellt.  Die Trennmuster für die
+traditionelle Rechtschreibung orientieren sich an den verbindlichen
+Regeln des Dudens in der Fassung von 1991.~\cite{duden:1991}  Die
+Trennmuster für die reformierte Rechtschreibung orientieren sich an den
+amtlichen Regeln für die Rechtschreibung der deutschen Sprache in der
+Fassung von 2006.~\cite{amtlRegeln:2006, amtlRegeln:2006:duden}
 
-Da sich Freiheiten bei der Schreibung und Trennung von Wörtern nicht
-ohne weiteres auf die maschinelle Worttrennung übertragen lassen, wurden
-die folgenden Konventionen getroffen.  Hauptsächlich betreffen diese die
-reformierte Rechtschreibung, die zusätzliche Freiheiten eingeführt hat.
+Die Regeln lassen gewisse Freiheiten bei der Schreibung und Trennung von
+Wörtern zu.  Da sich solche Freiheiten nicht ohne weiteres auf die
+maschinelle Worttrennung übertragen lassen, wurden die folgenden
+Konventionen getroffen.  Hauptsächlich betreffen diese die reformierte
+Rechtschreibung, die zusätzliche Freiheiten eingeführt hat.  Die linke
+(grüne) Spalte zeigt jeweils die Trennung mit den experimentellen
+Trennmustern, die rechten (roten) Spalten zeigen alternative oder
+unerwünschte Trennungen.
 
-Die linke Spalte zeigt jeweils die Trennung mit den experimentellen
-Trennmustern, die rechten Spalten zeigen alternative oder unerwünschte
-Trennungen.
+Beachte, die folgenden Abschnitte enthalten keine vollständige
+Aufstellung der Silbentrennregeln.  Diese sind den entsprechenden
+Regelwerken zu entnehmen.
 
 \subsection{Traditionelle Rechtschreibung}
 \label{sec:tradRS}
 \begin{enumerate}[\hspace{1em}\itshape T1]
 
-\item Sinnentstellende und irreführende Trennungen werden möglichst
-  vermieden \cite[]{}:\par\nobreak
+\item\label{enum:tradSinn} Sinnentstellende und irreführende Trennungen
+  werden möglichst vermieden \cite[K~?]{duden:1991}:\par\nobreak% [K~70]
 
   \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l}
     An-alpha-bet & Anal-phabet\\
@@ -303,9 +309,9 @@ Trennungen.
     Tal-entwäs-se-rung & Talent-wässerung\\
   \end{tabular}
 
-\item In Ableitungen von Namen auf \emph{-ow} wird die Nottrennung der
-  Ableitungssilben \emph{-er}, \emph{-ern}, \emph{-ers} unterdrückt
-  \cite[]{}:\par\nobreak
+\item\label{enum:tradOW} In Ableitungen von Namen auf \emph{-ow} wird
+  die Nottrennung der Ableitungssilben \emph{-er}, \emph{-ern},
+  \emph{-ers} unterdrückt \cite[K~?]{duden:1991}:\par\nobreak% [K~91]
 
   \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l}
     Tel-tower & Tel-tow-er\\
@@ -319,8 +325,8 @@ Trennungen.
 \label{sec:reformRS}
 \begin{enumerate}[\hspace{1em}\itshape R1]
 
-\item Sinnentstellende und irreführende Trennungen werden möglichst
-  vermieden \cite[\S~107]{amtlRegeln:2006,
+\item\label{enum:reformSinn} Sinnentstellende und irreführende Trennungen
+  werden möglichst vermieden \cite[\S~107]{amtlRegeln:2006,
     amtlRegeln:2006:duden}:\par\nobreak
 
   \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
@@ -329,44 +335,61 @@ Trennungen.
     Tal-entwäs-se-rung & Talent-wässerung\\
   \end{tabular}
 
-\item In Fremdwörtern bleiben die Verbindungen aus Buchstaben für einen
-  Konsonanten + \emph{l} und \emph{r} ungetrennt, wenn keine Wortfuge
-  vorliegt.  Dies schließt \emph{phl}, \emph{phr}, \emph{thr} ein; nicht
-  jedoch \emph{str}.  Des weiteren bleiben die Buchstabenverbindungen
-  \emph{gn} und \emph{kn} ungetrennt \cite[\S~112]{amtlRegeln:2006,
-    amtlRegeln:2006:duden}:\par\nobreak
+\item\label{enum:reformClusterLR} In Fremdwörtern bleiben die
+  Verbindungen aus Buchstaben für einen Konsonanten + \emph{l} und
+  \emph{r} ungetrennt, sofern keine Wortfuge vorliegt.  Dies schließt
+  \emph{phl}, \emph{phr}, \emph{thr} ein; nicht jedoch \emph{str}
+  \cite[\S~112]{amtlRegeln:2006, amtlRegeln:2006:duden}
+  i.\,V.\,m.~\cite[K~?]{duden:1991}:\par\nobreak% [K~86]
 
   \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
     Ar-thri-tis & Arth-ri-tis\\
-    Co-gnac & Cog-nac\\
     Di-plom & Dip-lom\\
-%    Fe-bru-ar & Feb-ru-ar\\
-%    In-te-gral & In-teg-ral\\
+    Fe-bru-ar & Feb-ru-ar\\
+    In-te-gral & In-teg-ral\\
+  \end{tabular}
+  \quad\textit{aber:}\quad
+  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+    In-dus-trie & In-du-strie & In-dust-rie\\
+%    Ma-gi\retr{s-tr}a-le & Ma-gi-stra-le\\
+    sub-lim\\
+    zaub-re\\
+    Zug-rei-se\\
+  \end{tabular}
+
+\item\label{enum:reformClusterGN} In Fremdwörtern bleibt die
+  Konsonantenverbindung \emph{gn} ungetrennt
+  \cite[\S~112]{amtlRegeln:2006, amtlRegeln:2006:duden}
+  i.\,V.\,m.~\cite[K~?]{duden:1991}:\par\nobreak% [K~87]
+
+  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
+    Co-gnac & Cog-nac\\
+    igno-rie-ren & ig-no-rie-ren\\
   \end{tabular}
   \quad\textit{aber:}\quad
   \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
-    In-dus-trie & In-du-strie\\
-%    Ma-gi\retr{s-tr}a-le & Ma-gi-stra-le\\
-    Bank-no-te\\
-    sub-lim\\
+    Zeug-nis\\
+    seg-nen\\
   \end{tabular}
 
-\item Falls die Trennung nach Sprechsilben und die etymologische
-  Trennung (nach Wortherkunft) kollidieren, wurde weitgehend die
-  etymologische Trennung gewählt \cite[\S~113]{amtlRegeln:2006,
-    amtlRegeln:2006:duden}:\par\nobreak
+\item\label{enum:reformEtymo} Falls die Trennung nach Sprechsilben und
+  die etymologische Trennung (nach Wortherkunft) kollidieren, wurde
+  weitgehend die etymologische Trennung gewählt
+  \cite[\S~113]{amtlRegeln:2006, amtlRegeln:2006:duden}:\par\nobreak
 
   \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
-    Heli-ko-pter & Heli-kop-ter\\
+%    Heli-ko-pter & Heli-kop-ter\\
 %    in-ter-view-en & in-ter-vie-wen\\
+    in-ter-es-sant & in-te-res-sant\\
+    Lin-ole-um & Li-no-le-um\\
     Päd-ago-ge & Pä-da-go-ge\\
-    poe-tisch & po-e-tisch\\
   \end{tabular}
 
-\item In Ableitungen von Namen auf \emph{-ow} bleibt \emph{-ow}
-  ungetrennt, wenn es den Laut [o\,:] bezeichnet.  Die Nottrennung der
-  Ableitungssilben \emph{-er}, \emph{-ern}, \emph{-ers} wird unterdrückt
-  \cite[\S~113]{amtlRegeln:2006, amtlRegeln:2006:duden}:\par\nobreak
+\item\label{enum:reformOW} In Ableitungen von Namen auf \emph{-ow}
+  bleibt \emph{-ow} ungetrennt, wenn es den Laut [o\,:] bezeichnet.  Die
+  Nottrennung der Ableitungssilben \emph{-er}, \emph{-ern}, \emph{-ers}
+  wird unterdrückt \cite[\S~113]{amtlRegeln:2006, amtlRegeln:2006:duden}
+  i.\,V.\,m.~\cite[K~?]{duden:1991}:\par\nobreak% [K~91]
 
   \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
     Tel-tower & Tel-to-wer & Tel-tow-er\\
