@@ -33,8 +33,6 @@
   keywordstyle={}, commentstyle={\itshape}}
 \lstdefinestyle{shell}{language=sh, basicstyle=\ttfamily,
   keywordstyle={}, commentstyle={\itshape}}
-\usepackage[fixlanguage]{babelbib}
-\bibliographystyle{babalpha}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 %%% Bette Quellkode in PDF-Ausgabe ein.
 \usepackage{embedfile}
@@ -42,6 +40,10 @@
 mimetype=plain/text,%
 desc={LaTeX-Quelltext der Datei \jobname.pdf}%
 ]{\jobname.tex}
+%%% Literaturverzeichnis mit Sprachunterstützung.
+\usepackage[fixlanguage]{babelbib}
+\bibliographystyle{babalpha}
+%%% Babelbib fordert trotz fixlanguage zuviele Sprachen an.
 \usepackage[english, german, ngerman]{babel}
 %%% Einstellungen für interaktive PDF-Dokumente.
 \usepackage[rgb,x11names]{xcolor}
@@ -198,7 +200,7 @@ Wer Interesse oder Ideen hat, wende sich bitte an die Gruppe.\newline
 \begin{tabularx}{\linewidth}[t]{lL}
   \toprule\addlinespace Urheber & Liste des Wortschatzprojekts der Universität Leipzig%
   \footnote{\url{http://wortschatz.uni-leipzig.de/}}\\
-  Rechte & GPL\\
+  Rechte & \Abk{gpl}\\
   Wortformen & 2.000.000\\
   Sortierkriterium & Häufigkeit\\
   Rechtschreibung & mangelhaft\\
@@ -212,7 +214,7 @@ Wer Interesse oder Ideen hat, wende sich bitte an die Gruppe.\newline
 \noindent\lrand{\medskip Mannheimer Liste}
 \begin{tabularx}{\linewidth}[t]{lL}
   \toprule\addlinespace
-  Urheber & Korpus des Instituts für Deutsche Sprache (\Abk{IDS})%
+  Urheber & Korpus des Instituts für Deutsche Sprache (\Abk{ids})%
   \footnote{\url{http://www.ids-mannheim.de/kl/}}\\
   Rechte & ">Darf in ihrer Gesamtheit -- wie vereinbart -- nicht veröffentlicht oder an Dritte weitergegeben werden."< Abgeleitete Werke können nach unserer Wahl behandelt werden.\\
   Wortformen & 4.000.000\\
@@ -229,7 +231,7 @@ Wer Interesse oder Ideen hat, wende sich bitte an die Gruppe.\newline
 \lrand{\medskip Berliner Liste}
 \begin{tabularx}{\linewidth}[t]{lL}
   \toprule\addlinespace
-  Urheber & Kernkorpus des Projekts Digitales Wörterbuch der Deutschen Sprache (\Abk{DWDS})%
+  Urheber & Kernkorpus des Projekts Digitales Wörterbuch der Deutschen Sprache (\Abk{dwds})%
   \footnote{\url{http://www.dwdscorpus.de/}}\\
   Rechte & \ldots\\
   Wortformen & 2.000.000\\
@@ -273,7 +275,7 @@ Rechtschreibung von Wortlisten und der Eingabe korrekter Trennungen.%
 \subsection{Trennmusterdateien}
 Die bisherigen Trennmusterdateien für die traditionelle und neue
 Rechtschreibung, die Dateien \Datei{dehypht.tex} und
-\Datei{dehyphn.tex}, können am \Abk{CTAN}%
+\Datei{dehyphn.tex}, können am \Abk{ctan}%
 \footnote{Comprehensive \TeX\ Archive Network,
   \url{http://ctan.tug.org/}} bezogen werden.  Sie sind \emph{nicht} im
 Zuge dieses Projekts entstanden.
