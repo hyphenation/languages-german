@@ -274,7 +274,7 @@ Umbruch erfordern.  Ausgiebige Tests sind erwünscht!}
 % Unerwünschte Trennung.
 \newcommand*{\untr}[1]{\trennung{unerwcol!20}{#1}}
 
-\section{Trennregeln}
+\section{Trennregeln und Konventionen}
 \label{sec:trennregeln}
 Es werden zwei Trennmuster bereitgestellt.  Die Trennmuster für die
 traditionelle Rechtschreibung orientieren sich an den verbindlichen
@@ -300,23 +300,23 @@ Regelwerken zu entnehmen.
 \label{sec:tradRS}
 \begin{enumerate}[\hspace{1em}\itshape T1]
 
-\item\label{enum:tradSinn} Sinnentstellende und irreführende Trennungen
-  werden möglichst vermieden \cite[K~?]{duden:1991}:\par\nobreak% [K~70]
-
-  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l}
-    An-alpha-bet & Anal-phabet\\
-    Kaf-ka-kenner & Kafkaken-ner\\
-    Tal-entwäs-se-rung & Talent-wässerung\\
-  \end{tabular}
-
 \item\label{enum:tradOW} In Ableitungen von Namen auf \emph{-ow} wird
   die Nottrennung der Ableitungssilben \emph{-er}, \emph{-ern},
-  \emph{-ers} unterdrückt \cite[K~?]{duden:1991}:\par\nobreak% [K~91]
+  \emph{-ers} unterdrückt \cite[R~180]{duden:1991}:\par\nobreak
 
   \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l}
     Tel-tower & Tel-tow-er\\
     Trep-towern & Trep-tow-ern\\
     Pan-kowers & Pan-kow-ers\\
+  \end{tabular}
+
+\item\label{enum:tradSinn} Sinnentstellende und irreführende Trennungen
+  werden möglichst vermieden \cite[R~181]{duden:1991}:\par\nobreak
+
+  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l}
+    An-alpha-bet & Anal-phabet\\
+    Kaf-ka-kenner & Kafkaken-ner\\
+    Tal-entwäs-se-rung & Talent-wässerung\\
   \end{tabular}
 
 \end{enumerate}
@@ -336,40 +336,28 @@ Regelwerken zu entnehmen.
   \end{tabular}
 
 \item\label{enum:reformClusterLR} In Fremdwörtern bleiben die
-  Verbindungen aus Buchstaben für einen Konsonanten + \emph{l} und
-  \emph{r} ungetrennt, sofern keine Wortfuge vorliegt.  Dies schließt
-  \emph{phl}, \emph{phr}, \emph{thr} ein; nicht jedoch \emph{str}
-  \cite[\S~112]{amtlRegeln:2006, amtlRegeln:2006:duden}
-  i.\,V.\,m.~\cite[K~?]{duden:1991}:\par\nobreak% [K~86]
+  Buchstabengruppen \emph{bl, pl, fl, gl, cl, kl, phl; br, pr, dr, tr,
+    fr, vr, gr, cr, kr, phr, thr; chth; gn, kn} im allgemeinen
+  ungetrennt, nicht jedoch \emph{str} \cite[\S~112]{amtlRegeln:2006,
+    amtlRegeln:2006:duden}
+  i.\,V.\,m.~\cite[R~179]{duden:1991}:\par\nobreak
 
   \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
     Ar-thri-tis & Arth-ri-tis\\
+%    Co-gnac & Cog-nac\\
     Di-plom & Dip-lom\\
-    Fe-bru-ar & Feb-ru-ar\\
+%    Fe-bru-ar & Feb-ru-ar\\
+    igno-rie-re & ig-no-rie-re\\
     In-te-gral & In-teg-ral\\
   \end{tabular}
-  \quad\textit{aber:}\quad
+  \hspace{.5em}\textit{aber:}\hspace{.5em}
   \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
     In-dus-trie & In-du-strie & In-dust-rie\\
 %    Ma-gi\retr{s-tr}a-le & Ma-gi-stra-le\\
     sub-lim\\
-    zaub-re\\
+%    zaub-re\\
+    seg-ne\\
     Zug-rei-se\\
-  \end{tabular}
-
-\item\label{enum:reformClusterGN} In Fremdwörtern bleibt die
-  Konsonantenverbindung \emph{gn} ungetrennt
-  \cite[\S~112]{amtlRegeln:2006, amtlRegeln:2006:duden}
-  i.\,V.\,m.~\cite[K~?]{duden:1991}:\par\nobreak% [K~87]
-
-  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
-    Co-gnac & Cog-nac\\
-    igno-rie-ren & ig-no-rie-ren\\
-  \end{tabular}
-  \quad\textit{aber:}\quad
-  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
-    Zeug-nis\\
-    seg-nen\\
   \end{tabular}
 
 \item\label{enum:reformEtymo} Falls die Trennung nach Sprechsilben und
@@ -389,7 +377,7 @@ Regelwerken zu entnehmen.
   bleibt \emph{-ow} ungetrennt, wenn es den Laut [o\,:] bezeichnet.  Die
   Nottrennung der Ableitungssilben \emph{-er}, \emph{-ern}, \emph{-ers}
   wird unterdrückt \cite[\S~113]{amtlRegeln:2006, amtlRegeln:2006:duden}
-  i.\,V.\,m.~\cite[K~?]{duden:1991}:\par\nobreak% [K~91]
+  i.\,V.\,m.~\cite[R~180]{duden:1991}:\par\nobreak
 
   \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
     Tel-tower & Tel-to-wer & Tel-tow-er\\
