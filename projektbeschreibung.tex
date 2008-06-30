@@ -253,20 +253,20 @@ Wer Interesse oder Ideen hat, wende sich bitte an die Gruppe.\newline
 \subsection{Wortlisten}
 Die von Werner Lemberg erstellte und kontrollierte Liste steht im
 öffentlich zugänglichen Entwicklerrepositorium.%
-\footnote{\url{http://repo.or.cz/}\qquad Eine \Programm{Git}-Version für
-  Windows ist unter
-  \url{http://code.google.com/p/msysgit/downloads/list} erhältlich,
-  Datei \Datei{Git-1.5.5-preview20080413.exe} (Stand: 30.\,5.\,2008).}
+\footnote{\url{http://repo.or.cz/w/wortliste.git}}
+%
 Eine Kopie kann mit
 \begin{lstlisting}[style=shell,escapechar=\$]
 git clone git://repo.or.cz/wortliste.git $\qquad\emph{oder}$
 git clone http://repo.or.cz/r/wortliste.git
 \end{lstlisting}
 bezogen werden.%
-\footnote{Neben dem Protokoll unterscheiden sich auch die Adressen!}  Im
-Repositorium sind auch einige Skripten zur Bearbeitung der Wortliste
-enthalten.  Aktualisiert wird die Wortliste (das gesamte lokale
-Repositorium) mit
+\footnote{\url{http://repo.or.cz/}}
+
+Das Format der Datei \Datei{wortliste} ist in der Datei
+\Datei{dateikopf} beschrieben.  Im Repositorium sind auch einige
+Skripten zur Bearbeitung der Wortliste enthalten.  Aktualisiert wird die
+Wortliste (das gesamte lokale Repositorium) mit
 \begin{lstlisting}[style=shell]
 git pull
 \end{lstlisting}
