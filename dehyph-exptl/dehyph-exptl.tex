@@ -134,8 +134,9 @@ Back-end hyph-subst
 Der in \TeX\ implementierte Trennalgorithmus arbeitet
 musterbasiert~\cite{liang:1983}.  Prinzipiell können mit einem solchen
 Algorithmus nicht alle möglichen Wörter korrekt getrennt werden.  Die
-Qualität der Trennmuster einer Sprache wird jedoch maßgeblich von der
-Qualität der Wortliste beeinflusst, aus der sie berechnet werden.
+Qualität der Worttrennung einer Sprache wird jedoch maßgeblich von der
+Qualität der Wortliste beeinflusst, aus der die verwendeten Trennmuster
+berechnet wurden.
 
 Leider ist die Wortliste, die den herkömmlichen Trennmustern für die
 traditionelle deutsche Rechtschreibung zugrundeliegt, verschollen.  Dies
@@ -158,9 +159,11 @@ hat mehrere Konsequenzen:
   Rechtschreibung noch etwas schlechter als die der Trennmuster für die
   traditionelle Rechtschreibung.
 
-\item Eine Besonderheit der (deutsch)schweizerischen Rechtschreibung,
+\item Eine Besonderheit der (deutsch)""schweizerischen Rechtschreibung,
   der konsequente Ersatz des ">ß"< durch ">ss"<, wird mit den
-  herkömmlichen Trennmustern nicht berücksichtigt.
+  herkömmlichen Trennmustern nicht berücksichtigt.  Dies beeinflusst
+  auch den Versalsatz nach deutscher Rechtschreibung, wenngleich hier
+  auf Trennungen möglichst verzichtet werden sollte.
 \end{itemize}
 
 Das Projekt \emph{Freie Wortlisten und Trennmuster für die deutsche
@@ -169,15 +172,10 @@ Trennmuster für die Benutzung in \TeX\ und OpenOffice zu schaffen.
 
 Den experimentellen Trennmustern dieses Pakets liegt eine Wortliste mit
 den etwa fünfhunderttausend häufigsten deutschen Wörtern in deutscher
-und (deutsch)schweizerischer%
-\footnote{Die Berücksichtigung dieser Schreibweise kommt auch dem
-  Versalsatz zugute, wenngleich hier auf Trennungen möglichst verzichtet
-  werden sollte.}
-%
-Schreibung zugrunde.  Diese Liste ist vermutlich erheblich umfangreicher
-als die ursprüngliche Wortliste.  Außerdem wurden Worthäufigkeiten in
-der ursprünglichen Wortliste wahrscheinlich überhaupt nicht
-berücksichtigt.
+und (deutsch)""schweizerischer Schreibweise zugrunde.  Diese Liste ist
+vermutlich erheblich umfangreicher als die ursprüngliche Wortliste.
+Außerdem wurden Worthäufigkeiten in der ursprünglichen Wortliste
+wahrscheinlich überhaupt nicht berücksichtigt.
 
 Mit den vorliegenden Trennmustern sollte für nicht-fachsprachliche
 Wörter eine sehr gute Trennqualität erreicht werden.  Insbesondere
