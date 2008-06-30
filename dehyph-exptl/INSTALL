@@ -4,12 +4,32 @@ For English installation instructions, see end of this file.
 **************
 **  German  **
 **************
+Es folgen Installationshinweise für die
 
-Es folgen Installationshinweise für MiKTeX mit graphischer
-Oberfläche sowie MiKTeX und TeX Live auf der Kommandozeile.
+1. teilautomatisierte Installation in MiKTeX mit Hilfe der
+    Paketverwaltung,
+2. manuelle Installation in MiKTeX mit graphischer Oberfläche,
+3. manuelle Installation in MiKTeX auf der Kommandozeile,
+4. manuelle Installation in TeX Live auf der Kommandozeile.
+
 Nachfolgend ist <datum> jeweils durch die ISO-Notation des
 Datums der Trennmusterdateien zu ersetzen (JJJJ-MM-TT).
 
+
+*************************************************
+**  Teilautomatisierte Installation in MiKTeX  **
+**  mit Paketverwaltung                        **
+*************************************************
+Das Paket ist zunächst mit der Paketverwaltung
+"Browse Packages" zu installieren.  Danach ist Schritt C der
+manuellen Installation in MiKTeX mit graphischer Oberfläche
+zu befolgen (siehe nächster Abschnitt).
+
+
+**************************************
+**  Manuelle Installatin in MiKTeX  **
+**  mit graphischer Oberfläche      **
+**************************************
 Die Installation der experimentellen Trennmuster erfordert
 drei Schritte:
 
@@ -17,53 +37,39 @@ A. Die Trennmuster- und Wrapperdateien sollten in die
    folgenden Verzeichnisse innerhalb eines lokalen
    TEXMF-Baums kopiert werden:
 
-      tex/generic/hyphen/dehyph-exptl/dehyphn-x-<datum>.pat
-      tex/generic/hyphen/dehyph-exptl/dehyphn-x-<datum>.tex
-      tex/generic/hyphen/dehyph-exptl/dehypht-x-<datum>.pat
-      tex/generic/hyphen/dehyph-exptl/dehypht-x-<datum>.tex
-  
+      tex\generic\dehyph-exptl\dehyphn-x-<datum>.pat
+      tex\generic\dehyph-exptl\dehyphn-x-<datum>.tex
+      tex\generic\dehyph-exptl\dehypht-x-<datum>.pat
+      tex\generic\dehyph-exptl\dehypht-x-<datum>.tex
+
   Die verbleibenden Dateien können in das Verzeichnis
 
-      doc/generic/hyphen/dehyph-exptl/
+      doc\generic\dehyph-exptl\
 
   kopiert werden.
 
 
 B. Aktualisieren der File Name Database:
 
-  MiKTeX mit GUI:
-  ------------------------------------
     Programm 'Settings'
       -->  Reiter 'General'
         -->  Knopf 'Refresh FNDB'
 
-  Kommandozeile (MiKTeX und TeX Live):
-  ------------------------------------
-    Kommando
-
-      MiKTeX:      >initexmf --update-fndb
-      TeX Live:    >mktexlsr
-
-    aufrufen.
-  ------------------------------------
-
 
 C. Anlegen der Sprachen und Erstellen der Formatdateien:
 
-  MiKTeX mit GUI:
-  ------------------------------------
     Programm 'Settings'
       -->  Reiter 'Languages'
         -->  Knopf 'New'
           -->  Feld 'Language Name' : german-x-<datum>
           -->  Feld 'Synonyms' : german-x-latest
-          -->  Feld 'Hyphenation File' : <texmfbaum>\tex\generic\babel\hyphen\dehypht-x-<datum>.tex
+          -->  Feld 'Hyphenation File' : <texmfbaum>\tex\generic\dehyph-exptl\dehypht-x-<datum>.tex
           -->  Box 'Load the hyphenation file' : aktiv
           -->  Knopf 'OK'
         -->  Knopf 'New'
           -->  Feld 'Language Name' : ngerman-x-<datum>
           -->  Feld 'Synonyms' : ngerman-x-latest
-          -->  Feld 'Hyphenation File' : <texmfbaum>\tex\generic\babel\hyphen\dehyphn-x-<datum>.tex
+          -->  Feld 'Hyphenation File' : <texmfbaum>\tex\generic\dehyph-exptl\dehyphn-x-<datum>.tex
           -->  Box 'Load the hyphenation file' : aktiv
           -->  Knopf 'OK'
         Vorhandene Synonyme [n]german-x-latest anderer Sprachen
@@ -73,7 +79,7 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
         -->  Knopf 'OK'
 
      Wenn der letzte Schritt mit der Meldung
-     
+
        >TeX capacity exceeded, sorry [pattern memory=XXX]
 
      oder 
@@ -85,32 +91,50 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
      Bitte lesen Sie dazu die Dokumentation Ihrer
      TeX-Verteilung oder fragen Sie einen TeX-Meister.
 
-  Kommandozeile (MiKTeX und TeX Live):
-  ------------------------------------
-  Achtung: Die manuelle Installation wird nicht empfohlen,
-  da die Datei language.dat in der Regel automatisch
-  verwaltet wird, hier jedoch von Hand Änderungen
-  vorgenommen werden.  Es kann daher bei späteren
-  (unabhängigen) Updates zu Problemen kommen!
+
+**************************************
+**  Manuelle Installatin in MiKTeX  **
+**  auf der Kommandozeile           **
+**************************************
+Achtung: Die manuelle Installation in MikTeX wird nicht
+empfohlen, da die Datei language.dat in der Regel automatisch
+verwaltet wird, hier jedoch von Hand Änderungen vorgenommen
+werden.  Es kann daher bei späteren (unabhängigen) Updates zu
+Problemen kommen!
+
+Die Installation der experimentellen Trennmuster erfordert
+drei Schritte:
+
+A. siehe Schritt A im Abschnitt "Manuelle Installatin in
+   MiKTeX mit graphischer Oberfläche".
+
+B. Aktualisieren der File Name Database:
+
+    Kommando
+
+      >initexmf --update-fndb
+
+    aufrufen.
+
+
+C. Anlegen der Sprachen und Erstellen der Formatdateien:
 
   1. Ermitteln des Pfades der Datei language.dat:
 
-      MiKTeX:      >findtexmf language.dat
-      TeX Live:    >kpsewhich language.dat
+      >findtexmf language.dat
 
      Falls das Ergebnis des obigen Kommandos ein Pfad zu einem
-     *lokalen* TEXMF-Baum ist, existiert bereits eine lokale
+     lokalen TEXMF-Baum ist, existiert bereits eine lokale
      Kopie der Datei language.dat.  Springe zu Punkt C.3.
 
   2. Eine lokale Kopie von language.dat existiert bisher nicht.
      Kopiere die Datei aus dem in Schritt C.1 erhaltenen Pfad
      in einen lokalen TEXMF-Baum, zum Beispiel nach
 
-       MiKTeX:     C:\Dokumente und Einstellungen\All Users\Anwendungsdaten\MiKTeX\2.7\tex\generic\config\language.dat
-       TeX Live:   <TeXLiveWurzel>/texmf-local/tex/generic/config/language.dat
+       C:\Dokumente und Einstellungen\All Users\Anwendungsdaten\MiKTeX\2.7\tex\generic\config\language.dat
 
-  3. Öffne die Datei language.dat aus dem *lokalen* TEXMF-Baum.
-     in einem Editor.
+  3. Öffne die Datei language.dat aus dem lokalen TEXMF-Baum in
+     einem Editor.
 
   4. Falls vorhanden, entferne Zeilen
 
@@ -128,8 +152,7 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
 
   7. Kommando
 
-      MiKTeX:      >initexmf --dump
-      TeX Live:    >fmtutil --refresh
+      >initexmf --dump
 
      aufrufen.
 
@@ -146,60 +169,149 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
      und trie_op_size anpassen.  Bitte lesen Sie dazu die
      Dokumentation Ihrer TeX-Verteilung oder fragen Sie einen
      TeX-Meister.
-  ------------------------------------
 
 
-***************
-**  English  **
-***************
+****************************************
+**  Manuelle Installatin in TeX Live  **
+**  auf der Kommandozeile             **
+****************************************
+In TeX Live 2008 ist dieses Paket bereits vorinstalliert und
+ohne weitere Vorkehrungen nutzbar.
 
+Die Installation der experimentellen Trennmuster erfordert
+drei Schritte:
+
+A. Die Trennmuster- und Wrapperdateien sollten in die
+   folgenden Verzeichnisse innerhalb eines lokalen
+   TEXMF-Baums kopiert werden:
+
+      tex/generic/dehyph-exptl/dehyphn-x-<datum>.pat
+      tex/generic/dehyph-exptl/dehyphn-x-<datum>.tex
+      tex/generic/dehyph-exptl/dehypht-x-<datum>.pat
+      tex/generic/dehyph-exptl/dehypht-x-<datum>.tex
+
+  Die verbleibenden Dateien können in das Verzeichnis
+
+      doc/generic/dehyph-exptl/
+
+  kopiert werden.
+
+
+B. Aktualisieren der File Name Database:
+
+    Kommando
+
+      >mktexlsr
+
+    aufrufen.
+
+
+C. Anlegen der Sprachen und Erstellen der Formatdateien:
+
+  1. Ermitteln des Pfades der Datei language-local.dat:
+
+      >kpsewhich language-local.dat
+
+     Falls das Ergebnis des obigen Kommandos ein Pfad zu einem
+     lokalen TEXMF-Baum ist, existiert bereits eine lokale
+     Datei language-local.dat.  Springe zu Punkt C.3.
+
+  2. Eine lokale Datei language-local.dat existiert bisher
+     nicht.  Die Datei muss neu angelegt werden.  Ein
+     Beispielpfad ist:
+
+       <TeXLiveWurzel>/texmf-local/tex/generic/config/language-local.dat
+
+  3. Öffne die Datei language-local.dat aus dem lokalen
+     TEXMF-Baum in einem Editor.
+
+  4. Falls vorhanden, entferne Zeilen
+
+  =german-x-latest
+  =ngerman-x-latest
+
+  5. Füge am Ende der Datei die folgenden Zeilen hinzu:
+
+  german-x-<datum> dehypht-x-<datum>.tex
+  =german-x-latest
+  ngerman-x-<datum> dehyphn-x-<datum>.tex
+  =ngerman-x-latest
+
+  6. Datei language-local.dat speichern und schließen.
+
+  7. Kommando
+
+      >mktexlsr                   (zur Sicherheit)
+      >tlmgr generate language
+
+     aufrufen.
+
+  8. Kommando
+
+      >fmtutil --refresh
+
+     aufrufen.
+
+     Wenn dieses Kommando mit der Meldung
+
+       >TeX capacity exceeded, sorry [pattern memory=XXX]
+
+     oder 
+
+       >TEX capacity exceeded, sorry [pattern memory ops=XXX]
+
+     fehlschlägt, so müssen Sie andere Sprachen in der Datei
+     language.dat deaktivieren oder die Parameter trie_size
+     und trie_op_size anpassen.  Bitte lesen Sie dazu die
+     Dokumentation Ihrer TeX-Verteilung oder fragen Sie einen
+     TeX-Meister.
+
+
+******************************************************
+**  English installation instructions for TeX Live  **
+******************************************************
 Installation of the dehyph-exptl package requires three steps.
-Distribution dependent commands are marked (*).
 Note, in the remaining text <date> refers to the pattern file
 date in ISO notation (YYYY-MM-DD)!
 
 A. Copy pattern and wrapper files to the following location
-   within a *local* texmf tree:
+   within a local texmf tree:
 
-      tex/generic/hyphen/dehyph-exptl/dehyphn-x-<date>.pat
-      tex/generic/hyphen/dehyph-exptl/dehyphn-x-<date>.tex
-      tex/generic/hyphen/dehyph-exptl/dehypht-x-<date>.pat
-      tex/generic/hyphen/dehyph-exptl/dehypht-x-<date>.tex
-  
+      tex/generic/dehyph-exptl/dehyphn-x-<date>.pat
+      tex/generic/dehyph-exptl/dehyphn-x-<date>.tex
+      tex/generic/dehyph-exptl/dehypht-x-<date>.pat
+      tex/generic/dehyph-exptl/dehypht-x-<date>.tex
+
    The remaining files can be copied to
 
-      doc/generic/hyphen/dehyph-exptl/
+      doc/generic/dehyph-exptl/
 
 
 B. Refresh file name database.  See documentation of your
    TeX distribution to learn how to do this.  The command
    should be similar to
 
-      >mktexlsr                    (*)
+      >mktexlsr
 
 
 C. Modify language.dat and rebuild format files.
 
-  Note, manual installation is not recommended, for file
-  language.dat is an automatically generated file in
-  general, but needs some manual modifications.  This can
-  cause problems with later (unrelated) updates!
 
-  1. Determine the location of language.dat:
+  1. Determine the location of language-local.dat:
 
-      >kpsewhich language.dat      (*)
-    
-     If the resulting path already points to a *local* tree,
+      >kpsewhich language-local.dat
+
+     If the resulting path already points to a local tree,
      jump right to step C.3.
 
-  2. A local copy of language.dat doesn't exist, yet.  Copy
-     that file from the path shown in step C.1 into a local
-     texmf tree.  Below is an example path for TeX Live:
+  2. A local copy of language-local.dat doesn't exist, yet.
+     Create a new file lanuage-local.dat in a local texmf tree,
+     e.g.,
 
-       <TeXLiveRoot>/texmf-local/tex/generic/config/language.dat
+       <TeXLiveRoot>/texmf-local/tex/generic/config/language-local.dat
 
-  3. Open the copy of language.dat from the *local* texmf
-     tree into an editor.
+  3. Open language-local.dat from the local texmf tree into an
+     editor.
 
   4. If existent, remove the following lines
 
@@ -213,11 +325,16 @@ C. Modify language.dat and rebuild format files.
   ngerman-x-<date> dehyphn-x-<date>.tex
   =ngerman-x-latest
 
-  6. Save language.dat and close the editor.
+  6. Save language-local.dat and close the editor.
+
+  7. Make new languages known to TeX Live:
+
+      >mktexlsr                  (just to be sure)
+      >tlmgr generate language
 
   7. Rebuild format files:
 
-      >fmtutil --refresh           (*)
+      >fmtutil --refresh
 
      In case this command fails with error message
 
