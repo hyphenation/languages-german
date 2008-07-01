@@ -23,9 +23,9 @@ aus dem Oberdiek-Buendel verwendet werden.
 *****************
 **  File List  **
 *****************
+BUGS                     - documentation (ISO-8859-15)
 INSTALL                  - documentation (ISO-8859-15)
 LICENSE                  - documentation (ASCII)
-NEWS                     - documentation (ISO-8859-15)
 README                   - documentation (ASCII)
 dehyph-exptl.bib         - documentation (ASCII)
 dehyph-exptl.pdf         - documentation

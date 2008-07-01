@@ -4,6 +4,12 @@ um systematische Fehler.  Die Liste enthält jedoch keine
 vollständige Änderungsliste.  Genauere Angaben sind dem
 öffentlichen Entwicklerrepositorium zu entnehmen.
 
+Nicht verzeichnete falsche, fehlende und unerwünschte Worttrennungen
+können an die folgenden E-Mail-Adressen gerichtet werden:
+
+* trennmuster-opensource@googlegroups.com (Anmeldung erforderlich),
+* wl@gnu.org (Werner Lemberg).
+
 
 2008-06-27: v0.11
 -----------
@@ -21,12 +27,10 @@ bekannte Probleme:
 
 bekannte Probleme:
 * traditionelle Rechtschreibung:
-  ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au
-     und -ow.
+  ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au und -ow.
   ** Der Ersatz ss für ß wird stets nach den Regeln für die
      reformierte Rechtschreibung s-s getrennt.
   ** Der Ersatz sz für ß wird bisher nicht berücksichtigt.
 
 * reformierte Rechtschreibung:
-  ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au
-     und -ow.
+  ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au und -ow.
