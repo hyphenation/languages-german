@@ -122,10 +122,9 @@
 
 %%% Zweispaltiges Inhaltsverzeichnis.
 \begin{multicols}{2}
+\raggedright
 \tableofcontents
 \end{multicols}
-%%% Inhaltsverzeichnis im Flattersatz.
-\addtocontents{toc}{\protect\raggedright}
 
 
 \section{Einleitung}
@@ -471,7 +470,9 @@ git clone http://repo.or.cz/r/wortliste.git
 \end{lstlisting}
 bezogen werden.%
 \footnote{\url{http://repo.or.cz/}}
-
+%
+Das Format der Wortliste wird in der Datei \Datei{dateikopf}
+beschrieben.
 
 Der \Abk{sha1}-Commit-Hash der Repositoriumversion, die den Dateien
 \begin{lstlisting}
@@ -480,8 +481,6 @@ dehypht-x-<datum>.pat
 \end{lstlisting}
 zugrundeliegt, sowie eine \Abk{url} zum direkten Herunterladen der
 Wortliste (ca. 15\,MB) kann dem Kopf beider Dateien entnommen werden.
-Das Format der Datei \Datei{wortliste} ist in der Datei
-\Datei{dateikopf} beschrieben.
 
 
 \end{document}
