@@ -96,28 +96,20 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
 **  Manuelle Installatin in MiKTeX  **
 **  auf der Kommandozeile           **
 **************************************
-Achtung: Die manuelle Installation in MikTeX wird nicht
+Achtung: Die manuelle Installation in MiKTeX wird nicht
 empfohlen, da die Datei language.dat in der Regel automatisch
 verwaltet wird, hier jedoch von Hand Änderungen vorgenommen
 werden.  Es kann daher bei späteren (unabhängigen) Updates zu
 Problemen kommen!
 
-Die Installation der experimentellen Trennmuster erfordert
-drei Schritte:
+Die manuelle Installation der experimentellen Trennmuster
+erfordert vier Schritte:
 
 A. siehe Schritt A im Abschnitt "Manuelle Installatin in
    MiKTeX mit graphischer Oberfläche".
 
-B. Aktualisieren der File Name Database:
 
-    Kommando
-
-      >initexmf --update-fndb
-
-    aufrufen.
-
-
-C. Anlegen der Sprachen und Erstellen der Formatdateien:
+B. Anlegen der Sprachen:
 
   1. Ermitteln des Pfades der Datei language.dat:
 
@@ -125,10 +117,10 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
 
      Falls das Ergebnis des obigen Kommandos ein Pfad zu einem
      lokalen TEXMF-Baum ist, existiert bereits eine lokale
-     Kopie der Datei language.dat.  Springe zu Punkt C.3.
+     Kopie der Datei language.dat.  Springe zu Punkt B.3.
 
   2. Eine lokale Kopie von language.dat existiert bisher nicht.
-     Kopiere die Datei aus dem in Schritt C.1 erhaltenen Pfad
+     Kopiere die Datei aus dem in Schritt B.1 erhaltenen Pfad
      in einen lokalen TEXMF-Baum, zum Beispiel nach
 
        C:\Dokumente und Einstellungen\All Users\Anwendungsdaten\MiKTeX\2.7\tex\generic\config\language.dat
@@ -150,36 +142,54 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
 
   6. Datei language.dat speichern und schließen.
 
-  7. Kommando
+
+C. Aktualisieren der File Name Database:
+
+    Kommando
+
+      >initexmf --update-fndb
+
+    aufrufen.
+
+
+D. Anlegen der Formatdateien:
+
+    Kommando
 
       >initexmf --dump
 
-     aufrufen.
+    aufrufen.
 
-     Wenn dieses Kommando mit der Meldung
+    Wenn dieses Kommando mit der Meldung
 
-       >TeX capacity exceeded, sorry [pattern memory=XXX]
+      >TeX capacity exceeded, sorry [pattern memory=XXX]
 
-     oder 
+    oder 
 
-       >TEX capacity exceeded, sorry [pattern memory ops=XXX]
+      >TEX capacity exceeded, sorry [pattern memory ops=XXX]
 
-     fehlschlägt, so müssen Sie andere Sprachen in der Datei
-     language.dat deaktivieren oder die Parameter trie_size
-     und trie_op_size anpassen.  Bitte lesen Sie dazu die
-     Dokumentation Ihrer TeX-Verteilung oder fragen Sie einen
-     TeX-Meister.
+    fehlschlägt, so müssen Sie andere Sprachen in der Datei
+    language.dat deaktivieren oder die Parameter trie_size
+    und trie_op_size anpassen.  Bitte lesen Sie dazu die
+    Dokumentation Ihrer TeX-Verteilung oder fragen Sie einen
+    TeX-Meister.
 
 
 ****************************************
 **  Manuelle Installatin in TeX Live  **
 **  auf der Kommandozeile             **
 ****************************************
+Achtung: Die manuelle Installation in TeX Live wird nicht
+empfohlen, da die Datei language.dat in der Regel automatisch
+verwaltet wird, hier jedoch von Hand Änderungen vorgenommen
+werden.  Es kann daher bei späteren (unabhängigen) Updates zu
+Problemen kommen!
+
 In TeX Live 2008 ist dieses Paket bereits vorinstalliert und
 ohne weitere Vorkehrungen nutzbar.
 
 Die Installation der experimentellen Trennmuster erfordert
-drei Schritte:
+vier Schritte:
 
 A. Die Trennmuster- und Wrapperdateien sollten in die
    folgenden Verzeichnisse innerhalb eines lokalen
@@ -197,33 +207,24 @@ A. Die Trennmuster- und Wrapperdateien sollten in die
   kopiert werden.
 
 
-B. Aktualisieren der File Name Database:
+B. Anlegen der Sprachen:
 
-    Kommando
+  1. Ermitteln des Pfades der Datei language.dat:
 
-      >mktexlsr
-
-    aufrufen.
-
-
-C. Anlegen der Sprachen und Erstellen der Formatdateien:
-
-  1. Ermitteln des Pfades der Datei language-local.dat:
-
-      >kpsewhich language-local.dat
+      >kpsewhich language.dat
 
      Falls das Ergebnis des obigen Kommandos ein Pfad zu einem
      lokalen TEXMF-Baum ist, existiert bereits eine lokale
-     Datei language-local.dat.  Springe zu Punkt C.3.
+     Kopie der Datei language.dat.  Springe zu Punkt B.3.
 
-  2. Eine lokale Datei language-local.dat existiert bisher
-     nicht.  Die Datei muss neu angelegt werden.  Ein
-     Beispielpfad ist:
+  2. Eine lokale Kopie von language.dat existiert bisher nicht.
+     Kopiere die Datei aus dem in Schritt B.1 erhaltenen Pfad
+     in einen lokalen TEXMF-Baum, zum Beispiel nach
 
-       <TeXLiveWurzel>/texmf-local/tex/generic/config/language-local.dat
+       <TeXLiveWurzel>/texmf-local/tex/generic/config/language.dat
 
-  3. Öffne die Datei language-local.dat aus dem lokalen
-     TEXMF-Baum in einem Editor.
+  3. Öffne die Datei language.dat aus dem lokalen TEXMF-Baum in
+     einem Editor.
 
   4. Falls vorhanden, entferne Zeilen
 
@@ -237,42 +238,48 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
   ngerman-x-<datum> dehyphn-x-<datum>.tex
   =ngerman-x-latest
 
-  6. Datei language-local.dat speichern und schließen.
+  6. Datei language.dat speichern und schließen.
 
-  7. Kommando
 
-      >mktexlsr                   (zur Sicherheit)
-      >tlmgr generate language
+C. Aktualisieren der File Name Database:
 
-     aufrufen.
+    Kommando
 
-  8. Kommando
+      >mktexlsr
+
+    aufrufen.
+
+
+D. Anlegen der Formatdateien:
+
+    Kommando
 
       >fmtutil --refresh
 
-     aufrufen.
+    aufrufen.
 
-     Wenn dieses Kommando mit der Meldung
+    Wenn dieses Kommando mit der Meldung
 
-       >TeX capacity exceeded, sorry [pattern memory=XXX]
+      >TeX capacity exceeded, sorry [pattern memory=XXX]
 
-     oder 
+    oder 
 
-       >TEX capacity exceeded, sorry [pattern memory ops=XXX]
+      >TEX capacity exceeded, sorry [pattern memory ops=XXX]
 
-     fehlschlägt, so müssen Sie andere Sprachen in der Datei
-     language.dat deaktivieren oder die Parameter trie_size
-     und trie_op_size anpassen.  Bitte lesen Sie dazu die
-     Dokumentation Ihrer TeX-Verteilung oder fragen Sie einen
-     TeX-Meister.
+    fehlschlägt, so müssen Sie andere Sprachen in der Datei
+    language.dat deaktivieren oder die Parameter trie_size
+    und trie_op_size in der Datei texmf.cnf anpassen.  Bitte
+    lesen Sie dazu die Dokumentation Ihrer TeX-Verteilung oder
+    fragen Sie einen TeX-Meister.
 
 
 ******************************************************
 **  English installation instructions for TeX Live  **
 ******************************************************
-Installation of the dehyph-exptl package requires three steps.
 Note, in the remaining text <date> refers to the pattern file
 date in ISO notation (YYYY-MM-DD)!
+
+Installation of the dehyph-exptl package requires four steps:
 
 A. Copy pattern and wrapper files to the following location
    within a local texmf tree:
@@ -287,30 +294,22 @@ A. Copy pattern and wrapper files to the following location
       doc/generic/dehyph-exptl/
 
 
-B. Refresh file name database.  See documentation of your
-   TeX distribution to learn how to do this.  The command
-   should be similar to
+B. Modify file language.dat:
 
-      >mktexlsr
+  1. Determine the location of language.dat:
 
-
-C. Modify language.dat and rebuild format files.
-
-
-  1. Determine the location of language-local.dat:
-
-      >kpsewhich language-local.dat
+      >kpsewhich language.dat
 
      If the resulting path already points to a local tree,
-     jump right to step C.3.
+     jump right to step B.3.
 
-  2. A local copy of language-local.dat doesn't exist, yet.
-     Create a new file lanuage-local.dat in a local texmf tree,
+  2. A local copy of language.dat doesn't exist, yet.  Copy the
+     file that was output in step B.1 to a local texmf tree,
      e.g.,
 
-       <TeXLiveRoot>/texmf-local/tex/generic/config/language-local.dat
+       <TeXLiveRoot>/texmf-local/tex/generic/config/language.dat
 
-  3. Open language-local.dat from the local texmf tree into an
+  3. Open language.dat from the local texmf tree into an
      editor.
 
   4. If existent, remove the following lines
@@ -325,29 +324,34 @@ C. Modify language.dat and rebuild format files.
   ngerman-x-<date> dehyphn-x-<date>.tex
   =ngerman-x-latest
 
-  6. Save language-local.dat and close the editor.
+  6. Save file language.dat and close the editor.
 
-  7. Make new languages known to TeX Live:
 
-      >mktexlsr                  (just to be sure)
-      >tlmgr generate language
+C. Refresh file name database:
 
-  7. Rebuild format files:
+    Execute command
+
+      >mktexlsr
+
+
+D. Rebuild format files:  
+
+    Execute command
 
       >fmtutil --refresh
 
-     In case this command fails with error message
+    In case this command fails with error message
 
-       >TeX capacity exceeded, sorry [pattern memory=XXX]
+      >TeX capacity exceeded, sorry [pattern memory=XXX]
 
-     or
+    or
 
-       >TEX capacity exceeded, sorry [pattern memory ops=XXX]
+      >TEX capacity exceeded, sorry [pattern memory ops=XXX]
 
-     some languages have to be deactivated in language.dat or
-     parameters trie_size and trie_op_size have to be enlarged.
-     Please refer to the documentation of your TeX distribution
-     or ask a TeX wizard.
+    some languages have to be deactivated in language.dat or
+    parameters trie_size and trie_op_size have to be enlarged
+    (probably in file texmf.cnf).  Please refer to the
+    documentation of your TeX distribution or ask a TeX wizard.
 
 
 END.
