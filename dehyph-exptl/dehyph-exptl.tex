@@ -494,6 +494,109 @@ zugrundeliegt, sowie eine \Abk{url} zum direkten Herunterladen der
 Wortliste (ca. 15\,MB) kann dem Kopf beider Dateien entnommen werden.
 
 
+\section{Fragen \& Antworten}
+\label{sec:fragen}
+
+\newcommand*{\fragefont}{\itshape}
+\newcommand*{\frage}[2]{%
+  \expandafter\gdef\csname #1\endcsname{#2}%
+\item\label{#1}\csname #1\endcsname%
+}
+\newcommand{\antwort}[1]{%
+  \medskip\par
+  {\noindent\fragefont\ref{#1}.~\csname #1\endcsname\par}
+  \nobreak\noindent\ignorespaces%
+}
+
+\begin{enumerate}
+  \fragefont%
+  \setlength{\itemsep}{4pt}%
+  \setlength{\parskip}{0pt}%
+
+\frage{faInfo}{Wie kann ich mich über dieses Projekt informieren?}
+
+\frage{faHelfen}{Wie kann ich helfen?}
+
+\frage{faDateien}{Welche Dateien sollte ich mir ansehen?}
+
+\frage{faBugsSammeln}{Sollten Trennfehler einzeln oder gesammelt
+  eingereicht werden?}
+
+\frage{faBugsKrit}{Was ist noch beim Einreichen von Trennfehlern zu
+  beachten?}
+\end{enumerate}
+
+
+\antwort{faInfo}{Zentrale Anlaufstelle ist die Projekt-\Abk{url}.%
+\footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}
+%
+Die Mailingliste kann nach Anmeldung%
+\footnote{Falls Sie die Anmeldung bei \Programm{Google} scheuen, können
+Sie uns vielleicht beim Umzug auf einen anderen Host helfen?  Die
+Anforderungen an einen alternativen Projekthost können auch privat oder
+ersatzweise in der Newsgruppe \Datei{de.comp.text.tex} besprochen
+werden.}
+%
+für Fragen und Hinweise genutzt werden.}
+
+
+\antwort{faHelfen}{Es gibt mehrere Möglichkeiten:
+\begin{itemize}
+\item Die einfachste ist, die experimentellen Trennmuster ausgiebig zu
+  Testen und Fehler zu melden (siehe
+  Abschnitt~\ref{sec:fehltrennungen}).
+
+\item Besonders hilfreich wäre Mitarbeit am Projekt.  Obwohl schon
+  experimentelle Trennmuster veröffentlicht wurden, steht dieses noch
+  ziemlich am Anfang.  Ziel ist, die Wortliste, die den Trennmustern
+  zugrundeliegt, von möglichst vielen Menschen in verteilter Arbeit auf
+  Richtigkeit zu prüfen.
+
+  Bis dahin bleiben noch viele offene Fragen zu klären und viel zu tun.
+  Bei Interesse ist es am einfachsten, Fragen, Hinweise und Ideen an die
+  Mailingliste zu schicken.  Als Einstieg kann auch die Aufgabenliste in
+  der Projektbeschreibung dienen.
+
+\item Nach Fertigstellung der Prüfmaske kann mittelfristig auch durch
+  systematische Durchsicht eines Teils der Wortliste geholfen werden.
+\end{itemize}
+}
+
+
+\antwort{faDateien}{
+\begin{itemize}
+\item Neben der Dokumentation zu den Trennmustern enthält dieses Paket
+  eine Projektbeschreibung (\Datei{projektbeschreibung.pdf}).
+
+\item Die Datei \Datei{BUGS} beschreibt ein paar bekannte systematische
+  Fehler der Trennmuster.
+
+\item Das Entwicklerrepositorium enthält in der Datei \Datei{dateikopf}
+  eine Beschreibung des Formats der Wortliste.
+
+\item Die \Abk{html}-Präsenz des Projekts enthält einen Dateibereich mit
+  weiteren Dateien, etwa einem Archiv der Diskussion im
+  \Abk{mbox}-Format.
+\end{itemize}
+}
+
+
+\antwort{faBugsSammeln}{Ganz egal.  Bei mehreren Fehlern kann es jedoch
+sinnvoll sein, diese thematisch zu gruppieren.}
+
+
+\antwort{faBugsKrit}{In Abschnitt~\ref{sec:fehltrennungen} wurden drei
+alternative Kriterien angegeben, für Fehler, die sehr wahrscheinlich in
+den Trennmustern korrigiert werden (können).  Zur einfacheren Zuordnung
+können Sie bei einzelnen Fehlern dem Betreff Ihrer E-Mail das
+entsprechende Kriterium in eckigen Klammern voranstellen, zum Beispiel:
+\begin{lstlisting}[style=Text]
+Betreff: [C] sonnendurchfluteten
+\end{lstlisting}
+für eine Fehltrennung des Wortes \emph{sonnendurchfluteten}, die durch
+einen Fehler in der Wortliste hervorgerufen wird.}
+
+
 \end{document}
 
 %%% Local Variables: 
