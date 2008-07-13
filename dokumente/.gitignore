@@ -6,8 +6,5 @@
 *.pdf
 *.toc
 
-auto
-*.bib~
-*.tex~
-
 *.diff
+*.patch
