@@ -193,8 +193,7 @@ Wer Interesse oder Ideen hat, wende sich bitte an die Gruppe.\newline
   Rechtschreibung & gut\\
   Bemerkung & manuell gepflegt\\
   Zugriff & \Programm{git}-Repositorium:\newline
-  \textbullet\ \verb+git clone git://repo.or.cz/wortliste.git+\newline
-  \textbullet\ \verb+git clone http://repo.or.cz/r/wortliste.git+ \\
+    \verb+$git clone git://repo.or.cz/wortliste.git+\\
   Stand & 29.\,3.\,2008\\
   \addlinespace\bottomrule
 \end{tabularx}
@@ -256,9 +255,8 @@ Die von Werner Lemberg erstellte und kontrollierte Liste steht im
 \footnote{\url{http://repo.or.cz/w/wortliste.git}}
 %
 Eine Kopie kann mit
-\begin{lstlisting}[style=shell,escapechar=\$]
-git clone git://repo.or.cz/wortliste.git $\qquad\emph{oder}$
-git clone http://repo.or.cz/r/wortliste.git
+\begin{lstlisting}[style=shell]
+$git clone git://repo.or.cz/wortliste.git
 \end{lstlisting}
 bezogen werden.%
 \footnote{\url{http://repo.or.cz/}}
@@ -268,7 +266,7 @@ Das Format der Datei \Datei{wortliste} ist in der Datei
 Skripten zur Bearbeitung der Wortliste enthalten.  Aktualisiert wird die
 Wortliste (das gesamte lokale Repositorium) mit
 \begin{lstlisting}[style=shell]
-git pull
+$git pull
 \end{lstlisting}
 
 \subsection{HTML-Frontend}
