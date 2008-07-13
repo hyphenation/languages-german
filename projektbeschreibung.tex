@@ -20,6 +20,8 @@
 \usepackage{multicol}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{soul}
+\setul{}{.2ex}
 \usepackage{listings}
 \lstloadlanguages{[LaTeX]TeX, sh}
 \lstset{basicstyle=\ttfamily, keywordstyle={}, commentstyle={},
@@ -138,48 +140,84 @@ Die Kommunikation läuft derzeit über die Gruppe
 \Programm{Trennmuster-Opensource} bei Google%
 \footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}%
 , das Projekt soll jedoch bei einem anderen Internetdienst zur
-Verwaltung von Softwareprojekten angemeldet werden.
+Verwaltung von Softwareprojekten angemeldet werden.  Ersatzweise kann
+für die Diskussion auch die Newsgruppe \Datei{de.comp.text.tex} genutzt
+werden.
 
 
 
 \section{Aufgabenliste}
 \label{sec:aufgabenliste}
 Dieser Abschnitt enthält eine Zusammenstellung von anstehenden Aufgaben.
-Die Liste ist weder sortiert, noch vollständig.
+Die Liste ist weder sortiert, noch vollständig.  Wer Interesse oder
+Ideen hat, wende sich bitte an die Gruppe.  \emph{Dieses Projekt
+  benötigt Deine Hilfe!}
 
-\subsection*{Arbeit an Trennmustern}
+\subsection{Wortliste}
 \begin{itemize}\raggedright
-\item Spezifikation und Gestaltung der Eingabemaske (Frontend)
-\item Spezifikation und Implementierung der Datenbankanbindung (Backend)
-\item Erweitern des Wortbestandes um Wörter aus geläufigen
-  Sprachbereichen (Küche und Haushalt, Handwerk, Floristik, Märchen,
-  deutsche Vor- und Nachnamen, Städte- und Flussnamen, römische Ziffern,
-  etc.)
-\item Kontrolle von Rechtschreibung und Trennung des Wortbestands
-\item Prüfen, ob linguistische Besonderheiten der deutschen Sprache
-  durch Startmuster in \Programm{Patgen} berücksichtigt werden können
-  (häufige Vor- und Nachsilben wie -lich, -keit, -lein, etc.)
+\item Spezifikation und Implementierung der Datenbankanbindung
+  (Wortliste~v2.0, Backend)
+\item Spezifikation und Gestaltung der \Abk{html}-Maske zur verteilten
+  Kontrolle der Wortliste (Frontend)
+\item systematische Erweiterung des Wortbestands:
+  \begin{itemize}
+  \item um Wörter aus einer nach Häufigkeiten sortierten Liste (Quellen
+    sind vorhanden, siehe Abschnitt~\ref{sec:ressourcen}),
+  \item um Wörter aus geläufigen Sprachbereichen (Quellen werden noch
+    benötigt), zum Beispiel
+    \begin{multicols}{2}
+      \begin{itemize}
+      \item Küche und Haushalt
+      \item Flora und Fauna
+      \item Gesellschaft: Handwerk, Politik, Sport
+      \item (alte) Literatur: Märchen, Liedtexte
+      \item deutsche Vor- und Nachnamen
+      \item Städte- und Flussnamen\\
+      \item \st{Zahlwörter} und römische Zahlen\\
+      \item \ldots
+      \end{itemize}
+    \end{multicols}
+  \end{itemize}
+\item Behandlung von falschen Ligaturen
+\item Unterscheidung von Lang- und Rund-s für den Satz mit gebrochenen
+  Schriften
+\item verteilte Kontrolle von Rechtschreibung und Trennung des
+  Wortbestands
 \end{itemize}
 
-\subsection*{Änderungen an \TeX}
+\subsection{Trennmuster}
 \begin{itemize}\raggedright
-\item \TeX\ sollte Trennmuster dynamisch laden können, beispielsweise
-  für fachspezifische Begriffe ($\Rightarrow$ Lua\TeX).
-\item Babel sollte einen Versionsmechanismus für die
-  Trennmusteraktivierung anbieten, um in einem Dokument trotz
-  weiterentwickelter Trennmuster umbruchtreuen Textsatz garantieren zu
-  können ($\Rightarrow$ Paket \texttt{hyphsubst}).
-\item Haupt- und Nebentrennstellen sollten im Trennalgorithmus
-  berücksichtigt werden.
+\item Können Strukturen der deutschen Sprache durch Startmuster in
+  \Programm{Patgen} berücksichtigt werden, zum Beispiel häufige Vor- und
+  Nachsilben wie \emph{auf-}, \emph{aus-}, \emph{ver-}, \emph{-keit},
+  \emph{-lich}, \emph{-lein}, etc.?
 \end{itemize}
 
-\subsection*{Sonstiges}
+\subsection{\TeX}
+\begin{itemize}\raggedright
+\item In Dokumenten muss trotz weiterentwickelter Trennmuster
+  langfristig umbruchtreuer Textsatz garantiert werden können.  Daher
+  benötigt \TeX{}s Sprachenschnittstelle (Pakete \Programm{Babel} bzw.
+  \Programm{Polyglossia}) einen Versionsmechanismus für die
+  Trennmusteraktivierung.  $\Rightarrow$ Paket \Programm{hyphsubst}
+\item Für einzelne Dokumente ist es wünschenswert fachspezifische
+  Trennmuster verwenden zu können.  Allerdings können Trennmuster nur
+  während der Formaterstellung geladen werden.  Einmal eingebundene
+  Trennmuster sind somit immer im Format vorhanden.  Es ist daher
+  sinnvoll, Trennmuster dynamisch, auch während der Ausführung, laden zu
+  können.  Wie wird mit kollidierenden Mustern umgegangen?
+  $\Rightarrow$ Lua\TeX
+\item Trennstellen sollen gewichtet werden können (z.\,B. Haupt-,
+  Neben-, Nottrennungen).
+\item Im Satz mit gebrochenen Schriften sollen langes und rundes~s ohne
+  Auszeichnung im Quelltext richtig behandelt werden.
+\end{itemize}
+
+\subsection{Sonstige}
 \begin{itemize}\raggedright
 \item Umzug auf einen anderen Host (BerliOS, Sourceforge o.\,ä.)
 \item Reservierung einer eigenen Domain
 \end{itemize}
-Wer Interesse oder Ideen hat, wende sich bitte an die Gruppe.\newline
-\indent\emph{Dieses Projekt benötigt Deine Hilfe!}
 
 
 
@@ -274,7 +312,7 @@ Wortliste (das gesamte lokale Repositorium) mit
 $git pull
 \end{lstlisting}
 
-\subsection{HTML-Frontend}
+\subsection{\Abk{html}-Prüfmaske}
 Es existiert ein Entwurf für eine interaktive Maske zur Kontrolle der
 Rechtschreibung von Wortlisten und der Eingabe korrekter Trennungen.%
 \footnote{\url{http://www.mnn.ch/opendehyph/index.php}}
