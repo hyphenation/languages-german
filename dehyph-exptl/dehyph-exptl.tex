@@ -23,7 +23,7 @@
 \usepackage{booktabs}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 \usepackage{listings}
-\lstloadlanguages{[LaTeX]TeX}
+\lstloadlanguages{[LaTeX]TeX, sh}
 \lstset{basicstyle=\ttfamily, keywordstyle={}, commentstyle={},
   columns=flexible, showspaces=false, showstringspaces=false,
 %  aboveskip=12pt, belowskip=12pt, frame=tb,
@@ -32,6 +32,8 @@
 % framexleftmargin=6pt, framexrightmargin=6pt
 }
 \lstdefinestyle{LaTeX}{language=[LaTeX]TeX, basicstyle=\ttfamily,
+  keywordstyle={}, commentstyle={\itshape}}
+\lstdefinestyle{shell}{language=sh, basicstyle=\ttfamily,
   keywordstyle={}, commentstyle={\itshape}}
 \lstdefinestyle{Text}{language=, basicstyle=\ttfamily,
   keywordstyle={}, commentstyle={}}
@@ -475,9 +477,8 @@ des Projekts%
 \footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}
 %
 erhältlich.  Eine Kopie kann mit
-\begin{lstlisting}[escapechar=\$]
-git clone git://repo.or.cz/wortliste.git $\qquad\emph{oder}$
-git clone http://repo.or.cz/r/wortliste.git
+\begin{lstlisting}[style=shell]
+$git clone git://repo.or.cz/wortliste.git
 \end{lstlisting}
 bezogen werden.%
 \footnote{\url{http://repo.or.cz/}}
