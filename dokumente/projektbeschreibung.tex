@@ -71,8 +71,8 @@ desc={BibTeX-Quelltext der Datei \jobname.pdf}%
 \setkomafont{section}{\Large}
 \setkomafont{subsection}{\Large\itshape}
 %%% Einige Makros für logische Auszeichnungen definieren.
-\newcommand*{\Abk}[1]{\textsc{#1}}
-\newcommand*{\Programm}[1]{\textsc{#1}}
+\newcommand*{\Abk}[1]{\textsc{\lsstyle#1}}
+\newcommand*{\Programm}[1]{\textsc{\lsstyle#1}}
 \newcommand*{\Datei}[1]{\texttt{#1}}
 %%% Randnotiz am linken Rand.
 \newcommand{\lrand}[1]{%
@@ -137,7 +137,7 @@ Dante~e.\,V.%
   \url{http://www.dante.de/}} zusammen.
 
 Die Kommunikation läuft derzeit über die Gruppe
-\Programm{Trennmuster-Opensource} bei Google%
+\Programm{Trennmuster-Opensource} bei \Programm{Google}%
 \footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}%
 , das Projekt soll jedoch bei einem anderen Internetdienst zur
 Verwaltung von Softwareprojekten angemeldet werden.  Ersatzweise kann
@@ -197,9 +197,9 @@ Ideen hat, wende sich bitte an die Gruppe.  \emph{Dieses Projekt
 \begin{itemize}\raggedright
 \item In Dokumenten muss trotz weiterentwickelter Trennmuster
   langfristig umbruchtreuer Textsatz garantiert werden können.  Daher
-  benötigt \TeX{}s Sprachenschnittstelle (Pakete \Programm{Babel} bzw.
-  \Programm{Polyglossia}) einen Versionsmechanismus für die
-  Trennmusteraktivierung.  $\Rightarrow$ Paket \Programm{hyphsubst}
+  benötigt \TeX{}s Sprachenschnittstelle (Pakete \texttt{Babel} bzw.
+  \texttt{Polyglossia}) einen Versionsmechanismus für die
+  Trennmusteraktivierung.  $\Rightarrow$ Paket \texttt{hyphsubst}
 \item Für einzelne Dokumente ist es wünschenswert fachspezifische
   Trennmuster verwenden zu können.  Allerdings können Trennmuster nur
   während der Formaterstellung geladen werden.  Einmal eingebundene
@@ -333,7 +333,7 @@ Rechtschreibung von Wortlisten und der Eingabe korrekter Trennungen.%
   \texttt{Babel} und \texttt{hyphsubst} verwendet werden und ist im
   \Abk{ctan} verfügbar.
 
-\item Im Dateibereich der Google-Gruppe
+\item Im Dateibereich der \Programm{Google}-Gruppe
   \Programm{Trennmuster-Opensource} sind aktuelle Trennmuster verfügbar,
   die aus Werner Lembergs Liste generiert wurden.%
   \footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}
