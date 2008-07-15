@@ -31,14 +31,21 @@ PATTERNS = $(TRAD)/$(TRAD)-$(DATE).pat $(REFO)/$(REFO)-$(DATE).pat
 WRAPPERS = $(TRAD)/$(TRAD)-$(DATE).tex $(REFO)/$(REFO)-$(DATE).tex
 
 
-.PHONY: pre tex
+.PHONY: pre-trad pre-refo tex
 
 all: pre tex
 
-pre:
-	$(MKDIR) $(TRAD) $(REFO)
+pre-trad:
+	$(MKDIR) $(TRAD)
+pre-refo:
+	$(MKDIR) $(REFO)
 
 tex: $(PATTERNS) $(WRAPPERS)
+
+# auxiliary targets
+
+words-trad: pre-trad $(TRAD)/words.hyphenated.trad
+words-refo: pre-refo $(REFO)/words.hyphenated.refo
 
 
 $(TRAD)/pattern.8 $(TRAD)/pattern.rules: $(TRAD)/words.hyphenated.trad
