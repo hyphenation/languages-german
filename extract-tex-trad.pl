@@ -1,11 +1,11 @@
 #! /usr/bin/perl -w
 #
-# extract-tex-old.pl
+# extract-tex-trad.pl
 #
 # Dieses Perl-Skript extrahiert aus der `wortliste'-Datei eine Eingabedatei
-# für Patgen, und zwar für die alte deutsche Rechtschreibung.
+# für Patgen, und zwar für die traditionelle deutsche Rechtschreibung.
 #
-# Aufruf:  perl extract-tex-alt.pl < wortliste > input.patgen
+# Aufruf:  perl extract-tex-trad.pl < wortliste > input.patgen
 
 use strict;
 

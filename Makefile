@@ -1,11 +1,11 @@
 # This Makefile creates German hyphenation patterns in subdirectories
-# $(OLD) and $(NEW).  
+# $(TRAD) and $(REFO).  
 
 SRCDIR = ~/git/wortliste
 WORDLIST = wortliste
 
-OLD = dehypht-x
-NEW = dehyphn-x
+TRAD = dehypht-x
+REFO = dehyphn-x
 
 LC_ENVVARS = LC_COLLATE=de_DE.ISO8859-1 \
              LC_CTYPE=de_DE.ISO8859-1
@@ -27,8 +27,8 @@ SORT = $(LC_ENVVARS) sort -d \
 GIT_VERSION := `$(CHDIR) $(SRCDIR); \
                 $(GIT) log --pretty=oneline -1 $(WORDLIST) \
                 | $(SED) 's/ .*//'`
-PATTERNS = $(OLD)/$(OLD)-$(DATE).pat $(NEW)/$(NEW)-$(DATE).pat
-WRAPPERS = $(OLD)/$(OLD)-$(DATE).tex $(NEW)/$(NEW)-$(DATE).tex
+PATTERNS = $(TRAD)/$(TRAD)-$(DATE).pat $(REFO)/$(REFO)-$(DATE).pat
+WRAPPERS = $(TRAD)/$(TRAD)-$(DATE).tex $(REFO)/$(REFO)-$(DATE).tex
 
 
 .PHONY: pre tex
@@ -36,54 +36,54 @@ WRAPPERS = $(OLD)/$(OLD)-$(DATE).tex $(NEW)/$(NEW)-$(DATE).tex
 all: pre tex
 
 pre:
-	$(MKDIR) $(OLD) $(NEW)
+	$(MKDIR) $(TRAD) $(REFO)
 
 tex: $(PATTERNS) $(WRAPPERS)
 
 
-$(OLD)/pattern.8 $(OLD)/pattern.rules: $(OLD)/words.hyphenated.old
-	$(CHDIR) $(OLD); \
+$(TRAD)/pattern.8 $(TRAD)/pattern.rules: $(TRAD)/words.hyphenated.trad
+	$(CHDIR) $(TRAD); \
           $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
 
-$(OLD)/$(OLD)-$(DATE).pat : $(OLD)/pattern.8 $(OLD)/pattern.rules
-	$(CAT) $(SRCDIR)/$(OLD).1 \
+$(TRAD)/$(TRAD)-$(DATE).pat : $(TRAD)/pattern.8 $(TRAD)/pattern.rules
+	$(CAT) $(SRCDIR)/$(TRAD).1 \
           | $(SED) -e "s/@DATE@/$(DATE)/" \
                    -e "s/@GIT_VERSION@/$(GIT_VERSION)/" > $@; \
-        $(CAT) $(OLD)/pattern.rules >> $@; \
-        $(CAT) $(SRCDIR)/$(OLD).2 >> $@; \
-        $(CAT) $(OLD)/pattern.8 \
+        $(CAT) $(TRAD)/pattern.rules >> $@; \
+        $(CAT) $(SRCDIR)/$(TRAD).2 >> $@; \
+        $(CAT) $(TRAD)/pattern.8 \
           | $(ICONV) >> $@; \
-        $(CAT) $(SRCDIR)/$(OLD).3 >> $@
+        $(CAT) $(SRCDIR)/$(TRAD).3 >> $@
 
-$(NEW)/pattern.8 $(NEW)/pattern.rules: $(NEW)/words.hyphenated.new
-	$(CHDIR) $(NEW); \
+$(REFO)/pattern.8 $(REFO)/pattern.rules: $(REFO)/words.hyphenated.refo
+	$(CHDIR) $(REFO); \
           $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
 
-$(NEW)/$(NEW)-$(DATE).pat: $(NEW)/pattern.8 $(NEW)/pattern.rules
-	$(CAT) $(SRCDIR)/$(NEW).1 \
+$(REFO)/$(REFO)-$(DATE).pat: $(REFO)/pattern.8 $(REFO)/pattern.rules
+	$(CAT) $(SRCDIR)/$(REFO).1 \
           | $(SED) -e "s/@DATE@/$(DATE)/" \
                    -e "s/@GIT_VERSION@/$(GIT_VERSION)/" > $@; \
-        $(CAT) $(NEW)/pattern.rules >> $@; \
-        $(CAT) $(SRCDIR)/$(NEW).2 >> $@; \
-        $(CAT) $(NEW)/pattern.8 \
+        $(CAT) $(REFO)/pattern.rules >> $@; \
+        $(CAT) $(SRCDIR)/$(REFO).2 >> $@; \
+        $(CAT) $(REFO)/pattern.8 \
           | $(ICONV) >> $@; \
-        $(CAT) $(SRCDIR)/$(NEW).3 >> $@
+        $(CAT) $(SRCDIR)/$(REFO).3 >> $@
 
-$(OLD)/words.hyphenated.old: $(SRCDIR)/$(WORDLIST)
+$(TRAD)/words.hyphenated.trad: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
-          | $(PERL) $(SRCDIR)/extract-tex-old.pl \
+          | $(PERL) $(SRCDIR)/extract-tex-trad.pl \
           | $(SORT) > $@
 
-$(NEW)/words.hyphenated.new: $(SRCDIR)/$(WORDLIST)
+$(REFO)/words.hyphenated.refo: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
-          | $(PERL) $(SRCDIR)/extract-tex-new.pl \
+          | $(PERL) $(SRCDIR)/extract-tex-refo.pl \
           | $(SORT) > $@
 
-$(OLD)/$(OLD)-$(DATE).tex: $(SRCDIR)/$(OLD).tex.in
+$(TRAD)/$(TRAD)-$(DATE).tex: $(SRCDIR)/$(TRAD).tex.in
 	$(CAT) $< \
           | $(SED) -e "s/@DATE@/$(DATE)/" > $@
 
-$(NEW)/$(NEW)-$(DATE).tex: $(SRCDIR)/$(NEW).tex.in
+$(REFO)/$(REFO)-$(DATE).tex: $(SRCDIR)/$(REFO).tex.in
 	$(CAT) $< \
           | $(SED) -e "s/@DATE@/$(DATE)/" > $@
 

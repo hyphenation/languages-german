@@ -1,11 +1,11 @@
 #! /usr/bin/perl -w
 #
-# extract-tex-new.pl
+# extract-tex-refo.pl
 #
 # Dieses Perl-Skript extrahiert aus der `wortliste'-Datei eine Eingabedatei
-# für Patgen, und zwar für die neue deutsche Rechtschreibung.
+# für Patgen, und zwar für die reformierte deutsche Rechtschreibung.
 #
-# Aufruf:  perl extract-tex-new.pl < wortliste > input.patgen
+# Aufruf:  perl extract-tex-refo.pl < wortliste > input.patgen
 
 use strict;
 
