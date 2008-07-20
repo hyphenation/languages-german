@@ -317,9 +317,24 @@ Eine Kopie kann mit
 $git clone git://repo.or.cz/wortliste.git
 \end{lstlisting}
 bezogen werden.%
-\footnote{\url{http://repo.or.cz/}\quad \Programm{Git} v1.6.0 enthält
-einen Patch, der den Netzwerkzugriff auf dieses Repositorium
-verbessert.}
+\footnote{\url{http://repo.or.cz/}}
+%
+Da dieses Repositorium eine große Textdatei enthält, sollte nach dem
+Klonen für einen reibungslosen Betrieb die Konfigurationsvariable
+\verb+core.DeltaBaseCacheLimit+ vom Standardwert 16\,MB auf einen
+höheren Wert gesetzt werden.  Dies kann mit den folgenden Kommandos
+erreicht werden:
+\begin{lstlisting}[style=shell]
+$git config core.DeltaBaseCacheLimit 64m
+$git config --get core.DeltaBaseCacheLimit
+\end{lstlisting}
+Das letzt Kommando sollte nun den Wert \verb+64m+ zurückliefern.
+
+\Programm{Git} enthält in der Version 1.5.6.4 einen Patch, der ein
+Problem mit dieser Konfigurationsvariablen behebt und den
+Netzwerkzugriff auf dieses Repositorium verbessert.  Mit älteren
+\Programm{Git}-Versionen können auch höhere Werte für
+\verb+core.DeltaBaseCacheLimit+ sinnvoll sein.
 
 Das Format der Datei \Datei{wortliste} ist in der Datei
 \Datei{dateikopf} beschrieben.  Im Repositorium sind auch einige
