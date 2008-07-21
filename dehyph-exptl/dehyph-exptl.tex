@@ -15,7 +15,7 @@
 \renewcommand*{\ttdefault}{lmtt}
 \usepackage{textcomp}
 \linespread{1.05}
-\usepackage[expansion=true]{microtype}
+\usepackage[expansion=true, letterspace=80]{microtype}
 %%% Lade einige Pakete.
 \usepackage{multicol}
 \usepackage{paralist}
@@ -171,7 +171,8 @@ hat mehrere Konsequenzen:
 
 Das Projekt \emph{Freie Wortlisten und Trennmuster für die deutsche
   Sprache} hat sich deshalb das Ziel gesetzt, neue, hochqualitative
-Trennmuster für die Benutzung in \TeX\ und OpenOffice zu erstellen.
+Trennmuster für die Benutzung in \TeX\ und \Programm{OpenOffice} zu
+erstellen.
 
 Den experimentellen Trennmustern dieses Pakets liegt eine Wortliste mit
 den etwa fünfhunderttausend häufigsten deutschen Wörtern in deutscher
@@ -185,9 +186,11 @@ Wörter eine sehr gute Trennqualität erreicht werden.  Insbesondere
 sollte sich die Trennung häufig auftretender zusammengesetzter Wörter
 verbessern.
 
-\emph{Dieses Projekt benötigt Deine Hilfe!}  Weitere Informationen
-können der diesem Paket beiliegenden Projektbeschreibung entnommen
-werden, zum Beispiel eine (grobe) Aufgabenliste.%
+Die deutschsprachige Trennmustermannschaft ist eine offene Gruppe und
+benötigt dringend weitere Mithilfe.  Weitere Informationen können
+Anhang~\ref{sec:fragen} oder der diesem Paket beiliegenden
+Projektbeschreibung entnommen werden, zum Beispiel eine (grobe)
+Aufgabenliste.%
 \footnote{Diese Liste enthält auch themenferne Punkte, wie den Umzug auf
   einen neuen Projekthost.  Jede Hilfe ist willkommen!}
 %
@@ -482,10 +485,24 @@ erhältlich.  Eine Kopie kann mit
 $git clone git://repo.or.cz/wortliste.git
 \end{lstlisting}
 bezogen werden.%
-\footnote{\url{http://repo.or.cz/}\quad \Programm{Git} v1.6.0 enthält
-einen Patch, der den Netzwerkzugriff auf dieses Repositorium
-verbessert.}
+\footnote{\url{http://repo.or.cz/}}
 %
+Da dieses Repositorium eine große Textdatei enthält, sollte nach dem
+Klonen für einen reibungslosen Betrieb die Konfigurationsvariable
+\verb+core.DeltaBaseCacheLimit+ vom Standardwert 16\,MB auf einen
+höheren Wert gesetzt werden.  Dies kann mit den folgenden Kommandos
+erreicht werden:
+\begin{lstlisting}[style=shell]
+$git config core.DeltaBaseCacheLimit 64m
+$git config --get core.DeltaBaseCacheLimit
+\end{lstlisting}
+Das letzte Kommando sollte nun den Wert \verb+64m+ zurückliefern.
+
+\Programm{Git} enthält in der Version 1.5.6.4 einen Patch, der ein
+Problem mit dem Netzwerkzugriff auf dieses Repositorium behebt.  Mit
+älteren \Programm{Git}-Versionen können auch höhere Werte für
+\verb+core.DeltaBaseCacheLimit+ sinnvoll sein.
+
 Das Format der Wortliste wird in der Datei \Datei{dateikopf}
 beschrieben.
 
