@@ -27,12 +27,11 @@ while (<>) {
   $zeile = $feld[7] if defined $feld[7] && $feld[7] ne "-8-";
   next if $zeile eq "-2-";
 
-  # entferne Doppeldeutigkeiten ganz
-  next if /[\[\]]/;
   # entferne spezielle Trennungen
   $zeile =~ s/\{(.*?)\|.*?\}/$1/g;
   # entferne Markierungen für schlechte Trennungen
   $zeile =~ s/\.//g;
+
   print "$zeile\n";
 }
 
