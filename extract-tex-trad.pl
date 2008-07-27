@@ -29,6 +29,8 @@ while (<>) {
 
   # entferne spezielle Trennungen
   $zeile =~ s/\{(.*?)\|.*?\}/$1/g;
+  # entferne Doppeldeutigkeiten
+  $zeile =~ s/\[-*(.*?)-*\|.*?\]/$1/g;
   # entferne Markierungen für schlechte Trennungen
   $zeile =~ s/\.//g;
 
