@@ -306,6 +306,13 @@ Beachte, die folgenden Abschnitte enthalten keine vollst‰ndige
 Aufstellung der Silbentrennregeln.  Diese sind den entsprechenden
 Regelwerken zu entnehmen.
 
+\emph{Hinweis!} In Liangs Trennalgorithmus werden Groﬂ- und
+Kleinschreibung nicht unterschieden~\cite{liang:1983}.  Die
+Schreibweisen \emph{Nachtritt} und \emph{nachtritt} werden aus Sicht des
+Trennalgorithmus gleich behandelt (siehe auch
+\hyperref[enum:tradDoppeld]{Regeln~\textit{T\ref{enum:tradDoppeld}}}
+und~\hyperref[enum:reformDoppeld]{\textit{R\ref{enum:reformDoppeld}}}).
+
 \subsection{Traditionelle Rechtschreibung}
 \label{sec:tradRS}
 \begin{enumerate}[\hspace{1em}\itshape T1]
@@ -331,23 +338,29 @@ Regelwerken zu entnehmen.
 
 \item\label{enum:tradDoppeld} In mehrdeutigen Wˆrtern werden nur
   ¸bereinstimmende Trennstellen zugelassen.  Mehrdeutigkeiten, die nur
-  im Versalsatz von Wˆrtern mit ﬂ auftreten, werden nicht
+  im Versalsatz von Wˆrtern mit \emph{ﬂ} auftreten, werden nicht
   ber¸cksichtigt:\par\nobreak
 
   \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
-    Drucker-zeug-nis & Druck-erzeugnis\\
+    Druckerzeug-nis & Druck-erzeugnis & Drucker-zeugnis\\
     Fuﬂ-balleh-re & Fuﬂball-ehre\\
+    Nachtritt & Nacht-ritt & nach-tritt\\
     Wachstu-be & Wach-stube & Wachs-tube\\
-    \textls{M\kern-.4ptA\kern-.4ptS-SE} & \textls{M\kern-.4ptA\kern-.4ptSSE}\\
+    Mas-se & \textls{M\kern-.4ptA-SSE} &
+    \textls{M\kern-.4ptA\kern-.6ptSSE}\\
   \end{tabular}
 
-  Beachte, Konsonanten‰nderungen bei Trennungen werden nicht in
-  Trennmustern ber¸cksichtigt, sondern durch die Sprachunterst¸tzung der
-  Pakete \texttt{Babel} und \texttt{Polyglossia}.  Mit den Eingaben
-  \lstinline[style=LaTeX]+Dru"ckerzeugnis+ und
-  \lstinline[style=LaTeX]+Fuﬂba"llehre+ kˆnnen die Mehrdeutigkeiten
-  aufgelˆst und die Trennungen Druk-kerzeugnis und Fuﬂball-lehre
-  ermˆglicht werden.
+  Beachte, die Trennstelle ">Drucker-zeugnis"< ist in der Interpretation
+  \emph{Druck-Erzeugnis} irref¸hrend.  Sie entf‰llt nach
+  \hyperref[enum:tradSinn]{Regel~\textit{T\ref{enum:tradSinn}}} und ist
+  nicht als ¸bereinstimmende Trennstelle anzusehen.
+
+  Konsonanten‰nderungen bei Trennungen werden nicht in Trennmustern
+  ber¸cksichtigt, sondern durch die Sprachunterst¸tzung des Pakets
+  \texttt{Babel}.  Die Eingaben \lstinline[style=LaTeX]+Dru"ckerzeugnis+
+  und \lstinline[style=LaTeX]+Fuﬂba"llehre+ lˆsen die Mehrdeutigkeit auf
+  und ermˆglichen die Trennungen ">Druk-kerzeugnis"< und
+  ">Fuﬂball-lehre"<.
 
 \end{enumerate}
 
@@ -417,11 +430,18 @@ Regelwerken zu entnehmen.
 \item\label{enum:reformDoppeld} In mehrdeutigen Wˆrtern werden nur
   ¸bereinstimmende Trennstellen zugelassen:\par\nobreak
 
-  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
-    Drucker-zeug-nis & Dru-ckerzeugnis & Druck-erzeugnis\\
+  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+    Druckerzeug-nis & Dru-ckerzeugnis & Druck-erzeugnis &
+    Drucker-zeugnis\\
     Mu-siker-le-ben & Musi-kerleben & Musik-erleben\\
+    Nachtritt & Nacht-ritt & nach-tritt\\
     Wachstu-be & Wach-stube & Wachs-tube\\
   \end{tabular}
+  
+  Beachte, die Trennstelle ">Drucker-zeugnis"< ist in der Interpretation
+  \emph{Druck-Erzeugnis} irref¸hrend.  Sie entf‰llt nach
+  \hyperref[enum:tradSinn]{Regel~\textit{R\ref{enum:reformSinn}}} und
+  ist nicht als ¸bereinstimmende Trennstelle anzusehen.
 
 \end{enumerate}
 
