@@ -329,6 +329,26 @@ Regelwerken zu entnehmen.
     Tal-entwäs-se-rung & Talent-wässerung\\
   \end{tabular}
 
+\item\label{enum:tradDoppeld} In mehrdeutigen Wörtern werden nur
+  übereinstimmende Trennstellen zugelassen.  Mehrdeutigkeiten, die nur
+  im Versalsatz von Wörtern mit ß auftreten, werden nicht
+  berücksichtigt:\par\nobreak
+
+  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+    Drucker-zeug-nis & Druck-erzeugnis\\
+    Fuß-balleh-re & Fußball-ehre\\
+    Wachstu-be & Wach-stube & Wachs-tube\\
+    \textls{M\kern-.4ptA\kern-.4ptS-SE} & \textls{M\kern-.4ptA\kern-.4ptSSE}\\
+  \end{tabular}
+
+  Beachte, Konsonantenänderungen bei Trennungen werden nicht in
+  Trennmustern berücksichtigt, sondern durch die Sprachunterstützung der
+  Pakete \texttt{Babel} und \texttt{Polyglossia}.  Mit den Eingaben
+  \lstinline[style=LaTeX]+Dru"ckerzeugnis+ und
+  \lstinline[style=LaTeX]+Fußba"llehre+ können die Mehrdeutigkeiten
+  aufgelöst und die Trennungen Druk-kerzeugnis und Fußball-lehre
+  ermöglicht werden.
+
 \end{enumerate}
 
 \subsection{Reformierte Rechtschreibung}
@@ -392,6 +412,15 @@ Regelwerken zu entnehmen.
     Tel-tower & Tel-to-wer & Tel-tow-er\\
     Trep-towern & Trep-to-wern & Trep-tow-ern\\
     Pan-kowers & Pan-ko-wers & Pan-kow-ers\\
+  \end{tabular}
+
+\item\label{enum:reformDoppeld} In mehrdeutigen Wörtern werden nur
+  übereinstimmende Trennstellen zugelassen:\par\nobreak
+
+  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+    Drucker-zeug-nis & Dru-ckerzeugnis & Druck-erzeugnis\\
+    Mu-siker-le-ben & Musi-kerleben & Musik-erleben\\
+    Wachstu-be & Wach-stube & Wachs-tube\\
   \end{tabular}
 
 \end{enumerate}
