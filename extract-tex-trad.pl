@@ -16,6 +16,9 @@ while (<>) {
   chop;
   next if /^#/;
 
+  # entferne Kommentare
+  s/#.*$//;
+
   my @feld = split(';');
   next if $#feld < 0;
 
