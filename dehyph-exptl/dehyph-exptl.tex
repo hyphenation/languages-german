@@ -37,6 +37,9 @@
   keywordstyle={}, commentstyle={\itshape}}
 \lstdefinestyle{Text}{language=, basicstyle=\ttfamily,
   keywordstyle={}, commentstyle={}}
+%%% Literaturverweise in runden Klammern mit Semikolon als Trenner.
+\usepackage[round,semicolon]{natbib}
+\renewcommand*{\bibnumfmt}[1]{(#1)}
 %%% Literaturverzeichnis mit Sprachunterstützung.
 \usepackage[fixlanguage]{babelbib}
 \bibliographystyle{babalpha}
@@ -288,10 +291,10 @@ Umbruch erfordern.  Ausgiebige Tests sind erwünscht!}
 \label{sec:trennregeln}
 Es werden zwei Trennmuster bereitgestellt.  Die Trennmuster für die
 traditionelle Rechtschreibung orientieren sich an den verbindlichen
-Regeln des Dudens in der Fassung von 1991.~\cite{duden:1991}  Die
+Regeln des Dudens in der Fassung von 1991~\cite{duden:1991}.  Die
 Trennmuster für die reformierte Rechtschreibung orientieren sich an den
 amtlichen Regeln für die Rechtschreibung der deutschen Sprache in der
-Fassung von 2006.~\cite{amtlRegeln:2006, amtlRegeln:2006:duden}
+Fassung von 2006~\cite{amtlRegeln:2006, amtlRegeln:2006:duden}.
 
 Die Regeln lassen gewisse Freiheiten bei der Schreibung und Trennung von
 Wörtern zu.  Da sich solche Freiheiten nicht ohne weiteres auf die
