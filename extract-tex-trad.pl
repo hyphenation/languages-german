@@ -19,6 +19,9 @@ while (<>) {
   # entferne Kommentare
   s/#.*$//;
 
+  # entferne Leerzeichen aller Art
+  s/\s+//g;
+
   my @feld = split(';');
   next if $#feld < 0;
 
