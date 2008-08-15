@@ -167,19 +167,28 @@ Qualität der Worttrennung einer Sprache wird jedoch maßgeblich von der
 Qualität der Wortliste beeinflusst, aus der die verwendeten Trennmuster
 berechnet wurden.
 
-Leider ist die Wortliste, die den herkömmlichen Trennmustern für die
-traditionelle deutsche Rechtschreibung zugrundeliegt, verschollen.  Dies
-hat mehrere Konsequenzen:
-\begin{itemize}
-\item Die Trennmuster lassen sich nicht reproduzieren.  Die Pflege der
-  herkömmlichen Trennmuster ist daher schwierig bis unmöglich.  Für
-  freie Software ist dies kein zufriedenstellender Zustand.
+Obwohl die herkömmlichen Trennmuster für die deutsche Sprache bei der
+Worttrennung in gewöhnlichen Texten eine akzeptable Fehlerrate
+erreichen, enthalten sie doch einige Schwächen:
 
-\item Die Qualität der ursprünglichen Wortliste und die der Trennmuster
-  kann nur schlecht eingeschätzt werden.  Obwohl sich die herkömmlichen
-  Trennmuster in der Praxis recht gut bewährt haben, existiert für die
-  traditionelle Rechtschreibung inzwischen eine Ausnahmeliste mit über
-  3500 korrigierten Trennungen (Datei \Datei{dehyphtex.tex}).
+\begin{enumerate}
+\item Die Wortliste, die den Trennmustern für die traditionelle deutsche
+  Rechtschreibung zugrundeliegt, ist verschollen.  Die herkömmlichen
+  Trennmuster lassen sich daher nicht reproduzieren und ihre Pflege ist
+  schwierig bis unmöglich.  Für freie Software ist dies kein
+  zufriedenstellender Zustand.
+
+\item Umfang und Qualität der ursprünglichen Wortliste und der
+  Trennmuster können schlecht eingeschätzt werden.  Für die
+  traditionelle Rechtschreibung existiert jedoch inzwischen eine
+  Ausnahmeliste%
+  \footnote{\url{CTAN:language/hyphenation/dehyph/dehyphtex.tex}}
+%
+  mit über 3500 korrigierten Trennungen einfacher Wörter
+  \cite{lemberg:2003, lemberg:2005}.
+
+\item Die Qualität der Trennung zusammengesetzter Wörter ist deutlich
+  geringer als die der Trennung einfacher Wörter.
 
 \item Für die Berechnung der Trennmuster für die reformierte deutsche
   Rechtschreibung stand keine Wortliste zur Verfügung.  Diese
@@ -189,12 +198,28 @@ hat mehrere Konsequenzen:
   Rechtschreibung noch etwas schlechter als die der Trennmuster für die
   traditionelle Rechtschreibung.
 
-\item Eine Besonderheit der (deutsch)""schweizerischen Rechtschreibung,
-  der konsequente Ersatz des ">ß"< durch ">ss"<, wird mit den
-  herkömmlichen Trennmustern nicht berücksichtigt.  Dies beeinflusst
-  auch den Versalsatz nach deutscher Rechtschreibung, wenngleich hier
-  auf Trennungen möglichst verzichtet werden sollte.
-\end{itemize}
+\item Im Versalsatz nach traditioneller deutscher Rechtschreibung wird
+  \emph{ß} durch \emph{SS} oder \emph{SZ} ersetzt, die Trennung bleibt
+  davon jedoch unberührt.%
+  \footnote{Wenngleich auf Trennungen im Versalsatz möglichst ganz
+    verzichtet werden sollte.}
+%
+  In den Trennmustern wird dies nicht berücksichtigt und häufig
+  \emph{S-S} getrennt: \textls{">GR\ftr{ÖS-S}E"<},
+  \textls{">GR\ftr{ÜS-S}E"<}, \textls{">M\ftr{AS-S}ES"<}.
+
+\item Abweichende Schreibweisen in der traditionellen Rechtschreibung,
+  die in Österreich und der Schweiz verwendet werden, werden von den
+  herkömmlichen Trennmustern häufig falsch oder unzureichend getrennt:
+  ">Gro\ftr{s-so}n-kel"<, ">Ku\ftr{s-sh}and"<, ">Ma\ftr{ssn}ah-me"<,
+  ">mi\ftr{s-sa}ch-ten"< (nur Schweiz) und ">Ex-pre\ftr{ssz}ug"<,
+  ">Fit-ne\ftr{s-sc}en-ter"<, ">Fit-ne\ftr{sst}rai-ner"<.
+
+\item Die herkömmlichen Trennmusterdateien enthalten eine Mischung aus
+  \Abk{t1}- und \Abk{ot1}-kodierten Mustern.  Letztere sind zudem
+  unvollständig.  Mit Erscheinen von 16-Bit-fähigen \TeX-Varianten
+  werden saubere Trennmuster nötig.
+\end{enumerate}
 
 Das Projekt \emph{Freie Wortlisten und Trennmuster für die deutsche
   Sprache} hat sich deshalb das Ziel gesetzt, neue, hochqualitative
@@ -202,13 +227,13 @@ Trennmuster für die Benutzung in \TeX\ und \Programm{OpenOffice} zu
 erstellen.
 
 Den experimentellen Trennmustern dieses Pakets liegt eine Wortliste mit
-den etwa fünfhunderttausend häufigsten deutschen Wörtern in deutscher
-und (deutsch)""schweizerischer Schreibweise zugrunde.  Diese Liste ist
-vermutlich erheblich umfangreicher als die ursprüngliche Wortliste.
-Außerdem wurden Worthäufigkeiten in der ursprünglichen Wortliste
-wahrscheinlich überhaupt nicht berücksichtigt.
+den etwa fünfhunderttausend häufigsten Wörtern der deutschen Sprache in
+deutscher, österreichischer und schweizerdeutscher Schreibweise
+zugrunde.  Diese Liste ist vermutlich erheblich umfangreicher als die
+ursprüngliche Wortliste, in der Worthäufigkeiten wahrscheinlich
+überhaupt nicht berücksichtigt wurden.
 
-Mit den vorliegenden Trennmustern sollte für nicht-fachsprachliche
+Mit den vorliegenden Trennmustern sollte für nicht-fachsprach\-li\-che
 Wörter eine sehr gute Trennqualität erreicht werden.  Insbesondere
 sollte sich die Trennung häufig auftretender zusammengesetzter Wörter
 verbessern.
