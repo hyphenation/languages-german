@@ -380,10 +380,20 @@ Trennalgorithmus gleich behandelt (siehe auch
     Tal-entwäs-se-rung & Talent-wässerung\\
   \end{tabular}
 
+\item\label{enum:tradVersal} Wörter mit \emph{ß} werden in der
+  Versalschreibung mit \emph{SS} richtig getrennt
+  \cite[R~179]{duden:1991}:\par\nobreak
+
+  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l}
+    \textls{GRÖSS-TE}\\
+    \textls{GRÜ-SSE}\\
+    \textls{M\kern-.4ptA\kern-.4pt-SSES}\\
+  \end{tabular}
+
 \item\label{enum:tradDoppeld} In mehrdeutigen Wörtern werden nur
   übereinstimmende Trennstellen zugelassen.  Mehrdeutigkeiten, die nur
   im Versalsatz von Wörtern mit \emph{ß} auftreten, werden nicht
-  berücksichtigt:\par\nobreak
+  berücksichtigt (siehe auch \regelref{enum:tradVersal}):\par\nobreak
 
   \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
     Druckerzeug-nis & Druck-erzeugnis & Drucker-zeugnis\\
@@ -479,6 +489,21 @@ Trennalgorithmus gleich behandelt (siehe auch
     Trep-towern & Trep-to-wern & Trep-tow-ern\\
     Pan-kowers & Pan-ko-wers & Pan-kow-ers\\
   \end{tabular}
+
+\item\label{enum:refoVersal} Wörter mit \emph{ß} werden in der
+  Versalschreibung mit \emph{SS} richtig getrennt \cite[\S\S~25~E3,
+  110]{amtlRegeln:2006, amtlRegeln:2006:duden}:\par\nobreak
+
+  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
+    \textls{GRÖS-STE}\\
+    \textls{GRÜS-SE}\\
+    \textls{M\kern-.4ptA\kern-.6ptS-SES}\\
+  \end{tabular}
+
+  Beachte, wird \emph{ß} mit \lstinline[style=LaTeX]+\MakeUppercase+
+  oder in Kapitälchen in \emph{SS} gewandelt, so bleibt \emph{SS}
+  ungetrennt.  Dies ist kein Fehler in den Trennmustern, sondern im
+  \LaTeX-Kern fest implementiert.
 
 \item\label{enum:reformDoppeld} In mehrdeutigen Wörtern werden nur
   übereinstimmende Trennstellen zugelassen:\par\nobreak
