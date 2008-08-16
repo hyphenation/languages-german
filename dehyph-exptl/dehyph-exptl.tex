@@ -55,6 +55,7 @@
     computergestützte Worttrennung}
 }
 \hypersetup{
+  ngerman,% for \autoref
   pdfstartview={XYZ null null null},% Zoom factor is determined by viewer.
   colorlinks,
   linkcolor=RoyalBlue3,
@@ -191,7 +192,7 @@ verbessern.
 
 Die deutschsprachige Trennmustermannschaft ist eine offene Gruppe und
 benötigt dringend weitere Mithilfe.  Weitere Informationen können
-Anhang~\ref{sec:fragen} oder der diesem Paket beiliegenden
+\autoref{sec:fragen} oder der diesem Paket beiliegenden
 Projektbeschreibung entnommen werden, zum Beispiel eine (grobe)
 Aufgabenliste.%
 \footnote{Diese Liste enthält auch themenferne Punkte, wie den Umzug auf
@@ -240,7 +241,7 @@ Dokumentation des Pakets \texttt{hyphsubst} entnommen werden.
 Ob die experimentellen Trennmuster korrekt aktiviert werden, kann mit
 dem folgenden Beispiel getestet werden.  Die Ausgabe für die
 traditionelle und reformierte Rechtschreibung mit herkömmlichen und
-experimentellen Trennmustern ist in Tabelle~\ref{fig:trennvarianten}
+experimentellen Trennmustern ist in \autoref{fig:trennvarianten}
 zusammengefasst.
 \begin{lstlisting}[style=LaTeX]
 \begin{document}
@@ -491,8 +492,8 @@ folgenden Kriterien erfüllt ist:
   ">Talent-wässerungsanlage"<.
 
 \item\label{enum:kritWLfehlerhaft} Das Wort ist bereits in der Wortliste
-  enthalten (siehe Anhang~\ref{sec:wortliste}) und
-  Punkt~\ref{enum:WLfehlerhaft} trifft zu.
+  enthalten (siehe \autoref{sec:wortliste}) und
+  \autoref{enum:WLfehlerhaft} trifft zu.
 \end{enumerate}
 
 Einige bekannte Fehler in den Trennmustern sind in der Datei
@@ -621,8 +622,7 @@ ersatzweise auch die Newsgruppe \Datei{de.comp.text.tex}.}
 \antwort{faHelfen}{Es gibt mehrere Möglichkeiten:
 \begin{itemize}
 \item Die einfachste ist, die experimentellen Trennmuster ausgiebig zu
-  testen und Fehler zu melden (siehe
-  Abschnitt~\ref{sec:fehltrennungen}).
+  testen und Fehler zu melden (siehe \autoref{sec:fehltrennungen}).
 
 \item Besonders hilfreich wäre Mitarbeit am Projekt.  Obwohl schon
   experimentelle Trennmuster veröffentlicht wurden, steht dieses noch
@@ -706,9 +706,9 @@ Fensterplatz;Fen-ster-platz;Fens-ter-platz
 \item[Betreff] Der Betreff einer Fehlermeldung sollte aussagekräftig
   sein.  Daher sollten mehrere Fehltrennungen, sofern möglich,
   thematisch zusammengefasst werden.  Außerdem kann zur einfacheren
-  Zuordnung das entsprechende Kriterium aus
-  Abschnitt~\ref{sec:fehltrennungen} dem Betreff der E-Mail in eckigen
-  Klammern vorangestellt werden, zum Beispiel:
+  Zuordnung das entsprechende Kriterium aus \autoref{sec:fehltrennungen}
+  dem Betreff der E-Mail in eckigen Klammern vorangestellt werden, zum
+  Beispiel:
 \begin{lstlisting}[style=Text]
 Betreff: [C] sonnendurchfluteten
 \end{lstlisting}
