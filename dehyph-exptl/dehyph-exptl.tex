@@ -17,6 +17,7 @@
 \linespread{1.05}
 \usepackage[expansion=true, letterspace=80]{microtype}
 %%% Lade einige Pakete.
+\usepackage{ifthen}
 \usepackage{multicol}
 \usepackage{paralist}
 \usepackage{fncylab}
@@ -48,6 +49,7 @@
 \usepackage[english, german, ngerman]{babel}
 %%% Einstellungen für interaktive PDF-Dokumente.
 \usepackage[rgb,x11names]{xcolor}
+\usepackage[hyperref]{zref}
 \usepackage{hyperref}
 \hypersetup{
   pdftitle={dehyph-exptl},
@@ -56,7 +58,7 @@
     computergestützte Worttrennung}
 }
 \hypersetup{
-  ngerman,% for \autoref
+  ngerman,% For \autoref.
   pdfstartview={XYZ null null null},% Zoom factor is determined by viewer.
   colorlinks,
   linkcolor=RoyalBlue3,
@@ -596,143 +598,172 @@ dehypht-x-<datum>.pat
 \label{sec:fragen}
 
 \newcommand*{\fragefont}{\itshape}
-\newcommand*{\frage}[2]{%
-  \expandafter\gdef\csname #1\endcsname{#2}%
-\item\label{#1}\csname #1\endcsname%
+\newcounter{cntfrage}% Zaehler fuer Fragen.
+\newcounter{frage}% Zaehler fuer Fragen mit Formatierung.
+\renewcommand*{\thefrage}{\arabic{frage}.}
+\newboolean{nextfrage}
+
+\makeatletter
+
+%%% Neue zref-Liste frage = (text, anchor).
+\zref@newlist{frage}
+\zref@newprop{text}{??}
+\zref@addprop{frage}{text}
+\zref@addprop{frage}{anchor}
+
+%%% Umgebung fuer eine Frage mit Antwort.
+\newenvironment{frageantwort}[1]{%
+  \par\vspace{.75\baselineskip plus .1\baselineskip minus .1\baselineskip}
+  \refstepcounter{cntfrage}
+  \stepcounter{frage}
+  \zref@setcurrent{text}{\thefrage~#1}
+  \zref@labelbylist{frage:\thecntfrage}{frage}
+  \noindent{\fragefont\thefrage~#1\par}
+  \nobreak\noindent\ignorespaces
+}{%
 }
-\newcommand{\antwort}[1]{%
-  \medskip\par
-  {\noindent\fragefont\ref{#1}.~\csname #1\endcsname\par}
-  \nobreak\noindent\ignorespaces%
+
+%%% Zeige alle Fragen in sortierter Reihenfolge.
+\newcommand{\zeigefragen}{%
+  \par
+  \zref@refused{frage:1}
+  \setcounter{cntfrage}{1}
+  \setboolean{nextfrage}{true}
+  \whiledo{\boolean{nextfrage}}{
+    \vspace{.25\baselineskip plus .1\baselineskip minus .1\baselineskip}
+    \noindent%
+    \hyperlink{\zref@extract{frage:\thecntfrage}{anchor}}{%
+      \fragefont%
+      \zref@extract{frage:\thecntfrage}{text}%
+    }\par
+    \stepcounter{cntfrage}
+    \zref@ifrefundefined{frage:\thecntfrage}{\setboolean{nextfrage}{false}}{}
+  }
+  \setcounter{cntfrage}{0}
+  \setcounter{frage}{0}
 }
 
-\begin{enumerate}
-  \fragefont%
-  \setlength{\itemsep}{4pt}%
-  \setlength{\parskip}{0pt}%
 
-\frage{faInfo}{Wie kann ich mich über dieses Projekt informieren?}
-
-\frage{faHelfen}{Wie kann ich helfen?}
-
-\frage{faDateien}{Welche Dateien sollte ich mir ansehen?}
-
-\frage{faVorschlaege}{Sollten Trennfehler einzeln oder gesammelt
-  eingereicht werden?}
-
-\end{enumerate}
+\zeigefragen
 
 
-\antwort{faInfo}{Zentrale Anlaufstelle ist die Projekt-\Abk{url}.%
-\footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}
+\begin{frageantwort}{Wie kann ich mich über dieses Projekt informieren?}
+  Zentrale Anlaufstelle ist die Projekt-\Abk{url}.%
+  \footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}
 %
-Nach Anmeldung%
-\footnote{Falls Sie die Anmeldung bei \Programm{Google} scheuen, können
-Sie uns vielleicht beim Umzug auf einen anderen Host helfen?  Die
-Anforderungen an einen alternativen Projekthost können auch privat oder
-in \Datei{de.comp.text.tex} besprochen werden.}
-%
-kann die Mailingliste für Fragen und Hinweise genutzt werden, 
-ersatzweise auch die Newsgruppe \Datei{de.comp.text.tex}.}
+  Nach Anmeldung%
+  \footnote{Falls Sie die Anmeldung bei \Programm{Google} scheuen,
+    können Sie uns vielleicht beim Umzug auf einen anderen Host helfen?
+    Die Anforderungen an einen alternativen Projekthost können auch
+    privat oder in \Datei{de.comp.text.tex} besprochen werden.}
+% 
+  kann die Mailingliste für Fragen und Hinweise genutzt werden,
+  ersatzweise auch die Newsgruppe \Datei{de.comp.text.tex}.
+\end{frageantwort}
 
 
-\antwort{faHelfen}{Es gibt mehrere Möglichkeiten:
-\begin{itemize}
-\item Die einfachste ist, die experimentellen Trennmuster ausgiebig zu
-  testen und Fehler zu melden (siehe \autoref{sec:fehltrennungen}).
-
-\item Besonders hilfreich wäre Mitarbeit am Projekt.  Obwohl schon
-  experimentelle Trennmuster veröffentlicht wurden, steht dieses noch
-  ziemlich am Anfang.  Ziel ist, die Wortliste, die den Trennmustern
-  zugrundeliegt, von möglichst vielen Menschen in verteilter Arbeit auf
-  Richtigkeit zu prüfen.
-
-  Bis dahin bleiben noch viele offene Fragen zu klären und viel zu tun.
-  Bei Interesse ist es am einfachsten, Fragen, Hinweise und Ideen an die
-  Mailingliste zu schicken.  Als Einstieg kann die (grobe) Aufgabenliste
-  in der Projektbeschreibung dienen.
-
-\item Mittelfristig -- nach Fertigstellung der Prüfmaske~-- kann auch
-  durch systematische Durchsicht eines Teils der Wortliste geholfen
-  werden.
-\end{itemize}
-}
-
-
-\antwort{faDateien}{
-\begin{itemize}
-\item Neben der Dokumentation zu den Trennmustern enthält dieses Paket
-  eine Projektbeschreibung (\Datei{projektbeschreibung.pdf}).
-
-\item Die Datei \Datei{BUGS} beschreibt ein paar bekannte systematische
-  Fehler der Trennmuster.
-
-\item Das Entwicklerrepositorium enthält in der Datei \Datei{dateikopf}
-  eine Beschreibung des Formats der Wortliste.
-
-\item Die \Abk{html}-Präsenz des Projekts enthält einen Dateibereich mit
-  weiteren Dateien, etwa einem Archiv der Diskussion im
-  \Abk{mbox}-Format.
-\end{itemize}
-}
-
-
-\antwort{faVorschlaege}{Das ist egal.  Es sollten allerdings die
-folgenden Hinweise beim Einreichen von Fehlern beachtet werden:
-
-\begin{description}\setkomafont{descriptionlabel}{\normalfont\itshape}
-\item[Aktualität] Wenn Sie ältere Trennmusterdateien verwenden, prüfen
-  Sie zunächst, ob der Fehler auch mit aktuellen Trennmustern auftritt.
-  Aktuelle Trennmuster sind im \Abk{ctan} im Paket \texttt{dehyph-exptl}
-  oder im Dateibereich unter der Projekt-\Abk{url} erhältlich.
-
-\item[Informationen] In einem Fehlerbericht sollte für das betreffende
-  Wort die richtige und bei einzelnen Worteinreichungen auch die falsche
-  Trennung angegeben werden.  Außerdem die genaue Version der
-  verwendeten Trennmuster (traditionelle oder reformierte
-  Rechtschreibung, Datum der Trennmusterdatei).
-
-\item[Listenformat] Es erleichtert die Korrektur, wenn
-  Berichtigungsvorschläge in Form einer Liste eingereicht werden, die
-  automatisch mit Skripten bearbeitet werden kann.  Die folgenden
-  Konventionen sollten dabei eingehalten werden:
+\begin{frageantwort}{Wie kann ich helfen?}
+  Es gibt mehrere Möglichkeiten:
   \begin{itemize}
-  \item Die Spalten werden mit einem Semikolon \verb+;+ getrennt.
-  \item Die erste Spalte enthält das betreffende Wort in ungetrennter
-    Form.
-  \item Die zweite Spalte enthält das Wort in der Trennvariante nach
-    traditioneller Rechtschreibung.
-  \item Falls die Trennung nach reformierter Rechtschreibung davon
-    abweicht, steht diese in der dritten Spalte.
-  \item Ab der vierten Spalte \emph{können} weitere Trennvarianten
-    folgen, etwa die falsche Trennung.  Eine kurze Erklärung sollte dann
-    darauf eingehen.
-  \item Unerwünschte Trennungen werden mit einem Punkt \verb+.+
-    markiert.
-  \item Anfang und Ende der Liste sollten klar erkennbar sein.
+  \item Die einfachste ist, die experimentellen Trennmuster ausgiebig zu
+    testen und Fehler zu melden (siehe \autoref{sec:fehltrennungen}).
+
+  \item Besonders hilfreich wäre Mitarbeit am Projekt.  Obwohl schon
+    experimentelle Trennmuster veröffentlicht wurden, steht dieses noch
+    ziemlich am Anfang.  Ziel ist, die Wortliste, die den Trennmustern
+    zugrundeliegt, von möglichst vielen Menschen in verteilter Arbeit
+    auf Richtigkeit zu prüfen.
+
+    Bis dahin bleiben noch viele offene Fragen zu klären und viel zu
+    tun.  Bei Interesse ist es am einfachsten, Fragen, Hinweise und
+    Ideen an die Mailingliste zu schicken.  Als Einstieg kann die
+    (grobe) Aufgabenliste in der Projektbeschreibung dienen.
+
+  \item Mittelfristig -- nach Fertigstellung der Prüfmaske~-- kann auch
+    durch systematische Durchsicht eines Teils der Wortliste geholfen
+    werden.
   \end{itemize}
-  Eine Liste könnte beispielhaft so aussehen:
+\end{frageantwort}
+
+
+\begin{frageantwort}{Welche Dateien sollte ich mir ansehen?}
+  \begin{itemize}
+  \item Neben der Dokumentation zu den Trennmustern enthält dieses Paket
+    eine Projektbeschreibung (\Datei{projektbeschreibung.pdf}).
+
+  \item Die Datei \Datei{BUGS} beschreibt ein paar bekannte
+    systematische Fehler der Trennmuster.
+
+  \item Das Entwicklerrepositorium enthält in der Datei
+    \Datei{dateikopf} eine Beschreibung des Formats der Wortliste.
+
+  \item Die \Abk{html}-Präsenz des Projekts enthält einen Dateibereich
+    mit weiteren Dateien, etwa einem Archiv der Diskussion im
+    \Abk{mbox}-Format.
+  \end{itemize}
+\end{frageantwort}
+
+
+\begin{frageantwort}{Sollten Trennfehler einzeln oder gesammelt
+    eingereicht werden?}
+  Das ist egal.  Es sollten allerdings die folgenden Hinweise beim
+  Einreichen von Fehlern beachtet werden:
+
+  \begin{description}\setkomafont{descriptionlabel}{\normalfont\itshape}
+  \item[Aktualität] Wenn Sie ältere Trennmusterdateien verwenden, prüfen
+    Sie zunächst, ob der Fehler auch mit aktuellen Trennmustern
+    auftritt.  Aktuelle Trennmuster sind im \Abk{ctan} im Paket
+    \texttt{dehyph-exptl} oder im Dateibereich unter der
+    Projekt-\Abk{url} erhältlich.
+
+  \item[Informationen] In einem Fehlerbericht sollte für das betreffende
+    Wort die richtige und bei einzelnen Worteinreichungen auch die
+    falsche Trennung angegeben werden.  Außerdem die genaue Version der
+    verwendeten Trennmuster (traditionelle oder reformierte
+    Rechtschreibung, Datum der Trennmusterdatei).
+
+  \item[Listenformat] Es erleichtert die Korrektur, wenn
+    Berichtigungsvorschläge in Form einer Liste eingereicht werden, die
+    automatisch mit Skripten bearbeitet werden kann.  Die folgenden
+    Konventionen sollten dabei eingehalten werden:
+    \begin{itemize}
+    \item Die Spalten werden mit einem Semikolon \verb+;+ getrennt.
+    \item Die erste Spalte enthält das betreffende Wort in ungetrennter
+      Form.
+    \item Die zweite Spalte enthält das Wort in der Trennvariante nach
+      traditioneller Rechtschreibung.
+    \item Falls die Trennung nach reformierter Rechtschreibung davon
+      abweicht, steht diese in der dritten Spalte.
+    \item Ab der vierten Spalte \emph{können} weitere Trennvarianten
+      folgen, etwa die falsche Trennung.  Eine kurze Erklärung sollte
+      dann darauf eingehen.
+    \item Unerwünschte Trennungen werden mit einem Punkt \verb+.+
+      markiert.
+    \item Anfang und Ende der Liste sollten klar erkennbar sein.
+    \end{itemize}
+    Eine Liste könnte beispielhaft so aussehen:
 \begin{lstlisting}[style=Text]
 sonnendurchfluteten;son-nen-durch-flu-te-ten
 Talentwässerung;Tal-ent.wäs-se-rung
 Fensterplatz;Fen-ster-platz;Fens-ter-platz
 \end{lstlisting}
-  Dieses Format ist auch für einzeln eingereichte Fehltrennungen
-  sinnvoll.
+    Dieses Format ist auch für einzeln eingereichte Fehltrennungen
+    sinnvoll.
 
-\item[Betreff] Der Betreff einer Fehlermeldung sollte aussagekräftig
-  sein.  Daher sollten mehrere Fehltrennungen, sofern möglich,
-  thematisch zusammengefasst werden.  Außerdem kann zur einfacheren
-  Zuordnung das entsprechende Kriterium aus \autoref{sec:fehltrennungen}
-  dem Betreff der E-Mail in eckigen Klammern vorangestellt werden, zum
-  Beispiel:
+  \item[Betreff] Der Betreff einer Fehlermeldung sollte aussagekräftig
+    sein.  Daher sollten mehrere Fehltrennungen, sofern möglich,
+    thematisch zusammengefasst werden.  Außerdem kann zur einfacheren
+    Zuordnung das entsprechende Kriterium aus
+    \autoref{sec:fehltrennungen} dem Betreff der E-Mail in eckigen
+    Klammern vorangestellt werden, zum Beispiel:
 \begin{lstlisting}[style=Text]
 Betreff: [C] sonnendurchfluteten
 \end{lstlisting}
-  für eine Fehltrennung des Wortes \emph{sonnendurchfluteten}, die durch
-  einen Fehler in der Wortliste hervorgerufen wird.
-\end{description}
-}
+    für eine Fehltrennung des Wortes \emph{sonnendurchfluteten}, die
+    durch einen Fehler in der Wortliste hervorgerufen wird.
+  \end{description}
+\end{frageantwort}
+
 
 \end{document}
 
