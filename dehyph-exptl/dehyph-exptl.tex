@@ -1,8 +1,9 @@
 %%% Artikelklasse mit:
 %%% * Grundschriftgröße 11 Punkt,
 %%% * klassischem Satzspiegel,
-%%% * flachem Inhaltsverzeichnis.
-\documentclass[11pt,DIV8,tocleft,abstracton]{scrartcl}
+%%% * flachem Inhaltsverzeichnis,
+%%% * Tabellenüberschriften.
+\documentclass[11pt,DIV8,tocleft,tablecaptionabove,abstracton]{scrartcl}
 %%% Eingabekodierung ist ISO-8859-15.
 \usepackage[ansinew]{inputenc}
 %%% Schrifteinstellung:
@@ -18,6 +19,7 @@
 \usepackage[expansion=true, letterspace=80]{microtype}
 %%% Lade einige Pakete.
 \usepackage{ifthen}
+\usepackage{calc}
 \usepackage{multicol}
 \usepackage{paralist}
 \usepackage{fncylab}
@@ -98,11 +100,22 @@
   }%
   \ignorespaces%
 }
-\colorlet{richtigcol}{green!60!black}
-\colorlet{falschcol}{red!60!black}
+\colorlet{richtigcol}{green!80!black}
+\colorlet{falschcol}{red!80!black}
 \colorlet{tradcol}{green!75!black}
 \colorlet{reformcol}{green!50!black}
 \colorlet{unerwcol}{red!60!black}
+
+\newcommand*{\trennung}[2]{%
+   \makebox[0pt][l]{%
+     \color{#1}%
+     \smash{\rule[-2.5pt]{\widthof{#2}}{.7pt}}%
+   }%
+   #2%
+}
+\newcommand*{\ftr}[1]{\trennung{falschcol}{#1}}% Falsche Trennung.
+\newcommand*{\rtr}[1]{\trennung{richtigcol}{#1}}% Richtige Trennung.
+
 %%% Satzspiegel erneut berechnen.
 \typearea{last}
 %%% Trennausnahmen definieren.
@@ -251,39 +264,30 @@ Dokumentation des Pakets \texttt{hyphsubst} entnommen werden.
 Ob die experimentellen Trennmuster korrekt aktiviert werden, kann mit
 dem folgenden Beispiel getestet werden.  Die Ausgabe für die
 traditionelle und reformierte Rechtschreibung mit herkömmlichen und
-experimentellen Trennmustern ist in \autoref{fig:trennvarianten}
+experimentellen Trennmustern ist in \autoref{tab:trennvarianten}
 zusammengefasst.
 \begin{lstlisting}[style=LaTeX]
 \begin{document}
 \showhyphens{löste Fassade modernste Abendstern Mordopfer}
 \end{lstlisting}
 
-\newcommand*{\trennung}[2]{%
-\begingroup%
-\setlength{\fboxsep}{0pt}%
-\colorbox{#1}{\strut#2}%
-\endgroup%
-}
-\newcommand*{\ftr}[1]{\trennung{falschcol!20}{#1}}% Falsche Trennung.
-\newcommand*{\rtr}[1]{\trennung{richtigcol!20}{#1}}% Richtige Trennung.
-
 %\suppressfloats[t]
-\begin{table}
+\begin{table*}
   \centering
+  \caption{Trennvarianten}
+  \label{tab:trennvarianten}
   \begin{tabular}{llll}
     \multicolumn{2}{c}{\itshape traditionelle Rechtschreibung} &
     \multicolumn{2}{c}{\itshape reformierte Rechtschreibung}\\
-    herkömmlich & experimentell & herkömmlich &
-    experimentell\\\addlinespace\toprule\addlinespace
+    herkömmlich & experimentell & herkömmlich & experimentell\\
+    \addlinespace\toprule\addlinespace
     l\ftr{ös-t}e & lö-ste & lös-te & lös-te\\
     Fas-sa-de & Fas-sa-de & Fa\ftr{ss}a-de & Fas-sa-de\\
     mo-\ftr{d-e}rn-ste & mo-dern-ste & mo-\ftr{d-e}rns-te & mo-derns-te\\
     Abend-stern & Abend-stern & Aben\ftr{ds-t}ern & Abend-stern\\
     Mo\ftr{r-do}p-fer & Mord-op-fer & Mo\ftr{r-do}p-fer & Mord-op-fer\\
   \end{tabular}
-  \caption{Trennvarianten}
-  \label{fig:trennvarianten}
-\end{table}
+\end{table*}
 
 \emph{Diese Trennmuster befinden sich im experimentellen Status.  Sie
 können jederzeit durch umbruchinkompatible Versionen ersetzt und vom
