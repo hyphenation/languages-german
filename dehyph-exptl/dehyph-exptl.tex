@@ -19,6 +19,7 @@
 %%% Lade einige Pakete.
 \usepackage{multicol}
 \usepackage{paralist}
+\usepackage{fncylab}
 \usepackage{tabularx}
 \usepackage{booktabs}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
@@ -61,6 +62,12 @@
   linkcolor=RoyalBlue3,
   urlcolor=Chocolate4,
   citecolor=DeepPink2
+}
+\newcommand*{\regelref}[1]{%
+  \begingroup%
+  \renewcommand*{\Itemautorefname}{Regel}%
+  \autoref{#1}%
+  \endgroup%
 }
 %%% Schriftfestlegungen.
 \setkomafont{title}{\normalcolor\normalfont}
@@ -314,12 +321,13 @@ Regelwerken zu entnehmen.
 Kleinschreibung nicht unterschieden~\cite{liang:1983}.  Die
 Schreibweisen \emph{Nachtritt} und \emph{nachtritt} werden aus Sicht des
 Trennalgorithmus gleich behandelt (siehe auch
-\hyperref[enum:tradDoppeld]{Regeln~\textit{T\ref{enum:tradDoppeld}}}
-und~\hyperref[enum:reformDoppeld]{\textit{R\ref{enum:reformDoppeld}}}).
+\regelref{enum:tradDoppeld} und \regelref{enum:reformDoppeld}).
 
 \subsection{Traditionelle Rechtschreibung}
 \label{sec:tradRS}
+
 \begin{enumerate}[\hspace{1em}\itshape{T}1]
+\labelformat{enumi}{\textit{T#1}}
 
 \item\label{enum:tradOW} In Ableitungen von Namen auf \emph{"~ow} wird
   die Nottrennung der Ableitungssilben \emph{"~er}, \emph{"~ern},
@@ -361,8 +369,8 @@ und~\hyperref[enum:reformDoppeld]{\textit{R\ref{enum:reformDoppeld}}}).
 
   Beachte, die Trennstelle ">Drucker-zeugnis"< ist in der Interpretation
   \emph{Druck-Erzeugnis} irreführend.  Sie entfällt nach
-  \hyperref[enum:tradSinn]{Regel~\textit{T\ref{enum:tradSinn}}} und ist
-  nicht als übereinstimmende Trennstelle anzusehen.
+  \regelref{enum:tradSinn} und ist nicht als übereinstimmende
+  Trennstelle anzusehen.
 
   Konsonantenänderungen bei Trennungen werden nicht in Trennmustern
   berücksichtigt, sondern durch die Sprachunterstützung des Pakets
@@ -375,7 +383,9 @@ und~\hyperref[enum:reformDoppeld]{\textit{R\ref{enum:reformDoppeld}}}).
 
 \subsection{Reformierte Rechtschreibung}
 \label{sec:reformRS}
+
 \begin{enumerate}[\hspace{1em}\itshape{R}1]
+\labelformat{enumi}{\textit{R#1}}
 
 \item\label{enum:reformSinn} Sinnentstellende und irreführende Trennungen
   werden möglichst vermieden \cite[\S~107]{amtlRegeln:2006,
@@ -451,8 +461,8 @@ und~\hyperref[enum:reformDoppeld]{\textit{R\ref{enum:reformDoppeld}}}).
   
   Beachte, die Trennstelle ">Drucker-zeugnis"< ist in der Interpretation
   \emph{Druck-Erzeugnis} irreführend.  Sie entfällt nach
-  \hyperref[enum:tradSinn]{Regel~\textit{R\ref{enum:reformSinn}}} und
-  ist nicht als übereinstimmende Trennstelle anzusehen.
+  \regelref{enum:reformSinn} und ist nicht als übereinstimmende
+  Trennstelle anzusehen.
 
 \end{enumerate}
 
