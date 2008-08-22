@@ -598,29 +598,49 @@ dehypht-x-<datum>.pat
 \label{sec:fragen}
 
 \newcommand*{\fragefont}{\itshape}
+\newcommand*{\themenfont}{\large\normalfont}
 \newcounter{cntfrage}% Zaehler fuer Fragen.
-\newcounter{frage}% Zaehler fuer Fragen mit Formatierung.
+\newcounter{thema}% Zaehler fuer Themenueberschriften.
+\renewcommand*{\thethema}{\Roman{thema}.}
+\newcounter{frage}% Zaehler fuer Fragen.
 \renewcommand*{\thefrage}{\arabic{frage}.}
 \newboolean{nextfrage}
 
 \makeatletter
 
-%%% Neue zref-Liste frage = (text, anchor).
+%%% Neue zref-Liste frage = (type, text, anchor).
 \zref@newlist{frage}
+\zref@newprop{type}{f}
 \zref@newprop{text}{??}
+\zref@addprop{frage}{type}
 \zref@addprop{frage}{text}
 \zref@addprop{frage}{anchor}
 
+%%% Fuegt eine neue Themenueberschrift ein.
+\newcommand*{\fragenthema}[1]{%
+  \par
+  \vspace{.25\baselineskip plus .1\baselineskip minus .1\baselineskip}
+  \refstepcounter{cntfrage}
+  \stepcounter{thema}
+  \zref@setcurrent{type}{t}
+  \zref@setcurrent{text}{\thethema~#1}
+  \zref@labelbylist{frage:\thecntfrage}{frage}
+  \noindent{\themenfont\thethema~#1\par}
+}
+
 %%% Umgebung fuer eine Frage mit Antwort.
 \newenvironment{frageantwort}[1]{%
-  \par\vspace{.75\baselineskip plus .1\baselineskip minus .1\baselineskip}
+  \par
+  \vspace{.25\baselineskip plus .1\baselineskip minus .1\baselineskip}
   \refstepcounter{cntfrage}
   \stepcounter{frage}
+  \zref@setcurrent{type}{f}
   \zref@setcurrent{text}{\thefrage~#1}
   \zref@labelbylist{frage:\thecntfrage}{frage}
   \noindent{\fragefont\thefrage~#1\par}
   \nobreak\noindent\ignorespaces
 }{%
+  \vspace{.25\baselineskip plus .1\baselineskip minus .1\baselineskip}
 }
 
 %%% Zeige alle Fragen in sortierter Reihenfolge.
@@ -631,14 +651,28 @@ dehypht-x-<datum>.pat
   \setboolean{nextfrage}{true}
   \whiledo{\boolean{nextfrage}}{
     \vspace{.25\baselineskip plus .1\baselineskip minus .1\baselineskip}
-    \noindent%
-    \hyperlink{\zref@extract{frage:\thecntfrage}{anchor}}{%
-      \fragefont%
-      \zref@extract{frage:\thecntfrage}{text}%
-    }\par
+    \ifthenelse{\equal{\zref@extract{frage:\thecntfrage}{type}}{f}}{% Frage
+      \noindent%
+      \begingroup%
+        \fragefont%
+        \hyperlink{\zref@extract{frage:\thecntfrage}{anchor}}{%
+          \zref@extract{frage:\thecntfrage}{text}%
+        }%
+        \par
+      \endgroup
+    }{% Themenueberschrift
+      \noindent%
+      \begingroup%
+        \themenfont%
+        \zref@extract{frage:\thecntfrage}{text}%
+        \par
+      \endgroup 
+      \nobreak
+    }
     \stepcounter{cntfrage}
     \zref@ifrefundefined{frage:\thecntfrage}{\setboolean{nextfrage}{false}}{}
   }
+  \vspace{.5\baselineskip plus .1\baselineskip minus .1\baselineskip}
   \setcounter{cntfrage}{0}
   \setcounter{frage}{0}
 }
