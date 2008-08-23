@@ -253,6 +253,55 @@ Projektliste.%
 
 \section{Verwenden der Trennmuster}
 \label{sec:verwenden}
+
+\subsection{Sprachvarietät und Rechtschreibung}
+\label{sec:varietaeten}
+Dieses Paket stellt Trennmuster für die Worttrennung der deutschen
+Sprache in der traditionellen und der reformierten Rechtschreibung
+bereit.  Die folgenden Varietäten der deutschen (Standard-)""Sprache
+werden zur Zeit unterstützt:
+\begin{itemize}
+\item Standarddeutsch Deutschlands,
+\item Österreichisches Standarddeutsch,
+\item Schweizer Standarddeutsch.
+\end{itemize}
+\autoref{tab:varietaeten} zeigt die Trennmuster, die abhängig von
+verwendeter Varietät und Rechtschreibung in einem Dokument aktiviert
+werden können.
+
+\begin{table}
+  \centering
+  \caption{Die unterstützten Varietäten und Rechtschreibungen}
+  \label{tab:varietaeten}
+  \begin{tabular}{l>{\ttfamily}l}
+    Standarddeutsch & \normalfont Trennmusterbezeichner\\
+    \addlinespace\toprule\addlinespace
+    \textit{traditionell}\\
+    \hspace{.5em}Deutschland & german-x-<datum>\\
+    \hspace{.5em}Österreich & german-x-<datum>\\
+    \hspace{.5em}Schweiz & gswiss-x-<datum>\\
+    \textit{reformiert}\\
+    \hspace{.5em}alle & ngerman-x-<datum>\\
+  \end{tabular}
+\end{table}
+
+Besonderheiten des österreichischen Standarddeutschen werden in den
+Trennmustern für das Standarddeutsch Deutschlands berücksichtigt.
+Österreichische und deutsche Anwender können daher dieselben Trennmuster
+verwenden.
+
+Aufgrund unvereinbarer Trennregeln in der traditionellen Rechtschreibung
+des Standarddeutschen Deutschlands und der Schweiz werden für die
+traditionelle Rechtschreibung beider Varietäten unterschiedliche
+Trennmuster angeboten.
+
+Mit der Rechtschreibreform 1996 wurden die Trennregeln der drei
+Standardvarietäten so weit angeglichen, dass für die reformierte
+Rechtschreibung einheitliche Trennmuster für alle drei unterstützten
+Standardvarietäten bereitgestellt werden können.
+
+\subsection{Aktivieren der Trennmuster}
+\label{sec:aktivieren}
 Die Installation der experimentellen Trennmuster ist in der Datei
 \Datei{INSTALL} beschrieben.  Sie können mit den Paketen \texttt{Babel}
 und \texttt{hyphsubst} aus dem \Programm{Oberdiek-Bündel} aktiviert
