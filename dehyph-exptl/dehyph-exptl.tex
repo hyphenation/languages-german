@@ -253,6 +253,8 @@ Projektliste.%
 
 \section{Verwenden der Trennmuster}
 \label{sec:verwenden}
+Zur Installation der experimentellen Trennmuster siehe
+\autoref{sec:installation} und die Datei \Datei{INSTALL}.
 
 \subsection{Sprachvarietät und Rechtschreibung}
 \label{sec:varietaeten}
@@ -302,11 +304,6 @@ Standardvarietäten bereitgestellt werden können.
 
 \subsection{Aktivieren der Trennmuster}
 \label{sec:aktivieren}
-Die Installation der experimentellen Trennmuster ist in der Datei
-\Datei{INSTALL} beschrieben.  Sie können mit den Paketen \texttt{Babel}
-und \texttt{hyphsubst} aus dem \Programm{Oberdiek-Bündel} aktiviert
-werden.
-
 Das folgende Beispiel zeigt eine \LaTeX-Präambel für die Aktivierung der
 experimentellen Trennmuster für die reformierte Rechtschreibung.
 Beachte, \verb+<datum>+ ist durch das bei der Installation angegebene
@@ -648,6 +645,40 @@ oder im \Abk{ctan} erhältlich.
 
 
 \appendix
+\section{Dateien und Installation}
+\label{sec:installation}
+Die eigentlichen Trennmusterdateien liegen in \Abk{utf}-8-Kodierung vor.
+Sie sind somit für die Verwendung mit den 16-Bit-fähigen \TeX-Varianten
+Xe\TeX\ und Lua\TeX\ geeignet.%
+\footnote{Tatsächlich verwendet Xe\TeX\ bereits Trennmuster, die aus
+  diesem Projekt hervorgegangen sind, jedoch unter anderen Namen.}
+%
+Für die 8-Bit-fähigen \TeX-Varianten \TeX\ und pdf\TeX\ werden
+Manteldateien bereitgestellt, die die \Abk{utf}-8-Dateien laden und in
+\Abk{t1}-Kodierung umwandeln (\autoref{tab:dateien}).
+
+\begin{table}
+  \centering
+  \caption{Trennmuster- und Manteldateien}
+  \label{tab:dateien}
+  \begin{tabular}{>{\ttfamily}l>{\ttfamily}l}
+    \normalfont Trennmusterdatei & \normalfont Manteldatei\\
+    \addlinespace\toprule\addlinespace
+    dehyphn-x-<datum>.pat & dehyphn-x-<datum>.tex\\
+    dehypht-x-<datum>.pat & dehypht-x-<datum>.tex\\
+    geswiss-x-<datum>.pat & geswiss-x-<datum>.tex\\
+  \end{tabular}
+\end{table}
+
+Bei der Installation für 8-Bit-\TeX\ werden die Manteldateien an die in
+\autoref{tab:varietaeten} gezeigten Trennmusterbezeichner gebunden.
+Diese Schritte werden für verschiedene \TeX-Verteilungen in der Datei
+\Datei{INSTALL} beschrieben.  Nach der Installation können die
+experimentellen Trennmuster wie in \autoref{sec:aktivieren} gezeigt mit
+den Paketen \texttt{Babel} und \texttt{hyphsubst} aus dem
+\Programm{Oberdiek-Bündel} aktiviert werden.
+
+
 \section{Die Wortliste}
 \label{sec:wortliste}
 \begin{description}
