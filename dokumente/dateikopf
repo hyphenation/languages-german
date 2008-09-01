@@ -25,8 +25,9 @@
 #     Dreifachkonsonanten gehandhabt wurden (also anders, als der Duden
 #     früher vorgeschrieben hat)
 #
-# Leere Felder sind mit `---' markiert; Felder 3 und 4 als auch Felder 6
-# und 7 treten immer paarig auf, um die Lesbarkeit zu erhöhen.
+# Leere Felder sind mit `-x-' markiert (`x' ist die Feldnummer); Felder 3
+# und 4 als auch Felder 6 und 7 treten immer paarig auf, um die Lesbarkeit
+# zu erhöhen.
 #
 # Zur Erstellung von Trennmustern für die traditionelle Rechtschreibung
 # benötigt man Felder 2, 3, 5, 6 und 8; für die reformierte Rechtschreibung
