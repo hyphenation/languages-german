@@ -168,17 +168,20 @@ bestehen nur als Idee und werden zur Zeit nicht aktiv bearbeitet.
 
 \subsection{Wortlisten}
 \begin{itemize}\raggedright
+
 \item Spezifikation und Implementierung der Datenbankanbindung
   (Wortliste~v2.0, Backend)
+
 \item Spezifikation und Gestaltung der \Abk{html}-Maske zur verteilten
   Kontrolle der Wortliste (Frontend)
+
 \item systematische Erweiterung der Hauptwortliste:
   \begin{itemize}
   \item um Wörter aus einer nach Häufigkeiten sortierten Liste (Quellen
     sind vorhanden, siehe Abschnitt~\ref{sec:ressourcen}),
   \item um Wörter aus geläufigen Sprachbereichen (Quellen werden
     benötigt):
-    \begin{multicols}{2}
+    \begin{multicols}{2}\raggedcolumns
       \begin{itemize}
       \item Küche und Haushalt,
       \item Flora und Fauna,
@@ -191,9 +194,10 @@ bestehen nur als Idee und werden zur Zeit nicht aktiv bearbeitet.
       \end{itemize}
     \end{multicols}
   \end{itemize}
+
 \item Erstellen von Wortlisten für fachspezifische Trennmuster (Quellen
   werden benötigt):
-  \begin{multicols}{2}
+  \begin{multicols}{2}\raggedcolumns
     \begin{itemize}
     \item Naturwissenschaft und Technik,
     \item Sprachwissenschaften,
@@ -204,33 +208,44 @@ bestehen nur als Idee und werden zur Zeit nicht aktiv bearbeitet.
     \item \ldots
     \end{itemize}
   \end{multicols}
+
 \item Gewichtung der Trennstellen
+
 \item Markierung von Nottrennungen
+
 \item Behandlung von falschen Ligaturen
+
 \item Unterscheidung von Lang- und Rund-s für den Satz mit gebrochenen
   Schriften
+
 \item verteilte Kontrolle von Rechtschreibung und Trennung des
   Wortbestands
+
 \end{itemize}
 
 \subsection{Trennmuster}
 \begin{itemize}\raggedright
+
 \item Können Strukturen der deutschen Sprache durch Startmuster in
   \Programm{Patgen} berücksichtigt werden, zum Beispiel häufige Vor- und
   Nachsilben wie \emph{auf-}, \emph{aus-}, \emph{ver-}, \emph{-keit},
   \emph{-lich}, \emph{-lein}, etc.?
+
 \end{itemize}
 
 \subsection{\TeX}
 \begin{itemize}\raggedright
+
 \item Die Trennmuster für die (traditionelle) (deutsch)schweizerische
   Rechtschreibung benötigen eine Sprachanbindung für \texttt{Babel} und
   \texttt{Polyglossia}.
+
 \item In Dokumenten muss trotz weiterentwickelter Trennmuster
   langfristig umbruchtreuer Textsatz garantiert werden können.  Daher
   benötigt \TeX{}s Sprachenschnittstelle (Pakete \texttt{Babel} bzw.
   \texttt{Polyglossia}) einen Versionsmechanismus für die
   Trennmusteraktivierung.  $\Rightarrow$ Paket \texttt{hyphsubst}
+
 \item Für einzelne Dokumente ist es wünschenswert, fachspezifische
   Trennmuster verwenden zu können.  Allerdings können Trennmuster nur
   während der Formaterstellung geladen werden.  Einmal eingebundene
@@ -238,16 +253,26 @@ bestehen nur als Idee und werden zur Zeit nicht aktiv bearbeitet.
   sinnvoll, Trennmuster auch dynamisch während der Ausführung laden zu
   können.  Wie wird mit kollidierenden Mustern umgegangen?
   $\Rightarrow$ Lua\TeX
+
 \item Trennstellen sollen gewichtet werden können (z.\,B. Haupt-,
   Neben-, Nottrennungen).
+
 \item Im Satz mit gebrochenen Schriften sollen langes und rundes~s ohne
-  Auszeichnung im Quelltext richtig behandelt werden.
+  Auszeichnung im Quelltext richtig behandelt werden.  Vorstellbar sind
+  eigene Muster zur Erkennung von Rund-s (und falschen Ligaturen -- oder
+  besser den richtigen?) und ein Durchsuchen mehrerer entsprechender
+  Tries während des Absatzumbruchs.  $\Rightarrow$ Vorschlag für
+  Lua\TeX-Entwickler ausarbeiten
+
 \end{itemize}
 
 \subsection{Sonstige}
 \begin{itemize}\raggedright
+
 \item Umzug auf einen anderen Host (BerliOS, Sourceforge o.\,ä.)
+
 \item Reservierung einer eigenen Domain
+
 \end{itemize}
 
 
