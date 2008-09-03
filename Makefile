@@ -1,5 +1,5 @@
 # This Makefile creates German hyphenation patterns in subdirectories
-# $(TRAD) and $(REFO).  
+# $(TRAD) and $(REFO).  The input data is in $(SRCDIR).
 
 SRCDIR = ~/git/wortliste
 WORDLIST = wortliste
@@ -27,32 +27,45 @@ SORT = $(LC_ENVVARS) sort -d \
 GIT_VERSION := `$(CHDIR) $(SRCDIR); \
                 $(GIT) log --pretty=oneline -1 $(WORDLIST) \
                 | $(SED) 's/ .*//'`
-PATTERNS = $(TRAD)/$(TRAD)-$(DATE).pat $(REFO)/$(REFO)-$(DATE).pat
-WRAPPERS = $(TRAD)/$(TRAD)-$(DATE).tex $(REFO)/$(REFO)-$(DATE).tex
+TRADFILES = $(TRAD)/$(TRAD)-$(DATE).pat $(TRAD)/$(TRAD)-$(DATE).tex
+REFOFILES = $(REFO)/$(REFO)-$(DATE).pat $(REFO)/$(REFO)-$(DATE).tex
 
 
 .PHONY: pre-trad pre-refo tex
 
-all: pre tex
+all: pattern-trad pattern-refo
+
+pattern-trad: $(TRADFILES)
+pattern-refo: $(REFOFILES)
+
+# auxiliary targets
+
+words-trad: $(TRAD)/words.hyphenated.trad
+words-refo: $(REFO)/words.hyphenated.refo
+
 
 pre-trad:
 	$(MKDIR) $(TRAD)
 pre-refo:
 	$(MKDIR) $(REFO)
 
-tex: $(PATTERNS) $(WRAPPERS)
-
-# auxiliary targets
-
-words-trad: pre-trad $(TRAD)/words.hyphenated.trad
-words-refo: pre-refo $(REFO)/words.hyphenated.refo
+$(TRADFILES) $(TRAD)/words.hyphenated.trad: pre-trad
+$(REFOFILES) $(REFO)/words.hyphenated.refo: pre-refo
 
 
-$(TRAD)/pattern.8 $(TRAD)/pattern.rules: $(TRAD)/words.hyphenated.trad
+# GNU make supports creation of multiple targets by a single
+# invocation of a recipe only for pattern rules, thus we have
+# to use a `sentinel file' (using `echo' for the time stamp).
+
+
+$(TRAD)/pattern.8 $(TRAD)/pattern.rules: $(TRAD)/make-full-pattern-trad
+
+$(TRAD)/make-full-pattern-trad: $(TRAD)/words.hyphenated.trad
 	$(CHDIR) $(TRAD); \
           $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
+	$(ECHO) done > $@
 
-$(TRAD)/$(TRAD)-$(DATE).pat : $(TRAD)/pattern.8 $(TRAD)/pattern.rules
+$(TRAD)/$(TRAD)-$(DATE).pat: $(TRAD)/pattern.8 $(TRAD)/pattern.rules
 	$(CAT) $(SRCDIR)/$(TRAD).1 \
           | $(SED) -e "s/@DATE@/$(DATE)/" \
                    -e "s/@GIT_VERSION@/$(GIT_VERSION)/" > $@; \
@@ -62,9 +75,12 @@ $(TRAD)/$(TRAD)-$(DATE).pat : $(TRAD)/pattern.8 $(TRAD)/pattern.rules
           | $(ICONV) >> $@; \
         $(CAT) $(SRCDIR)/$(TRAD).3 >> $@
 
-$(REFO)/pattern.8 $(REFO)/pattern.rules: $(REFO)/words.hyphenated.refo
+$(REFO)/pattern.8 $(REFO)/pattern.rules: $(REFO)/make-full-pattern-refo
+
+$(REFO)/make-full-pattern-refo: $(REFO)/words.hyphenated.refo
 	$(CHDIR) $(REFO); \
           $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
+	$(ECHO) done > $@
 
 $(REFO)/$(REFO)-$(DATE).pat: $(REFO)/pattern.8 $(REFO)/pattern.rules
 	$(CAT) $(SRCDIR)/$(REFO).1 \
