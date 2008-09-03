@@ -31,19 +31,21 @@ TRADFILES = $(TRAD)/$(TRAD)-$(DATE).pat $(TRAD)/$(TRAD)-$(DATE).tex
 REFOFILES = $(REFO)/$(REFO)-$(DATE).pat $(REFO)/$(REFO)-$(DATE).tex
 
 
-.PHONY: pre-trad pre-refo tex
 
 all: pattern-trad pattern-refo
 
+.PHONY: pattern-trad pattern-refo
 pattern-trad: $(TRADFILES)
 pattern-refo: $(REFOFILES)
 
 # auxiliary targets
 
+.PHONY: words-trad words-refo
 words-trad: $(TRAD)/words.hyphenated.trad
 words-refo: $(REFO)/words.hyphenated.refo
 
 
+.PHONY: pre-trad pre-refo
 pre-trad:
 	$(MKDIR) $(TRAD)
 pre-refo:
