@@ -375,12 +375,13 @@ Umbruch erfordern.  Ausgiebige Tests sind erwünscht!}
 
 \section{Trennregeln und Konventionen}
 \label{sec:trennregeln}
-Es werden zwei Trennmuster bereitgestellt.  Die Trennmuster für die
-traditionelle Rechtschreibung orientieren sich an den verbindlichen
-Regeln des Dudens in der Fassung von 1991~\cite{duden:1991}.  Die
-Trennmuster für die reformierte Rechtschreibung orientieren sich an den
-amtlichen Regeln für die Rechtschreibung der deutschen Sprache in der
-Fassung von 2006~\cite{amtlRegeln:2006, amtlRegeln:2006:duden}.
+Es werden Trennmuster für die traditionelle und die reformierte
+Rechtschreibung bereitgestellt.  Die Trennmuster für die traditionelle
+Rechtschreibung orientieren sich an den verbindlichen Regeln des Dudens
+in der Fassung von 1991~\cite{duden:1991}.  Die Trennmuster für die
+reformierte Rechtschreibung orientieren sich an den amtlichen Regeln für
+die Rechtschreibung der deutschen Sprache in der Fassung von
+2006~\cite{amtlRegeln:2006, amtlRegeln:2006:duden}.
 
 Die Regeln lassen gewisse Freiheiten bei der Schreibung und Trennung von
 Wörtern zu.  Da sich solche Freiheiten nicht ohne weiteres auf die
@@ -391,11 +392,21 @@ Rechtschreibung, die zusätzliche Freiheiten eingeführt hat.  Die linke
 Trennmustern, die rechten (roten) Spalten zeigen alternative oder
 unerwünschte Trennungen.
 
-Beachte, die folgenden Abschnitte enthalten keine vollständige
-Aufstellung der Silbentrennregeln.  Diese sind den entsprechenden
-Regelwerken zu entnehmen.
+\emph{Hinweise:} Beziehen sich die Konventionen für die reformierte
+Rechtschreibung auf die traditionelle Rechtschreibung, so werden die
+entsprechenden Regeln etwas ausführlicher dargestellt.  Die folgenden
+Abschnitte enthalten jedoch keine vollständige Aufstellung der
+Silbentrennregeln.  Diese sind den entsprechenden Regelwerken zu
+entnehmen.
 
-\emph{Hinweis!} In Liangs Trennalgorithmus werden Groß- und
+Werden in Einzelfällen von den hier gezeigten Konventionen abweichende
+Trennungen gewünscht, so kann die Trennung mit den \TeX- und 
+\texttt{Babel}-Kürzeln \lstinline[style=LaTeX]+\-+ und
+\lstinline[style=LaTeX]+"-+ geändert werden.  Für dokumentweite
+Änderungen der Trennung eignet sich das Kommando
+\lstinline[style=LaTeX]+\hyphenation+.
+
+In Liangs Trennalgorithmus werden Groß- und
 Kleinschreibung nicht unterschieden~\cite{liang:1983}.  Die
 Schreibweisen \emph{Nachtritt} und \emph{nachtritt} werden aus Sicht des
 Trennalgorithmus gleich behandelt (siehe auch
