@@ -452,20 +452,29 @@ Trennalgorithmus gleich behandelt (siehe auch
   \end{tabular}
 
 \item\label{enum:tradDoppeld} In mehrdeutigen Wörtern werden nur
-  übereinstimmende Trennstellen zugelassen.  Mehrdeutigkeiten, die nur
-  im Versalsatz von Wörtern mit \emph{ß} auftreten, werden nicht
-  berücksichtigt (siehe auch \regelref{enum:tradVersal}):\par\nobreak
+  übereinstimmende Trennstellen zugelassen.  Es gelten die folgenden
+  Einschränkungen:
+
+  \begin{itemize}
+  \item Bei mehrdeutigen Wörtern endend auf \emph{-ende, -enden, -endes}
+    wird stets die Trennung der Partizipform des Verbs verwendet.
+  \item Mehrdeutigkeiten, die nur im Versalsatz von Wörtern mit \emph{ß}
+    auftreten, werden nicht berücksichtigt (siehe auch
+    \regelref{enum:tradVersal}).
+  \end{itemize}
+  \nobreak
 
   \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
     Druckerzeug-nis & Druck-erzeugnis & Drucker-zeugnis\\
     Fuß-balleh-re & Fußball-ehre\\
-    Nachtritt & Nacht-ritt & nach-tritt\\
+    nachtritt & nach-tritt & Nacht-ritt\\
     Wachstu-be & Wach-stube & Wachs-tube\\
   \end{tabular}
   \par\nobreak
   \textit{aber:}
 
   \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+    spie-len-de & Spiel-ende & spielende\\
     Mas-se & \textls{M\kern-.4ptA-SSE} &
     \textls{M\kern-.4ptA\kern-.6ptSSE}\\
   \end{tabular}
@@ -567,14 +576,27 @@ Trennalgorithmus gleich behandelt (siehe auch
   \LaTeX-Kern fest implementiert.
 
 \item\label{enum:reformDoppeld} In mehrdeutigen Wörtern werden nur
-  übereinstimmende Trennstellen zugelassen:\par\nobreak
+  übereinstimmende Trennstellen zugelassen.  Es gilt die folgende
+  Einschränkung:
+
+  \begin{itemize}
+  \item Bei mehrdeutigen Wörtern endend auf \emph{-ende, -enden, -endes}
+    wird stets die Trennung der Partizipform des Verbs verwendet.
+  \end{itemize}
+  \nobreak
 
   \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
     Druckerzeug-nis & Dru-ckerzeugnis & Druck-erzeugnis &
     Drucker-zeugnis\\
     Mu-siker-le-ben & Musi-kerleben & Musik-erleben\\
-    Nachtritt & Nacht-ritt & nach-tritt\\
+    nachtritt & nach-tritt & Nacht-ritt\\
     Wachstu-be & Wach-stube & Wachs-tube\\
+  \end{tabular}
+  \par\nobreak
+  \textit{aber:}
+
+  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+    spie-len-de & Spiel-ende & spielende\\
   \end{tabular}
   
   Beachte, die Trennstelle ">Drucker-zeugnis"< ist in der Interpretation
