@@ -113,7 +113,7 @@
 \newcommand*{\trennung}[2]{%
    \makebox[0pt][l]{%
      \color{#1}%
-     \smash{\rule[-2.5pt]{\widthof{#2}}{.7pt}}%
+     \smash{\rule[-3.5pt]{\widthof{#2}}{.7pt}}% Schriftabhängig.
    }%
    #2%
 }
@@ -177,7 +177,10 @@ berechnet wurden.
 
 Obwohl die herkömmlichen Trennmuster für die deutsche Sprache bei der
 Worttrennung in gewöhnlichen Texten eine akzeptable Fehlerrate
-erreichen, enthalten sie doch einige Schwächen:
+erreichen, enthalten sie doch einige Schwächen:%
+\footnote{Diese Liste bezieht sich auf die Trennmusterdateien
+  \Datei{dehypht.tex}, Version~3.2a vom 3.\,3.\,1999, und
+  \Datei{dehyphn.tex}, Version~31 vom 7.\,5.\,2001.}
 
 \begin{enumerate}
 \item Die Wortliste, die den Trennmustern für die traditionelle deutsche
@@ -195,16 +198,8 @@ erreichen, enthalten sie doch einige Schwächen:
   mit über 3500 korrigierten Trennungen einfacher Wörter
   \cite{lemberg:2003, lemberg:2005}.
 
-\item Die Qualität der Trennung zusammengesetzter Wörter ist deutlich
-  geringer als die der Trennung einfacher Wörter.
-
-\item Für die Berechnung der Trennmuster für die reformierte deutsche
-  Rechtschreibung stand keine Wortliste zur Verfügung.  Diese
-  Trennmuster entstanden durch manuelle Anpassung der Trennmuster für
-  die traditionelle Rechtschreibung an die reformierten Regeln.  Aus
-  diesem Grund ist die Qualität der Trennmuster für die reformierte
-  Rechtschreibung noch etwas schlechter als die der Trennmuster für die
-  traditionelle Rechtschreibung.
+\item In zusammengesetzten Wörtern treten deutlich häufiger Trennfehler
+  auf als in einfachen Wörtern.
 
 \item Im Versalsatz nach traditioneller deutscher Rechtschreibung wird
   \emph{ß} durch \emph{SS} oder \emph{SZ} ersetzt, die Trennung bleibt
@@ -213,20 +208,34 @@ erreichen, enthalten sie doch einige Schwächen:
     verzichtet werden sollte.}
 %
   In den Trennmustern wird dies nicht berücksichtigt und häufig
-  \emph{S-S} getrennt: \textls{">GR\ftr{ÖS-S}E"<},
-  \textls{">GR\ftr{ÜS-S}E"<}, \textls{">M\ftr{AS-S}ES"<}.
+  \mbox{\emph{S-S}} getrennt: \textls{">GR\ftr{ÖS-S}E"<},
+  \textls{">GR\ftr{ÜS-S}E"<}, \textls{">M\ftr{AS-S}ES"<}.%
+  \footnote{Das Paket \texttt{Babel} kompensiert diese Schwäche durch
+    Einführung des Kürzels \lstinline[style=LaTeX]+\"S+.}
 
-\item Abweichende Schreibweisen in der traditionellen Rechtschreibung,
-  die in Österreich und der Schweiz verwendet werden, werden von den
-  herkömmlichen Trennmustern häufig falsch oder unzureichend getrennt:
-  ">Gro\ftr{s-so}n-kel"<, ">Ku\ftr{s-sh}and"<, ">Ma\ftr{ssn}ah-me"<,
-  ">mi\ftr{s-sa}ch-ten"< (nur Schweiz) und ">Ex-pre\ftr{ssz}ug"<,
-  ">Fit-ne\ftr{s-sc}en-ter"<, ">Fit-ne\ftr{sst}rai-ner"<.
+\item Fremdwörter mit akzentuierten Buchstaben werden mangelhaft
+  getrennt: ">C\ftr{af}é"<, ">Ci-tr\ftr{oë}n"<, ">F\ftr{aç}on"<,
+  ">vo\ftr{il}à"<.
 
-\item Die herkömmlichen Trennmusterdateien enthalten eine Mischung aus
-  \Abk{t1}- und \Abk{ot1}-kodierten Mustern.  Letztere sind zudem
-  unvollständig.  Mit Erscheinen von 16-Bit-fähigen \TeX-Varianten
-  werden saubere Trennmuster nötig.
+\item Abweichende Schreibweisen, die in der traditionellen
+  Rechtschreibung in Österreich und der Schweiz verwendet werden, werden
+  mangelhaft getrennt: ">Gro\ftr{s-so}n-kel"<, ">Ku\ftr{s-sh}and"<,
+  ">Ma\ftr{ssn}ah-me"<, ">mi\ftr{s-sa}ch-ten"< (nur Schweiz) und
+  ">Ex-pre\ftr{ssz}ug"<, ">Fit-ne\ftr{s-sc}en-ter"<,
+  ">Fit-ne\ftr{sst}rai-ner"<.
+
+\item Die Trennmuster für die reformierte deutsche Rechtschreibung
+  konnten nicht von Grund auf neu berechnet werden, da keine Wortliste
+  zur Verfügung stand.  Stattdessen wurden die Trennmuster für die
+  traditionelle Rechtschreibung von Hand an die reformierten Regeln
+  angepasst.  Aus diesem Grund ist die Worttrennung mit den Trennmustern
+  für die reformierte Rechtschreibung noch etwas schlechter als mit den
+  Trennmustern für die traditionelle Rechtschreibung.
+
+\item Die Trennmusterdateien enthalten eine Mischung aus \Abk{t1}- und
+  \Abk{ot1}-kodierten Mustern.  Letztere sind zudem unvollständig.  Mit
+  Erscheinen von 16-Bit-fähigen \TeX-Varianten werden saubere
+  Trennmuster nötig.
 \end{enumerate}
 
 Das Projekt \emph{Freie Wortlisten und Trennmuster für die deutsche
@@ -251,8 +260,8 @@ benötigt dringend weitere Mithilfe.  Weitere Informationen können
 \autoref{sec:fragen} oder der diesem Paket beiliegenden
 Projektbeschreibung entnommen werden, zum Beispiel eine (grobe)
 Aufgabenliste.%
-\footnote{Diese Liste enthält auch themenferne Punkte, wie den Umzug auf
-  einen neuen Projekthost.  Jede Hilfe ist willkommen!}
+\footnote{Die Aufgabenliste enthält auch themenferne Punkte, wie den
+  Umzug auf einen neuen Projekthost.  Jede Hilfe ist willkommen!}
 %
 Bei Interesse oder mit Fragen wenden Sie sich bitte an die
 Projektliste.%
