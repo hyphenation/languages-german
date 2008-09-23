@@ -20,6 +20,7 @@
 \usepackage{multicol}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
 \usepackage{soul}
 \setul{}{.2ex}
 \usepackage{listings}
@@ -237,9 +238,9 @@ bestehen nur als Idee und werden zur Zeit nicht aktiv bearbeitet.
 \subsection{\TeX}
 \begin{description}\raggedright
 
-\item[Sprachanbindung] Die Trennmuster für die (traditionelle)
-  (deutsch)schweizerische Rechtschreibung benötigen eine Sprachanbindung
-  für \texttt{Babel} und \texttt{Polyglossia}.
+\item[Sprachanbindung] Die Trennmuster für Schweizer Standarddeutsch
+  (traditionelle Rechtschreibung) benötigen eine Sprachanbindung für
+  \texttt{Babel} und \texttt{Polyglossia}.
 
 \item[Versionierung der Trennmuster] In Dokumenten muss trotz
   weiterentwickelter Trennmuster langfristig umbruchtreuer Textsatz
@@ -252,19 +253,53 @@ bestehen nur als Idee und werden zur Zeit nicht aktiv bearbeitet.
   wünschenswert, fachspezifische Trennmuster verwenden zu können.
   Allerdings können Trennmuster nur während der Formaterstellung geladen
   werden.  Einmal eingebundene Trennmuster sind somit immer im Format
-  vorhanden.  Es wäre daher sinnvoll, Trennmuster auch dynamisch während
-  der Ausführung laden zu können.  Wie wird mit kollidierenden Mustern
+  vorhanden.  Es wäre sinnvoll, Trennmuster auch dynamisch während der
+  Ausführung laden zu können.  Wie wird mit kollidierenden Mustern
   umgegangen?  $\Rightarrow$ Lua\TeX
 
 \item[Trennstellengewichte] Trennstellen sollen gewichtet werden können
   (z.\,B. Haupt-, Neben-, Nottrennungen).
 
-\item[Verallgemeinerung des Trennalgorithmus] Im Satz mit gebrochenen
-  Schriften sollen langes und rundes~s ohne Auszeichnung im Quelltext
-  richtig behandelt werden.  Vorstellbar sind eigene Muster zur
-  Erkennung von Rund-s (und falschen Ligaturen -- oder besser den
-  richtigen?) und ein Durchsuchen mehrerer entsprechender Tries während
-  des Absatzumbruchs.  $\Rightarrow$ Vorschlag für Lua\TeX-Entwickler
+\item[Verallgemeinerung des Trennalgorithmus] Derzeit benötigen
+  \TeX-Quelltexte in deutscher Sprache verschiedene Auszeichnungen:
+
+  \begin{tabularx}{\linewidth}{lL}
+    \lstinline[style=LaTeX]+\\/ \"|+ & zur Korrektur falscher Ligaturen
+    (\lstinline[style=LaTeX]+Auf\"|lage+) \\
+    \lstinline[style=LaTeX]+s:+ \emph{u.\,a.} & zur Unterscheidung von
+    langem und rundem~\emph{s} in gebrochenen Schriften
+    (\lstinline[style=LaTeX]+aus:setzen+) \\
+    \lstinline[style=LaTeX]+\"ck+ & für die richtige Trennung von
+    \emph{ck} in der traditionellen Rechtschreibung
+    (\lstinline[style=LaTeX]+dru\"cken+) \\
+    \lstinline[style=LaTeX]+\"ff \"ll+ \emph{u.\,a.} & für die richtige
+    Trennung von Dreifachkonsonanten mit folgendem Vokal in der
+    traditionellen Rechtschreibung
+    (\lstinline[style=LaTeX]+Meta\"llegierung+) \\
+  \end{tabularx}
+
+  Für die Dokumentenerstellung mit \TeX\ ergeben sich dadurch die
+  folgenden Nachteile:
+  \begin{enumerate}
+  \item Alle genannten Eingriffe beeinflussen die Worttrennung in den
+    übrigen Wortteilen.
+  \item Das Anbringen der Auszeichnung von Hand erfordert zusätzlichen
+    Aufwand und ist fehleranfällig.
+  \item Physische Auszeichnung erschwert den Wechsel zwischen
+    gebrochener und runder Schrift.
+  \item Physische Auszeichnung erschwert den Wechsel zwischen
+    traditioneller und reformierter Rechtschreibung.
+  \end{enumerate}
+  Idealerweise sollte ein Quelltext möglichst wenige physische
+  Auszeichnungen enthalten.
+
+  Es handelt sich hier um ein Mustererkennungsproblem ähnlich der
+  Worttrennung.  Denkbar ist eine Verallgemeinerung des
+  Silbentrennalgorithmus, mit der diese Fälle ohne Eingriffe im
+  Quelltext erkannt und richtig behandelt werden können: Mit
+  entsprechenden zusätzlichen Mustern werden während des Absatzumbruchs
+  \emph{verschiedene} Tries durchsucht und die notwendigen Ersetzungen
+  vorgenommen. $\Rightarrow$ Vorschlag für Lua\TeX-Entwickler
   ausarbeiten
 
 \end{description}
