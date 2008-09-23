@@ -407,8 +407,8 @@ Abschnitte enthalten jedoch keine vollständige Aufstellung der
 Silbentrennregeln.  Diese sind den entsprechenden Regelwerken zu
 entnehmen.
 
-Werden in Einzelfällen von den hier gezeigten Konventionen abweichende
-Trennungen gewünscht, so kann die Trennung mit den \TeX- und 
+Werden von den hier gezeigten Konventionen abweichende Trennungen
+gewünscht, so kann die Trennung in Einzelfällen mit den \TeX- und
 \texttt{Babel}-Kürzeln \lstinline[style=LaTeX]+\-+ und
 \lstinline[style=LaTeX]+"-+ geändert werden.  Für dokumentweite
 Änderungen der Trennung eignet sich das Kommando
@@ -445,22 +445,24 @@ Trennalgorithmus gleich behandelt (siehe auch
     \textls{M\kern-.4ptA\kern-.4pt-SSES}\\
   \end{tabular}
 
-\item\label{enum:tradDoppeld} In mehrdeutigen Wörtern werden nur
-  übereinstimmende Trennstellen zugelassen.  Es gelten die folgenden
-  Einschränkungen:
+\item\label{enum:tradDoppeld} In mehrdeutigen Wörtern werden Trennungen
+  nur an übereinstimmenden Trennstellen zugelassen.  Es gelten die
+  folgenden Einschränkungen:
 
   \begin{itemize}
-  \item Bei mehrdeutigen Wörtern endend auf \emph{-ende, -enden, -endes}
-    wird stets die Trennung der Partizipform des Verbs verwendet.
+  \item Bei mehrdeutigen Wörtern endend auf \emph{"~ende, "~enden,
+      "~endes} wird stets die Trennung der Partizipform des Verbs
+    verwendet.
   \item Mehrdeutigkeiten, die nur im Versalsatz von Wörtern mit \emph{ß}
     auftreten, werden nicht berücksichtigt (siehe auch
     \regelref{enum:tradVersal}).
   \end{itemize}
   \nobreak
 
-  \begin{tabular}[t]{TUU}
+  \begin{tabular}[t]{TUUU}
     Druckerzeug-nis & Druck-erzeugnis & Drucker-zeugnis\\
     Fuß-balleh-re & Fußball-ehre\\
+    Mu-sikerle-ben & Musi-kerleben & Musik-erleben & Musiker-leben\\
     nachtritt & nach-tritt & Nacht-ritt\\
     Wachstu-be & Wach-stube & Wachs-tube\\
   \end{tabular}
@@ -473,10 +475,11 @@ Trennalgorithmus gleich behandelt (siehe auch
     \textls{M\kern-.4ptA\kern-.6ptSSE}\\
   \end{tabular}
 
-  Beachte, die Trennstelle ">Drucker-zeugnis"< ist in der Interpretation
-  \emph{Druck-Erzeugnis} irreführend.  Sie entfällt nach
-  \regelref{enum:tradSinn} und ist nicht als übereinstimmende
-  Trennstelle anzusehen.
+  Beachte, die Trennstellen ">Drucker-zeugnis"< und ">Musiker-leben"<
+  sind in den Interpretationen \emph{Druck-Erzeugnis} und
+  \emph{Musik-Erleben} irreführend.  Sie entfallen nach
+  \regelref{enum:tradSinn} und sind nicht als übereinstimmende
+  Trennstellen anzusehen.
 
   Konsonantenänderungen bei Trennungen werden nicht in Trennmustern
   berücksichtigt, sondern durch die Sprachunterstützung des Pakets
@@ -528,20 +531,21 @@ Trennalgorithmus gleich behandelt (siehe auch
   ungetrennt.  Dies ist kein Fehler in den Trennmustern, sondern im
   \LaTeX-Kern fest implementiert.
 
-\item\label{enum:reformDoppeld} In mehrdeutigen Wörtern werden nur
-  übereinstimmende Trennstellen zugelassen.  Es gilt die folgende
-  Einschränkung:
+\item\label{enum:reformDoppeld} In mehrdeutigen Wörtern werden
+  Trennungen nur an übereinstimmenden Trennstellen zugelassen.  Es gilt
+  die folgende Einschränkung:
 
   \begin{itemize}
-  \item Bei mehrdeutigen Wörtern endend auf \emph{-ende, -enden, -endes}
-    wird stets die Trennung der Partizipform des Verbs verwendet.
+  \item Bei mehrdeutigen Wörtern endend auf \emph{"~ende, "~enden,
+      "~endes} wird stets die Trennung der Partizipform des Verbs
+    verwendet.
   \end{itemize}
   \nobreak
 
   \begin{tabular}[t]{RUUU}
     Druckerzeug-nis & Dru-ckerzeugnis & Druck-erzeugnis &
     Drucker-zeugnis\\
-    Mu-siker-le-ben & Musi-kerleben & Musik-erleben\\
+    Mu-sikerle-ben & Musi-kerleben & Musik-erleben & Musiker-leben\\
     nachtritt & nach-tritt & Nacht-ritt\\
     Wachstu-be & Wach-stube & Wachs-tube\\
   \end{tabular}
@@ -551,11 +555,12 @@ Trennalgorithmus gleich behandelt (siehe auch
   \begin{tabular}[t]{RUU}
     spie-len-de & Spiel-ende & spielende\\
   \end{tabular}
-  
-  Beachte, die Trennstelle ">Drucker-zeugnis"< ist in der Interpretation
-  \emph{Druck-Erzeugnis} irreführend.  Sie entfällt nach
-  \regelref{enum:reformSinn} und ist nicht als übereinstimmende
-  Trennstelle anzusehen.
+
+  Beachte, die Trennstellen ">Drucker-zeugnis"< und ">Musiker-leben"<
+  sind in den Interpretationen \emph{Druck-Erzeugnis} und
+  \emph{Musik-Erleben} irreführend.  Sie entfallen nach
+  \regelref{enum:reformSinn} und sind nicht als übereinstimmende
+  Trennstellen anzusehen.
 
 \item\label{enum:reformOW} In Ableitungen von Namen auf \emph{"~ow}
   bleibt \emph{"~ow} ungetrennt, wenn es den Laut [o\,:] bezeichnet.
@@ -571,7 +576,7 @@ Trennalgorithmus gleich behandelt (siehe auch
   \end{tabular}
 
 \item\label{enum:reformEtymo} Falls die Trennung nach Sprechsilben und
-  die etymologische Trennung (nach Wortherkunft) kollidieren, wurde
+  die etymologische Trennung (nach Wortherkunft) kollidieren, wird
   weitgehend die etymologische Trennung gewählt
   \cite[\S~113]{amtlRegeln:2006, amtlRegeln:2006:duden}:\par\nobreak
 
