@@ -106,6 +106,10 @@
 \colorlet{reformcol}{green!75!black}
 \colorlet{unerwcol}{red!60!black}
 
+\newcolumntype{T}{>{\color{tradcol}}l}
+\newcolumntype{R}{>{\color{reformcol}}l}
+\newcolumntype{U}{>{\color{unerwcol}}l}
+
 \newcommand*{\trennung}[2]{%
    \makebox[0pt][l]{%
      \color{#1}%
@@ -425,7 +429,7 @@ Trennalgorithmus gleich behandelt (siehe auch
 \item\label{enum:tradSinn} Sinnentstellende und irreführende Trennungen
   werden möglichst vermieden \cite[R~181]{duden:1991}:\par\nobreak
 
-  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{TU}
     An-alpha-bet & Anal-phabet\\
     Kaf-ka-kenner & Kafkaken-ner\\
     Tal-entwäs-se-rung & Talent-wässerung\\
@@ -435,7 +439,7 @@ Trennalgorithmus gleich behandelt (siehe auch
   Versalschreibung mit \emph{SS} richtig getrennt
   \cite[R~179]{duden:1991}:\par\nobreak
 
-  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{T}
     \textls{GRÖSS-TE}\\
     \textls{GRÜ-SSE}\\
     \textls{M\kern-.4ptA\kern-.4pt-SSES}\\
@@ -454,7 +458,7 @@ Trennalgorithmus gleich behandelt (siehe auch
   \end{itemize}
   \nobreak
 
-  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{TUU}
     Druckerzeug-nis & Druck-erzeugnis & Drucker-zeugnis\\
     Fuß-balleh-re & Fußball-ehre\\
     nachtritt & nach-tritt & Nacht-ritt\\
@@ -463,7 +467,7 @@ Trennalgorithmus gleich behandelt (siehe auch
   \par\nobreak
   \textit{aber:}
 
-  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{TUU}
     spie-len-de & Spiel-ende & spielende\\
     Mas-se & \textls{M\kern-.4ptA-SSE} &
     \textls{M\kern-.4ptA\kern-.6ptSSE}\\
@@ -485,7 +489,7 @@ Trennalgorithmus gleich behandelt (siehe auch
   die Nottrennung der Ableitungssilben \emph{"~er}, \emph{"~ern},
   \emph{"~ers} unterdrückt \cite[R~180]{duden:1991}:\par\nobreak
 
-  \begin{tabular}[t]{>{\color{tradcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{TU}
     Tel-tower & Tel-tow-er\\
     Trep-towern & Trep-tow-ern\\
     Pan-kowers & Pan-kow-ers\\
@@ -503,7 +507,7 @@ Trennalgorithmus gleich behandelt (siehe auch
   werden möglichst vermieden \cite[\S~107]{amtlRegeln:2006,
     amtlRegeln:2006:duden}:\par\nobreak
 
-  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{RU}
     An-alpha-bet & Anal-phabet\\
     Kaf-ka-kenner & Kafkaken-ner\\
     Tal-entwäs-se-rung & Talent-wässerung\\
@@ -513,7 +517,7 @@ Trennalgorithmus gleich behandelt (siehe auch
   Versalschreibung mit \emph{SS} richtig getrennt \cite[\S\S~25~E3,
   110]{amtlRegeln:2006, amtlRegeln:2006:duden}:\par\nobreak
 
-  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{R}
     \textls{GRÖS-STE}\\
     \textls{GRÜS-SE}\\
     \textls{M\kern-.4ptA\kern-.6ptS-SES}\\
@@ -534,7 +538,7 @@ Trennalgorithmus gleich behandelt (siehe auch
   \end{itemize}
   \nobreak
 
-  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{RUUU}
     Druckerzeug-nis & Dru-ckerzeugnis & Druck-erzeugnis &
     Drucker-zeugnis\\
     Mu-siker-le-ben & Musi-kerleben & Musik-erleben\\
@@ -544,7 +548,7 @@ Trennalgorithmus gleich behandelt (siehe auch
   \par\nobreak
   \textit{aber:}
 
-  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{RUU}
     spie-len-de & Spiel-ende & spielende\\
   \end{tabular}
   
@@ -560,7 +564,7 @@ Trennalgorithmus gleich behandelt (siehe auch
     amtlRegeln:2006:duden}
   i.\,V.\,m.~\cite[R~180]{duden:1991}:\par\nobreak
 
-  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{RUU}
     Tel-tower & Tel-to-wer & Tel-tow-er\\
     Trep-towern & Trep-to-wern & Trep-tow-ern\\
     Pan-kowers & Pan-ko-wers & Pan-kow-ers\\
@@ -571,7 +575,7 @@ Trennalgorithmus gleich behandelt (siehe auch
   weitgehend die etymologische Trennung gewählt
   \cite[\S~113]{amtlRegeln:2006, amtlRegeln:2006:duden}:\par\nobreak
 
-  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{RU}
 %    Heli-ko-pter & Heli-kop-ter\\
 %    in-ter-view-en & in-ter-vie-wen\\
     in-ter-es-sant & in-te-res-sant\\
@@ -586,7 +590,7 @@ Trennalgorithmus gleich behandelt (siehe auch
     amtlRegeln:2006:duden}
   i.\,V.\,m.~\cite[R~179]{duden:1991}:\par\nobreak
 
-  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{RU}
     Ar-thri-tis & Arth-ri-tis\\
 %    Co-gnac & Cog-nac\\
     Di-plom & Dip-lom\\
@@ -597,7 +601,7 @@ Trennalgorithmus gleich behandelt (siehe auch
   \par\nobreak
   \textit{aber:}
 
-  \begin{tabular}[t]{>{\color{reformcol}}l>{\color{unerwcol}}l>{\color{unerwcol}}l}
+  \begin{tabular}[t]{RUU}
     In-dus-trie & In-du-strie & In-dust-rie\\
 %    Ma-gi\retr{s-tr}a-le & Ma-gi-stra-le\\
     de-struk-tiv\\
