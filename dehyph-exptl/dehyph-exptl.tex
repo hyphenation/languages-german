@@ -393,32 +393,61 @@ die Rechtschreibung der deutschen Sprache in der Fassung von
 
 Die Regeln lassen gewisse Freiheiten bei der Schreibung und Trennung von
 Wörtern zu.  Da sich solche Freiheiten nicht ohne weiteres auf die
-maschinelle Worttrennung übertragen lassen, wurden die folgenden
-Konventionen getroffen.  Hauptsächlich betreffen diese die reformierte
-Rechtschreibung, die zusätzliche Freiheiten eingeführt hat.  Die linke
-(grüne) Spalte zeigt jeweils die Trennung mit den experimentellen
-Trennmustern, die rechten (roten) Spalten zeigen alternative oder
-unerwünschte Trennungen.
+maschinelle Worttrennung übertragen lassen, wurden die im folgenden
+beschriebenen Konventionen getroffen.  Hauptsächlich betreffen diese die
+reformierte Rechtschreibung, die zusätzliche Freiheiten eingeführt hat.
+Beziehen sich die Konventionen für die reformierte Rechtschreibung auf
+die traditionelle Rechtschreibung, so werden die entsprechenden Regeln
+etwas ausführlicher dargestellt.  Die folgenden Abschnitte enthalten
+jedoch keine vollständige Aufstellung der Silbentrennregeln.  Diese sind
+den entsprechenden Regelwerken zu entnehmen.
 
-\emph{Hinweise:} Beziehen sich die Konventionen für die reformierte
-Rechtschreibung auf die traditionelle Rechtschreibung, so werden die
-entsprechenden Regeln etwas ausführlicher dargestellt.  Die folgenden
-Abschnitte enthalten jedoch keine vollständige Aufstellung der
-Silbentrennregeln.  Diese sind den entsprechenden Regelwerken zu
-entnehmen.
+In den Beispielen zeigt die linke (grüne) Spalte jeweils die Trennung
+mit den experimentellen Trennmustern, die rechten (roten) Spalten zeigen
+alternative oder unerwünschte Trennungen.  Es folgen zunächst einige
+allgemeine Hinweise:
 
-Werden von den hier gezeigten Konventionen abweichende Trennungen
-gewünscht, so kann die Trennung in Einzelfällen mit den \TeX- und
-\texttt{Babel}-Kürzeln \lstinline[style=LaTeX]+\-+ und
-\lstinline[style=LaTeX]+"-+ geändert werden.  Für dokumentweite
-Änderungen der Trennung eignet sich das Kommando
-\lstinline[style=LaTeX]+\hyphenation+.
+\begin{itemize}
 
-In Liangs Trennalgorithmus werden Groß- und
-Kleinschreibung nicht unterschieden~\cite{liang:1983}.  Die
-Schreibweisen \emph{Nachtritt} und \emph{nachtritt} werden aus Sicht des
-Trennalgorithmus gleich behandelt (siehe auch
-\regelref{enum:tradDoppeld} und \regelref{enum:reformDoppeld}).
+\item In Liangs Trennalgorithmus werden Groß- und Kleinschreibung nicht
+  unterschieden~\cite{liang:1983}.  Die Schreibweisen \emph{Nachtritt}
+  und \emph{nachtritt} werden aus Sicht des Trennalgorithmus gleich
+  behandelt (siehe auch \regelref{enum:tradDoppeld} und
+  \regelref{enum:reformDoppeld}).
+
+\item Konsonantenänderungen, die bei der Trennung nach traditioneller
+  Rechtschreibung auftreten, können nicht in Trennmustern berücksichtigt
+  werden, sondern erfordern derzeit zusätzliche Auszeichnung im
+  Quelltext mit Hilfe des Pakets \texttt{Babel}.
+  \autoref{tab:konsonantenaenderung} stellt Eingaben und deren möglichen
+  Trennungen gegenüber.  Beachte, im letzten Beispiel sind die
+  Trennstellen im zweiten Wortteil verloren gegangen.
+  Konsonantenänderungen lassen sich in \TeX\ zur Zeit nicht
+  zufriedenstellend handhaben (vgl. Abschnitt~3 in der
+  Projektbeschreibung).
+
+  \begin{table}
+    \centering
+    \caption{Konsonantenänderungen in der traditionellen Rechtschreibung}
+    \label{tab:konsonantenaenderung}
+    \begin{tabular}[t]{ll}
+      Eingabe & Trennung \\
+      \addlinespace\toprule\addlinespace
+      \lstinline[style=LaTeX]+drucken+ & drucken \\
+      \lstinline[style=LaTeX]+dru"cken+ & druk-ken \\
+      \lstinline[style=LaTeX]+Metallegierung+ & Me-talle-gie-rung \\
+      \lstinline[style=LaTeX]+Meta"llegierung+ & Me-tall-legierung \\
+    \end{tabular}\par\smallskip
+  \end{table}
+
+\item Werden von den hier gezeigten Konventionen abweichende Trennungen
+  gewünscht, so kann die Trennung in Einzelfällen mit den \TeX- und
+  \texttt{Babel}-Kürzeln \lstinline[style=LaTeX]+\-+ und
+  \lstinline[style=LaTeX]+"-+ geändert werden.  Für dokumentweite
+  Änderungen der Trennung eignet sich das Kommando
+  \lstinline[style=LaTeX]+\hyphenation+.
+
+\end{itemize}
 
 \subsection{Traditionelle Rechtschreibung}
 \label{sec:tradRS}
@@ -480,13 +509,6 @@ Trennalgorithmus gleich behandelt (siehe auch
   \emph{Musik-Erleben} irreführend.  Sie entfallen nach
   \regelref{enum:tradSinn} und sind nicht als übereinstimmende
   Trennstellen anzusehen.
-
-  Konsonantenänderungen bei Trennungen werden nicht in Trennmustern
-  berücksichtigt, sondern durch die Sprachunterstützung des Pakets
-  \texttt{Babel}.  Die Eingaben \lstinline[style=LaTeX]+Dru"ckerzeugnis+
-  und \lstinline[style=LaTeX]+Fußba"llehre+ lösen die Mehrdeutigkeit auf
-  und ermöglichen die Trennungen ">Druk-kerzeugnis"< und
-  ">Fußball-lehre"<.
 
 \item\label{enum:tradOW} In Ableitungen von Namen auf \emph{"~ow} wird
   die Nottrennung der Ableitungssilben \emph{"~er}, \emph{"~ern},
