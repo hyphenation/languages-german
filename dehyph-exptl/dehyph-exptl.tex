@@ -285,7 +285,15 @@ werden zur Zeit unterstützt:
 \begin{itemize}
 \item Standarddeutsch Deutschlands,
 \item Österreichisches Standarddeutsch,
-\item Schweizer Standarddeutsch.
+\item Schweizer Standarddeutsch%
+  % 
+  \footnote{Für Texte in Schweizer Standarddeutsch fehlt zur Zeit die
+    \texttt{Babel}-Unterstützung.  Zum Beispiel muss das Kürzel
+    \lstinline[style=LaTeX]+\"s+ stets zu \emph{ss} expandieren.  In der
+    traditionellen Rechtschreibung wird außerdem ein zusätzliches Kürzel
+    \lstinline[style=LaTeX]+\"ss+ benötigt (Dreikonsonantenregel).
+    Siehe auch Abschnitt~3 in der Projektbeschreibung.}%
+  .
 \end{itemize}
 \autoref{tab:varietaeten} zeigt die Trennmuster, die abhängig von
 verwendeter Varietät und Rechtschreibung in einem Dokument aktiviert
@@ -432,8 +440,9 @@ allgemeine Hinweise:
   Trennungen gegenüber.  Beachte, im letzten Beispiel sind die
   Trennstellen im zweiten Wortteil verloren gegangen.
   Konsonantenänderungen lassen sich in \TeX\ zur Zeit nicht
-  zufriedenstellend handhaben (vgl. Abschnitt~3 in der
-  Projektbeschreibung).
+  zufriedenstellend handhaben.%
+  %
+  \footnote{Vgl. Abschnitt~3 in der Projektbeschreibung.}
 
   \begin{table}
     \centering
