@@ -1,11 +1,16 @@
 # This Makefile creates German hyphenation patterns in subdirectories
-# $(TRAD) and $(REFO).  The input data is in $(SRCDIR).
+# $(TRAD) and $(REFO) for traditional and new ortography, respectively.
+# Hyphenation patterns for traditional Swiss German is generated in
+# directory $(SWISS).
+#
+# The input data is in $(SRCDIR).
 
 SRCDIR = ~/git/wortliste
 WORDLIST = wortliste
 
 TRAD = dehypht-x
 REFO = dehyphn-x
+SWISS = dehyphts-x
 
 LC_ENVVARS = LC_COLLATE=de_DE.ISO8859-1 \
              LC_CTYPE=de_DE.ISO8859-1
@@ -29,14 +34,16 @@ GIT_VERSION := `$(CHDIR) $(SRCDIR); \
                 | $(SED) 's/ .*//'`
 TRADFILES = $(TRAD)/$(TRAD)-$(DATE).pat $(TRAD)/$(TRAD)-$(DATE).tex
 REFOFILES = $(REFO)/$(REFO)-$(DATE).pat $(REFO)/$(REFO)-$(DATE).tex
+SWISSFILES = $(SWISS)/$(SWISS)-$(DATE).pat $(SWISS)/$(SWISS)-$(DATE).tex
 
 
 
-all: pattern-trad pattern-refo
+all: pattern-trad pattern-refo pattern-swiss
 
-.PHONY: pattern-trad pattern-refo
+.PHONY: pattern-trad pattern-refo pattern-swiss
 pattern-trad: $(TRADFILES)
 pattern-refo: $(REFOFILES)
+pattern-swiss: $(SWISSFILES)
 
 # auxiliary targets
 
@@ -45,14 +52,17 @@ words-trad: $(TRAD)/words.hyphenated.trad
 words-refo: $(REFO)/words.hyphenated.refo
 
 
-.PHONY: pre-trad pre-refo
+.PHONY: pre-trad pre-refo pre-swiss
 pre-trad:
 	$(MKDIR) $(TRAD)
 pre-refo:
 	$(MKDIR) $(REFO)
+pre-swiss:
+	$(MKDIR) $(SWISS)
 
 $(TRADFILES) $(TRAD)/words.hyphenated.trad: pre-trad
 $(REFOFILES) $(REFO)/words.hyphenated.refo: pre-refo
+$(SWISSFILES) $(SWISS)/words.hyphenated.swiss: pre-swiss
 
 
 # GNU make supports creation of multiple targets by a single
@@ -77,6 +87,7 @@ $(TRAD)/$(TRAD)-$(DATE).pat: $(TRAD)/pattern.8 $(TRAD)/pattern.rules
           | $(ICONV) >> $@; \
         $(CAT) $(SRCDIR)/$(TRAD).3 >> $@
 
+
 $(REFO)/pattern.8 $(REFO)/pattern.rules: $(REFO)/make-full-pattern-refo
 
 $(REFO)/make-full-pattern-refo: $(REFO)/words.hyphenated.refo
@@ -94,6 +105,25 @@ $(REFO)/$(REFO)-$(DATE).pat: $(REFO)/pattern.8 $(REFO)/pattern.rules
           | $(ICONV) >> $@; \
         $(CAT) $(SRCDIR)/$(REFO).3 >> $@
 
+
+$(SWISS)/pattern.8 $(SWISS)/pattern.rules: $(SWISS)/make-full-pattern-swiss
+
+$(SWISS)/make-full-pattern-swiss: $(SWISS)/words.hyphenated.swiss
+	$(CHDIR) $(SWISS); \
+          $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
+	$(ECHO) done > $@
+
+$(SWISS)/$(SWISS)-$(DATE).pat: $(SWISS)/pattern.8 $(SWISS)/pattern.rules
+	$(CAT) $(SRCDIR)/$(SWISS).1 \
+          | $(SED) -e "s/@DATE@/$(DATE)/" \
+                   -e "s/@GIT_VERSION@/$(GIT_VERSION)/" > $@; \
+        $(CAT) $(SWISS)/pattern.rules >> $@; \
+        $(CAT) $(SRCDIR)/$(SWISS).2 >> $@; \
+        $(CAT) $(SWISS)/pattern.8 \
+          | $(ICONV) >> $@; \
+        $(CAT) $(SRCDIR)/$(SWISS).3 >> $@
+
+
 $(TRAD)/words.hyphenated.trad: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
           | $(PERL) $(SRCDIR)/extract-tex-trad.pl \
@@ -104,11 +134,21 @@ $(REFO)/words.hyphenated.refo: $(SRCDIR)/$(WORDLIST)
           | $(PERL) $(SRCDIR)/extract-tex-refo.pl \
           | $(SORT) > $@
 
+$(SWISS)/words.hyphenated.swiss: $(SRCDIR)/$(WORDLIST)
+	$(CAT) $< \
+          | $(PERL) $(SRCDIR)/extract-tex-swisstrad.pl \
+          | $(SORT) > $@
+
+
 $(TRAD)/$(TRAD)-$(DATE).tex: $(SRCDIR)/$(TRAD).tex.in
 	$(CAT) $< \
           | $(SED) -e "s/@DATE@/$(DATE)/" > $@
 
 $(REFO)/$(REFO)-$(DATE).tex: $(SRCDIR)/$(REFO).tex.in
+	$(CAT) $< \
+          | $(SED) -e "s/@DATE@/$(DATE)/" > $@
+
+$(SWISS)/$(SWISS)-$(DATE).tex: $(SRCDIR)/$(SWISS).tex.in
 	$(CAT) $< \
           | $(SED) -e "s/@DATE@/$(DATE)/" > $@
 
