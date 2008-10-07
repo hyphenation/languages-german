@@ -13,25 +13,28 @@
 #   4 falls Feld 2 leer, Trennung nach reformierter Rechtschreibung (2006)
 #   5 falls Feld 2 leer, Trennung für Wortform, die entweder in
 #     der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird
-#     und für traditionelle und reformierte Rechtschreibung identisch sind
+#     und für traditionelle und reformierte Rechtschreibung identisch ist
 #   6 falls Feld 5 leer, Trennung für Wortform, die entweder in
 #     der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
 #     traditionelle Rechtschreibung
 #   7 falls Feld 5 leer, Trennung für Wortform, die entweder in
 #     der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
 #     reformierte Rechtschreibung (2006)
-#   8 Wortformen der traditionellen Rechtschreibung mit `sss' gefolgt von
-#     einem Vokal, die im schweizer Gebrauchsdeutsch wie andere
-#     Dreifachkonsonanten gehandhabt wurden (also anders, als der Duden
-#     früher vorgeschrieben hat)
+#   8 falls Feld 5 leer, Trennung nach (deutsch)schweizerischer
+#     Rechtschreibung; insbesondere Wörter mit `sss' gefolgt von
+#     einem Vokal, die wie andere Dreifachkonsonanten gehandhabt wurden
+#     (also anders, als der Duden früher vorgeschrieben hat), z.B.
+#     `süssauer'
 #
 # Leere Felder sind mit `-x-' markiert (`x' ist die Feldnummer); Felder 3
-# und 4 als auch Felder 6 und 7 treten immer paarig auf, um die Lesbarkeit
-# zu erhöhen.
+# und 4 als auch Felder 6, 7 und 8 treten immer simultan auf, um die
+# Lesbarkeit zu erhöhen.
 #
 # Zur Erstellung von Trennmustern für die traditionelle Rechtschreibung
-# benötigt man Felder 2, 3, 5, 6 und 8; für die reformierte Rechtschreibung
-# die Felder 2, 4, 5 und 7.
+# benötigt man Felder 2, 3, 5, und 6; für die reformierte Rechtschreibung
+# die Felder 2, 4, 5 und 7, und für die traditionelle
+# (deutsch)schweizerische die Felder 2, 3, 5, 6 und 8.  Felder mit höherer
+# Feldnummer haben Priorität.
 #
 # Folgende Notation wird verwendet, um spezielle Trennungen (für die
 # traditionelle Rechtschreibung) zu kennzeichnen:
