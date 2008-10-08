@@ -7,6 +7,7 @@
 
 SRCDIR = ~/git/wortliste
 DATADIR = $(SRCDIR)/daten
+SCRIPTDIR = $(SRCDIR)/skripte
 WORDLIST = wortliste
 
 TRAD = dehypht-x
@@ -75,7 +76,7 @@ $(TRAD)/pattern.8 $(TRAD)/pattern.rules: $(TRAD)/make-full-pattern-trad
 
 $(TRAD)/make-full-pattern-trad: $(TRAD)/words.hyphenated.trad
 	$(CHDIR) $(TRAD); \
-          $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
+          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
 	$(ECHO) done > $@
 
 $(TRAD)/$(TRAD)-$(DATE).pat: $(TRAD)/pattern.8 $(TRAD)/pattern.rules
@@ -93,7 +94,7 @@ $(REFO)/pattern.8 $(REFO)/pattern.rules: $(REFO)/make-full-pattern-refo
 
 $(REFO)/make-full-pattern-refo: $(REFO)/words.hyphenated.refo
 	$(CHDIR) $(REFO); \
-          $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
+          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
 	$(ECHO) done > $@
 
 $(REFO)/$(REFO)-$(DATE).pat: $(REFO)/pattern.8 $(REFO)/pattern.rules
@@ -111,7 +112,7 @@ $(SWISS)/pattern.8 $(SWISS)/pattern.rules: $(SWISS)/make-full-pattern-swiss
 
 $(SWISS)/make-full-pattern-swiss: $(SWISS)/words.hyphenated.swiss
 	$(CHDIR) $(SWISS); \
-          $(SH) $(SRCDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
+          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
 	$(ECHO) done > $@
 
 $(SWISS)/$(SWISS)-$(DATE).pat: $(SWISS)/pattern.8 $(SWISS)/pattern.rules
@@ -127,17 +128,17 @@ $(SWISS)/$(SWISS)-$(DATE).pat: $(SWISS)/pattern.8 $(SWISS)/pattern.rules
 
 $(TRAD)/words.hyphenated.trad: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
-          | $(PERL) $(SRCDIR)/extract-tex-trad.pl \
+          | $(PERL) $(SCRIPTDIR)/extract-tex-trad.pl \
           | $(SORT) > $@
 
 $(REFO)/words.hyphenated.refo: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
-          | $(PERL) $(SRCDIR)/extract-tex-refo.pl \
+          | $(PERL) $(SCRIPTDIR)/extract-tex-refo.pl \
           | $(SORT) > $@
 
 $(SWISS)/words.hyphenated.swiss: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
-          | $(PERL) $(SRCDIR)/extract-tex-swisstrad.pl \
+          | $(PERL) $(SCRIPTDIR)/extract-tex-swisstrad.pl \
           | $(SORT) > $@
 
 
