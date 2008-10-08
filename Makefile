@@ -6,6 +6,7 @@
 # The input data is in $(SRCDIR).
 
 SRCDIR = ~/git/wortliste
+DATADIR = $(SRCDIR)/daten
 WORDLIST = wortliste
 
 TRAD = dehypht-x
@@ -78,14 +79,14 @@ $(TRAD)/make-full-pattern-trad: $(TRAD)/words.hyphenated.trad
 	$(ECHO) done > $@
 
 $(TRAD)/$(TRAD)-$(DATE).pat: $(TRAD)/pattern.8 $(TRAD)/pattern.rules
-	$(CAT) $(SRCDIR)/$(TRAD).1 \
+	$(CAT) $(DATADIR)/$(TRAD).1 \
           | $(SED) -e "s/@DATE@/$(DATE)/" \
                    -e "s/@GIT_VERSION@/$(GIT_VERSION)/" > $@; \
         $(CAT) $(TRAD)/pattern.rules >> $@; \
-        $(CAT) $(SRCDIR)/$(TRAD).2 >> $@; \
+        $(CAT) $(DATADIR)/$(TRAD).2 >> $@; \
         $(CAT) $(TRAD)/pattern.8 \
           | $(ICONV) >> $@; \
-        $(CAT) $(SRCDIR)/$(TRAD).3 >> $@
+        $(CAT) $(DATADIR)/$(TRAD).3 >> $@
 
 
 $(REFO)/pattern.8 $(REFO)/pattern.rules: $(REFO)/make-full-pattern-refo
@@ -96,14 +97,14 @@ $(REFO)/make-full-pattern-refo: $(REFO)/words.hyphenated.refo
 	$(ECHO) done > $@
 
 $(REFO)/$(REFO)-$(DATE).pat: $(REFO)/pattern.8 $(REFO)/pattern.rules
-	$(CAT) $(SRCDIR)/$(REFO).1 \
+	$(CAT) $(DATADIR)/$(REFO).1 \
           | $(SED) -e "s/@DATE@/$(DATE)/" \
                    -e "s/@GIT_VERSION@/$(GIT_VERSION)/" > $@; \
         $(CAT) $(REFO)/pattern.rules >> $@; \
-        $(CAT) $(SRCDIR)/$(REFO).2 >> $@; \
+        $(CAT) $(DATADIR)/$(REFO).2 >> $@; \
         $(CAT) $(REFO)/pattern.8 \
           | $(ICONV) >> $@; \
-        $(CAT) $(SRCDIR)/$(REFO).3 >> $@
+        $(CAT) $(DATADIR)/$(REFO).3 >> $@
 
 
 $(SWISS)/pattern.8 $(SWISS)/pattern.rules: $(SWISS)/make-full-pattern-swiss
@@ -114,14 +115,14 @@ $(SWISS)/make-full-pattern-swiss: $(SWISS)/words.hyphenated.swiss
 	$(ECHO) done > $@
 
 $(SWISS)/$(SWISS)-$(DATE).pat: $(SWISS)/pattern.8 $(SWISS)/pattern.rules
-	$(CAT) $(SRCDIR)/$(SWISS).1 \
+	$(CAT) $(DATADIR)/$(SWISS).1 \
           | $(SED) -e "s/@DATE@/$(DATE)/" \
                    -e "s/@GIT_VERSION@/$(GIT_VERSION)/" > $@; \
         $(CAT) $(SWISS)/pattern.rules >> $@; \
-        $(CAT) $(SRCDIR)/$(SWISS).2 >> $@; \
+        $(CAT) $(DATADIR)/$(SWISS).2 >> $@; \
         $(CAT) $(SWISS)/pattern.8 \
           | $(ICONV) >> $@; \
-        $(CAT) $(SRCDIR)/$(SWISS).3 >> $@
+        $(CAT) $(DATADIR)/$(SWISS).3 >> $@
 
 
 $(TRAD)/words.hyphenated.trad: $(SRCDIR)/$(WORDLIST)
@@ -140,15 +141,15 @@ $(SWISS)/words.hyphenated.swiss: $(SRCDIR)/$(WORDLIST)
           | $(SORT) > $@
 
 
-$(TRAD)/$(TRAD)-$(DATE).tex: $(SRCDIR)/$(TRAD).tex.in
+$(TRAD)/$(TRAD)-$(DATE).tex: $(DATADIR)/$(TRAD).tex.in
 	$(CAT) $< \
           | $(SED) -e "s/@DATE@/$(DATE)/" > $@
 
-$(REFO)/$(REFO)-$(DATE).tex: $(SRCDIR)/$(REFO).tex.in
+$(REFO)/$(REFO)-$(DATE).tex: $(DATADIR)/$(REFO).tex.in
 	$(CAT) $< \
           | $(SED) -e "s/@DATE@/$(DATE)/" > $@
 
-$(SWISS)/$(SWISS)-$(DATE).tex: $(SRCDIR)/$(SWISS).tex.in
+$(SWISS)/$(SWISS)-$(DATE).tex: $(DATADIR)/$(SWISS).tex.in
 	$(CAT) $< \
           | $(SED) -e "s/@DATE@/$(DATE)/" > $@
 
