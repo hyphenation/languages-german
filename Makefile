@@ -76,7 +76,7 @@ $(TRAD)/pattern.8 $(TRAD)/pattern.rules: $(TRAD)/make-full-pattern-trad
 
 $(TRAD)/make-full-pattern-trad: $(TRAD)/words.hyphenated.trad
 	$(CHDIR) $(TRAD); \
-          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
+          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(DATADIR)/german.tr
 	$(ECHO) done > $@
 
 $(TRAD)/$(TRAD)-$(DATE).pat: $(TRAD)/pattern.8 $(TRAD)/pattern.rules
@@ -94,7 +94,7 @@ $(REFO)/pattern.8 $(REFO)/pattern.rules: $(REFO)/make-full-pattern-refo
 
 $(REFO)/make-full-pattern-refo: $(REFO)/words.hyphenated.refo
 	$(CHDIR) $(REFO); \
-          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
+          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(DATADIR)/german.tr
 	$(ECHO) done > $@
 
 $(REFO)/$(REFO)-$(DATE).pat: $(REFO)/pattern.8 $(REFO)/pattern.rules
@@ -112,7 +112,7 @@ $(SWISS)/pattern.8 $(SWISS)/pattern.rules: $(SWISS)/make-full-pattern-swiss
 
 $(SWISS)/make-full-pattern-swiss: $(SWISS)/words.hyphenated.swiss
 	$(CHDIR) $(SWISS); \
-          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(SRCDIR)/german.tr
+          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(DATADIR)/german.tr
 	$(ECHO) done > $@
 
 $(SWISS)/$(SWISS)-$(DATE).pat: $(SWISS)/pattern.8 $(SWISS)/pattern.rules
