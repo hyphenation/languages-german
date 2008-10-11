@@ -946,7 +946,7 @@ dehypht-x-<datum>.pat
 \end{frageantwort}
 
 
-\begin{frageantwort}{Gibt es Duden-konforme Trennmuster für die
+\begin{frageantwort}{Gibt es dudenkonforme Trennmuster für die
     reformierte Rechtschreibung?}
   Zur Zeit nicht, es ist auch nicht geplant.  Dieses Projekt ist jedoch
   offen für Vorschläge und Mitarbeit.
@@ -966,6 +966,23 @@ dehypht-x-<datum>.pat
 
   Für Texte in gebrochener Schrift ist die traditionelle Rechtschreibung
   sogar vorzuziehen.
+\end{frageantwort}
+
+
+\begin{frageantwort}{Können Trennungen mit einer Silbenlänge von nur
+    einem Buchstaben ermöglicht werden, zum Beispiel für den Satz in
+    schmalen Kolumnen?}
+  Mit diesen Trennmustern ist das nicht möglich, da die zugrundeliegende
+  Wortliste solche Trennungen nicht enthält.  Die Abtrennung einzelner
+  Vokale, zum Beispiel ">A-bend"<, war nur kurzzeitig zulässig; die
+  entsprechende Regelung von 1996 wurde mit der Rechtschreibreform 2006
+  wieder zurückgenommen.
+
+  Wird die Silbenmindestlänge für die Worttrennung auf eins verringert,
+  können falsche Trennungen auftreten.  Zum Beispiel könnte in einem
+  Wort \lstinline[style=LaTeX]+zyxwv+ das Muster
+  \lstinline[style=Text]+1yx+ zu der unerlaubten Trennung ">z-yxwv"<
+  führen.
 \end{frageantwort}
 
 
