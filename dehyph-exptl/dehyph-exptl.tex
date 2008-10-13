@@ -417,14 +417,14 @@ Beziehen sich die Konventionen für die reformierte Rechtschreibung auf
 die traditionelle Rechtschreibung, so werden die entsprechenden Regeln
 etwas ausführlicher dargestellt.  Die folgenden Abschnitte enthalten
 jedoch keine vollständige Aufstellung der Silbentrennregeln.  Diese sind
-den entsprechenden Regelwerken zu entnehmen.
-
-In den Beispielen zeigt die linke (grüne) Spalte jeweils die Trennung
-mit den experimentellen Trennmustern, die rechten (roten) Spalten zeigen
-alternative oder unerwünschte Trennungen.  Es folgen zunächst einige
+den entsprechenden Regelwerken zu entnehmen.  Es folgen zunächst einige
 allgemeine Hinweise:
 
 \begin{itemize}
+
+\item In den Beispielen zeigt die linke (grüne) Spalte jeweils die
+  Trennung mit den experimentellen Trennmustern, die rechten (roten)
+  Spalten zeigen alternative oder unerwünschte Trennungen.
 
 \item In Liangs Trennalgorithmus werden Groß- und Kleinschreibung nicht
   unterschieden~\cite{liang:1983}.  Die Schreibweisen \emph{Nachtritt}
@@ -464,6 +464,9 @@ allgemeine Hinweise:
   \lstinline[style=LaTeX]+"-+ geändert werden.  Für dokumentweite
   Änderungen der Trennung eignet sich das Kommando
   \lstinline[style=LaTeX]+\hyphenation+.
+
+\item Die Datei \Datei{BUGS} beschreibt bekannte, systematische Fehler
+  der Trennmuster.
 
 \end{itemize}
 
@@ -1032,8 +1035,8 @@ dehypht-x-<datum>.pat
   \item Neben der Dokumentation zu den Trennmustern enthält dieses Paket
     eine Projektbeschreibung (\Datei{projektbeschreibung.pdf}).
 
-  \item Die Datei \Datei{BUGS} beschreibt ein paar bekannte
-    systematische Fehler der Trennmuster.
+  \item Die Datei \Datei{BUGS} enthält bekannte, systematische Fehler
+    der Trennmuster.
 
   \item Das Entwicklerrepositorium enthält in der Datei
     \Datei{dateikopf} eine Beschreibung des Formats der Wortliste.
