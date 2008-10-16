@@ -239,8 +239,8 @@ erreichen, enthalten sie doch einige Schwächen:%
 \end{enumerate}
 
 Das Projekt \emph{Freie Wortlisten und Trennmuster für die deutsche
-  Sprache} hat sich deshalb das Ziel gesetzt, neue, hochqualitative
-Trennmuster für die Benutzung in \TeX\ und \Programm{OpenOffice} zu
+  Sprache} hat sich deshalb das Ziel gesetzt, neue Trennmuster hoher
+Qualität für die Benutzung in \TeX\ und \Programm{OpenOffice} zu
 erstellen.
 
 Den experimentellen Trennmustern dieses Pakets liegt eine Wortliste mit
@@ -285,7 +285,15 @@ werden zur Zeit unterstützt:
 \begin{itemize}
 \item Standarddeutsch Deutschlands,
 \item Österreichisches Standarddeutsch,
-\item Schweizer Standarddeutsch.
+\item Schweizer Standarddeutsch%
+  % 
+  \footnote{Für Texte in Schweizer Standarddeutsch fehlt zur Zeit die
+    \texttt{Babel}-Unterstützung.  Zum Beispiel muss das Kürzel
+    \lstinline[style=LaTeX]+\"s+ stets zu \emph{ss} expandieren.  In der
+    traditionellen Rechtschreibung wird außerdem ein zusätzliches Kürzel
+    \lstinline[style=LaTeX]+\"ss+ benötigt (Dreikonsonantenregel).
+    Siehe auch Abschnitt~3 in der Projektbeschreibung.}%
+  .
 \end{itemize}
 \autoref{tab:varietaeten} zeigt die Trennmuster, die abhängig von
 verwendeter Varietät und Rechtschreibung in einem Dokument aktiviert
@@ -432,8 +440,9 @@ allgemeine Hinweise:
   Trennungen gegenüber.  Beachte, im letzten Beispiel sind die
   Trennstellen im zweiten Wortteil verloren gegangen.
   Konsonantenänderungen lassen sich in \TeX\ zur Zeit nicht
-  zufriedenstellend handhaben (vgl. Abschnitt~3 in der
-  Projektbeschreibung).
+  zufriedenstellend handhaben.%
+  %
+  \footnote{Vgl. Abschnitt~3 in der Projektbeschreibung.}
 
   \begin{table}
     \centering
@@ -528,6 +537,16 @@ allgemeine Hinweise:
     Trep-towern & Trep-tow-ern\\
     Pan-kowers & Pan-kow-ers\\
   \end{tabular}
+
+\item\label{enum:tradhyphenmin} Die minimal unterstützte Silbenlänge am
+  Wortanfang und "~ende beträgt zwei Buchstaben.
+
+  Beachte, die Mindestlänge von Silben lässt sich mit
+  \lstinline[style=LaTeX]+\germanhyphenmins+ (\texttt{Babel}) oder
+  \lstinline[style=LaTeX]+\lefthyphenmin+ und
+  \lstinline[style=LaTeX]+\righthyphenmin+ (\TeX) anpassen.  Wird die
+  Mindestlänge auf weniger als zwei Buchstaben verringert, so können
+  fehlerhafte Trennungen auftreten.
 
 \end{enumerate}
 
@@ -643,6 +662,16 @@ allgemeine Hinweise:
     de-struk-tiv\\
     sub-lim\\
   \end{tabular}
+
+\item\label{enum:reformhyphenmin} Die minimal unterstützte Silbenlänge
+  am Wortanfang und "~ende beträgt zwei Buchstaben.
+
+  Beachte, die Mindestlänge von Silben lässt sich mit
+  \lstinline[style=LaTeX]+\ngermanhyphenmins+ (\texttt{Babel}) oder
+  \lstinline[style=LaTeX]+\lefthyphenmin+ und
+  \lstinline[style=LaTeX]+\righthyphenmin+ (\TeX) anpassen.  Wird die
+  Mindestlänge auf weniger als zwei Buchstaben verringert, so können
+  fehlerhafte Trennungen auftreten.
 
 \end{enumerate}
 
@@ -917,7 +946,7 @@ dehypht-x-<datum>.pat
 \end{frageantwort}
 
 
-\begin{frageantwort}{Gibt es Duden-konforme Trennmuster für die
+\begin{frageantwort}{Gibt es dudenkonforme Trennmuster für die
     reformierte Rechtschreibung?}
   Zur Zeit nicht, es ist auch nicht geplant.  Dieses Projekt ist jedoch
   offen für Vorschläge und Mitarbeit.
@@ -937,6 +966,23 @@ dehypht-x-<datum>.pat
 
   Für Texte in gebrochener Schrift ist die traditionelle Rechtschreibung
   sogar vorzuziehen.
+\end{frageantwort}
+
+
+\begin{frageantwort}{Können Trennungen mit einer Silbenlänge von nur
+    einem Buchstaben ermöglicht werden, zum Beispiel für den Satz in
+    schmalen Kolumnen?}
+  Mit diesen Trennmustern ist das nicht möglich, da die zugrundeliegende
+  Wortliste solche Trennungen nicht enthält.  Die Abtrennung einzelner
+  Vokale, zum Beispiel ">A-bend"<, war nur kurzzeitig zulässig; die
+  entsprechende Regelung von 1996 wurde mit der Rechtschreibreform 2006
+  wieder zurückgenommen.
+
+  Wird die Silbenmindestlänge für die Worttrennung auf eins verringert,
+  können falsche Trennungen auftreten.  Zum Beispiel könnte in einem
+  Wort \lstinline[style=LaTeX]+zyxwv+ das Muster
+  \lstinline[style=Text]+1yx+ zu der unerlaubten Trennung ">z-yxwv"<
+  führen.
 \end{frageantwort}
 
 
