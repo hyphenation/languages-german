@@ -3,7 +3,9 @@
 # Hyphenation patterns for traditional Swiss German is generated in
 # directory $(SWISS).
 #
-# The input data is in $(SRCDIR).
+# The input data is in $(SRCDIR); the possible targets are `pattern-trad',
+# `pattern-refo', and `pattern-swiss'.  If no target (or target `all') is
+# given, all three patterns are built.
 
 SRCDIR = ~/git/wortliste
 DATADIR = $(SRCDIR)/daten
@@ -26,6 +28,7 @@ GIT = git
 ICONV = iconv -f latin1 -t utf8
 MKDIR = mkdir -p
 PERL = perl
+PWD = pwd
 SED = sed
 SH = sh
 SORT = $(LC_ENVVARS) sort -d \
@@ -38,6 +41,8 @@ TRADFILES = $(TRAD)/$(TRAD)-$(DATE).pat $(TRAD)/$(TRAD)-$(DATE).tex
 REFOFILES = $(REFO)/$(REFO)-$(DATE).pat $(REFO)/$(REFO)-$(DATE).tex
 SWISSFILES = $(SWISS)/$(SWISS)-$(DATE).pat $(SWISS)/$(SWISS)-$(DATE).tex
 
+
+override SRCDIR := $(shell cd $(SRCDIR); $(PWD))
 
 
 all: pattern-trad pattern-refo pattern-swiss
