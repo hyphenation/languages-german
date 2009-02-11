@@ -1,11 +1,11 @@
 # This Makefile creates German hyphenation patterns in subdirectories
 # $(TRAD) and $(REFO) for traditional and new ortography, respectively.
-# Hyphenation patterns for traditional Swiss German is generated in
+# Hyphenation patterns for traditional Swiss German are generated in
 # directory $(SWISS).
 #
 # The input data is in $(SRCDIR); the possible targets are `pattern-trad',
 # `pattern-refo', and `pattern-swiss'.  If no target (or target `all') is
-# given, all three patterns are built.
+# given, all patterns for all three targets are built.
 
 SRCDIR = ~/git/wortliste
 DATADIR = $(SRCDIR)/daten
