@@ -42,8 +42,8 @@
 \lstdefinestyle{Text}{language=, basicstyle=\ttfamily,
   keywordstyle={}, commentstyle={}}
 %%% Literaturverweise in runden Klammern mit Semikolon als Trenner.
-\usepackage[round,semicolon]{natbib}
-\renewcommand*{\bibnumfmt}[1]{(#1)}
+% \usepackage[round,semicolon]{natbib}
+% \renewcommand*{\bibnumfmt}[1]{(#1)}
 %%% Literaturverzeichnis mit Sprachunterstützung.
 \usepackage[fixlanguage]{babelbib}
 \bibliographystyle{babalpha}
@@ -80,7 +80,7 @@
 \setkomafont{subsection}{\Large\itshape}
 \setkomafont{descriptionlabel}{\normalfont\itshape}
 %%% Einige Makros für logische Auszeichnungen definieren.
-\newcommand*{\Abk}[1]{\textsc{\lsstyle#1}}
+\newcommand*{\Abk}[1]{\mbox{\textsc{\lsstyle#1}}}
 \newcommand*{\Programm}[1]{\textsc{\lsstyle#1}}
 \newcommand*{\Datei}[1]{\texttt{#1}}
 %%% Randnotiz am linken Rand.
@@ -417,14 +417,14 @@ Beziehen sich die Konventionen für die reformierte Rechtschreibung auf
 die traditionelle Rechtschreibung, so werden die entsprechenden Regeln
 etwas ausführlicher dargestellt.  Die folgenden Abschnitte enthalten
 jedoch keine vollständige Aufstellung der Silbentrennregeln.  Diese sind
-den entsprechenden Regelwerken zu entnehmen.
-
-In den Beispielen zeigt die linke (grüne) Spalte jeweils die Trennung
-mit den experimentellen Trennmustern, die rechten (roten) Spalten zeigen
-alternative oder unerwünschte Trennungen.  Es folgen zunächst einige
+den entsprechenden Regelwerken zu entnehmen.  Es folgen zunächst einige
 allgemeine Hinweise:
 
 \begin{itemize}
+
+\item In den Beispielen zeigt die linke (grüne) Spalte jeweils die
+  Trennung mit den experimentellen Trennmustern, die rechten (roten)
+  Spalten zeigen alternative oder unerwünschte Trennungen.
 
 \item In Liangs Trennalgorithmus werden Groß- und Kleinschreibung nicht
   unterschieden~\cite{liang:1983}.  Die Schreibweisen \emph{Nachtritt}
@@ -464,6 +464,9 @@ allgemeine Hinweise:
   \lstinline[style=LaTeX]+"-+ geändert werden.  Für dokumentweite
   Änderungen der Trennung eignet sich das Kommando
   \lstinline[style=LaTeX]+\hyphenation+.
+
+\item Die Datei \Datei{BUGS} beschreibt bekannte, systematische Fehler
+  der Trennmuster.
 
 \end{itemize}
 
@@ -533,9 +536,9 @@ allgemeine Hinweise:
   \emph{"~ers} unterdrückt \cite[R~180]{duden:1991}:\par\nobreak
 
   \begin{tabular}[t]{TU}
-    Tel-tower & Tel-tow-er\\
-    Trep-towern & Trep-tow-ern\\
-    Pan-kowers & Pan-kow-ers\\
+    Tel-tower & Teltow-er\\
+    Trep-towern & Treptow-ern\\
+    Pan-kowers & Pankow-ers\\
   \end{tabular}
 
 \item\label{enum:tradhyphenmin} Die minimal unterstützte Silbenlänge am
@@ -620,9 +623,9 @@ allgemeine Hinweise:
   i.\,V.\,m.~\cite[R~180]{duden:1991}:\par\nobreak
 
   \begin{tabular}[t]{RUU}
-    Tel-tower & Tel-to-wer & Tel-tow-er\\
-    Trep-towern & Trep-to-wern & Trep-tow-ern\\
-    Pan-kowers & Pan-ko-wers & Pan-kow-ers\\
+    Tel-tower & Telto-wer & Teltow-er\\
+    Trep-towern & Trepto-wern & Treptow-ern\\
+    Pan-kowers & Panko-wers & Pankow-ers\\
   \end{tabular}
 
 \item\label{enum:reformEtymo} Falls die Trennung nach Sprechsilben und
@@ -630,12 +633,12 @@ allgemeine Hinweise:
   weitgehend die etymologische Trennung gewählt
   \cite[\S~113]{amtlRegeln:2006, amtlRegeln:2006:duden}:\par\nobreak
 
-  \begin{tabular}[t]{RU}
-%    Heli-ko-pter & Heli-kop-ter\\
-%    in-ter-view-en & in-ter-vie-wen\\
-    in-ter-es-sant & in-te-res-sant\\
-    Lin-ole-um & Li-no-le-um\\
-    Päd-ago-ge & Pä-da-go-ge\\
+  \begin{tabular}[t]{RUU}
+%    Heli-ko-pter & Helikop-ter\\
+%    in-ter-view-en & intervie-wen\\
+    in-ter-es-sant & inte-ressant\\
+    Lin-ole-um & Li-noleum & Lino-leum\\
+    Päd-ago-ge & Pä-dagoge & Päda-goge\\
   \end{tabular}
 
 \item\label{enum:reformClusterLR} In Fremdwörtern bleiben die
@@ -646,19 +649,19 @@ allgemeine Hinweise:
   i.\,V.\,m.~\cite[R~179]{duden:1991}:\par\nobreak
 
   \begin{tabular}[t]{RU}
-    Ar-thri-tis & Arth-ri-tis\\
+    Ar-thri-tis & Arth-ritis\\
 %    Co-gnac & Cog-nac\\
     Di-plom & Dip-lom\\
-%    Fe-bru-ar & Feb-ru-ar\\
-    igno-rie-re & ig-no-rie-re\\
-    In-te-gral & In-teg-ral\\
+%    Fe-bru-ar & Feb-ruar\\
+    igno-rie-re & ig-noriere\\
+    In-te-gral & Integ-ral\\
   \end{tabular}
   \par\nobreak
   \textit{aber:}
 
   \begin{tabular}[t]{RUU}
-    In-dus-trie & In-du-strie & In-dust-rie\\
-%    Ma-gi\retr{s-tr}a-le & Ma-gi-stra-le\\
+    In-dus-trie & Indu-strie & Indust-rie\\
+%    Ma-gis-tra-le & Magi-strale\\
     de-struk-tiv\\
     sub-lim\\
   \end{tabular}
@@ -1032,8 +1035,8 @@ dehypht-x-<datum>.pat
   \item Neben der Dokumentation zu den Trennmustern enthält dieses Paket
     eine Projektbeschreibung (\Datei{projektbeschreibung.pdf}).
 
-  \item Die Datei \Datei{BUGS} beschreibt ein paar bekannte
-    systematische Fehler der Trennmuster.
+  \item Die Datei \Datei{BUGS} enthält bekannte, systematische Fehler
+    der Trennmuster.
 
   \item Das Entwicklerrepositorium enthält in der Datei
     \Datei{dateikopf} eine Beschreibung des Formats der Wortliste.
