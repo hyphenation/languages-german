@@ -36,6 +36,9 @@ while (<>) {
   $zeile =~ s/\[-*(.*?)-*\|.*?\]/$1/g;
   # entferne Markierungen für schlechte Trennungen
   $zeile =~ s/\.//g;
+  # reduziere gewichtete und ungewichtete Trennstellen zu `-';
+  # \xb7 ist `·' in Latin-1-Kodierung
+  $zeile =~ s/[\xb7=_]/-/g;
 
   print "$zeile\n";
 }
