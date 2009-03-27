@@ -6,9 +6,19 @@
 # für Patgen, und zwar für die traditionelle (deutsch)schweizerische
 # Rechtschreibung.
 #
-# Aufruf:  perl extract-tex-swisstrad.pl < wortliste > input.patgen
+# Aufruf:  perl extract-tex-swisstrad.pl [-u] [-g] < wortliste > input.patgen
+#
+# Option `-u' verhindert die Ausgabe von Wörtern mit Markern für
+# unerwünschte Trennungen (z.B. `An-al.pha-bet').
+#
+# Option `-g' bewirkt die Ausgabe von gewichteten Trennstellen; es wird
+# also nur `·' in `-' konvertiert, nicht aber `=' und `_'.
 
 use strict;
+use Getopt::Std;
+getopts('gu');
+
+our ($opt_g, $opt_u);
 
 my $prog = $0;
 $prog =~ s@.*/@@;
@@ -38,11 +48,17 @@ while (<>) {
   $zeile =~ s/\{(.*?)\|.*?\}/$1/g;
   # entferne Doppeldeutigkeiten
   $zeile =~ s/\[-*(.*?)-*\|.*?\]/$1/g;
-  # entferne Markierungen für schlechte Trennungen
+
+  # Ausgabe von Wörtern mit unerwünschten Trennungen?
+  next if /\./ and $opt_u;
+  # entferne Markierungen für unerwünschte Trennungen
   $zeile =~ s/\.//g;
-  # reduziere gewichtete und ungewichtete Trennstellen zu `-';
-  # \xb7 ist `·' in Latin-1-Kodierung
-  $zeile =~ s/[\xb7=_]/-/g;
+
+  # reduziere ungewichtete Trennstellen zu `-'; \xb7 ist `·' in
+  # Latin-1-Kodierung
+  $zeile =~ s/\xb7/-/g;
+  # reduziere gewichtete und ungewichtete Trennstellen zu `-', falls gewollt
+  $zeile =~ s/[=_]/-/g if not $opt_g;
 
   print "$zeile\n";
 }
