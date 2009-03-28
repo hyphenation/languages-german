@@ -5,19 +5,22 @@
 # Dieses Perl-Skript extrahiert aus der `wortliste'-Datei eine Eingabedatei
 # für Patgen, und zwar für die traditionelle deutsche Rechtschreibung.
 #
-# Aufruf:  perl extract-tex-trad.pl [-u] [-g] < wortliste > input.patgen
+# Aufruf:  perl extract-tex-trad.pl [-g] [-u] [-v] < wortliste > input.patgen
+#
+# Option `-g' bewirkt die Ausgabe von gewichteten Trennstellen; es wird
+# also nur `·' in `-' konvertiert, nicht aber `=' und `_'.
 #
 # Option `-u' verhindert die Ausgabe von Wörtern mit Markern für
 # unerwünschte Trennungen (z.B. `An-al.pha-bet').
 #
-# Option `-g' bewirkt die Ausgabe von gewichteten Trennstellen; es wird
-# also nur `·' in `-' konvertiert, nicht aber `=' und `_'.
+# Option `-v' verhindert die Ausgabe von Versalformen, wo `ß' durch `ss'
+# ersetzt ist.
 
 use strict;
 use Getopt::Std;
-getopts('gu');
+getopts('guv');
 
-our ($opt_g, $opt_u);
+our ($opt_g, $opt_u, $opt_v);
 
 my $prog = $0;
 $prog =~ s@.*/@@;
@@ -38,8 +41,8 @@ while (<>) {
   # Felder 2, 3, 5 und 6
   my $zeile = $feld[1];
   $zeile = $feld[2] if defined $feld[2] && $feld[2] ne "-3-";
-  $zeile = $feld[4] if defined $feld[4] && $feld[4] ne "-5-";
-  $zeile = $feld[5] if defined $feld[5] && $feld[5] ne "-6-";
+  $zeile = $feld[4] if defined $feld[4] && $feld[4] ne "-5-" && !$opt_v;
+  $zeile = $feld[5] if defined $feld[5] && $feld[5] ne "-6-" && !$opt_v;
   next if $zeile eq "-2-";
 
   # entferne spezielle Trennungen

@@ -6,13 +6,13 @@
 # für Patgen, und zwar für die traditionelle (deutsch)schweizerische
 # Rechtschreibung.
 #
-# Aufruf:  perl extract-tex-swisstrad.pl [-u] [-g] < wortliste > input.patgen
-#
-# Option `-u' verhindert die Ausgabe von Wörtern mit Markern für
-# unerwünschte Trennungen (z.B. `An-al.pha-bet').
+# Aufruf:  perl extract-tex-swisstrad.pl [-g] [-u] < wortliste > input.patgen
 #
 # Option `-g' bewirkt die Ausgabe von gewichteten Trennstellen; es wird
 # also nur `·' in `-' konvertiert, nicht aber `=' und `_'.
+#
+# Option `-u' verhindert die Ausgabe von Wörtern mit Markern für
+# unerwünschte Trennungen (z.B. `An-al.pha-bet').
 
 use strict;
 use Getopt::Std;
