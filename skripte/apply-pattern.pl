@@ -4,11 +4,23 @@
 #
 # Dieses Perl-Skript wendet die TeX-Trennmusterdatei $1 auf den Datenstrom
 # an, wobei $2 als Translationsdatei benutzt wird (das ist diejenige Datei,
-# die `patgen' als viertes Argument benötigt).  Die Eingabe kann `-'-Zeichen
-# enthalten, welche vor der Weiterverarbeitung herausgefiltert werden.
+# die `patgen' als viertes Argument benötigt).
 #
-# Trennungen direkt nach dem ersten und vor dem letzten Buchstaben in der
-# Ausgabe werden entfernt, wie bei deutschen Trennungen erforderlich.
+# Beachte: Die Kodierungen des Datenstroms und der Trennmuster müssen
+# übereinstimmen!  Aufgrund von Beschränkungen des patgen-Programms kann ein
+# Buchstabe nur aus einem Byte bestehen; im Besonderen kann daher UTF-8 nicht
+# verwendet werden (weder für Eingabe noch für Trennmuster).
+#
+# Folgende Zeichen werden vor der Weiterverarbeitung aus der Eingabe
+# herausgefiltert:
+#
+#   · - = _
+#
+# (das Skript verwendet die Latin-1-Position von `·', 0xB7).
+#
+# Ist Option `-1' nicht gegeben, werden Trennungen direkt nach dem ersten
+# und vor dem letzten Buchstaben in der Ausgabe entfernt, wie z.B. bei
+# deutschen Trennungen erforderlich.
 #
 # Dieses Skript benützt patgen, nicht TeX!  Die Trennmusterdatei darf daher
 # keine TeX-Konstrukte (Makros u.ä.) enthalten.
@@ -18,6 +30,11 @@
 use strict;
 use File::Spec;
 use File::Temp;
+
+use Getopt::Std;
+getopts('1');
+
+our ($opt_1);
 
 my $prog = $0;
 $prog =~ s@.*/@@;
@@ -41,7 +58,8 @@ my @eingabe;
 open TEMP, '>', $tempdatei
 || die "$prog: Kann temporäre Datei `$tempdatei' nicht öffnen: $!\n";
 while (<STDIN>) {
-  s/-//g;
+  # \xb7 ist `·' in Latin-1-Kodierung.
+  s/\xb7=_-//g;
   push(@eingabe, $_);
   print TEMP $_;
 }
@@ -81,8 +99,8 @@ open PATGEN, $pattmp
 || die "$prog: Kann von patgen erzeugte Datei `$pattmp' nicht öffnen: $!\n";
 while (<PATGEN>) {
   s/\./-/g;
-  s/^(.)-/$1/;
-  s/-(.)$/$1/;
+  s/^(.)-/$1/ if not $opt_1;
+  s/-(.)$/$1/ if not $opt_1;
   push(@muster, $_);
 }
 close PATGEN;
