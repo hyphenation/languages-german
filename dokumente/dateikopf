@@ -1,4 +1,4 @@
-# Wortliste deutscher Wörter mit Trennungen
+# Wortliste deutscher Wörter mit gewichteten Trennungen
 #
 # Version @version@
 #
@@ -52,7 +52,11 @@
 #
 #   s/{\([^|]*\)|[^}]*}/\1/g
 #
-# Ungünstige Trennstellen sind mit `.' markiert (Beispiel: Ur-in.stinkt).
+# Ungewichtete Trennstellen (das sind solche, wo noch niemand sich um die
+# Gewichtung gekümmert hat) werden durch `·' repräsentiert,
+# Haupttrennstellen durch `=', Nebentrennstellen durch `-' und ungünstige
+# Trennstellen durch `_'.  Unerwünschte Trennstellen, wo eine Trennung
+# sinnverwirrend ist, sind mit `.' markiert (Beispiel: Ur-in.stinkt).
 #
 # Doppeldeutige Trennstellen werden folgendermaßen deklariert:
 #
