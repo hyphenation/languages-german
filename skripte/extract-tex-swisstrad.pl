@@ -13,6 +13,9 @@
 #
 # Option `-u' verhindert die Ausgabe von Wörtern mit Markern für
 # unerwünschte Trennungen (z.B. `An-al.pha-bet').
+#
+# Konstrukte, die spezielle Trennungen (`{.../...}') und Doppeldeutigkeiten
+# (`[.../...]') anzeigen, werden immer entfernt.
 
 use strict;
 use Getopt::Std;
@@ -45,17 +48,17 @@ while (<>) {
   next if $zeile eq "-2-";
 
   # entferne spezielle Trennungen
-  $zeile =~ s/\{(.*?)\|.*?\}/$1/g;
-  # entferne Doppeldeutigkeiten
-  $zeile =~ s/\[-*(.*?)-*\|.*?\]/$1/g;
+  $zeile =~ s|\{(.*?)/.*?\}|$1|g;
+  # entferne Doppeldeutigkeiten; \xb7 ist `·' in
+  # Latin-1-Kodierung
+  $zeile =~ s|\[[-=\xb7]*(.*?)[-=\xb7]*/.*?\]|$1|g;
 
   # Ausgabe von Wörtern mit unerwünschten Trennungen?
   next if /\./ and $opt_u;
   # entferne Markierungen für unerwünschte Trennungen
   $zeile =~ s/\.//g;
 
-  # reduziere ungewichtete Trennstellen zu `-'; \xb7 ist `·' in
-  # Latin-1-Kodierung
+  # reduziere ungewichtete Trennstellen zu `-'
   $zeile =~ s/\xb7/-/g;
   # reduziere gewichtete und ungewichtete Trennstellen zu `-', falls gewollt
   $zeile =~ s/[=_]/-/g if not $opt_g;

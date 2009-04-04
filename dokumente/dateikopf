@@ -39,18 +39,18 @@
 # Folgende Notation wird verwendet, um spezielle Trennungen (für die
 # traditionelle Rechtschreibung) zu kennzeichnen:
 #
-#   Ab-fa{ll|ll-l}a-ger
+#   Ab-fa{ll/ll-l}a-ger
 #
 # Die gleiche Konstruktion wird verwendet, um Trennungen von `ck'
 # darzustellen:
 #
-#   Dru{ck|k-k}er
+#   Dru{ck/k·k}er
 #
 # Um z.B. eine Wortliste für TeX zu konstruieren (traditionelle
 # Rechtschreibung), das solche speziellen Trennungen nicht benutzen kann,
 # ist folgender regulärer Ausdruck in sed anzuwenden:
 #
-#   s/{\([^|]*\)|[^}]*}/\1/g
+#   s|{\([^/]*\)/[^}]*}|\1|g
 #
 # Ungewichtete Trennstellen (das sind solche, wo noch niemand sich um die
 # Gewichtung gekümmert hat) werden durch `·' repräsentiert,
@@ -60,9 +60,10 @@
 #
 # Doppeldeutige Trennstellen werden folgendermaßen deklariert:
 #
-#   er[b-|-b]recht
+#   er[b-/-b]recht
 #
 # Für TeX-Trennmuster ist es vielleicht am besten, solche Einträge zu
 # entfernen und die häufigeren Fälle in einem \hyphenation-Block zu
-# behandeln.
+# behandeln.  Sowohl in `[...]' als auch in `{...}' können alle Arten von
+# gewichteten und ungewichteten Trennstellen auftreten.
 #
