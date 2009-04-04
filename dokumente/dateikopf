@@ -48,15 +48,27 @@
 #
 # Um z.B. eine Wortliste für TeX zu konstruieren (traditionelle
 # Rechtschreibung), das solche speziellen Trennungen nicht benutzen kann,
-# ist folgender regulärer Ausdruck in sed anzuwenden:
+# ist folgender regulärer Ausdruck in `perl' anzuwenden:
 #
-#   s|{\([^/]*\)/[^}]*}|\1|g
+#   s| { ( [^/]* ) / [^}]* } | \1 |gx
 #
 # Ungewichtete Trennstellen (das sind solche, wo noch niemand sich um die
 # Gewichtung gekümmert hat) werden durch `·' repräsentiert,
-# Haupttrennstellen durch `=', Nebentrennstellen durch `-' und ungünstige
-# Trennstellen durch `_'.  Unerwünschte Trennstellen, wo eine Trennung
-# sinnverwirrend ist, sind mit `.' markiert (Beispiel: Ur-in.stinkt).
+# Haupttrennstellen durch `=' und Nebentrennstellen durch `-'. Unerwünschte
+# Trennstellen, wo eine Trennung sinnverwirrend ist, sind mit `.' markiert
+# (Beispiel: Ur-in.stinkt).
+#
+# Trennstellen, die nach einer Haupttrennstelle auftreten, selbst keine
+# Haupttrennstellen sind und deren Distanz zur Haupttrennstelle geringer als
+# vier Buchstaben ist, sind generell ungünstig.  Man kann sie z.B. mit `_'
+# markieren:
+#
+#   Pol=ge_bie-te
+#
+# Der folgende reguläre Ausdruck für `perl' konvertiert solche betroffenen
+# Trennstellen:
+#
+#   s| = ( [^=-]{2,3} ) - | = $1 _ |gx
 #
 # Doppeldeutige Trennstellen werden folgendermaßen deklariert:
 #

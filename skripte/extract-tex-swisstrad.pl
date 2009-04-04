@@ -9,7 +9,7 @@
 # Aufruf:  perl extract-tex-swisstrad.pl [-g] [-u] < wortliste > input.patgen
 #
 # Option `-g' bewirkt die Ausgabe von gewichteten Trennstellen; es wird
-# also nur `·' in `-' konvertiert, nicht aber `=' und `_'.
+# also nur `·' in `-' konvertiert, nicht aber `='.
 #
 # Option `-u' verhindert die Ausgabe von Wörtern mit Markern für
 # unerwünschte Trennungen (z.B. `An-al.pha-bet').
@@ -61,7 +61,7 @@ while (<>) {
   # reduziere ungewichtete Trennstellen zu `-'
   $zeile =~ s/\xb7/-/g;
   # reduziere gewichtete und ungewichtete Trennstellen zu `-', falls gewollt
-  $zeile =~ s/[=_]/-/g if not $opt_g;
+  $zeile =~ s/=/-/g if not $opt_g;
 
   print "$zeile\n";
 }
