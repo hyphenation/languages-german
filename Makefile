@@ -6,15 +6,44 @@
 # The input data is in $(SRCDIR); the possible targets are `pattern-trad',
 # `pattern-refo', and `pattern-swiss'.  If no target (or target `all') is
 # given, all patterns for all three targets are built.
+#
+# If you add the (phony) target `major', patterns which only use major
+# hyphenation points (`Haupttrennstellen') are created.  Example:
+#
+#   make major pattern-refo
+#
+# The used directories names are the same as above but with `-major'
+# appended to the names.
 
 SRCDIR = ~/git/wortliste
 DATADIR = $(SRCDIR)/daten
 SCRIPTDIR = $(SRCDIR)/skripte
 WORDLIST = wortliste
 
-TRAD = dehypht-x
-REFO = dehyphn-x
-SWISS = dehyphts-x
+ifneq ($(findstring major,$(MAKECMDGOALS)),)
+  MAJOR = -major
+  SEDMAJOR = $(SED) -e '/[=-]/!n' \
+                    -e 's/-//g' \
+                    -e 's/=/-/g' \
+                    -e '/-/!d'
+  PERLMAJOR = -g
+
+  ifeq ($(words $(MAKECMDGOALS)),1)
+    major: all
+  else
+    # This is to suppress the `nothing to be done' warning.
+    major:
+	    @:
+  endif
+else
+  MAJOR =
+  SEDMAJOR = cat
+  PERLMAJOR =
+endif
+
+TRAD = dehypht-x$(MAJOR)
+REFO = dehyphn-x$(MAJOR)
+SWISS = dehyphts-x$(MAJOR)
 
 LC_ENVVARS = LC_COLLATE=de_DE.ISO8859-1 \
              LC_CTYPE=de_DE.ISO8859-1
@@ -47,7 +76,7 @@ override SRCDIR := $(shell cd $(SRCDIR); $(PWD))
 
 all: pattern-trad pattern-refo pattern-swiss
 
-.PHONY: pattern-trad pattern-refo pattern-swiss
+.PHONY: pattern-trad pattern-refo pattern-swiss major
 pattern-trad: $(TRADFILES)
 pattern-refo: $(REFOFILES)
 pattern-swiss: $(SWISSFILES)
@@ -133,17 +162,20 @@ $(SWISS)/$(SWISS)-$(DATE).pat: $(SWISS)/pattern.8 $(SWISS)/pattern.rules
 
 $(TRAD)/words.hyphenated.trad: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
-          | $(PERL) $(SCRIPTDIR)/extract-tex-trad.pl \
+          | $(PERL) $(SCRIPTDIR)/extract-tex-trad.pl $(PERLMAJOR) \
+          | $(SEDMAJOR) \
           | $(SORT) > $@
 
 $(REFO)/words.hyphenated.refo: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
-          | $(PERL) $(SCRIPTDIR)/extract-tex-refo.pl \
+          | $(PERL) $(SCRIPTDIR)/extract-tex-refo.pl $(PERLMAJOR) \
+          | $(SEDMAJOR) \
           | $(SORT) > $@
 
 $(SWISS)/words.hyphenated.swiss: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
-          | $(PERL) $(SCRIPTDIR)/extract-tex-swisstrad.pl \
+          | $(PERL) $(SCRIPTDIR)/extract-tex-swisstrad.pl $(PERLMAJOR) \
+          | $(SEDMAJOR) \
           | $(SORT) > $@
 
 
