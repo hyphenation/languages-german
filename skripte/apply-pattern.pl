@@ -59,7 +59,7 @@ open TEMP, '>', $tempdatei
 || die "$prog: Kann temporäre Datei `$tempdatei' nicht öffnen: $!\n";
 while (<STDIN>) {
   # \xb7 ist `·' in Latin-1-Kodierung.
-  s/\xb7=_-//g;
+  s/[\xb7=_-]//g;
   push(@eingabe, $_);
   print TEMP $_;
 }
