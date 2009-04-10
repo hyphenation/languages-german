@@ -14,6 +14,30 @@
 #
 # The used directories names are the same as above but with `-major'
 # appended to the names.
+#
+#
+#
+# Dieses Makefile erzeugt deutsche Trennmuster in den
+# Unterverzeichnissen $(TRAD) und $(REFO für die traditionelle
+# bzw. reformierte Rechtschreibung.  Trennmuster für tradionelles
+# deutschschweizerisches Deutsch werden Verzeichnis $(SWISS) erzeugt.
+#
+# Die Eingabedaten werden im Verzeichnis $(SRCDIR) erwartet; die
+# möglichen; die möglichen Make-Ziele sind `pattern-trad',
+# `pattern-refo' und `pattern-swiss'.  Wenn kein Ziel angegeben ist
+# (oder man das Ziel `all' verwendet), werden alle drei Trennmuster
+# erzeugt.
+#
+# Wird zusätzlich das zusätzliche (künstliche) Ziel `major' angegeben,
+# werden Haupttrennstellmuster erzeugt.
+#
+# Beispiel:
+#
+#   make major pattern-refo
+#
+# Die verwendeten Verzeichnisnamen sind die gleichen wie oben,
+# allerdings mit einem angehängten `-major'.
+
 
 SRCDIR = ~/git/wortliste
 DATADIR = $(SRCDIR)/daten
