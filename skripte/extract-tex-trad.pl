@@ -8,7 +8,7 @@
 # Aufruf:  perl extract-tex-trad.pl [-g] [-u] [-v] < wortliste > input.patgen
 #
 # Option `-g' bewirkt die Ausgabe von gewichteten Trennstellen; es wird
-# also nur `·' in `-' konvertiert, nicht aber `='.
+# also nur `·' in `-' konvertiert, nicht aber `=' und `|'.
 #
 # Option `-u' verhindert die Ausgabe von Wörtern mit Markern für
 # unerwünschte Trennungen (z.B. `An-al.pha-bet').
@@ -52,7 +52,7 @@ while (<>) {
   $zeile =~ s|\{(.*?)/.*?\}|$1|g;
   # entferne Doppeldeutigkeiten; \xb7 ist `·' in
   # Latin-1-Kodierung
-  $zeile =~ s|\[[-=\xb7]*(.*?)[-=\xb7]*/.*?\]|$1|g;
+  $zeile =~ s|\[[-=|\xb7]*(.*?)[-=|\xb7]*/.*?\]|$1|g;
 
   # Ausgabe von Wörtern mit unerwünschten Trennungen?
   next if /\./ and $opt_u;
@@ -61,8 +61,8 @@ while (<>) {
 
   # reduziere ungewichtete Trennstellen zu `-'
   $zeile =~ s/\xb7/-/g;
-  # reduziere gewichtete und ungewichtete Trennstellen zu `-', falls gewollt
-  $zeile =~ s/=/-/g if not $opt_g;
+  # reduziere gewichtete Trennstellen zu `-', falls gewollt
+  $zeile =~ s/[|=]/-/g if not $opt_g;
 
   print "$zeile\n";
 }
