@@ -46,10 +46,8 @@ WORDLIST = wortliste
 
 ifneq ($(findstring major,$(MAKECMDGOALS)),)
   MAJOR = -major
-  SEDMAJOR = $(SED) -e '/[=-]/!n' \
-                    -e 's/-//g' \
-                    -e 's/=/-/g' \
-                    -e '/-/!d'
+  SEDMAJOR = $(SED) -e 's/-//g' \
+                    -e 's/[|=]/-/g'
   PERLMAJOR = -g
 
   ifeq ($(words $(MAKECMDGOALS)),1)
