@@ -51,7 +51,7 @@ while (<>) {
   $zeile =~ s|\{(.*?)/.*?\}|$1|g;
   # entferne Doppeldeutigkeiten; \xb7 ist `·' in
   # Latin-1-Kodierung
-  $zeile =~ s|\[[-=|\xb7]*(.*?)[-=|\xb7]*/.*?\]|$1|g;
+  $zeile =~ s;\[[-=|\xb7]*(.*?)[-=|\xb7]*/.*?\];$1;g;
 
   # Ausgabe von Wörtern mit unerwünschten Trennungen?
   next if /\./ and $opt_u;
