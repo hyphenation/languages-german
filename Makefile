@@ -7,6 +7,11 @@
 # `pattern-refo', and `pattern-swiss'.  If no target (or target `all') is
 # given, all patterns for all three targets are built.
 #
+# SRCDIR (and the other variables) can be easily modified as parameters
+# while calling `make', e.g.
+#
+#   make pattern-trad SRCDIR=~/git/wortliste
+#
 # If you add the (phony) target `major', patterns which only use major
 # hyphenation points (`Haupttrennstellen') are created.  Example:
 #
@@ -18,17 +23,22 @@
 #
 #
 # Dieses Makefile erzeugt deutsche Trennmuster in den
-# Unterverzeichnissen $(TRAD) und $(REFO für die traditionelle
-# bzw. reformierte Rechtschreibung.  Trennmuster für tradionelles
+# Unterverzeichnissen $(TRAD) und $(REFO fÃ¼r die traditionelle
+# bzw. reformierte Rechtschreibung.  Trennmuster fÃ¼r tradionelles
 # deutschschweizerisches Deutsch werden Verzeichnis $(SWISS) erzeugt.
 #
 # Die Eingabedaten werden im Verzeichnis $(SRCDIR) erwartet; die
-# möglichen; die möglichen Make-Ziele sind `pattern-trad',
+# mÃ¶glichen; die mÃ¶glichen Make-Ziele sind `pattern-trad',
 # `pattern-refo' und `pattern-swiss'.  Wenn kein Ziel angegeben ist
 # (oder man das Ziel `all' verwendet), werden alle drei Trennmuster
 # erzeugt.
 #
-# Wird zusätzlich das zusätzliche (künstliche) Ziel `major' angegeben,
+# SRCDIR (und die anderen Variablen) kann man leicht beim Aufruf von
+# `make' als Parameter modifizieren, z.B.
+#
+#   make pattern-trad SRCDIR=~/git/wortliste
+#
+# Wird zusÃ¤tzlich das zusÃ¤tzliche (kÃ¼nstliche) Ziel `major' angegeben,
 # werden Haupttrennstellmuster erzeugt.
 #
 # Beispiel:
@@ -36,10 +46,10 @@
 #   make major pattern-refo
 #
 # Die verwendeten Verzeichnisnamen sind die gleichen wie oben,
-# allerdings mit einem angehängten `-major'.
+# allerdings mit einem angehÃ¤ngten `-major'.
 
 
-SRCDIR = ~/git/wortliste
+SRCDIR = .
 DATADIR = $(SRCDIR)/daten
 SCRIPTDIR = $(SRCDIR)/skripte
 WORDLIST = wortliste
@@ -78,7 +88,7 @@ COPY = cp
 DATE = $(shell date '+%Y-%m-%d')
 ECHO = echo
 GIT = git
-ICONV = iconv -f latin1 -t utf8
+ICONV = iconv -f latin1 -t utf-8
 MKDIR = mkdir -p
 PERL = perl
 PWD = pwd
