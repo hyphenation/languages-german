@@ -11,6 +11,42 @@ können an die folgenden E-Mail-Adressen gerichtet werden:
 * wl@gnu.org (Werner Lemberg).
 
 
+bekannte Probleme:
+* traditionelle Rechtschreibung:
+  ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au und -ow.
+  ** Der Ersatz sz für ß wird bisher nicht berücksichtigt.
+
+* reformierte Rechtschreibung:
+  ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au und -ow.
+
+
+2009--:
+-----------
+Änderungen:
+* allgemein:
+  ** viele Zahlwörter wurden hinzugefügt
+  ** römischen Zahlen bis 2500 (MMD) mit mindestens vier Buchstaben 
+     wurden hinzugefügt
+  ** viele irreführende Trennungen werden vermieden
+  ** viele weitere Fehler wurden korrigiert
+  ** Dokumentation erweitert
+
+* dehyphts-x:
+  Es werden Trennmuster für die traditionelle Rechtschreibung des
+  Schweizer Standarddeutschs angeboten.  Die Trennmuster
+  unterscheiden sich von denen für die traditionelle Rechtschreibung
+  des Standarddeutschs Deutschlands und Österreichts
+  (dehypht-x-<datum>) in der Trennung von ss als Ersatz für ß.
+  Beispiele: Grü-ße   -->  Grüs-se
+             größ-te  -->  grös-ste
+
+* dehypht-x:
+  Der Ersatz ss für ß wird berücksichtigt und wie bei der Schreibung
+  mit ß getrennt.
+  Beispiel:  Grüße    -->  GRÜ-SSE
+             größ-te  -->  GRÖSS-TE
+
+
 2008-07-07: v0.13
 -----------
 Änderungen:
@@ -33,13 +69,3 @@ können an die folgenden E-Mail-Adressen gerichtet werden:
 -----------
 Änderungen:
 * Erstveröffentlichung
-
-bekannte Probleme:
-* traditionelle Rechtschreibung:
-  ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au und -ow.
-  ** Der Ersatz ss für ß wird stets nach den Regeln für die
-     reformierte Rechtschreibung s-s getrennt.
-  ** Der Ersatz sz für ß wird bisher nicht berücksichtigt.
-
-* reformierte Rechtschreibung:
-  ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au und -ow.
