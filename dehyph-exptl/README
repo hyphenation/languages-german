@@ -30,10 +30,18 @@ README                   - documentation (ASCII)
 dehyph-exptl.bib         - documentation (ASCII)
 dehyph-exptl.pdf         - documentation
 dehyph-exptl.tex         - documentation (ISO-8859-15)
-dehyphn-x-<date>.pat     - patterns for reformed orthography (UTF-8)
+dehyphn-x-<date>.pat     - patterns for reformed orthography of
+                            Standard German as used in Germany,
+                            Austria, and Switzerland (UTF-8)
 dehyphn-x-<date>.tex     - wrapper for 8-bit TeX
-dehypht-x-<date>.pat     - patterns for traditional orthography (UTF-8)
+dehypht-x-<date>.pat     - patterns for traditional orthography
+                            of Standard German as used in
+                            Germany and Austria (UTF-8)
 dehypht-x-<date>.tex     - wrapper for 8-bit TeX
+dehyphts-x-<date>.pat    - patterns for traditional orthography
+                            of Standard German as used in
+                            Switzerland (UTF-8)
+dehyphts-x-<date>.tex    - wrapper for 8-bit TeX
 projektbeschreibung.bib  - documentation (ASCII)
 projektbeschreibung.pdf  - documentation
 projektbeschreibung.tex  - documentation (ISO-8859-15)
