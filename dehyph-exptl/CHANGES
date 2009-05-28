@@ -25,7 +25,7 @@ bekannte Probleme:
 Änderungen:
 * allgemein:
   ** viele Zahlwörter wurden hinzugefügt
-  ** römischen Zahlen bis 2500 (MMD) mit mindestens vier Buchstaben
+  ** römische Zahlen bis 2500 (MMD) mit mindestens vier Buchstaben
      wurden hinzugefügt
   ** viele irreführende Trennungen werden vermieden
   ** viele weitere Fehler wurden korrigiert
