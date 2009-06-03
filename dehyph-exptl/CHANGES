@@ -1,50 +1,47 @@
-Diese Datei beschreibt einige Änderungen und bekannte Probleme
-der experimentellen Trennmuster.  Hauptsächlich handelt es sich
-um systematische Fehler.  Die Liste enthält jedoch keine
-vollständige Änderungsliste.  Genauere Angaben sind dem
-öffentlichen Entwicklerrepositorium zu entnehmen.
-
-Nicht verzeichnete falsche, fehlende und unerwünschte Worttrennungen
-können an die folgenden E-Mail-Adressen gerichtet werden:
-
-* trennmuster-opensource@googlegroups.com (Anmeldung erforderlich),
-* wl@gnu.org (Werner Lemberg).
+Diese Datei beschreibt die wichtigsten Änderungen der
+experimentellen Trennmuster und einige bekannte Probleme
+(hauptsächlich systematische Fehler).  Genauere Informationen zu den
+Änderungen können dem öffentlichen Entwicklerrepositorium entnommen
+werden.
 
 
 bekannte Probleme:
-* traditionelle Rechtschreibung:
+* alle Trennmusterdateien:
+  ** Es werden bisher nur Wörter berücksichtigt, die sich in der
+     Kodierung ISO-8859-1 darstellen lassen.  Betroffen ist davon
+     zum Beispiel das Wort ¼uvre (Oeuvre).  Die in der Klammer
+     angegebene Transkription wird jedoch richtig getrennt.
   ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au und -ow.
-  ** Der Ersatz sz für ß wird bisher nicht berücksichtigt.
 
-* reformierte Rechtschreibung:
-  ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au und -ow.
+* dehypht-x (traditionelle Rechtschreibung, Deutschland, Österreich):
+  ** Der Ersatz sz für ß wird bisher nicht berücksichtigt.
 
 
 2009--:
 -----------
 Änderungen:
 * allgemein:
-  ** viele Zahlwörter wurden hinzugefügt
-  ** römische Zahlen bis 2500 (MMD) mit mindestens vier Buchstaben
-     wurden hinzugefügt
-  ** viele irreführende Trennungen werden vermieden
-  ** viele weitere Fehler wurden korrigiert
-  ** Dokumentation erweitert
+  ** Die Trennung von Zahlwörtern wurde verbessert.
+  ** Die römischen Zahlen bis MMD (2500) werden nicht getrennt.
+  ** Viele zusätzliche irreführende Trennungen werden vermieden.
+  ** Viele weitere Fehler wurden korrigiert.
+  ** Die Dokumentation wurde erweitert.
 
-* dehyphts-x:
-  Es werden Trennmuster für die traditionelle Rechtschreibung des
-  Schweizer Standarddeutschs angeboten.  Die Trennmuster
+* dehyphts-x (traditionelle Rechtschreibung, Schweiz):
+  Es werden neue Trennmuster für die traditionelle Rechtschreibung
+  des Schweizer Standarddeutschs angeboten.  Die Trennmuster
   unterscheiden sich von denen für die traditionelle Rechtschreibung
-  des Standarddeutschs Deutschlands und Österreichs
-  (dehypht-x-<datum>) in der Trennung von ss als Ersatz für ß.
-  Beispiele: Grü-ße   -->  Grüs-se
-             größ-te  -->  grös-ste
+  des Standarddeutschs Deutschlands und Österreichs (dehypht-x) in
+  der Trennung von ss als Ersatz für ß.
+  Beispiele:  Grüs-se   statt  Grü-ße
+              grös-ste  statt  größ-te
 
-* dehypht-x:
+* dehypht-x (traditionelle Rechtschreibung, Deutschland, Österreich):
   Der Ersatz ss für ß wird berücksichtigt und wie bei der Schreibung
-  mit ß getrennt.
-  Beispiele: Grüße    -->  GRÜ-SSE
-             größ-te  -->  GRÖSS-TE
+  mit ß getrennt.  Das Babelkürzel "S muss damit in Versalwörtern
+  nicht mehr verwendet werden.
+  Beispiele:  GRÜSSE   -->  GRÜ-SSE
+              GRÖSSTE  -->  GRÖSS-TE
 
 
 2008-07-07: v0.13
