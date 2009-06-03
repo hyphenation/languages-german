@@ -26,10 +26,10 @@ manuellen Installation in MiKTeX mit graphischer Oberfläche
 zu befolgen (siehe nächster Abschnitt).
 
 
-**************************************
-**  Manuelle Installatin in MiKTeX  **
-**  mit graphischer Oberfläche      **
-**************************************
+***************************************
+**  Manuelle Installation in MiKTeX  **
+**  mit graphischer Oberfläche       **
+***************************************
 Die Installation der experimentellen Trennmuster erfordert
 drei Schritte:
 
@@ -92,10 +92,10 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
      TeX-Verteilung oder fragen Sie einen TeX-Meister.
 
 
-**************************************
-**  Manuelle Installatin in MiKTeX  **
-**  auf der Kommandozeile           **
-**************************************
+***************************************
+**  Manuelle Installation in MiKTeX  **
+**  auf der Kommandozeile            **
+***************************************
 Achtung: Die manuelle Installation in MiKTeX wird nicht
 empfohlen, da die Datei language.dat in der Regel automatisch
 verwaltet wird, hier jedoch von Hand Änderungen vorgenommen
@@ -105,7 +105,7 @@ Problemen kommen!
 Die manuelle Installation der experimentellen Trennmuster
 erfordert vier Schritte:
 
-A. siehe Schritt A im Abschnitt "Manuelle Installatin in
+A. siehe Schritt A im Abschnitt "Manuelle Installation in
    MiKTeX mit graphischer Oberfläche".
 
 
@@ -175,10 +175,10 @@ D. Anlegen der Formatdateien:
     TeX-Meister.
 
 
-****************************************
-**  Manuelle Installatin in TeX Live  **
-**  auf der Kommandozeile             **
-****************************************
+*****************************************
+**  Manuelle Installation in TeX Live  **
+**  auf der Kommandozeile              **
+*****************************************
 Achtung: Die manuelle Installation in TeX Live wird nicht
 empfohlen, da die Datei language.dat in der Regel automatisch
 verwaltet wird, hier jedoch von Hand Änderungen vorgenommen
