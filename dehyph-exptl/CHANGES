@@ -7,14 +7,12 @@ werden.
 
 bekannte Probleme:
 * alle Trennmusterdateien:
-  ** Es werden bisher nur Wörter berücksichtigt, die sich in der
-     Kodierung ISO-8859-1 darstellen lassen.  Betroffen ist davon
-     zum Beispiel das Wort ¼uvre (Oeuvre).  Die in der Klammer
-     angegebene Transkription wird jedoch richtig getrennt.
   ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au und -ow.
-
-* dehypht-x (traditionelle Rechtschreibung, Deutschland, Österreich):
   ** Der Ersatz sz für ß wird bisher nicht berücksichtigt.
+  ** Es werden bisher nur Wörter berücksichtigt, die sich in der
+     Kodierung ISO-8859-1 darstellen lassen.  Beispielsweise wird
+     das Wort ¼uvre (Oeuvre, hier in ISO-8859-15-Kodierung) nur in
+     der in der Klammer angegebenen Transkription richtig getrennt.
 
 
 2009--:
@@ -24,24 +22,26 @@ bekannte Probleme:
   ** Die Trennung von Zahlwörtern wurde verbessert.
   ** Die römischen Zahlen bis MMD (2500) werden nicht getrennt.
   ** Viele zusätzliche irreführende Trennungen werden vermieden.
-  ** Viele weitere Fehler wurden korrigiert.
+  ** Viele Fehler in der Wortdatenbank wurden korrigiert.
   ** Die Dokumentation wurde erweitert.
+
+* dehypht-x (traditionelle Rechtschreibung, Deutschland, Österreich):
+  Der Ersatz ss für ß wird berücksichtigt und wie bei der Schreibung
+  mit ß getrennt.  Das Babelkürzel "S muss damit in Versalwörtern
+  nur noch in Ausnahmefällen verwendet werden (siehe auch Regel T2
+  in der Paketdokumentation).
+  Beispiele:  GRÜSSE   -->  GRÜ-SSE
+              GRÖSSTE  -->  GRÖSS-TE
 
 * dehyphts-x (traditionelle Rechtschreibung, Schweiz):
   Es werden neue Trennmuster für die traditionelle Rechtschreibung
   des Schweizer Standarddeutschs angeboten.  Die Trennmuster
   unterscheiden sich von denen für die traditionelle Rechtschreibung
   des Standarddeutschs Deutschlands und Österreichs (dehypht-x) in
-  der Trennung von ss als Ersatz für ß.
+  der Trennung von ss als Ersatz für ß.  Babelunterstützung für
+  diese Trennmuster fehlt bisher jedoch.  Wer machts?
   Beispiele:  Grüs-se   statt  Grü-ße
               grös-ste  statt  größ-te
-
-* dehypht-x (traditionelle Rechtschreibung, Deutschland, Österreich):
-  Der Ersatz ss für ß wird berücksichtigt und wie bei der Schreibung
-  mit ß getrennt.  Das Babelkürzel "S muss damit in Versalwörtern
-  nicht mehr verwendet werden.
-  Beispiele:  GRÜSSE   -->  GRÜ-SSE
-              GRÖSSTE  -->  GRÖSS-TE
 
 
 2008-07-07: v0.13
