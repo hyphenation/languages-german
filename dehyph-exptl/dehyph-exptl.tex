@@ -292,8 +292,8 @@ werden zur Zeit unterstützt:
     \texttt{Babel}-Unterstützung.  Zum Beispiel muss das Kürzel
     \lstinline[style=LaTeX]+\"s+ stets zu \emph{ss} expandieren.  In der
     traditionellen Rechtschreibung wird außerdem ein zusätzliches Kürzel
-    \lstinline[style=LaTeX]+\"ss+ benötigt (Dreikonsonantenregel).
-    Siehe auch Abschnitt~3 in der Projektbeschreibung.}%
+    \lstinline[style=LaTeX]+\"ss+ benötigt (Dreikonsonantenregel).  Wer
+    kann helfen?}%
   .
 \end{itemize}
 \autoref{tab:varietaeten} zeigt die Trennmuster, die abhängig von
@@ -435,11 +435,10 @@ allgemeine Hinweise:
   Quelltext mit Hilfe des Pakets \texttt{Babel}.
   \autoref{tab:konsonantenaenderung} stellt Eingaben und deren möglichen
   Trennungen gegenüber.  Beachte, im letzten Beispiel sind die
-  Trennstellen im zweiten Wortteil verloren gegangen.
-  Konsonantenänderungen lassen sich in \TeX\ zur Zeit nicht
-  zufriedenstellend handhaben.%
-  %
-  \footnote{Vgl. Abschnitt~3 in der Projektbeschreibung.}
+  Trennstellen im zweiten Wortteil verloren gegangen.  Es handelt sich
+  dabei um einen bekannten Fehler im Paket \texttt{Babel}.%
+  \footnote{\url{http://www.latex-project.org/}, Kennzeichen
+    \texttt{babel/3458}}
 
   \begin{table}
     \centering
@@ -697,8 +696,9 @@ allgemeine Hinweise:
 
 \section{Fehltrennungen}
 \label{sec:fehltrennungen}
-Für fehlerhafte (falsche, ausgelassene oder unerwünschte) Trennungen
-gibt es zwei mögliche Ursachen:
+Mit den vorliegenden Trennmustern können sämtliche Wörter der Wortliste
+fehlerfrei getrennt werden.  Für fehlerhafte (falsche, ausgelassene oder
+unerwünschte) Trennungen gibt es zwei mögliche Ursachen:
 
 \begin{enumerate}
 \item\label{enum:WLfehlerhaft} Die zugrundeliegende Wortliste enthält
@@ -821,13 +821,11 @@ $git clone git://repo.or.cz/wortliste.git
   bezogen werden.%
   \footnote{\url{http://repo.or.cz/}}
   
-  \emph{Hinweis:} Für den Zugriff auf dieses Repositorium sollte
-  \Programm{Git}~1.5.6.5 oder jünger verwendet werden.  Ältere Versionen
-  enthalten einen Fehler im Netzwerkzugriff, der dazu führt, dass statt
-  eines Satzes von Änderungen häufig die komplette Wortliste übertragen
-  wird.
+  \emph{Hinweis:} Ältere \Programm{Git}-Versionen als v1.5.6.5 enthalten
+  einen Fehler im Netzwerkzugriff, der dazu führt, dass statt eines
+  Satzes von Änderungen häufig die komplette Wortliste übertragen wird.
 
-  Außerdem sollte für einen reibungslosen Betrieb nach dem Klonen dieses
+  Für einen reibungslosen Betrieb sollte nach dem Klonen dieses
   Repositoriums die Konfigurationsvariable
   \verb+core.DeltaBaseCacheLimit+ vom Standardwert 16\,MB auf mindestens
   64\,MB erhöht werden.  Mit älteren \Programm{Git}-Versionen können
@@ -995,13 +993,8 @@ dehypht-x-<datum>.pat
   Wortliste solche Trennungen nicht enthält.  Die Abtrennung einzelner
   Vokale, zum Beispiel ">A-bend"<, war nur kurzzeitig zulässig; die
   entsprechende Regelung von 1996 wurde mit der Rechtschreibreform 2006
-  wieder zurückgenommen.
-
-  Wird die Silbenmindestlänge für die Worttrennung auf eins verringert,
-  können falsche Trennungen auftreten.  Zum Beispiel könnte in einem
-  Wort \lstinline[style=LaTeX]+zyxwv+ das Muster
-  \lstinline[style=Text]+1yx+ zu der unerlaubten Trennung ">z-yxwv"<
-  führen.
+  wieder zurückgenommen.  Wird die Silbenmindestlänge für die
+  Worttrennung auf eins verringert, können falsche Trennungen auftreten.
 \end{frageantwort}
 
 
