@@ -175,31 +175,32 @@ Qualität der Worttrennung einer Sprache wird jedoch maßgeblich von der
 Qualität der Wortliste beeinflusst, aus der die verwendeten Trennmuster
 berechnet wurden.
 
-Obwohl die herkömmlichen Trennmuster für die deutsche Sprache bei der
-Worttrennung in gewöhnlichen Texten eine akzeptable Fehlerrate
-erreichen, enthalten sie doch einige Schwächen:%
+Obwohl die herkömmlichen Trennmuster%
 \footnote{Diese Liste bezieht sich auf die Trennmusterdateien
   \Datei{dehypht.tex}, Version~3.2a vom 3.\,3.\,1999, und
   \Datei{dehyphn.tex}, Version~31 vom 7.\,5.\,2001.}
+%
+für die deutsche Sprache bei der Worttrennung in gewöhnlichen Texten
+eine akzeptable Fehlerrate erreichen, enthalten sie doch eine Reihe von
+Schwächen:
 
-\begin{enumerate}
-\item Die Wortliste, die den Trennmustern für die traditionelle deutsche
-  Rechtschreibung zugrundeliegt, ist verschollen.  Die herkömmlichen
-  Trennmuster lassen sich daher nicht reproduzieren und ihre Pflege ist
-  schwierig bis unmöglich.  Für freie Software ist dies kein
-  zufriedenstellender Zustand.
+\bigskip\smallskip
+\noindent\textit{traditionelle Rechtschreibung}
 
-\item Umfang und Qualität der ursprünglichen Wortliste und der
-  Trennmuster können schlecht eingeschätzt werden.  Für die
-  traditionelle Rechtschreibung existiert jedoch inzwischen eine
-  Ausnahmeliste%
+\begin{itemize}
+\item Die herkömmlichen Trennmuster für die traditionelle deutsche
+  Rechtschreibung lassen sich nicht reproduzieren, da die
+  zugrundeliegende Wortliste verschollen ist.  Umfang und Qualität der
+  ursprünglichen Wortliste sind nicht mehr bekannt und die Pflege der
+  Trennmuster ist schwierig bis unmöglich.  Für freie Software ist dies
+  kein zufriedenstellender Zustand.
+
+\item Für die Trennmuster in traditioneller Rechtschreibung existiert
+  inzwischen eine Ausnahmeliste%
   \footnote{\url{CTAN:language/hyphenation/dehyph/dehyphtex.tex}}
 %
   mit über 3500 korrigierten Trennungen einfacher Wörter
   \cite{lemberg:2003, lemberg:2005}.
-
-\item In zusammengesetzten Wörtern treten deutlich häufiger Trennfehler
-  auf als in einfachen Wörtern.
 
 \item Im Versalsatz nach traditioneller deutscher Rechtschreibung wird
   \emph{ß} durch \emph{SS} oder \emph{SZ} ersetzt, die Trennung bleibt
@@ -207,11 +208,32 @@ erreichen, enthalten sie doch einige Schwächen:%
   \footnote{Wenngleich auf Trennungen im Versalsatz möglichst ganz
     verzichtet werden sollte.}
 %
-  In den Trennmustern wird dies nicht berücksichtigt und häufig
-  \mbox{\emph{S-S}} getrennt: \textls{">GR\ftr{ÖS-S}E"<},
+  Die herkömmlichen Trennmustern berücksichtigen dies nicht und trennen
+  häufig \mbox{\emph{S-S}}: \textls{">GR\ftr{ÖS-S}E"<},
   \textls{">GR\ftr{ÜS-S}E"<}, \textls{">M\ftr{AS-S}ES"<}.%
   \footnote{Das Paket \texttt{Babel} kompensiert diese Schwäche durch
     Einführung des Kürzels \lstinline[style=LaTeX]+\"S+.}
+\end{itemize}
+
+\bigskip
+\noindent\textit{reformierte Rechtschreibung}
+
+\begin{itemize}
+\item Die Trennmuster für die reformierte deutsche Rechtschreibung
+  wurden nicht mit \Programm{Patgen} aus einer Wortliste erstellt.
+  Stattdessen wurden die Trennmuster für die traditionelle
+  Rechtschreibung von Hand an die reformierten Regeln angepasst.  Aus
+  diesem Grund ist die Worttrennung mit den Trennmustern für die
+  reformierte Rechtschreibung etwas schlechter als mit den Trennmustern
+  für die traditionelle Rechtschreibung.
+\end{itemize}
+
+\bigskip
+\noindent\textit{beide Rechtschreibungen}
+
+\begin{itemize}
+\item In zusammengesetzten Wörtern treten häufig Trennfehler an
+  Wortfugen auf.
 
 \item Fremdwörter mit akzentuierten Buchstaben werden mangelhaft
   getrennt: ">C\ftr{af}é"<, ">Ci-tr\ftr{oë}n"<, ">F\ftr{aç}on"<,
@@ -224,29 +246,20 @@ erreichen, enthalten sie doch einige Schwächen:%
   ">Ex-pre\ftr{ssz}ug"<, ">Fit-ne\ftr{s-sc}en-ter"<,
   ">Fit-ne\ftr{sst}rai-ner"<.
 
-\item Die Trennmuster für die reformierte deutsche Rechtschreibung
-  konnten nicht von Grund auf neu berechnet werden, da keine Wortliste
-  zur Verfügung stand.  Stattdessen wurden die Trennmuster für die
-  traditionelle Rechtschreibung von Hand an die reformierten Regeln
-  angepasst.  Aus diesem Grund ist die Worttrennung mit den Trennmustern
-  für die reformierte Rechtschreibung noch etwas schlechter als mit den
-  Trennmustern für die traditionelle Rechtschreibung.
-
-\item Die Trennmusterdateien enthalten eine Mischung aus \Abk{t1}- und
-  \Abk{ot1}-kodierten Mustern.  Letztere sind zudem unvollständig.  Mit
-  Erscheinen von 16-Bit-fähigen \TeX-Varianten werden saubere
-  Trennmuster nötig.
-\end{enumerate}
+\item Die Trennmusterdateien enthalten eine Mischung aus \Abk{t1}- sowie
+  unvollständigen \Abk{ot1}-kodierten Mustern.  Mit Erscheinen von
+  16-Bit-fähigen \TeX-Varianten werden saubere Trennmuster nötig.
+\end{itemize}
 
 Das Projekt \emph{Freie Wortlisten und Trennmuster für die deutsche
-  Sprache} hat sich deshalb das Ziel gesetzt, neue Trennmuster hoher
-Qualität für die Benutzung in \TeX\ und \Programm{OpenOffice} zu
-erstellen.
+  Sprache} hat sich das Ziel gesetzt, neue Trennmuster hoher Qualität
+für die deutsche Sprache zu erstellen, die die genannten Probleme
+ausräumen.
 
 Den experimentellen Trennmustern dieses Pakets liegt eine Wortliste mit
 den etwa fünfhunderttausend häufigsten Wörtern der deutschen Sprache in
 deutscher, österreichischer und schweizerdeutscher Schreibweise
-zugrunde.  Diese Liste ist vermutlich erheblich umfangreicher als die
+zugrunde.  Vermutlich ist diese Liste erheblich umfangreicher als die
 ursprüngliche Wortliste, in der Worthäufigkeiten wahrscheinlich
 überhaupt nicht berücksichtigt wurden.
 
