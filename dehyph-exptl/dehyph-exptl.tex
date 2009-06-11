@@ -41,6 +41,7 @@
   keywordstyle={}, commentstyle={\itshape}}
 \lstdefinestyle{Text}{language=, basicstyle=\ttfamily,
   keywordstyle={}, commentstyle={}}
+\usepackage{needspace}
 %%% Literaturverweise in runden Klammern mit Semikolon als Trenner.
 % \usepackage[round,semicolon]{natbib}
 % \renewcommand*{\bibnumfmt}[1]{(#1)}
@@ -185,6 +186,7 @@ eine akzeptable Fehlerrate erreichen, enthalten sie doch eine Reihe von
 Schwächen:
 
 \bigskip\smallskip
+\needspace{4\baselineskip}
 \noindent\textit{traditionelle Rechtschreibung}
 
 \begin{itemize}
@@ -213,9 +215,17 @@ Schwächen:
   \textls{">GR\ftr{ÜS-S}E"<}, \textls{">M\ftr{AS-S}ES"<}.%
   \footnote{Das Paket \texttt{Babel} kompensiert diese Schwäche durch
     Einführung des Kürzels \lstinline[style=LaTeX]+\"S+.}
+
+\item Abweichende Schreibweisen, die in der traditionellen
+  Rechtschreibung in Österreich und der Schweiz verwendet werden, werden
+  mangelhaft getrennt: ">Gro\ftr{s-so}n-kel"<, ">Ku\ftr{s-sh}and"<,
+  ">Ma\ftr{ssn}ah-me"<, ">mi\ftr{s-sa}ch-ten"< (nur Schweiz) und
+  ">Ex-pre\ftr{ssz}ug"<, ">Fit-ne\ftr{s-sc}en-ter"<,
+  ">Fit-ne\ftr{sst}rai-ner"<.
 \end{itemize}
 
 \bigskip
+\needspace{4\baselineskip}
 \noindent\textit{reformierte Rechtschreibung}
 
 \begin{itemize}
@@ -229,7 +239,8 @@ Schwächen:
 \end{itemize}
 
 \bigskip
-\noindent\textit{beide Rechtschreibungen}
+\needspace{4\baselineskip}
+\noindent\textit{traditionelle und reformierte Rechtschreibung}
 
 \begin{itemize}
 \item In zusammengesetzten Wörtern treten häufig Trennfehler an
@@ -238,13 +249,6 @@ Schwächen:
 \item Fremdwörter mit akzentuierten Buchstaben werden mangelhaft
   getrennt: ">C\ftr{af}é"<, ">Ci-tr\ftr{oë}n"<, ">F\ftr{aç}on"<,
   ">vo\ftr{il}à"<.
-
-\item Abweichende Schreibweisen, die in der traditionellen
-  Rechtschreibung in Österreich und der Schweiz verwendet werden, werden
-  mangelhaft getrennt: ">Gro\ftr{s-so}n-kel"<, ">Ku\ftr{s-sh}and"<,
-  ">Ma\ftr{ssn}ah-me"<, ">mi\ftr{s-sa}ch-ten"< (nur Schweiz) und
-  ">Ex-pre\ftr{ssz}ug"<, ">Fit-ne\ftr{s-sc}en-ter"<,
-  ">Fit-ne\ftr{sst}rai-ner"<.
 
 \item Die Trennmusterdateien enthalten eine Mischung aus \Abk{t1}- sowie
   unvollständigen \Abk{ot1}-kodierten Mustern.  Mit Erscheinen von
