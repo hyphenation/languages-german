@@ -191,14 +191,14 @@ Schwächen:
 
 \begin{itemize}
 \item Die herkömmlichen Trennmuster für die traditionelle deutsche
-  Rechtschreibung lassen sich nicht reproduzieren, da die
-  zugrundeliegende Wortliste verschollen ist.  Umfang und Qualität der
-  ursprünglichen Wortliste sind nicht mehr bekannt und die Pflege der
-  Trennmuster ist schwierig bis unmöglich.  Für freie Software ist dies
-  kein zufriedenstellender Zustand.
+  Rechtschreibung können mit \Programm{Patgen} nicht reproduziert
+  werden, da die zugrundeliegende Wortliste verschollen ist.  Die Pflege
+  der Trennmuster ist daher schwierig bis unmöglich.  Für freie Software
+  ist dies kein zufriedenstellender Zustand.
 
-\item Für die Trennmuster in traditioneller Rechtschreibung existiert
-  inzwischen eine Ausnahmeliste%
+\item Umfang und Qualität der ursprünglichen Wortliste lassen sich nicht
+  mehr einschätzen.  Für die Trennmuster in traditioneller
+  Rechtschreibung existiert jedoch inzwischen eine Ausnahmeliste%
   \footnote{\url{CTAN:language/hyphenation/dehyph/dehyphtex.tex}}
 %
   mit über 3500 korrigierten Trennungen einfacher Wörter
@@ -210,11 +210,11 @@ Schwächen:
   \footnote{Wenngleich auf Trennungen im Versalsatz möglichst ganz
     verzichtet werden sollte.}
 %
-  Die herkömmlichen Trennmustern berücksichtigen dies nicht und trennen
+  Die herkömmlichen Trennmuster berücksichtigen dies nicht und trennen
   häufig \mbox{\emph{S-S}}: \textls{">GR\ftr{ÖS-S}E"<},
   \textls{">GR\ftr{ÜS-S}E"<}, \textls{">M\ftr{AS-S}ES"<}.%
-  \footnote{Das Paket \texttt{Babel} kompensiert diese Schwäche durch
-    Einführung des Kürzels \lstinline[style=LaTeX]+\"S+.}
+  \footnote{Das Paket \texttt{Babel} versucht diese Schwäche mit Hilfe
+    des Kürzels \lstinline[style=LaTeX]+\"S+ zu kompensieren.}
 
 \item Abweichende Schreibweisen, die in der traditionellen
   Rechtschreibung in Österreich und der Schweiz verwendet werden, werden
@@ -261,11 +261,12 @@ für die deutsche Sprache zu erstellen, die die genannten Probleme
 ausräumen.
 
 Den experimentellen Trennmustern dieses Pakets liegt eine Wortliste mit
-den etwa fünfhunderttausend häufigsten Wörtern der deutschen Sprache in
-deutscher, österreichischer und schweizerdeutscher Schreibweise
+den etwa fünfhunderttausend häufigsten Wörtern der deutschen Sprache
 zugrunde.  Vermutlich ist diese Liste erheblich umfangreicher als die
 ursprüngliche Wortliste, in der Worthäufigkeiten wahrscheinlich
-überhaupt nicht berücksichtigt wurden.
+überhaupt nicht berücksichtigt wurden.  Die verwendete Wortliste deckt
+das in Deutschland, Österreich und der Schweiz gebräuchliche
+Standarddeutsch ab.
 
 Mit den vorliegenden Trennmustern sollte für nicht-fachsprach\-li\-che
 Wörter eine sehr gute Trennqualität erreicht werden.  Insbesondere
