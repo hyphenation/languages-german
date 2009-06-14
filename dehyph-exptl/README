@@ -8,16 +8,19 @@ URL: http://groups.google.de/group/trennmuster-opensource
 
 
 English:
-This package provides new, experimental hyphenation patterns
-for the German language, covering traditional and reformed
-orthography. The patterns can be used with packages Babel
-and hyphsubst from the Oberdiek bundle.
+This package provides experimental hyphenation patterns for
+the German language, covering traditional and reformed
+orthography for several varities of Standard German.  The
+patterns can be used with packages Babel and hyphsubst from
+the Oberdiek bundle.
 
 Deutsch:
 Dieses Paket enthaelt experimentelle Trennmuster fuer die
-traditionelle und reformierte deutsche Rechtschreibung.
-Die Trennmuster koennen mit den Paketen Babel und hyphsubst
-aus dem Oberdiek-Buendel verwendet werden.
+deutsche Sprache.  Die Trennmuster decken das in
+Deutschland, Oesterreich und der Schweiz gebraeuchliche
+Standarddeutsch in der traditionellen und reformierten
+Rechtschreibung ab und koennen mit den Paketen Babel und
+hyphsubst aus dem Oberdiek-Buendel verwendet werden.
 
 
 *****************
