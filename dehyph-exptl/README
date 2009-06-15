@@ -10,7 +10,7 @@ URL: http://groups.google.de/group/trennmuster-opensource
 English:
 This package provides experimental hyphenation patterns for
 the German language, covering traditional and reformed
-orthography for several varities of Standard German.  The
+orthography for several varieties of Standard German.  The
 patterns can be used with packages Babel and hyphsubst from
 the Oberdiek bundle.
 
