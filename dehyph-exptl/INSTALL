@@ -4,7 +4,14 @@ For English installation instructions, see end of this file.
 **************
 **  German  **
 **************
-Es folgen Installationshinweise für die
+Es folgen Installationshinweise für die experimentellen
+deutschen Trennmuster.  Die Installation der Trennmuster für die
+traditionelle Rechtschreibung des in der Schweiz gebräuchlichen
+Standarddeutschs wird nicht ausdrücklich erwähnt, kann aber
+analog erfolgen.  TeX benötigt dann jedoch zusätzlichen
+Speicherplatz für die Trennmuster.
+
+Die folgenden Installationswege werden beschrieben:
 
 1. teilautomatisierte Installation in MiKTeX mit Hilfe der
     Paketverwaltung,
@@ -89,7 +96,8 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
      fehlschlägt, so müssen Sie andere Sprachen deaktivieren
      oder die Parameter trie_size und trie_op_size anpassen.
      Bitte lesen Sie dazu die Dokumentation Ihrer
-     TeX-Verteilung oder fragen Sie einen TeX-Meister.
+     TeX-Verteilung oder fragen Sie jemanden, der das Problem
+     lösen kann.
 
 
 ***************************************
@@ -171,8 +179,8 @@ D. Anlegen der Formatdateien:
     fehlschlägt, so müssen Sie andere Sprachen in der Datei
     language.dat deaktivieren oder die Parameter trie_size
     und trie_op_size anpassen.  Bitte lesen Sie dazu die
-    Dokumentation Ihrer TeX-Verteilung oder fragen Sie einen
-    TeX-Meister.
+    Dokumentation Ihrer TeX-Verteilung oder fragen Sie
+    jemanden, der das Problem lösen kann.
 
 
 *****************************************
@@ -270,12 +278,19 @@ D. Anlegen der Formatdateien:
     language.dat deaktivieren oder die Parameter trie_size
     und trie_op_size in der Datei texmf.cnf anpassen.  Bitte
     lesen Sie dazu die Dokumentation Ihrer TeX-Verteilung oder
-    fragen Sie einen TeX-Meister.
+    fragen Sie jemanden, der das Problem lösen kann.
 
 
 ******************************************************
 **  English installation instructions for TeX Live  **
 ******************************************************
+The following installation instructions don't mention
+hyphenation patterns for traditional orthography of Standard
+German as used in Switzerland explicitly.  However,
+installation is analogous to the discussed patterns.  Be
+warned, that installing all patterns might cause memory
+problems for TeX.
+
 Note, in the remaining text <date> refers to the pattern file
 date in ISO notation (YYYY-MM-DD)!
 
