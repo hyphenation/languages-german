@@ -206,17 +206,20 @@ Schwächen:
   mit über 3500 korrigierten Trennungen einfacher Wörter
   \cite{lemberg:2003, lemberg:2005}.
 
-\item Im Versalsatz nach traditioneller deutscher Rechtschreibung wird
-  \emph{ß} durch \emph{SS} oder \emph{SZ} ersetzt, die Trennung bleibt
-  davon jedoch unberührt.%
-  \footnote{Wenngleich auf Trennungen im Versalsatz möglichst ganz
-    verzichtet werden sollte.}
+\item Wird in der traditionellen Rechtschreibung \emph{ß} durch
+  \emph{ss/SS} oder \emph{sz/SZ}%
+  \footnote{Im Versalsatz sollte auf Trennungen jedoch möglichst ganz
+    verzichtet werden.}
 %
-  Die herkömmlichen Trennmuster berücksichtigen dies nicht und trennen
-  häufig \mbox{\emph{S-S}}: \textls{">GR\ftr{ÖS-S}E"<},
-  \textls{">GR\ftr{ÜS-S}E"<}, \textls{">M\ftr{AS-S}ES"<}.%
-  \footnote{Das Paket \texttt{Babel} versucht diese Schwäche mit Hilfe
-    des Kürzels \lstinline[style=LaTeX]+\"S+ zu kompensieren.}
+  ersetzt, so bleibt die Trennung davon unberührt.  Die herkömmlichen
+  Trennmuster berücksichtigen diese Regel nicht und trennen häufig den
+  Ersatz: \textls{">GR\ftr{ÖS-S}E"<}, \textls{">GR\ftr{ÜS-S}E"<},
+  \textls{">M\ftr{AS-S}ES"<}.%
+  \footnote{Das Verhalten entspricht den Regeln der deutschen
+    Standardsprache in der Schweiz, obwohl diese Sprachvarietät vom
+    Paket \texttt{Babel} nicht offiziell unterstützt wird.
+    \texttt{Babel} versucht den Mangel mit Hilfe des Kürzels
+    \lstinline[style=LaTeX]+\"S+ zu kompensieren.}
 
 \item Abweichende Schreibweisen, die in der traditionellen
   Rechtschreibung in Österreich und der Schweiz verwendet werden, werden
@@ -412,10 +415,11 @@ Umbruch erfordern.  Ausgiebige Tests sind erwünscht!}
 
 \section{Trennregeln und Konventionen}
 \label{sec:trennregeln}
-Es werden Trennmuster für die traditionelle und die reformierte
-Rechtschreibung bereitgestellt.  Die Trennmuster für die traditionelle
-Rechtschreibung orientieren sich an den verbindlichen Regeln des Dudens
-in der Fassung von 1991~\cite{duden:1991}.  Die Trennmuster für die
+Die Trennmuster für die traditionelle Rechtschreibung in Deutschland und
+Österreich orientieren sich an den verbindlichen Regeln des Dudens in
+der Fassung von 1991~\cite{duden:1991}.  Dasselbe gilt für die
+Trennmuster für die traditionelle Rechtschreibung in der Schweiz, jedoch
+mit einer unten beschriebenen Abweichung.  Die Trennmuster für die
 reformierte Rechtschreibung orientieren sich an den amtlichen Regeln für
 die Rechtschreibung der deutschen Sprache in der Fassung von
 2006~\cite{amtlRegeln:2006, amtlRegeln:2006:duden}.
@@ -480,7 +484,7 @@ allgemeine Hinweise:
 
 \end{itemize}
 
-\subsection{Traditionelle Rechtschreibung}
+\subsection{Traditionelle Rechtschreibung in Deutschland und Österreich}
 \label{sec:tradRS}
 
 \begin{enumerate}[\hspace{1em}\itshape{T}1]
@@ -495,8 +499,8 @@ allgemeine Hinweise:
     Tal-entwäs-se-rung & Talent-wässerung\\
   \end{tabular}
 
-\item\label{enum:tradVersal} Wörter mit \emph{ß} werden in der
-  Versalschreibung mit \emph{SS} richtig getrennt
+\item\label{enum:tradEszett} Wird der Buchstabe~\emph{ß} durch \emph{ss/SS}
+  ersetzt, so bleibt die Trennung davon unberührt
   \cite[R~179]{duden:1991}:\par\nobreak
 
   \begin{tabular}[t]{T}
@@ -507,10 +511,9 @@ allgemeine Hinweise:
 
   Für diese Regel gilt die folgende Einschränkung:
   \begin{itemize}
-  \item Wenn durch das Ersetzen von~\emph{ß} durch~\emph{SS} im
-    Versalsatz eine Mehrdeutigkeit auftritt, so wird zugunsten der
-    Bedeutung des Wortes in der normalen Schreibweise getrennt (siehe
-    auch \regelref{enum:tradDoppeld}).
+  \item Wenn durch den Ersatz von~\emph{ß} eine Mehrdeutigkeit auftritt,
+    so wird zugunsten der Bedeutung des Wortes in der normalen
+    Schreibweise getrennt (siehe auch \regelref{enum:tradDoppeld}).
   \end{itemize}
   \nobreak
 
@@ -546,9 +549,9 @@ allgemeine Hinweise:
   \item Bei mehrdeutigen Wörtern endend auf \emph{"~ende, "~enden,
       "~endes} wird stets die Trennung der Partizipform des Verbs
     verwendet.
-  \item Mehrdeutigkeiten, die nur im Versalsatz von Wörtern mit \emph{ß}
-    auftreten, werden nicht berücksichtigt (siehe auch
-    \regelref{enum:tradVersal}).
+  \item Mehrdeutigkeiten, die durch die Ersatzschreibweise von Wörtern
+    mit \emph{ß} auftreten, werden nicht berücksichtigt (siehe auch
+    \regelref{enum:tradEszett}).
   \end{itemize}
   \nobreak
 
@@ -580,6 +583,24 @@ allgemeine Hinweise:
 
 \end{enumerate}
 
+\subsection{Traditionelle Rechtschreibung in der Schweiz}
+\label{sec:tradchRS}
+
+\begin{enumerate}[\hspace{1em}\itshape{TS}1]
+\labelformat{enumi}{\textit{TS#1}}
+
+\item\label{enum:tradchEszett} Abweichend von \regelref{enum:tradEszett}
+  wird \emph{ss/SS} stets als Doppelkonsonant behandelt und
+  gegebenenfalls getrennt:\par\nobreak
+
+  \begin{tabular}[t]{T}
+    grös-ste\\
+    Grüs-se\\
+    Mas-ses\\
+  \end{tabular}
+
+\end{enumerate}
+
 \subsection{Reformierte Rechtschreibung}
 \label{sec:reformRS}
 
@@ -596,8 +617,8 @@ allgemeine Hinweise:
     Tal-entwäs-se-rung & Talent-wässerung\\
   \end{tabular}
 
-\item\label{enum:refoVersal} Wörter mit \emph{ß} werden in der
-  Versalschreibung mit \emph{SS} richtig getrennt \cite[\S\S~25~E3,
+\item\label{enum:reformEszett} Wird der Buchstabe~\emph{ß} durch
+  \emph{ss/SS} ersetzt, so wird \emph{s-s} getrennt \cite[\S\S~25~E3,
   110]{amtlRegeln:2006, amtlRegeln:2006:duden}:\par\nobreak
 
   \begin{tabular}[t]{R}
@@ -800,9 +821,9 @@ Manteldateien bereitgestellt, die die \Abk{utf}-8-Dateien laden und in
   \begin{tabular}{>{\ttfamily}l>{\ttfamily}l}
     \normalfont Trennmusterdatei & \normalfont Manteldatei\\
     \addlinespace\toprule\addlinespace
-    dehyphn-x-<datum>.pat & dehyphn-x-<datum>.tex\\
     dehypht-x-<datum>.pat & dehypht-x-<datum>.tex\\
-    geswiss-x-<datum>.pat & geswiss-x-<datum>.tex\\
+    dehyphts-x-<datum>.pat & dehyphts-x-<datum>.tex\\
+    dehyphn-x-<datum>.pat & dehyphn-x-<datum>.tex\\
   \end{tabular}
 \end{table}
 
