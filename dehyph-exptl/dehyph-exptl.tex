@@ -288,55 +288,59 @@ oder die Zeichenkette \verb+latest+ zu ersetzen!
 \label{sec:varietaeten}
 Dieses Paket stellt Trennmuster für die Worttrennung der deutschen
 Sprache in der traditionellen und der reformierten Rechtschreibung
-bereit.  Die folgenden Varietäten der deutschen (Standard-)""Sprache
-werden zur Zeit unterstützt:
+bereit.  Die Trennmuster unterstützen zur Zeit die drei in
 \begin{itemize}
-\item Standarddeutsch Deutschlands,
-\item Österreichisches Standarddeutsch,
-\item Schweizer Standarddeutsch%
+\item Deutschland,
+\item Österreich und der
+\item Schweiz%
   % 
   \footnote{Für Texte in Schweizer Standarddeutsch fehlt zur Zeit die
     \texttt{Babel}-Unterstützung.  Zum Beispiel muss das Kürzel
     \lstinline[style=LaTeX]+\"s+ stets zu \emph{ss} expandieren.  In der
     traditionellen Rechtschreibung wird außerdem ein zusätzliches Kürzel
     \lstinline[style=LaTeX]+\"ss+ benötigt (Dreikonsonantenregel).  Wer
-    kann helfen?}%
-  .
+    kann helfen?}
 \end{itemize}
+gebräuchlichen Hauptvarietäten der deutschen Standardsprache.
 \autoref{tab:varietaeten} zeigt die Trennmuster, die abhängig von
-verwendeter Varietät und Rechtschreibung in einem Dokument aktiviert
+gewünschter Varietät und Rechtschreibung in einem Dokument aktiviert
 werden können.
 
 \begin{table}
   \centering
   \caption{Die unterstützten Varietäten und Rechtschreibungen}
   \label{tab:varietaeten}
-  \begin{tabular}{l>{\ttfamily}l}
-    Standarddeutsch & \normalfont Trennmusterbezeichner\\
-    \addlinespace\toprule\addlinespace
-    \textit{traditionell}\\
-    \hspace{.5em}Deutschland & german-x-<datum>\\
-    \hspace{.5em}Österreich & german-x-<datum>\\
-    \hspace{.5em}Schweiz & gswiss-x-<datum>\\
-    \textit{reformiert}\\
-    \hspace{.5em}alle & ngerman-x-<datum>\\
+  \begin{tabular}{>{\ttfamily}l@{\hspace{2\tabcolsep}\hspace{1em}}l}
+      \normalfont Trennmusterbezeichner & Sprachvarietät\\
+      \addlinespace\toprule\addlinespace
+      german-x-<datum> & \hspace*{-1em}\emph{traditionelle Rechtschreibung}\\
+      & Deutschland, Österreich\\
+      gswiss-x-<datum> & \hspace*{-1em}\emph{traditionelle Rechtschreibung}\\
+      & Schweiz\\
+      ngerman-x-<datum> & \hspace*{-1em}\emph{reformierte Rechtschreibung}\\
+      & Deutschland, Österreich, Schweiz\\
   \end{tabular}
 \end{table}
 
-Besonderheiten des österreichischen Standarddeutschs werden in den
-Trennmustern für das Standarddeutsch Deutschlands berücksichtigt.
+Varietäten, die sich nur in der Verwendung und Schreibung einzelner
+Wörter voneinander unterscheiden, können durch gemeinsame Trennmuster
+unterstützt werden.  Die Eingabewortliste für \Programm{Patgen} ist dann
+eine Vereinigung der den Varietäten entsprechenden Wortlisten.  Zum
+Beispiel werden Besonderheiten der österreichischen Standardsprache in
+den Trennmustern für die Standardsprache Deutschlands berücksichtigt.
 Österreichische und deutsche Anwender können daher dieselben Trennmuster
-verwenden.
+verwenden.%
+\footnote{Wie das auch schon bei den herkömmlichen Trennmustern der Fall
+  war.}
 
 Aufgrund unvereinbarer Trennregeln in der traditionellen Rechtschreibung
-des Standarddeutschs Deutschlands und der Schweiz werden für die
-traditionelle Rechtschreibung beider Varietäten unterschiedliche
-Trennmuster angeboten.
+der Standardsprachen Deutschlands/""Österreichs und der Schweiz werden
+für die letztere Varietät eigene Trennmuster bereitgestellt.
 
-Mit der Rechtschreibreform 1996 wurden die Trennregeln der drei
-Standardvarietäten so weit angeglichen, dass für die reformierte
+Mit der Rechtschreibreform 1996 wurden die Trennregeln aller drei
+Standardsprachen so weit angeglichen, dass für die reformierte
 Rechtschreibung einheitliche Trennmuster für alle drei unterstützten
-Standardvarietäten bereitgestellt werden können.
+Sprachvarietäten bereitgestellt werden können.
 
 \subsection{Aktivieren der Trennmuster}
 \label{sec:aktivieren}
