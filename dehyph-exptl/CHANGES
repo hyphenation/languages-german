@@ -2,12 +2,14 @@ Diese Datei beschreibt die wichtigsten Änderungen der
 experimentellen Trennmuster und einige bekannte Probleme
 (hauptsächlich systematische Fehler).  Genauere Informationen zu den
 Änderungen können dem öffentlichen Entwicklerrepositorium entnommen
-werden.
+werden.  Ältere Veröffentlichungen des Pakets können im Dateibereich
+gefunden werden:
+http://groups.google.com/group/trennmuster-opensource/files
 
 
 bekannte Probleme:
 * alle Trennmusterdateien:
-  ** Es gibt ein paar Probleme mit Ortsnamen endend auf -au und -ow.
+  ** Es gibt Probleme mit Namen und geographischen Bezeichnungen.
   ** Der Ersatz sz für ß wird bisher nicht berücksichtigt.
   ** Es werden bisher nur Wörter berücksichtigt, die sich in der
      Kodierung ISO-8859-1 darstellen lassen.  Beispielsweise wird
@@ -15,7 +17,7 @@ bekannte Probleme:
      der in der Klammer angegebenen Transkription richtig getrennt.
 
 
-2009-06-15: v0.20
+2009-06-24: v0.20
 -----------
 Änderungen:
 * allgemein:
