@@ -582,11 +582,20 @@ allgemeine Hinweise:
 \subsection{Traditionelle Rechtschreibung in der Schweiz}
 \label{sec:tradchRS}
 
+Die Trennmuster für die traditionelle Rechtschreibung in der Schweiz
+folgen weitgehend den Konventionen für die traditionelle Rechtschreibung
+in Deutschland (siehe \autoref{sec:tradRS}).  Die folgende Liste enthält
+daher nur Fälle, in denen davon abgewichen wird oder deren Beschreibung
+aus anderen Gründen sinnvoll erscheint.
+
 \begin{enumerate}[\hspace{1em}\itshape{TS}1]
 \labelformat{enumi}{\textit{TS#1}}
 
-\item\label{enum:tradchEszett} Abweichend von \regelref{enum:tradEszett}
-  wird \emph{ss/SS} stets als Doppelkonsonant behandelt und
+\item\label{enum:tradchEszett} Wörter mit \emph{ß} werden gemäß den
+  Regeln für die traditionelle Rechtschreibung in Deutschland getrennt.
+
+\item\label{enum:tradchSS} Abweichend von \regelref{enum:tradEszett}
+  wird \emph{ss/SS} immer als Doppelkonsonant behandelt und
   gegebenenfalls getrennt:\par\nobreak
 
   \begin{tabular}[t]{T}
@@ -594,6 +603,12 @@ allgemeine Hinweise:
     Grüs-se\\
     Mas-ses\\
   \end{tabular}
+
+  Beachte, wird~\emph{ß} jedoch mit
+  \lstinline[style=LaTeX]+\MakeUppercase+ durch~\emph{SS} ersetzt, so
+  bleibt~\emph{SS} stets ungetrennt.  Die Trennung richtet sich dann
+  nach der Schreibweise mit~\emph{ß} im Quelldokument (siehe
+  \regelref{enum:tradchEszett}).
 
 \end{enumerate}
 
