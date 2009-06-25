@@ -180,16 +180,32 @@ Qualität der Worttrennung einer Sprache wird jedoch maßgeblich von der
 Qualität der Wortliste beeinflusst, aus der die verwendeten Trennmuster
 berechnet wurden.
 
-Obwohl die herkömmlichen Trennmuster%
+Obwohl die herkömmlichen Trennmuster für die deutsche Sprache bei der
+Worttrennung in gewöhnlichen Texten eine akzeptable Fehlerrate
+erreichen, enthalten sie doch eine Reihe von Schwächen:%
 \footnote{Diese Liste bezieht sich auf die Trennmusterdateien
   \Datei{dehypht.tex}, Version~3.2a vom 3.\,3.\,1999, und
   \Datei{dehyphn.tex}, Version~31 vom 7.\,5.\,2001.}
-%
-für die deutsche Sprache bei der Worttrennung in gewöhnlichen Texten
-eine akzeptable Fehlerrate erreichen, enthalten sie doch eine Reihe von
-Schwächen:
 
 \bigskip\smallskip
+\needspace{4\baselineskip}
+\noindent\textit{traditionelle und reformierte Rechtschreibung}
+
+\begin{itemize}
+\item In zusammengesetzten Wörtern treten häufig Trennfehler an
+  Wortfugen auf.
+
+\item Fremdwörter mit akzentuierten Buchstaben werden mangelhaft
+  getrennt: ">C\ftr{af}é"<, ">Ci-tr\ftr{oë}n"<, ">F\ftr{aç}on"<,
+  ">vo\ftr{il}à"<.
+
+\item Die Trennmusterdateien enthalten eine Mischung aus \Abk{t1}- sowie
+  unvollständigen \Abk{ot1}-kodierten Mustern.  Mit Erscheinen von
+  16-Bit-fähigen \TeX-Varianten werden sauber \Abk{utf-8}-kodierte
+  Trennmuster nötig \cite{miklavec:2008}.
+\end{itemize}
+
+\bigskip
 \needspace{4\baselineskip}
 \noindent\textit{traditionelle Rechtschreibung}
 
@@ -202,25 +218,20 @@ Schwächen:
 
 \item Umfang und Qualität der ursprünglichen Wortliste lassen sich nicht
   mehr einschätzen.  Für die Trennmuster in traditioneller
-  Rechtschreibung existiert jedoch inzwischen eine Ausnahmeliste%
+  Rechtschreibung existiert jedoch inzwischen eine Ausnahmeliste mit
+  über 3500 korrigierten Trennungen einfacher Wörter \cite{lemberg:2003,
+    lemberg:2005}.%
   \footnote{\url{CTAN:language/hyphenation/dehyph/dehyphtex.tex}}
-%
-  mit über 3500 korrigierten Trennungen einfacher Wörter
-  \cite{lemberg:2003, lemberg:2005}.
 
 \item Wird in der traditionellen Rechtschreibung \emph{ß} durch
-  \emph{ss/SS} oder \emph{sz/SZ}%
-  \footnote{Im Versalsatz sollte auf Trennungen jedoch möglichst ganz
-    verzichtet werden.}
-%
-  ersetzt, so bleibt die Trennung davon unberührt.  Die herkömmlichen
-  Trennmuster berücksichtigen diese Regel nicht und trennen häufig den
-  Ersatz: \textls{">GR\ftr{ÖS-S}E"<}, \textls{">GR\ftr{ÜS-S}E"<},
-  \textls{">M\ftr{AS-S}ES"<}.%
-  \footnote{Das Verhalten entspricht den Regeln der deutschen
-    Standardsprache in der Schweiz, obwohl diese Sprachvarietät vom
-    Paket \texttt{Babel} nicht offiziell unterstützt wird.
-    \texttt{Babel} versucht den Mangel mit Hilfe des Kürzels
+  \emph{ss/SS} oder \emph{sz/SZ} ersetzt, so bleibt die Trennung davon
+  unberührt.  Die herkömmlichen Trennmuster berücksichtigen diese Regel
+  nicht und trennen häufig den Ersatz: \textls{">GR\ftr{ÖS-S}E"<},
+  \textls{">GR\ftr{ÜS-S}E"<}, \textls{">M\ftr{AS-S}ES"<}.%
+  \footnote{Die Trennung der herkömmlichen Muster entspricht den Regeln
+    der deutschen Standardsprache in der Schweiz, obwohl diese
+    Sprachvarietät vom Paket \texttt{Babel} nicht offiziell unterstützt
+    wird.  \texttt{Babel} versucht den Mangel mit Hilfe des Kürzels
     \lstinline[style=LaTeX]+\"S+ zu kompensieren.}
 
 \item Abweichende Schreibweisen, die in der traditionellen
@@ -243,24 +254,6 @@ Schwächen:
   diesem Grund ist die Worttrennung mit den Trennmustern für die
   reformierte Rechtschreibung etwas schlechter als mit den Trennmustern
   für die traditionelle Rechtschreibung.
-\end{itemize}
-
-\bigskip
-\needspace{4\baselineskip}
-\noindent\textit{traditionelle und reformierte Rechtschreibung}
-
-\begin{itemize}
-\item In zusammengesetzten Wörtern treten häufig Trennfehler an
-  Wortfugen auf.
-
-\item Fremdwörter mit akzentuierten Buchstaben werden mangelhaft
-  getrennt: ">C\ftr{af}é"<, ">Ci-tr\ftr{oë}n"<, ">F\ftr{aç}on"<,
-  ">vo\ftr{il}à"<.
-
-\item Die Trennmusterdateien enthalten eine Mischung aus \Abk{t1}- sowie
-  unvollständigen \Abk{ot1}-kodierten Mustern.  Mit Erscheinen von
-  16-Bit-fähigen \TeX-Varianten werden sauber \Abk{utf-8}-kodierte
-  Trennmuster nötig \cite{miklavec:2008}.
 \end{itemize}
 
 Das Projekt \emph{Freie Wortlisten und Trennmuster für die deutsche
