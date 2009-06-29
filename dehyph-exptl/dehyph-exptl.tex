@@ -485,6 +485,17 @@ allgemeine Hinweise:
 \begin{enumerate}[\hspace{1em}\itshape{T}1]
 \labelformat{enumi}{\textit{T#1}}
 
+\item\label{enum:tradhyphenmin} Die minimal unterstützte Silbenlänge am
+  Wortanfang und "~ende beträgt zwei Buchstaben
+  \cite[R~178]{duden:1991}.
+
+  Beachte, die Mindestlänge abgetrennter Silben lässt sich in \TeX\ mit
+  den Makros \lstinline[style=LaTeX]+\lefthyphenmin+ und
+  \lstinline[style=LaTeX]+\righthyphenmin+ und in \LaTeX\ mit dem Makro
+  \lstinline[style=LaTeX]+\germanhyphenmins+ (\texttt{Babel}) anpassen.
+  Wird die Mindestlänge auf weniger als zwei Buchstaben verringert, so
+  können fehlerhafte Trennungen auftreten.
+
 \item\label{enum:tradSinn} Sinnentstellende und irreführende Trennungen
   werden möglichst vermieden \cite[R~181]{duden:1991}:\par\nobreak
 
@@ -566,16 +577,6 @@ allgemeine Hinweise:
     Pan-kowers & Pankow-ers\\
   \end{tabular}
 
-\item\label{enum:tradhyphenmin} Die minimal unterstützte Silbenlänge am
-  Wortanfang und "~ende beträgt zwei Buchstaben.
-
-  Beachte, die Mindestlänge von Silben lässt sich mit
-  \lstinline[style=LaTeX]+\germanhyphenmins+ (\texttt{Babel}) oder
-  \lstinline[style=LaTeX]+\lefthyphenmin+ und
-  \lstinline[style=LaTeX]+\righthyphenmin+ (\TeX) anpassen.  Wird die
-  Mindestlänge auf weniger als zwei Buchstaben verringert, so können
-  fehlerhafte Trennungen auftreten.
-
 \end{enumerate}
 
 \subsection{Traditionelle Rechtschreibung in der Schweiz}
@@ -616,6 +617,17 @@ aus anderen Gründen sinnvoll erscheint.
 
 \begin{enumerate}[\hspace{1em}\itshape{R}1]
 \labelformat{enumi}{\textit{R#1}}
+
+\item\label{enum:reformhyphenmin} Die minimal unterstützte Silbenlänge
+  am Wortanfang und "~ende beträgt zwei Buchstaben
+  \cite[\S~107]{amtlRegeln:2006, amtlRegeln:2006:duden}.
+
+  Beachte, die Mindestlänge abgetrennter Silben lässt sich in \TeX\ mit
+  den Makros \lstinline[style=LaTeX]+\lefthyphenmin+ und
+  \lstinline[style=LaTeX]+\righthyphenmin+ und in \LaTeX\ mit dem Makro
+  \lstinline[style=LaTeX]+\ngermanhyphenmins+ (\texttt{Babel}) anpassen.
+  Wird die Mindestlänge auf weniger als zwei Buchstaben verringert, so
+  können fehlerhafte Trennungen auftreten.
 
 \item\label{enum:reformEtymo} Falls die Trennung nach Sprechsilben und
   die etymologische (sprachgeschichtliche) Trennung kollidieren, wird
@@ -722,16 +734,6 @@ aus anderen Gründen sinnvoll erscheint.
 %     Trep-towern & Trepto-wern & Treptow-ern\\
 %     Pan-kowers & Panko-wers & Pankow-ers\\
 %   \end{tabular}
-
-\item\label{enum:reformhyphenmin} Die minimal unterstützte Silbenlänge
-  am Wortanfang und "~ende beträgt zwei Buchstaben.
-
-  Beachte, die Mindestlänge von Silben lässt sich mit
-  \lstinline[style=LaTeX]+\ngermanhyphenmins+ (\texttt{Babel}) oder
-  \lstinline[style=LaTeX]+\lefthyphenmin+ und
-  \lstinline[style=LaTeX]+\righthyphenmin+ (\TeX) anpassen.  Wird die
-  Mindestlänge auf weniger als zwei Buchstaben verringert, so können
-  fehlerhafte Trennungen auftreten.
 
 \end{enumerate}
 
