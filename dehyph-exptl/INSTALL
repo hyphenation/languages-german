@@ -89,7 +89,7 @@ C. Anlegen der Sprachen und Erstellen der Formatdateien:
 
        >TeX capacity exceeded, sorry [pattern memory=XXX]
 
-     oder 
+     oder
 
        >TEX capacity exceeded, sorry [pattern memory ops=XXX]
 
@@ -172,7 +172,7 @@ D. Anlegen der Formatdateien:
 
       >TeX capacity exceeded, sorry [pattern memory=XXX]
 
-    oder 
+    oder
 
       >TEX capacity exceeded, sorry [pattern memory ops=XXX]
 
@@ -270,7 +270,7 @@ D. Anlegen der Formatdateien:
 
       >TeX capacity exceeded, sorry [pattern memory=XXX]
 
-    oder 
+    oder
 
       >TEX capacity exceeded, sorry [pattern memory ops=XXX]
 
@@ -349,7 +349,7 @@ C. Refresh file name database:
       >mktexlsr
 
 
-D. Rebuild format files:  
+D. Rebuild format files:
 
     Execute command
 
