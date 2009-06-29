@@ -309,15 +309,14 @@ werden können.
   \centering
   \caption{Die unterstützten Varietäten und Rechtschreibungen}
   \label{tab:varietaeten}
-  \begin{tabular}{>{\ttfamily}l@{\hspace{2\tabcolsep}\hspace{1em}}l}
-      \normalfont Trennmusterbezeichner & Sprachvarietät\\
-      \addlinespace\toprule\addlinespace
-      german-x-<datum> & \hspace*{-1em}\emph{traditionelle Rechtschreibung}\\
-      & Deutschland, Österreich\\
-      gswiss-x-<datum> & \hspace*{-1em}\emph{traditionelle Rechtschreibung}\\
-      & Schweiz\\
-      ngerman-x-<datum> & \hspace*{-1em}\emph{reformierte Rechtschreibung}\\
-      & Deutschland, Österreich, Schweiz\\
+  \begin{tabular}{l>{\ttfamily}l}
+    \normalfont Sprachvarietät & Trennmusterbezeichner\\
+    \addlinespace\toprule\addlinespace
+    \hspace*{-\tabcolsep}\normalfont\emph{traditionelle Rechtschreibung}\\
+    Deutschland, Österreich & german-x-<datum>\\
+    Schweiz & gswiss-x-<datum>\\\addlinespace
+    \hspace*{-\tabcolsep}\normalfont\emph{reformierte Rechtschreibung}\\
+    Deutschland, Österreich, Schweiz & ngerman-x-<datum>\\
   \end{tabular}
 \end{table}
 
