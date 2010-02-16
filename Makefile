@@ -27,11 +27,10 @@
 # bzw. reformierte Rechtschreibung.  Trennmuster für tradionelles
 # deutschschweizerisches Deutsch werden Verzeichnis $(SWISS) erzeugt.
 #
-# Die Eingabedaten werden im Verzeichnis $(SRCDIR) erwartet; die
-# möglichen; die möglichen Make-Ziele sind `pattern-trad',
-# `pattern-refo' und `pattern-swiss'.  Wenn kein Ziel angegeben ist
-# (oder man das Ziel `all' verwendet), werden alle drei Trennmuster
-# erzeugt.
+# Die Eingabedaten werden im Verzeichnis $(SRCDIR) erwartet; die möglichen
+# Make-Ziele sind `pattern-trad', `pattern-refo' und `pattern-swiss'.  Wenn
+# kein Ziel angegeben ist (oder man das Ziel `all' verwendet), werden alle
+# drei Trennmuster erzeugt.
 #
 # SRCDIR (und die anderen Variablen) kann man leicht beim Aufruf von
 # `make' als Parameter modifizieren, z.B.
