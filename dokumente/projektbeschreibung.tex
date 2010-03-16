@@ -213,12 +213,14 @@ bestehen nur als Idee und werden zur Zeit nicht aktiv bearbeitet.
 
 \item Gewichtung der Trennstellen
 
-\item Markierung von Nottrennungen
-
-\item Behandlung von falschen Ligaturen
+\item Markieren von falschen/""richtigen Ligaturen
 
 \item Unterscheidung von Lang- und Rund-s für den Satz mit gebrochenen
   Schriften
+
+\item Erstellen von Trennmustern unterschiedlicher Trennpriorität, für
+  die Erkennung von Sondertrennungen (ck- und Dreikonsonantenregel),
+  Ligaturen und die Behandlung des Rund-s
 
 \item verteilte Kontrolle von Rechtschreibung und Trennung des
   Wortbestands
@@ -248,17 +250,6 @@ bestehen nur als Idee und werden zur Zeit nicht aktiv bearbeitet.
   Sprachenschnittstelle (Pakete \texttt{Babel} bzw.
   \texttt{Polyglossia}) einen Versionsmechanismus für die
   Trennmusteraktivierung.  $\Rightarrow$ Paket \texttt{hyphsubst}
-
-\item[mehrere Trennmuster laden] Für einzelne Dokumente ist es
-  wünschenswert, fachspezifische Trennmuster verwenden zu können.
-  Allerdings können Trennmuster nur während der Formaterstellung geladen
-  werden.  Einmal eingebundene Trennmuster sind somit immer im Format
-  vorhanden.  Es wäre sinnvoll, Trennmuster auch dynamisch während der
-  Ausführung laden zu können.  Wie wird mit kollidierenden Mustern
-  umgegangen?  $\Rightarrow$ Lua\TeX
-
-\item[Trennstellengewichte] Trennstellen sollen gewichtet werden können
-  (z.\,B. Haupt-, Neben-, Nottrennungen).
 
 \item[Verallgemeinerung des Trennalgorithmus] Derzeit benötigen
   \TeX-Quelltexte in deutscher Sprache verschiedene Auszeichnungen:
@@ -299,8 +290,8 @@ bestehen nur als Idee und werden zur Zeit nicht aktiv bearbeitet.
   Quelltext erkannt und richtig behandelt werden können: Mit
   entsprechenden zusätzlichen Mustern werden während des Absatzumbruchs
   \emph{verschiedene} Tries durchsucht und die notwendigen Ersetzungen
-  vorgenommen. $\Rightarrow$ Vorschlag für Lua\TeX-Entwickler
-  ausarbeiten
+  vorgenommen. $\Rightarrow$ \st{Vorschlag für LuaTeX-Entwickler
+    ausarbeiten}
 
 \end{description}
 
