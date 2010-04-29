@@ -756,50 +756,67 @@ aus anderen Gründen sinnvoll erscheint.
 \end{enumerate}
 
 
-\section{Fehltrennungen}
-\label{sec:fehltrennungen}
-Mit den vorliegenden Trennmustern können sämtliche Wörter der Wortliste
-fehlerfrei getrennt werden.  Für fehlerhafte (falsche, ausgelassene oder
-unerwünschte) Trennungen gibt es zwei mögliche Ursachen:
+\section{Trennfehler}
+\label{sec:trennfehler}
+Mit den vorliegenden Trennmustern können sämtliche Wörter der
+zugrundeliegenden Wortliste fehlerfrei getrennt werden.  Technisch
+gesprochen endet der letzte \Programm{Patgen}-Lauf mit der Meldung
 
-\begin{enumerate}
-\item\label{enum:WLfehlerhaft} Die zugrundeliegende Wortliste enthält
-  einen Fehler.
-\item\label{enum:WLfehlt} Das betreffende Wort ist in der
-  zugrundeliegenden Wortliste nicht enthalten.
+\begin{lstlisting}[style=shell]
+1266082 good, 0 bad, 0 missed
+100.00 %, 0.00 %, 0.00 %
+\end{lstlisting}
+(der Wert vor \lstinline[style=shell]+good+ ist vom Listenumfang
+abhängig).  Trotz des großen Umfangs der Wortliste lassen sich
+Trennfehler in Wörtern, die nicht in der Liste enthalten sind, nicht
+vermeiden.  Der Umfang der Wortliste kann allerdings nicht beliebig
+erweitert werden.%
+\footnote{Liangs Schema sieht nur einen begrenzten Bereich für die
+  Trennstellenbewertungen vor (0--9).  Die derzeitigen Trennmuster
+  vewenden bereits Bewertungen der Höhe~8.}
+%
+In den folgenden Fällen sollten fehlerhafte Trennungen der Trennmuster
+jedoch gemeldet werden:
+
+\begin{enumerate}[\hspace{1em}A.]
+
+\item\label{enum:kritWLfehlerhaft} Das Wort ist bereits in der Wortliste
+  enthalten.  Der Eintrag ist jedoch fehlerhaft.
+
 \end{enumerate}
 
-Da der Umfang der Wortliste nicht beliebig erweitert werden kann,
-sollten Fehltrennungen nur dann gemeldet werden, wenn eines der
-folgenden Kriterien erfüllt ist:
-\begin{enumerate}[\hspace{1em}A.]
-\item\label{enum:kritHerkTM} Das betreffende Wort wird mit den
-  herkömmlichen Trennmustern für die traditionelle oder reformierte
-  Rechtschreibung korrekt getrennt.  Korrekt bedeutet hier: Nicht alle
-  möglichen Trennstellen müssen erkannt werden; es werden jedoch in
-  keinem Fall falsche Trennstellen ermittelt.
+Falls das Wort nicht in der Wortliste enthalten ist, bestehen sehr gute
+Chancen, dass es aufgenommen wird, wenn eines der folgenden Kriterien
+erfüllt ist:
 
-  Zum Testen kann der folgende Aufruf verwendet werden (die Ausgabe
-  erfolgt in der \Abk{log}-Datei):
+\begin{enumerate}[\hspace{1em}A.]
+  \refstepcounter{enumi}% Fortsetzung der obigen Aufzählung.
+
+\item\label{enum:kritHerkTM} Das betreffende Wort wird mit den
+  \emph{herkömmlichen} Trennmustern für die traditionelle oder
+  reformierte Rechtschreibung korrekt getrennt.  Korrekt bedeutet hier:
+  Nicht alle möglichen Trennstellen müssen erkannt werden; es werden
+  jedoch in keinem Fall falsche Trennstellen ermittelt.  Zum Testen kann
+  in \TeX\ der folgende Aufruf verwendet werden (die Ausgabe erfolgt in
+  der \Abk{log}-Datei):
 \begin{lstlisting}[style=LaTeX]
 \showhyphens{durch Leerzeichen getrennte Wörter}
 \end{lstlisting}
 
-\item\label{enum:kritSinn} Es handelt sich um eine sinnentstellende oder
-  irreführende Trennung eines Wortes, das nicht aus mehr als zwei prä-
-  und suffigierten Wörtern zusammengesetzt ist, zum Beispiel
-  ">Talent-wässerung"<.  Nicht berücksichtigt wird hingegen die
-  ">Talent-wässerungsanlage"<.
+\item\label{enum:kritSinn} Es handelt es sich um eine orthographisch
+  richtige, aber sinnentstellende oder irreführende Trennung.
+  Berücksichtigt werden allerdings nur Wörter, die aus höchstens zwei
+  (gegebenenfalls prä- und suffigierten) Wörtern zusammengesetzt sind,
+  zum Beispiel ">Talent-wässerung"<.  Nicht berücksichtigt wird hingegen
+  die ">Talent-wässerungsanlage"<.
 
-\item\label{enum:kritWLfehlerhaft} Das Wort ist bereits in der Wortliste
-  enthalten (siehe \autoref{sec:wortliste}) und
-  \autoref{enum:WLfehlerhaft} trifft zu.
 \end{enumerate}
 
-Einige bekannte Fehler in den Trennmustern sind in der Datei
-\Datei{CHANGES} verzeichnet.  Noch nicht bekannte falsche, fehlende und
-unerwünschte Worttrennungen können an die folgenden E-Mail-Adressen
-gerichtet werden:
+\autoref{sec:wortliste} beschreibt, wie auf die Wortliste zugegriffen
+werden kann.  Einige bekannte Fehler in den Trennmustern sind in der
+Datei \Datei{CHANGES} verzeichnet.  Noch nicht bekannte falsche,
+fehlende und unerwünschte Worttrennungen können an die folgenden
+E-Mail-Adressen gerichtet werden:
 \begin{itemize}
 \item
   \href{mailto:trennmuster-opensource@googlegroups.com}{trennmuster-opensource@googlegroups.com}
@@ -807,16 +824,18 @@ gerichtet werden:
 \item \href{mailto:wl@gnu.org}{wl@gnu.org} (Werner Lemberg).
 \end{itemize}
 
-Fehltrennungen, die in den Trennmustern nicht korrigiert werden können,
+Trennfehler, die in den Trennmustern nicht korrigiert werden können,
 können mit Hilfe einer privaten Ausnahmeliste behandelt werden:
 \begin{lstlisting}[style=LaTeX]
 \hyphenation{Tal-entwäs-se-rungs-an-la-ge Kaf-ka-kenner-klub}
 \end{lstlisting}
 
-Aktuelle Trennmuster sind im Dateibereich unter der Projekt-\Abk{url}%
+Die aktuelle Ausgabe der Trennmuster ist im Dateibereich unter der
+Projekt-\Abk{url}%
 \footnote{\url{http://groups.google.de/group/trennmuster-opensource?hl=de}}
 %
-oder im \Abk{ctan} erhältlich.
+oder im \Abk{ctan} erhältlich.  Im Repositorium befindet sich ein
+Makefile, mit dem jederzeit neue Trennmuster erzeugt werden können.
 
 \nobreak
 \noindent\parbox{\linewidth}{%
@@ -1088,8 +1107,7 @@ dehyphn-x-<datum>.pat
     \Datei{dateikopf} eine Beschreibung des Formats der Wortliste.
 
   \item Die \Abk{html}-Präsenz des Projekts enthält einen Dateibereich
-    mit weiteren Dateien, etwa einem Archiv der Diskussion im
-    \Abk{mbox}-Format.
+    mit weiteren Dateien.
   \end{itemize}
 \end{frageantwort}
 
@@ -1100,7 +1118,7 @@ dehyphn-x-<datum>.pat
   willkommen!  Zum Mitmachen gibt es mehrere Möglichkeiten:
   \begin{itemize}
   \item Die einfachste ist, die experimentellen Trennmuster ausgiebig zu
-    testen und Fehler zu melden (siehe \autoref{sec:fehltrennungen}).
+    testen und Fehler zu melden (siehe \autoref{sec:trennfehler}).
 
   \item Besonders hilfreich wäre Mitarbeit am Projekt.  Als Einstieg
     kann die (grobe) Aufgabenliste in der Projektbeschreibung dienen.
@@ -1128,9 +1146,11 @@ dehyphn-x-<datum>.pat
   \begin{description}\setkomafont{descriptionlabel}{\normalfont\itshape}
   \item[Aktualität] Wenn Sie ältere Trennmusterdateien verwenden, prüfen
     Sie zunächst, ob der Fehler auch mit aktuellen Trennmustern
-    auftritt.  Aktuelle Trennmuster sind im \Abk{ctan} im Paket
+    auftritt.  Die aktuellen Trennmuster sind im \Abk{ctan} im Paket
     \texttt{dehyph-exptl} oder im Dateibereich unter der
-    Projekt-\Abk{url} erhältlich.
+    Projekt-\Abk{url} erhältlich.  Im Repositorium befindet sich auch
+    ein Makefile, mit dem jederzeit neue Trennmuster aus der aktuellen
+    Wortliste erzeugt werden können.
 
   \item[Informationen] In einem Fehlerbericht sollte für das betreffende
     Wort die richtige und bei einzelnen Worteinreichungen auch die
@@ -1163,19 +1183,18 @@ sonnendurchfluteten;son-nen-durch-flu-te-ten
 Talentwässerung;Tal-ent.wäs-se-rung
 Fensterplatz;Fen-ster-platz;Fens-ter-platz
 \end{lstlisting}
-    Dieses Format ist auch für einzeln eingereichte Fehltrennungen
+    Dieses Format ist auch für einzeln eingereichte Korrekturen
     sinnvoll.
 
   \item[Betreff] Der Betreff einer Fehlermeldung sollte aussagekräftig
-    sein.  Daher sollten mehrere Fehltrennungen, sofern möglich,
-    thematisch zusammengefasst werden.  Außerdem kann zur einfacheren
-    Zuordnung das entsprechende Kriterium aus
-    \autoref{sec:fehltrennungen} dem Betreff der E-Mail in eckigen
-    Klammern vorangestellt werden, zum Beispiel:
+    sein.  Daher sollten mehrere Trennfehler, sofern möglich, thematisch
+    zusammengefasst werden.  Außerdem kann zur einfacheren Zuordnung das
+    entsprechende Kriterium aus \autoref{sec:trennfehler} dem Betreff
+    der E-Mail in eckigen Klammern vorangestellt werden, zum Beispiel:
 \begin{lstlisting}[style=Text]
-Betreff: [C] sonnendurchfluteten
+Betreff: [A] sonnendurchfluteten
 \end{lstlisting}
-    für eine Fehltrennung des Wortes \emph{sonnendurchfluteten}, die
+    für einen Trennfehler im Wortes \emph{sonnendurchfluteten}, der
     durch einen Fehler in der Wortliste hervorgerufen wird.
   \end{description}
 \end{frageantwort}
