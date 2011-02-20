@@ -1,6 +1,6 @@
 % dehypht-x-@DATE@.tex
 %
-% Copyright 2008 Werner Lemberg <wl@gnu.org>
+% Copyright 2008, 2009, 2011 Werner Lemberg <wl@gnu.org>
 % You may freely use, modify and/or distribute this file.
 %
 \newif\if@dehyphx@UTF@
