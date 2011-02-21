@@ -21,6 +21,8 @@ xxxx-xx-xx:
 -----------
 Änderungen:
 * allgemein:
+  ** Wenn pTeX verwendet wird, werden keine Muster geladen (notwendig
+     für die Formaterstellung für pTeX in TeX Live 2011).
   ** Etwa 200 Einträge in der Wortliste wurden korrigiert.
   ** Die Dokumentation wurde verbessert.
 

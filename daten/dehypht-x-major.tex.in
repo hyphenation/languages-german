@@ -3,6 +3,12 @@
 % Copyright 2009 Werner Lemberg <wl@gnu.org>
 % You may freely use, modify and/or distribute this file.
 %
+%
+% Test for pTeX engine.  pTeX needs explicit 8 bit patterns.  So we
+% don't load any patterns in pTeX.  This is necessary for pTeX format
+% generation.
+\ifx\kanjiskip\undefined
+% Non-pTeX engine.
 \newif\if@dehyphx@UTF@
 \@dehyphx@UTF@false
 %
@@ -103,6 +109,12 @@
 %
   \input dehypht-x-major-@DATE@.pat
 \endgroup
+%
+\fi\else
+% pTeX engine.  Don't load any patterns.
+\message{Package dehyph-exptl: pTeX engine detected. Experimental German
+  patterns not loaded!}%
+\fi
 %
 \endinput
 
