@@ -292,6 +292,22 @@ verbessern.
 
 \section{Verwenden der Trennmuster}
 \label{sec:verwenden}
+Dieses Paket stellt die experimentellen Trennmuster für der Verwendung
+mit \LaTeX\ und dem Paket \texttt{babel} zur Verfügung.  Es kann sowohl
+mit traditionellen 8-Bit-fähigen \TeX-Varianten (\TeX\ und pdf\TeX) als
+auch modernen 16-Bit-fähigen \TeX-Varianten (Lua\TeX\ und Xe\TeX)
+verwendet werden.  Da \texttt{babel} in Verbindung mit Lua\TeX\ und
+Xe\TeX\ für die Sprachbezeichner \texttt{german} bzw. \texttt{ngerman}
+bereits standardmäßig die experimentellen Trennmuster lädt --
+bereitgestellt durch das Paket \texttt{hyph-utf8}~--, liegt der
+Hauptnutzen dieses Pakets allerdings in der Verwendung der
+experimentellen Trennmuster mit traditionellen \TeX-Varianten.  Nutzer
+von p\TeX%
+\footnote{Eine in Japan populäre \TeX-Variante.}
+%
+können dieses Paket nicht verwenden und müssen auf die durch
+\texttt{hyph-utf8} bereitgestellten Muster zurückgreifen.
+
 Zur Installation der experimentellen Trennmuster siehe
 \autoref{sec:installation} und die Datei \Datei{INSTALL}.  Beachte, in
 den folgenden Abschnitten ist \verb+<datum>+ durch das bei der
@@ -860,16 +876,13 @@ Makefile, mit dem jederzeit neue Trennmuster erzeugt werden können.
 \appendix
 \section{Dateien und Installation}
 \label{sec:installation}
-Die eigentlichen Trennmusterdateien liegen in \Abk{utf-8}-Kodierung vor.
-Sie sind somit für die Verwendung mit den 16-Bit-fähigen \TeX-Varianten
-Lua\TeX\ und Xe\TeX\ geeignet.%
-\footnote{Tatsächlich verwenden Lua\TeX\ und Xe\TeX\ bereits
-  Trennmuster, die aus diesem Projekt hervorgegangen sind, jedoch unter
-  anderen Namen.}
-%
-Für die 8-Bit-fähigen \TeX-Varianten \TeX\ und pdf\TeX\ werden
-Manteldateien bereitgestellt, die die \Abk{utf-8}-Dateien laden und in
-\Abk{t1}-Kodierung umwandeln (\autoref{tab:dateien}).
+
+Die eigentlichen Trennmusterdateien liegen in \Abk{utf-8}-Kodierung vor
+(siehe \autoref{tab:dateien}, Endung \texttt{pat}).  Sie werden von
+\TeX\ nicht direkt geladen, sondern durch Manteldateien, die ebenfalls
+Teil des Pakets sind (Endung \texttt{tex}).  Wird eine 8-Bit-fähige
+\TeX-Variante erkannt, übernehmen diese Manteldateien die Konvertierung
+der Trennmuster in die \Abk{t1}-Kodierung.
 
 \begin{table}
   \centering
@@ -884,7 +897,7 @@ Manteldateien bereitgestellt, die die \Abk{utf-8}-Dateien laden und in
   \end{tabular}
 \end{table}
 
-Bei der Installation für 8-Bit-\TeX\ werden die Manteldateien an die in
+Bei der Installation werden die Manteldateien an die in
 \autoref{tab:varietaeten} gezeigten Trennmusterbezeichner gebunden.
 Diese Schritte werden für verschiedene \TeX-Verteilungen in der Datei
 \Datei{INSTALL} beschrieben.  Nach der Installation können die
