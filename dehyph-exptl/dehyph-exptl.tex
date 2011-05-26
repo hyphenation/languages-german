@@ -576,15 +576,15 @@ allgemeine Hinweise:
     Pan-kowers & Pankow-ers\\
   \end{tabular}
 
-\item\label{enum:tradnstd} Sondertrennungen (\emph{engl.:} non-standard
-  hyphenation), das heißt Trennungen, die nach speziellen Regeln
-  erfolgen, wie die \emph{ck}- oder die Dreikonsonantenregel, kann
-  \TeX82 nicht automatisch behandeln.  Aus diesem Grund sind solche
-  Trennstellen in diesen Trennmustern nicht berücksichtigt.  Das Paket
-  \texttt{Babel} stellt jedoch verschiedene Kürzel zur Verfügung, mit
-  denen solche Trennstellen im Quelldokument ausgezeichnet werden
-  können.%
-  \footnote{Sondertrennungen werden in \TeX\ mit Hilfe des Kommandos
+\item\label{enum:tradnstd} Spezialtrennungen (\emph{engl.:} non-standard
+  hyphenation), die nach Regeln erfolgen, die über das bloße Einfügen
+  eines Trennstrichs hinausgehen, wie die \emph{ck}- oder die
+  Dreikonsonantenregel, kann \TeX82 nicht automatisch behandeln.  Aus
+  diesem Grund sind solche Trennstellen in diesen Trennmustern nicht
+  berücksichtigt.  Das Paket \texttt{Babel} stellt jedoch verschiedene
+  Kürzel zur Verfügung, mit denen solche Trennstellen im Quelldokument
+  ausgezeichnet werden können.%
+  \footnote{Spezialtrennungen werden in \TeX\ mit Hilfe des Kommandos
     \lstinline[style=LaTeX]+\\discretionary+ kodiert.  So wird zum
     Beispiel das \texttt{Babel}-Kürzel \lstinline[style=LaTeX]+\"ck+ in
     der Eingabe während des Setzens durch
@@ -605,8 +605,8 @@ allgemeine Hinweise:
       \lstinline[style=LaTeX]+Meta"llegierung+ & Me-tall-legierung \\
   \end{tabular}
 
-  Beachte, im letzten Beispiel sind die Trennstellen nach der
-  Auszeichnung verloren gegangen.  Es handelt sich dabei um einen
+  Beachte, im letzten Beispiel sind die nach der Auszeichnung liegenden
+  Trennstellen verloren gegangen.  Es handelt sich dabei um einen
   bekannten Fehler im Paket \texttt{Babel}.%
   \footnote{\url{http://www.latex-project.org/}, Kennzeichen
     \texttt{babel/3458}}
@@ -614,10 +614,11 @@ allgemeine Hinweise:
   Lua\TeX%
   \footnote{\url{http://www.luatex.org/}}
 %
-  soll in einer zukünftigen Version Sondertrennungen automatisch
-  erkennen und richtig trennen können.  Eine physische Auszeichnung im
-  Quelltext ist dann nicht mehr erforderlich.  Die entsprechenden
-  Sondertrennmuster werden ebenfalls im Rahmen dieses Projekts erstellt.
+  soll in einer zukünftigen Version Mechanismen zur automatischen
+  Behandlung von Spezialtrennungen bereitstellen.  Eine physische
+  Auszeichnung im Quelltext ist dann nicht mehr erforderlich.  Die
+  entsprechenden Spezialtrennmuster für die deutsche Sprache werden
+  ebenfalls im Rahmen dieses Projekts erstellt.
 
 \end{enumerate}
 
