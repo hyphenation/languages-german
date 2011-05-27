@@ -292,6 +292,22 @@ verbessern.
 
 \section{Verwenden der Trennmuster}
 \label{sec:verwenden}
+Dieses Paket stellt die experimentellen Trennmuster für der Verwendung
+mit \LaTeX\ und dem Paket \texttt{babel} zur Verfügung.  Es kann sowohl
+mit traditionellen 8-Bit-fähigen \TeX-Varianten (\TeX\ und pdf\TeX) als
+auch modernen 16-Bit-fähigen \TeX-Varianten (Lua\TeX\ und Xe\TeX)
+verwendet werden.  Da \texttt{babel} in Verbindung mit Lua\TeX\ und
+Xe\TeX\ für die Sprachbezeichner \texttt{german} bzw. \texttt{ngerman}
+bereits standardmäßig die experimentellen Trennmuster lädt --
+bereitgestellt durch das Paket \texttt{hyph-utf8}~--, liegt der
+Hauptnutzen dieses Pakets allerdings in der Verwendung der
+experimentellen Trennmuster mit traditionellen \TeX-Varianten.  Nutzer
+von p\TeX%
+\footnote{Eine in Japan populäre \TeX-Variante.}
+%
+können dieses Paket nicht verwenden und müssen auf die durch
+\texttt{hyph-utf8} bereitgestellten Muster zurückgreifen.
+
 Zur Installation der experimentellen Trennmuster siehe
 \autoref{sec:installation} und die Datei \Datei{INSTALL}.  Beachte, in
 den folgenden Abschnitten ist \verb+<datum>+ durch das bei der
@@ -560,15 +576,15 @@ allgemeine Hinweise:
     Pan-kowers & Pankow-ers\\
   \end{tabular}
 
-\item\label{enum:tradnstd} Sondertrennungen (\emph{engl.:} non-standard
-  hyphenation), das heißt Trennungen, die nach speziellen Regeln
-  erfolgen, wie die \emph{ck}- oder die Dreikonsonantenregel, kann
-  \TeX82 nicht automatisch behandeln.  Aus diesem Grund sind solche
-  Trennstellen in diesen Trennmustern nicht berücksichtigt.  Das Paket
-  \texttt{Babel} stellt jedoch verschiedene Kürzel zur Verfügung, mit
-  denen solche Trennstellen im Quelldokument ausgezeichnet werden
-  können.%
-  \footnote{Sondertrennungen werden in \TeX\ mit Hilfe des Kommandos
+\item\label{enum:tradnstd} Spezialtrennungen (\emph{engl.:} non-standard
+  hyphenation), die nach Regeln erfolgen, die über das bloße Einfügen
+  eines Trennstrichs hinausgehen, wie die \emph{ck}- oder die
+  Dreikonsonantenregel, kann \TeX82 nicht automatisch behandeln.  Aus
+  diesem Grund sind solche Trennstellen in diesen Trennmustern nicht
+  berücksichtigt.  Das Paket \texttt{Babel} stellt jedoch verschiedene
+  Kürzel zur Verfügung, mit denen solche Trennstellen im Quelldokument
+  ausgezeichnet werden können.%
+  \footnote{Spezialtrennungen werden in \TeX\ mit Hilfe des Kommandos
     \lstinline[style=LaTeX]+\\discretionary+ kodiert.  So wird zum
     Beispiel das \texttt{Babel}-Kürzel \lstinline[style=LaTeX]+\"ck+ in
     der Eingabe während des Setzens durch
@@ -589,8 +605,8 @@ allgemeine Hinweise:
       \lstinline[style=LaTeX]+Meta"llegierung+ & Me-tall-legierung \\
   \end{tabular}
 
-  Beachte, im letzten Beispiel sind die Trennstellen nach der
-  Auszeichnung verloren gegangen.  Es handelt sich dabei um einen
+  Beachte, im letzten Beispiel sind die nach der Auszeichnung liegenden
+  Trennstellen verloren gegangen.  Es handelt sich dabei um einen
   bekannten Fehler im Paket \texttt{Babel}.%
   \footnote{\url{http://www.latex-project.org/}, Kennzeichen
     \texttt{babel/3458}}
@@ -598,10 +614,11 @@ allgemeine Hinweise:
   Lua\TeX%
   \footnote{\url{http://www.luatex.org/}}
 %
-  soll in einer zukünftigen Version Sondertrennungen automatisch
-  erkennen und richtig trennen können.  Eine physische Auszeichnung im
-  Quelltext ist dann nicht mehr erforderlich.  Die entsprechenden
-  Sondertrennmuster werden ebenfalls im Rahmen dieses Projekts erstellt.
+  soll in einer zukünftigen Version Mechanismen zur automatischen
+  Behandlung von Spezialtrennungen bereitstellen.  Eine physische
+  Auszeichnung im Quelltext ist dann nicht mehr erforderlich.  Die
+  entsprechenden Spezialtrennmuster für die deutsche Sprache werden
+  ebenfalls im Rahmen dieses Projekts erstellt.
 
 \end{enumerate}
 
@@ -860,16 +877,13 @@ Makefile, mit dem jederzeit neue Trennmuster erzeugt werden können.
 \appendix
 \section{Dateien und Installation}
 \label{sec:installation}
-Die eigentlichen Trennmusterdateien liegen in \Abk{utf-8}-Kodierung vor.
-Sie sind somit für die Verwendung mit den 16-Bit-fähigen \TeX-Varianten
-Lua\TeX\ und Xe\TeX\ geeignet.%
-\footnote{Tatsächlich verwenden Lua\TeX\ und Xe\TeX\ bereits
-  Trennmuster, die aus diesem Projekt hervorgegangen sind, jedoch unter
-  anderen Namen.}
-%
-Für die 8-Bit-fähigen \TeX-Varianten \TeX\ und pdf\TeX\ werden
-Manteldateien bereitgestellt, die die \Abk{utf-8}-Dateien laden und in
-\Abk{t1}-Kodierung umwandeln (\autoref{tab:dateien}).
+
+Die eigentlichen Trennmusterdateien liegen in \Abk{utf-8}-Kodierung vor
+(siehe \autoref{tab:dateien}, Endung \texttt{pat}).  Sie werden von
+\TeX\ nicht direkt geladen, sondern durch Manteldateien, die ebenfalls
+Teil des Pakets sind (Endung \texttt{tex}).  Wird eine 8-Bit-fähige
+\TeX-Variante erkannt, übernehmen diese Manteldateien die Konvertierung
+der Trennmuster in die \Abk{t1}-Kodierung.
 
 \begin{table}
   \centering
@@ -884,7 +898,7 @@ Manteldateien bereitgestellt, die die \Abk{utf-8}-Dateien laden und in
   \end{tabular}
 \end{table}
 
-Bei der Installation für 8-Bit-\TeX\ werden die Manteldateien an die in
+Bei der Installation werden die Manteldateien an die in
 \autoref{tab:varietaeten} gezeigten Trennmusterbezeichner gebunden.
 Diese Schritte werden für verschiedene \TeX-Verteilungen in der Datei
 \Datei{INSTALL} beschrieben.  Nach der Installation können die
