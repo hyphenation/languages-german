@@ -298,12 +298,13 @@ bestehen nur als Idee und werden zur Zeit nicht aktiv bearbeitet.
 
   Es handelt sich hier um ein Mustererkennungsproblem ähnlich der
   Worttrennung.  Denkbar ist eine Verallgemeinerung des
-  Silbentrennalgorithmus, mit der diese Fälle ohne Eingriffe im
-  Quelltext erkannt und richtig behandelt werden können: Mit
-  entsprechenden zusätzlichen Mustern werden während des Absatzumbruchs
-  \emph{verschiedene} Tries durchsucht und die notwendigen Ersetzungen
-  vorgenommen. $\Rightarrow$ \st{Vorschlag für LuaTeX-Entwickler
-    ausarbeiten}
+  Silbentrennalgorithmus, mit welcher diese Fälle ohne Eingriffe im
+  Quelltext erkannt und richtig behandelt werden können: Während des
+  Absatzumbruchs werden mehrere Tries mit entsprechenden zusätzlichen
+  Mustern durchsucht.  Je nachdem von welchen Mustern die einzelnen
+  Trennstellen erfasst werden, erhalten diese unterschiedliche
+  Gewichte.%
+  \footnote{\url{http://tracker.luatex.org/view.php?id=168}}
 
 \end{description}
 
