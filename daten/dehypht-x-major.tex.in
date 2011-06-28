@@ -19,10 +19,10 @@
   \def\testengine#1#2!{\def\secondarg{#2}}%
   \testengine χ!\relax % That's Chi, a 2-byte UTF-8 sequence
   \ifx\secondarg\empty
-    \message{Using a TeX engine with native UTF-8 support.}%
+    \message{dehyph-exptl: using a TeX engine with native UTF-8 support.}%
     \@dehyphx@UTF@true
   \else
-    \message{Using an 8-bit TeX engine.}%
+    \message{dehyph-exptl: using an 8-bit TeX engine.}%
   \fi
 %
   \if@dehyphx@UTF@
@@ -111,8 +111,8 @@
   \input dehypht-x-major-@DATE@.pat
 \else
 % pTeX engine.  Don't load any patterns.
-\message{Package dehyph-exptl: pTeX engine detected. Experimental German
-  patterns not loaded!}%
+  \message{dehyph-exptl: pTeX engine detected. Experimental German
+    patterns not loaded!}%
 \fi
 %
 \endgroup
