@@ -11,11 +11,12 @@
 % \newif must be defined outside any \ifx command.
 \newif\if@dehyphx@UTF@
 \@dehyphx@UTF@false
-% Test for pTeX engine.  pTeX needs explicit 8 bit patterns.  So we
-% don't load any patterns in pTeX.  This is necessary for pTeX format
+% Test for pTeX engine.  pTeX needs explicit 8 bit patterns.  We don't
+% provide pTeX compatible patterns, yet.  Therefore, don't load any
+% patterns for pTeX.  This strategy is necessary for pTeX format
 % generation.
 \ifx\kanjiskip\undefined
-% Non-pTeX engine.
+  % Non-pTeX engine.  Test for UTF-8 aware engine.
   \def\testengine#1#2!{\def\secondarg{#2}}%
   \testengine χ!\relax % That's Chi, a 2-byte UTF-8 sequence
   \ifx\secondarg\empty
@@ -28,7 +29,8 @@
   \if@dehyphx@UTF@
   \else
     \catcode"C3=\active
-% The word list for the German hyphenation patterns is encoded in Latin1.
+    % The word list used for generating German hyphenation patterns is
+    % encoded in Latin1.
     \def^^c3#1{%
       \ifx#1^^9f^^ff\else % ß - U+00DF - germandbls
       \ifx#1^^a0^^e0\else % à - U+00E0 - agrave
@@ -110,7 +112,7 @@
 %
   \input dehypht-x-@DATE@.pat
 \else
-% pTeX engine.  Don't load any patterns.
+  % pTeX engine.  Don't load any patterns.
   \message{dehyph-exptl: pTeX engine detected. Experimental German
     patterns not loaded!}%
 \fi
