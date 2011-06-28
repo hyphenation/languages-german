@@ -4,14 +4,15 @@
 % You may freely use, modify and/or distribute this file.
 %
 %
+% Create local flag for checking UTF-8 support of non-pTeX engines.
+% \newif must be defined outside any \ifx command.
+\newif\if@dehyphx@UTF@
+\@dehyphx@UTF@false
 % Test for pTeX engine.  pTeX needs explicit 8 bit patterns.  So we
 % don't load any patterns in pTeX.  This is necessary for pTeX format
 % generation.
 \ifx\kanjiskip\undefined
 % Non-pTeX engine.
-\newif\if@dehyphx@UTF@
-\@dehyphx@UTF@false
-%
 \begingroup
   \def\testengine#1#2!{\def\secondarg{#2}}%
   \testengine χ!\relax % That's Chi, a 2-byte UTF-8 sequence
@@ -110,7 +111,7 @@
   \input dehyphn-x-major-@DATE@.pat
 \endgroup
 %
-\fi\else
+\else
 % pTeX engine.  Don't load any patterns.
 \message{Package dehyph-exptl: pTeX engine detected. Experimental German
   patterns not loaded!}%
