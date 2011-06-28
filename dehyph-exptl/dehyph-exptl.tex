@@ -295,20 +295,20 @@ verbessern.
 \section{Verwenden der Trennmuster}
 \label{sec:verwenden}
 Dieses Paket stellt die experimentellen Trennmuster für der Verwendung
-mit \LaTeX\ und dem Paket \texttt{babel} zur Verfügung.  Es kann sowohl
-mit traditionellen 8-Bit-fähigen \TeX-Varianten (\TeX\ und pdf\TeX) als
-auch modernen 16-Bit-fähigen \TeX-Varianten (Lua\TeX\ und Xe\TeX)
-verwendet werden.  Da \texttt{babel} in Verbindung mit Lua\TeX\ und
-Xe\TeX\ für die Sprachbezeichner \texttt{german} bzw. \texttt{ngerman}
-bereits standardmäßig die experimentellen Trennmuster lädt --
-bereitgestellt durch das Paket \texttt{hyph-utf8}~--, liegt der
-Hauptnutzen dieses Pakets allerdings in der Verwendung der
-experimentellen Trennmuster mit traditionellen \TeX-Varianten.  Nutzer
-von p\TeX%
-\footnote{Eine in Japan populäre \TeX-Variante.}
+mit \LaTeX\ und dem Paket \texttt{babel} zur Verfügung.
+Zur\marginpar{\textbf{Achtung!}} Zeit ist dieses Paket nicht kompatibel
+mit den Formaten Lua\LaTeX, Xe\LaTeX\ und p\LaTeX%
+\footnote{Eine in Japan populäre \TeX-Variante.}%
 %
-können dieses Paket nicht verwenden und müssen auf die durch
-\texttt{hyph-utf8} bereitgestellten Muster zurückgreifen.
+.  Es sollte daher nur mit \LaTeX\ oder pdf\LaTeX\ verwendet werden.
+Die experimentellen Trennmuster können dennoch mit Lua\LaTeX\ und
+Xe\LaTeX\ verwendet werden, da \texttt{babel} in Verbindung mit Lua\TeX\
+und Xe\TeX\ für die Sprachbezeichner \texttt{german}
+bzw. \texttt{ngerman} bereits standardmäßig die experimentellen
+Trennmuster lädt -- bereitgestellt durch das Paket \texttt{hyph-utf8}.
+Nutzer von p\TeX\ können die experimentellen Trennmuster nicht verwenden
+und müssen auf die durch \texttt{hyph-utf8} bereitgestellten
+herkömmlichen Muster zurückgreifen.
 
 Zur Installation der experimentellen Trennmuster siehe
 \autoref{sec:installation} und die Datei \Datei{INSTALL}.  Beachte, in
