@@ -1,6 +1,6 @@
 Package: dehyph-exptl (experimental German hyphenation patterns)
-Version: v0.21
-Date: 2011-06-28
+Version: v0.22
+Date: 2011-07-01
 License: LPPL
 Author: Werner Lemberg
 Email: wl@gnu.org
