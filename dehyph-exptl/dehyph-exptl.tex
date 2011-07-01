@@ -294,21 +294,35 @@ verbessern.
 
 \section{Verwenden der Trennmuster}
 \label{sec:verwenden}
-Dieses Paket stellt die experimentellen Trennmuster für der Verwendung
-mit \LaTeX\ und dem Paket \texttt{babel} zur Verfügung.
-Zur\marginpar{\textbf{Achtung!}} Zeit ist dieses Paket nicht kompatibel
-mit den Formaten Lua\LaTeX, Xe\LaTeX\ und p\LaTeX%
-\footnote{Eine in Japan populäre \TeX-Variante.}%
-%
-.  Es sollte daher nur mit \LaTeX\ oder pdf\LaTeX\ verwendet werden.
-Die experimentellen Trennmuster können dennoch mit Lua\LaTeX\ und
-Xe\LaTeX\ verwendet werden, da \texttt{babel} in Verbindung mit Lua\TeX\
-und Xe\TeX\ für die Sprachbezeichner \texttt{german}
-bzw. \texttt{ngerman} bereits standardmäßig die experimentellen
-Trennmuster lädt -- bereitgestellt durch das Paket \texttt{hyph-utf8}.
-Nutzer von p\TeX\ können die experimentellen Trennmuster nicht verwenden
-und müssen auf die durch \texttt{hyph-utf8} bereitgestellten
-herkömmlichen Muster zurückgreifen.
+Dieses Paket stellt die experimentellen Trennmuster für die Verwendung
+mit \LaTeX\ und dem Sprachenpaket \texttt{Babel} zur Verfügung.  Derzeit
+werden nur eine Auswahl von \TeX-Programmen und "~Formaten unterstützt
+(siehe \autoref{tab:texkompat}).  Mit den nicht unterstützten Formaten
+können experimentelle Trennmuster dennoch verwendet werden, da das Paket
+\texttt{hyph-utf8} eine Version dieser Muster enthält.\footnote{%
+  Bisher die jeweils aktuelle Version.%
+} Werden Formate für die UTF-8-fähigen Programme Xe\TeX\ und Lua\TeX\
+oder für p\TeX\footnote{%
+  Eine in Japan populäre \TeX-Variante.%
+} verwendet, so werden jene experimentelle Trennmuster bereits
+standardmäßig aktiviert.  Der Hauptzweck des Pakets
+\texttt{dehyph-exptl} ist die Verwendung mit den Formaten \texttt{latex}
+und \texttt{pdflatex}.
+
+\begin{table}
+  \centering
+  \caption{Kompatibilität mit verschiedenen \TeX-Varianten}
+  \label{tab:texkompat}
+  \begin{tabular}{l>{\ttfamily}lc}
+    Programm & \normalfont Format & Kompatibilität\\
+    \addlinespace\toprule\addlinespace
+    \TeX & latex & ja\\
+    pdf\TeX & pdflatex & ja\\
+    XeTeX & xelatex & ja\\
+    LuaTeX & lualatex & nein\\
+    p\TeX & platex & nein\\
+  \end{tabular}
+\end{table}
 
 Zur Installation der experimentellen Trennmuster siehe
 \autoref{sec:installation} und die Datei \Datei{INSTALL}.  Beachte, in
