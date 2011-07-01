@@ -19,41 +19,45 @@ bekannte Probleme:
 
 2011-06-28: v0.21
 -----------
-Änderungen:
-* allgemein:
-  ** Wenn pTeX verwendet wird, werden keine Muster geladen (notwendig
-     für die Formaterstellung für pTeX in TeX Live 2011).
-  ** Etwa 200 Einträge in der Wortliste wurden korrigiert.
-  ** Die Dokumentation wurde verbessert.
+Wortdatenbank:
+* Etwa 200 Einträge wurden korrigiert.
+
+Paket:
+* Wenn pTeX verwendet wird, werden keine Trennmuster geladen
+  (notwendig für die platex-Formaterstellung in TeX Live 2011).
+* Die Dokumentation wurde erweitert.
 
 
 2009-06-24: v0.20
 -----------
-Änderungen:
-* allgemein:
-  ** Die Trennung von Zahlwörtern wurde verbessert.
-  ** Die römischen Zahlen bis MMD (2500) werden nicht getrennt.
-  ** Viele zusätzliche irreführende Trennungen werden vermieden.
-  ** Viele Fehler in der Wortdatenbank wurden korrigiert.
-  ** Die Dokumentation wurde erweitert.
-
-* dehypht-x (traditionelle Rechtschreibung, Deutschland, Österreich):
-  Der Ersatz ss für ß wird berücksichtigt und wie bei der Schreibung
-  mit ß getrennt.  Das Babelkürzel "S muss damit in Versalwörtern
-  nur noch in Ausnahmefällen verwendet werden (siehe auch Regel T2
-  in der Paketdokumentation).
+Wortdatenbank:
+* In der traditionellen Rechtschreibung wird der Ersatz ss für ß
+  berücksichtigt und wie bei der Schreibung mit ß getrennt.  Das
+  Babelkürzel "S muss damit in Versalwörtern nur noch in
+  Ausnahmefällen verwendet werden (siehe auch Regel T2 in der
+  Paketdokumentation).
   Beispiele:  GRÜSSE   -->  GRÜ-SSE
               GRÖSSTE  -->  GRÖSS-TE
-
-* dehyphts-x (traditionelle Rechtschreibung, Schweiz):
-  Es werden neue Trennmuster für die traditionelle Rechtschreibung
-  des Schweizer Standarddeutschs angeboten.  Die Trennmuster
-  unterscheiden sich von denen für die traditionelle Rechtschreibung
-  des Standarddeutschs Deutschlands und Österreichs (dehypht-x) in
-  der Trennung von ss als Ersatz für ß.  Babelunterstützung für
-  diese Trennmuster fehlt bisher jedoch.  Wer machts?
+  Darüber hinaus wurde für alle Wörter mit ß die im Schweizer
+  Standarddeutsch gebräuchliche Schreibung mit ss und Trennung als
+  s-s aufgenommen.
   Beispiele:  Grüs-se   statt  Grü-ße
               grös-ste  statt  größ-te
+* Die Trennung von Zahlwörtern wurde verbessert.
+* Die römischen Zahlen bis MMD (2500) werden nicht getrennt.
+* Viele zusätzliche irreführende Trennungen werden vermieden.
+* Viele Fehler wurden korrigiert.
+
+Trennmuster:
+* Es werden Trennmuster für die traditionelle Rechtschreibung des in
+  der Schweiz verwendeten Standarddeutschs bereitgestellt.
+  Babelunterstützung für diese Trennmuster fehlt bisher jedoch.  Wer
+  machts?
+* Die Patgen-Parameter wurden geändert.  Die Trennmusterdateien
+  werden dadurch etwas kleiner.
+
+Paket:
+* Die Dokumentation wurde erweitert.
 
 
 2008-07-07: v0.13
