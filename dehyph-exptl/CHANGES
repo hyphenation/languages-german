@@ -1,92 +1,128 @@
-Diese Datei beschreibt die wichtigsten Änderungen der
-experimentellen Trennmuster und einige bekannte Probleme
-(hauptsächlich systematische Fehler).  Genauere Informationen zu den
-Änderungen können dem öffentlichen Entwicklerrepositorium entnommen
-werden.  Ältere Veröffentlichungen des Pakets können im Dateibereich
+# Beschreibung
+
+Diese Datei beschreibt die wichtigsten Ã„nderungen der experimentellen
+Trennmuster und einige bekannte Probleme (hauptsÃ¤chlich systematische
+Fehler).  Genauere Informationen zu den Ã„nderungen kÃ¶nnen dem
+Ã¶ffentlichen Entwicklerrepositorium entnommen werden.  Ã„ltere
+VerÃ¶ffentlichungen des Pakets kÃ¶nnen im Dateibereich des
+[Trennmuster-Wikis](http://projekte.dante.de/Trennmuster/WebHome)
 gefunden werden:
-http://projekte.dante.de/Trennmuster/WebHome
 
 
-bekannte Probleme:
-* alle Trennmusterdateien:
-  ** Es gibt Probleme mit Namen und geographischen Bezeichnungen.
-  ** Der Ersatz sz für ß wird bisher nicht berücksichtigt.
-  ** Es werden bisher nur Wörter berücksichtigt, die sich in der
-     Kodierung ISO-8859-1 darstellen lassen.  Beispielsweise wird
-     das Wort ¼uvre (Oeuvre, hier in ISO-8859-15-Kodierung) nur in
-     der in der Klammer angegebenen Transkription richtig getrennt.
+
+# Bekannte Probleme
+
+## Alle Trennmusterdateien
+
+* Es gibt Probleme mit Namen und geographischen Bezeichnungen.
+
+* Der Ersatz _sz_ fÃ¼r _ÃŸ_ in der traditionellen Rechtschreibung wird
+  bisher nicht berÃ¼cksichtigt.
+
+* Es werden bisher nur WÃ¶rter berÃ¼cksichtigt, die sich in der Kodierung
+  ISO-8859-1 darstellen lassen.  Beispielsweise wird das Wort _Å’uvre_
+  (`Oeuvre`) nur in der in Klammern angegebenen Transkription richtig
+  getrennt.
 
 
-2011-07-02: v0.22
------------
-Wortdatenbank:
-* Etwa 200 Einträge wurden korrigiert.
 
-Paket:
-* Wenn pTeX verwendet wird, werden keine Trennmuster geladen
-  (notwendig für die platex-Formaterstellung in TeX Live 2011).
+# Ã„nderungen
+
+## v0.22 (2011-07-02)
+
+#### Wortdatenbank
+
+* Etwa 200 EintrÃ¤ge wurden korrigiert.
+
+#### Paket
+
+* Wenn pTeX verwendet wird, werden keine Trennmuster geladen (notwendig
+  fÃ¼r die platex-Formaterstellung in TeX Live 2011).
+
 * Die Dokumentation wurde erweitert.
 
 
-2009-06-24: v0.20
------------
-Wortdatenbank:
-* In der traditionellen Rechtschreibung wird der Ersatz ss für ß
-  berücksichtigt und wie bei der Schreibung mit ß getrennt.  Das
-  Babelkürzel "S muss damit in Versalwörtern nur noch in
-  Ausnahmefällen verwendet werden (siehe auch Regel T2 in der
-  Paketdokumentation).
-  Beispiele:  GRÜSSE   -->  GRÜ-SSE
-              GRÖSSTE  -->  GRÖSS-TE
-  Darüber hinaus wurde für alle Wörter mit ß die im Schweizer
-  Standarddeutsch gebräuchliche Schreibung mit ss und Trennung als
-  s-s aufgenommen.
-  Beispiele:  Grüs-se   statt  Grü-ße
-              grös-ste  statt  größ-te
-* Die Trennung von Zahlwörtern wurde verbessert.
-* Die römischen Zahlen bis MMD (2500) werden nicht getrennt.
-* Viele zusätzliche irreführende Trennungen werden vermieden.
+## v0.20 (2009-06-24)
+
+#### Wortdatenbank
+
+* In der traditionellen Rechtschreibung wird der Ersatz _ss_ fÃ¼r _ÃŸ_
+  berÃ¼cksichtigt und wie bei der Schreibung mit _ÃŸ_ getrennt.  Das
+  BabelkÃ¼rzel `"S` muss damit in VersalwÃ¶rtern nur noch in
+  AusnahmefÃ¤llen verwendet werden (siehe auch Regel T2 in der
+  Paketdokumentation).  Beispiele:
+        GRÃœSSE   =>  GRÃœ-SSE
+        GRÃ–SSTE  =>  GRÃ–SS-TE
+  DarÃ¼ber hinaus wurde fÃ¼r alle WÃ¶rter mit _ÃŸ_ die im Schweizer
+  Standarddeutsch gebrÃ¤uchliche Schreibung mit _ss_ und Trennung als
+  _s-s_ aufgenommen.  Beispiele:
+        GrÃ¼s-se   statt  GrÃ¼-ÃŸe
+        grÃ¶s-ste  statt  grÃ¶ÃŸ-te
+
+* Die Trennung von ZahlwÃ¶rtern wurde verbessert.
+
+* Die rÃ¶mischen Zahlen bis MMD (2500) werden nicht getrennt.
+
+* Viele zusÃ¤tzliche irrefÃ¼hrende Trennungen werden vermieden.
+
 * Viele Fehler wurden korrigiert.
 
-Trennmuster:
-* Es werden Trennmuster für die traditionelle Rechtschreibung des in
-  der Schweiz verwendeten Standarddeutschs bereitgestellt.
-  Babelunterstützung für diese Trennmuster fehlt bisher jedoch.  Wer
+#### Trennmuster
+
+* Es werden Trennmuster fÃ¼r die traditionelle Rechtschreibung des in der
+  Schweiz verwendeten Standarddeutschs bereitgestellt.
+  BabelunterstÃ¼tzung fÃ¼r diese Trennmuster fehlt bisher jedoch.  Wer
   machts?
-* Die Patgen-Parameter wurden geändert.  Die Trennmusterdateien
-  werden dadurch etwas kleiner.
 
-Paket:
+* Die Patgen-Parameter wurden geÃ¤ndert.  Die Trennmusterdateien werden
+  dadurch etwas kleiner.
+
+#### Paket
+
 * Die Dokumentation wurde erweitert.
 
 
-2008-07-07: v0.13
------------
-Paket:
-* Die Dokumentation wurde überarbeitet.
+## v0.13 (2008-07-07)
+
+#### Paket
+
+* Die Dokumentation wurde Ã¼berarbeitet.
 
 
-2008-07-02: v0.12
------------
-Wortdatenbank:
-* Etwa 40 Wörter wurden korrigiert.
+## v0.12 (2008-07-02)
 
-Paket:
+#### Wortdatenbank
+
+* Etwa 40 WÃ¶rter wurden korrigiert.
+
+#### Paket
+
 * Die Dokumentation wurde erweitert.
 
 
-2008-06-27: v0.11
------------
-Wortdatenbank:
-* Etwa 40 Wörter wurden korrigiert.
-* Einige knifflige Wortzusammensetzungen wurden hinzugefügt
+## v0.11 (2008-06-27)
+
+#### Wortdatenbank
+
+* Etwa 40 WÃ¶rter wurden korrigiert.
+
+* Einige knifflige Wortzusammensetzungen wurden hinzugefÃ¼gt
   (Patentrichter usw.)
 
-Paket:
+#### Paket
+
 * Die Dokumentation wurde erweitert.
 
 
-2008-06-18: v0.1
------------
-Änderungen:
-* Erstveröffentlichung
+## v0.1 (2008-06-18)
+
+* ErstverÃ¶ffentlichung
+
+
+
+<!--
+%%% Local Variables: 
+%%% coding: utf-8
+%%% mode: markdown
+%%% End: 
+-->
