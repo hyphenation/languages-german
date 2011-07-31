@@ -328,7 +328,11 @@ Zur Installation der experimentellen Trennmuster siehe
 \autoref{sec:installation} und die Datei \Datei{INSTALL}.  Beachte, in
 den folgenden Abschnitten ist \verb+<datum>+ durch das bei der
 Installation angegebene Datum in \Abk{iso}-Notation (\verb+JJJJ-MM-TT+)
-oder die Zeichenkette \verb+latest+ zu ersetzen!
+oder die Zeichenkette \verb+latest+ zu ersetzen.  \autoref{sec:fragen}
+enthält Hinweise, wie das Datum ermittelt werden kann, falls die
+experimentellen Trennmuster in Ihrer \TeX-Verteilung schon
+vorinstalliert sind.
+
 
 \subsection{Sprachvarietät und Rechtschreibung}
 \label{sec:varietaeten}
@@ -1054,6 +1058,52 @@ dehyphn-x-<datum>.pat
 
 
 \zeigefragen
+
+
+\fragenthema{Verwenden der Trennmuster}
+
+\begin{frageantwort}{Die experimentellen Trennmuster waren in der
+    \TeX-Verteilung bereits vorinstalliert.  Wie kann das Datum
+    ermittelt werden, das Teil des Trennmusterbezeichners ist, wie in
+    \autoref{sec:verwenden} erwähnt?}
+  Die Trennmusterbezeichner werden in der Datei \Datei{language.dat}
+  definiert, wo auch die Verbindung zu den Manteldateien hergestellt
+  wird.  Da ein Teil der Trennmusterbezeichner bereits bekannt ist,
+  \verb+german-x+, vgl. \autoref{tab:varietaeten}, kann die Datei
+  \Datei{language.dat} danach durchsucht werden.  Zunächst muss der Ort
+  der Datei mit Hilfe des Kommandos \lstinline[style=shell]{kpsewhich}
+  ermittelt werden.  Es folgen die vollständigen Kommandos für
+  unixähnliche Shells und die Windows-Kommandozeile \Datei{cmd.exe}.
+  Achtung, bei den einfachen Anführungszeichen handelt es sich um
+  Gravis ("`Backquotes"').
+
+  \begin{lstlisting}[style=shell, caption=shell]
+grep -i german-x `kpsewhich language.dat`
+  \end{lstlisting}
+
+  \begin{lstlisting}[style=shell, caption=\Datei{cmd.exe}]
+for /F "usebackq" %f in (`kpsewhich language.dat`) do find /i "german-x" %f
+  \end{lstlisting}
+
+  Die Ausgabe dieser Kommandos sieht etwa wie folgt aus (das Datum kann
+  abweichen):
+
+\begin{lstlisting}
+german-x-2009-06-19 dehypht-x-2009-06-19.tex
+=german-x-latest
+ngerman-x-2009-06-19 dehyphn-x-2009-06-19.tex
+=ngerman-x-latest
+\end{lstlisting}
+  Die gesuchten Trennmusterbezeichner befinden sich in der ersten Spalte
+  und lauten in diesem Beispiel
+  \lstinline[style=LaTeX]{german-x-2009-06-19} und
+  \lstinline[style=LaTeX]{ngerman-x-2009-06-19}.  In der zweiten Spalte
+  kann man die Namen der Manteldateien erkennen
+  (vgl. \autoref{tab:dateien}).  Die mit einem Gleichheitszeichen
+  beginnenden Zeilen definieren ein Synonym für den
+  Trennmusterbezeichner der unmittelbar vorangehenden Zeile in der Datei
+  \Datei{language.dat}.
+\end{frageantwort}
 
 
 \fragenthema{Rechtschreibung}
