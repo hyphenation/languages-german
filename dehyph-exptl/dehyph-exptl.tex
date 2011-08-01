@@ -393,7 +393,11 @@ Sprachvarietäten bereitgestellt werden können.
 \subsection{Aktivieren der Trennmuster}
 \label{sec:aktivieren}
 Das folgende Beispiel zeigt eine \LaTeX-Präambel für die Aktivierung der
-experimentellen Trennmuster für die reformierte Rechtschreibung.
+experimentellen Trennmuster für die reformierte Rechtschreibung.  Die
+Trennmusterbezeichner, die vom Paket \texttt{Babel} verwendet werden,
+werden dazu mit Hilfe des Pakets \texttt{hyphsubst} aus dem
+\Programm{Oberdiek-Bündel} so geändert, dass sie auf die experimentellen
+Trennmuster verweisen:
 
 \begin{lstlisting}[style=LaTeX]
 \RequirePackage[ngerman=ngerman-x-<datum>]{hyphsubst}
@@ -920,9 +924,8 @@ Bei der Installation werden die Manteldateien an die in
 \autoref{tab:varietaeten} gezeigten Trennmusterbezeichner gebunden.
 Diese Schritte werden für verschiedene \TeX-Verteilungen in der Datei
 \Datei{INSTALL} beschrieben.  Nach der Installation können die
-experimentellen Trennmuster wie in \autoref{sec:aktivieren} gezeigt mit
-den Paketen \texttt{Babel} und \texttt{hyphsubst} aus dem
-\Programm{Oberdiek-Bündel} aktiviert werden.
+experimentellen Trennmuster wie in \autoref{sec:aktivieren} gezeigt
+verwendet werden.
 
 
 \section{Die Wortliste}
