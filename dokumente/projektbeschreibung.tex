@@ -79,23 +79,6 @@ desc={BibTeX-Quelltext der Datei \jobname.pdf}%
 \newcommand*{\Abk}[1]{\mbox{\textsc{\lsstyle#1}}}
 \newcommand*{\Programm}[1]{\textsc{\lsstyle#1}}
 \newcommand*{\Datei}[1]{\texttt{#1}}
-%%% Randnotiz am linken Rand.
-\newcommand{\lrand}[1]{%
-  \mbox{}%
-  \marginpar{%
-    \hspace*{-2\marginparsep}%
-    \hspace*{-\textwidth}%
-    \hspace*{-\marginparwidth}%
-    \parbox[t]{\marginparwidth}{%
-      \raggedright%
-      \small%
-      \sffamily%
-      \bfseries%
-      #1%
-    }%
-  }%
-  \ignorespaces%
-}
 %%% Satzspiegel erneut berechnen.
 \typearea{last}
 %%% Trennausnahmen definieren.
