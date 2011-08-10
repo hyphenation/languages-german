@@ -842,11 +842,10 @@ erfüllt ist:
 
 \end{enumerate}
 
-\autoref{sec:wortliste} beschreibt, wie auf die Wortliste zugegriffen
-werden kann.  Einige bekannte Fehler in den Trennmustern sind in der
-Datei \Datei{CHANGES} verzeichnet.  Noch nicht bekannte falsche,
-fehlende und unerwünschte Worttrennungen können an die folgenden
-E-Mail-Adressen gerichtet werden:
+Einige bekannte Fehler in den Trennmustern sind in der Datei
+\Datei{CHANGES} verzeichnet.  Noch nicht bekannte falsche, fehlende und
+unerwünschte Worttrennungen können an die folgenden E-Mail-Adressen
+gerichtet werden:
 \begin{itemize}
 \item
   \href{mailto:trennmuster@dante.de}{trennmuster@dante.de},
@@ -863,8 +862,10 @@ Die aktuelle und ältere Ausgaben der Trennmuster sind im Dateibereich
 des Trennmuster-Wikis erhältlich.%
 \footnote{\url{http://projekte.dante.de/Trennmuster/WebHome}}
 %
-Im \Programm{Git}-Repositorium (siehe Anhang) befindet sich ein
-Makefile, mit dem jederzeit neue Trennmuster erzeugt werden können.
+Im Entwicklerrepositorium\footnote{%
+  siehe \url{http://projekte.dante.de/Trennmuster/Entwickler}}
+befindet sich ein Makefile, mit dem jederzeit neue Trennmuster erzeugt
+werden können.
 
 \nobreak
 \noindent\parbox{\linewidth}{%
@@ -909,54 +910,6 @@ Diese Schritte werden für verschiedene \TeX-Verteilungen in der Datei
 \Datei{INSTALL} beschrieben.  Nach der Installation können die
 experimentellen Trennmuster wie in \autoref{sec:aktivieren} gezeigt
 verwendet werden.
-
-
-\section{Die Wortliste}
-\label{sec:wortliste}
-\begin{description}
-\item[Bezug] Die Wortliste ist über das öffentliche
-  Entwicklerrepositorium%
-  \footnote{\url{http://repo.or.cz/w/wortliste.git}}
-  %
-  des Projekts%
-  \footnote{\url{http://projekte.dante.de/Trennmuster/WebHome}}
-  %
-  erhältlich.  Eine Kopie kann mit
-\begin{lstlisting}[style=shell]
-$git clone git://repo.or.cz/wortliste.git
-\end{lstlisting}
-  bezogen werden.%
-  \footnote{\url{http://repo.or.cz/}}
-
-  \emph{Hinweis:} Ältere \Programm{Git}-Versionen als v1.5.6.5 enthalten
-  einen Fehler im Netzwerkzugriff, der dazu führt, dass statt eines
-  Satzes von Änderungen häufig die komplette Wortliste übertragen wird.
-
-  Für einen reibungslosen Betrieb sollte nach dem Klonen dieses
-  Repositoriums die Konfigurationsvariable
-  \verb+core.DeltaBaseCacheLimit+ vom Standardwert 16\,MB auf mindestens
-  64\,MB erhöht werden.  Mit älteren \Programm{Git}-Versionen können
-  auch deutlich höhere Werte sinnvoll sein.  Die Konfiguration kann
-  beispielhaft so erfolgen:
-\begin{lstlisting}[style=shell]
-$git config core.DeltaBaseCacheLimit 64m
-$git config --get core.DeltaBaseCacheLimit
-\end{lstlisting}
-  Das letzte Kommando sollte nun den Wert \verb+64m+ zurückliefern.
-
-\item[Dateiformat] Das Format der Wortliste wird in der Datei
-  \Datei{dateikopf} beschrieben.
-
-\item[Version] Der \Abk{sha1}-Commit-Hash der Repositoriumversion, die
-  den Musterdateien
-\begin{lstlisting}
-dehypht-x-<datum>.pat
-dehyphts-x-<datum>.pat
-dehyphn-x-<datum>.pat
-\end{lstlisting}
-  zugrundeliegt, sowie eine \Abk{url} zum direkten Herunterladen der
-  Wortliste (ca. 15\,MB) kann dem Kopf der Dateien entnommen werden.
-\end{description}
 
 
 \section{Fragen \& Antworten}
