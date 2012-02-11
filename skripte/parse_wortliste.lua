@@ -104,7 +104,7 @@ local opcomment = spc^0 * (com * lpeg.C(lpeg.P(1)^0))^-1 * -1
 local ua = feld * _feld * opcomment
 -- einfach;ein·fach
 
-local uxt_ = feld * _leer2 * _feld * sep * leer4 * opcomment
+local uxt_ = feld * _leer2 * _feld * _leer4 * opcomment
 -- Abfallager;-2-;Ab·fa{ll/ll·l}a·ger;-4-
 -- Abfluß;-2-;Ab-fluß;-4-
 
