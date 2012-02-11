@@ -2,9 +2,10 @@
 
 local pwl = require("parse_wortliste")
 
+-- Anzahl Gesamtzeilen
+local total = 0
 -- Anzahl der ungültigen Zeilen.
 local invalid = 0
-
 -- Anzahl der identifizierten Zeilentypen.
 local count = {
    ua = 0,
@@ -25,6 +26,7 @@ local count = {
 
 -- Iteriere über stdin.
 for line in io.lines() do
+   total = total + 1
    -- Zerlege eine Zeile.
    local p = pwl.parse(line)
    -- gültig?
@@ -52,4 +54,5 @@ print("ux__xtrs  ", count.ux__xtrs)
 print("ux_rc     ", count.ux_rc)
 print("ux_rxtr_  ", count.ux_rxtr_)
 print("ux_rxtrs  ", count.ux_rxtrs)
+io.stderr:write("gesamt    ", total, "\n")
 io.stderr:write("ungültig  ", invalid, "\n")
