@@ -52,7 +52,7 @@ local opcomment = spc^0 * (com * lpeg.C(lpeg.P(1)^0))^-1 * -1
 -- Kurze Beschreibung des Formats der Wortliste:
 --
 -- Jede Zeile enthält eine bestimmte Schreibvariante eines Wortes.
--- Unterschiedliche Schreibvarianten deselben Wortes sind nicht
+-- Unterschiedliche Schreibvarianten desselben Wortes sind nicht
 -- miteinander verknüpft.
 --
 -- Feldtrenner ist das Semikolon.  Kommentare werden durch '#'
@@ -62,16 +62,15 @@ local opcomment = spc^0 * (com * lpeg.C(lpeg.P(1)^0))^-1 * -1
 -- Leere Felder bestehen aus der Feldnummer eingeschlossen in
 -- Minuszeichen, z. B. steht -2- für ein leeres Feld 2.
 --
--- Feld 1 enthät ein Wort in ungetrennter Schreibung.
+-- Feld 1 enthält ein Wort in ungetrennter Schreibung.
 --
--- Die Felder 2, 3, 4 enthalten Wörter, die keiner expliziten
--- Versalschreibung entsprechen ('ß' durch 'ss' ersetzt).  Die Felder 3,
--- 4 treten immer paarweise auf.  Enthielten sie denselben Inhalt, so
--- wird stattdessen Feld 2 verwendet.  Die Felder 3 und 4 existieren
--- dann nicht.
+-- Die Felder 2, 3, 4 enthalten Wörter, die nicht ausschließlich in
+-- Versalschreibung existieren.  Die Felder 3, 4 treten immer paarweise
+-- auf.  Enthielten sie denselben Inhalt, so wird stattdessen Feld 2
+-- verwendet.  Die Felder 3 und 4 existieren dann nicht.
 --
--- Die Felder 5, 6, 7, 8 enthalten Wörter, die expliziter
--- Versalschreibung entsprechen ('ß' durch 'ss' ersetzt).  Die Felder 6,
+-- Die Felder 5, 6, 7, 8 enthalten Wörter, die nur in expliziter
+-- Versalschreibung existieren ('ß' durch 'ss' ersetzt).  Die Felder 6,
 -- 7, 8 treten immer zu dritt auf.  Enthielten sie alle denselben
 -- Inhalt, so wird stattdessen Feld 5 verwendet.  Die Felder 6, 7, 8
 -- existieren dann nicht.
@@ -99,7 +98,7 @@ local opcomment = spc^0 * (com * lpeg.C(lpeg.P(1)^0))^-1 * -1
 
 
 -- Muster für Wörter, die keiner expliziten Versalschreibung
--- entsprechen.
+-- entsprechen.  (Die Felder 5 bis 8 existieren nicht.)
 
 local ua = feld * _feld * opcomment
 -- einfach;ein·fach
