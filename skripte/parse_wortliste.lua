@@ -10,45 +10,6 @@
 local M = {}
 
 
--- Definiere Muster für einige Spezialzeichen.
-local sep = lpeg.P ";"-- Feldtrenner
-local com = lpeg.P "#"-- Kommentar
-local spc = lpeg.P " "-- Leerzeichen
-local num = lpeg.R "09"-- Ziffern
-
--- Muster für Felder mit festem Inhalt (leere Felder).
-local leer2 = lpeg.P "-2-"
-local leer3 = lpeg.P "-3-"
-local leer4 = lpeg.P "-4-"
-local leer5 = lpeg.P "-5-"
-local leer6 = lpeg.P "-6-"
-local leer7 = lpeg.P "-7-"
-local leer8 = lpeg.P "-8-"
-local leerX = lpeg.P "-" * num * lpeg.P "-"
--- Kürzel für leere Felder mit voranstehendem Feldtrenner.
-local _leer2 = sep * leer2
-local _leer3 = sep * leer3
-local _leer4 = sep * leer4
-local _leer5 = sep * leer5
-local _leer6 = sep * leer6
-local _leer7 = sep * leer7
-local _leer8 = sep * leer8
-
--- Muster für ein Feld beliebigen Inhalts, welches nicht mit -[0-9]-
--- beginnt.  Die Capture enthält den Feldinhalt.
-local feld = (lpeg.C((1 - (sep + spc + com))^0) - leerX)
--- Kürzel für Feld mit voranstehendem Feldtrenner.
-local _feld = sep * feld
-
--- Muster für Kommentare der Form: beliebig viele Leerzeichen, gefolgt
--- von einem Kommentarzeichen, gefolgt von beliebigem Inhalt bis zum
--- Zeilenende.  Die Capture enthält den eigentlichen Kommentartext ohne
--- das Kommentarzeichen.
-local opcomment = spc^0 * (com * lpeg.C(lpeg.P(1)^0))^-1 * -1
-
-
--- Grammatik
-
 -- Kurze Beschreibung des Formats der Wortliste:
 --
 -- Jede Zeile enthält eine bestimmte Schreibvariante eines Wortes.
@@ -95,60 +56,102 @@ local opcomment = spc^0 * (com * lpeg.C(lpeg.P(1)^0))^-1 * -1
 --  7       * reformierte Rechtschreibung,
 --
 --  8       * traditionelle Rechtschreibung in der Schweiz,
-
-
+--
+--
+-- Definiere Muster für einige Spezialzeichen.
+local sep = lpeg.P ";"-- Feldtrenner
+local com = lpeg.P "#"-- Kommentar
+local spc = lpeg.P " "-- Leerzeichen
+local num = lpeg.R "09"-- Ziffern
+--
+-- Muster für Felder mit festem Inhalt (leere Felder).
+local leer2 = lpeg.P "-2-"
+local leer3 = lpeg.P "-3-"
+local leer4 = lpeg.P "-4-"
+local leer5 = lpeg.P "-5-"
+local leer6 = lpeg.P "-6-"
+local leer7 = lpeg.P "-7-"
+local leer8 = lpeg.P "-8-"
+local leerX = lpeg.P "-" * num * lpeg.P "-"
+-- Kürzel für leere Felder mit voranstehendem Feldtrenner.
+local _leer2 = sep * leer2
+local _leer3 = sep * leer3
+local _leer4 = sep * leer4
+local _leer5 = sep * leer5
+local _leer6 = sep * leer6
+local _leer7 = sep * leer7
+local _leer8 = sep * leer8
+--
+-- Muster für ein Feld beliebigen Inhalts, welches nicht mit -[0-9]-
+-- beginnt.  Die Capture enthält den Feldinhalt.
+local feld = (lpeg.C((1 - (sep + spc + com))^0) - leerX)
+-- Kürzel für Feld mit voranstehendem Feldtrenner.
+local _feld = sep * feld
+--
+-- Muster für Kommentare der Form: beliebig viele Leerzeichen, gefolgt
+-- von einem Kommentarzeichen, gefolgt von beliebigem Inhalt bis zum
+-- Zeilenende.  Die Capture enthält den eigentlichen Kommentartext ohne
+-- das Kommentarzeichen.
+local opcomment = spc^0 * (com * lpeg.C(lpeg.P(1)^0))^-1 * -1
+--
+--
+--
+-- Grammatik für die Strukturprüfung der Wortliste.
+-- Welche Felder sind belegt, welche unbelegt?
+-- Jeder Regel folgt eine Beispielzeile.
+--
 -- Muster für Wörter, die keiner expliziten Versalschreibung
 -- entsprechen.  (Die Felder 5 bis 8 existieren nicht.)
-
+--
 local ua = feld * _feld * opcomment
 -- einfach;ein·fach
-
+--
 local uxt_ = feld * _leer2 * _feld * _leer4 * opcomment
 -- Abfallager;-2-;Ab·fa{ll/ll·l}a·ger;-4-
 -- Abfluß;-2-;Ab-fluß;-4-
-
+--
 local ux_r = feld * _leer2 * _leer3 * _feld * opcomment
 -- Abfalllager;-2-;-3-;Ab-fall=la-ger
-
+--
 local uxtr = feld * _leer2 * _feld * _feld * opcomment
 -- abgelöste;-2-;ab-ge-lö-ste;ab-ge-lös-te
-
-
+--
+--
 -- Muster für Wörter, die expliziter Versalschreibung entsprechen ('ß'
 -- durch 'ss' ersetzt).
-
+--
 local ux__c = feld * _leer2 * _leer3 * _leer4 * _feld * opcomment
 -- Abstoss;-2-;-3-;-4-;Ab·stoss
-
+--
 local ux__xt__ = feld * _leer2 * _leer3 * _leer4 * _leer5 * _feld * _leer7 * _leer8 * opcomment
 -- Litfasssäulenstilleben;-2-;-3-;-4-;-5-;Lit-fass-säu-len-sti{ll/ll-l}e-ben;-7-;-8-
-
+--
 local ux__x_r_ = feld * _leer2 * _leer3 * _leer4 * _leer5 * _leer6 * _feld * _leer8 * opcomment
 -- Fussballliga;-2-;-3-;-4-;-5-;-6-;Fuss·ball·li·ga;-8-
-
+--
 local ux__x__s = feld * _leer2 * _leer3 * _leer4 * _leer5 * _leer6 * _leer7 * _feld * opcomment
 -- Litfassäule;-2-;-3-;-4-;-5-;-6-;-7-;Lit·fa{ss/ss·s}äu·le
-
+--
 local ux__xtr_ = feld * _leer2 * _leer3 * _leer4 * _leer5 * _feld * _feld * _leer8 * opcomment
 -- süsssauer;-2-;-3-;-4-;-5-;süss·sau·er;süss·sau·er;-8-
-
+--
 local ux__xt_s = feld * _leer2 * _leer3 * _leer4 * _leer5 * _feld * _leer7 * _feld * opcomment
 -- Fussballiga;-2-;-3-;-4-;-5-;Fuss·ba{ll/ll·l}i·ga;-7-;Fuss·ba{ll/ll·l}i·ga
-
+--
 local ux__xtrs = feld * _leer2 * _leer3 * _leer4 * _leer5 * _feld * _feld * _feld * opcomment
 -- Füsse;-2-;-3-;-4-;-5-;Fü·sse;Füs·se;Füs·se
-
-
+--
+--
 -- Muster für Wörter, die in der reformierten Rechtschreibung
 -- existieren, in der traditionellen Rechtschreibung jedoch nur in
 -- Versalschreibweise ('ß' durch 'ss' ersetzt).
-
+--
 local ux_rc = feld * _leer2 * _leer3 * _feld * _feld * opcomment
 -- Abfluss;-2-;-3-;Ab-fluss;Ab·fluss
-
+--
 local ux_rxtr_ = feld * _leer2 * _leer3 * _feld * _leer5 * _feld * _feld * _leer8 * opcomment
 -- Litfasssäule;-2-;-3-;Lit·fass·säu·le;-5-;Lit·fass·säu·le;Lit·fass·säu·le;-8-
-
+--
 local ux_rxtrs = feld * _leer2 * _leer3 * _feld * _leer5 * _feld * _feld * _feld * opcomment
 -- dussligste;-2-;-3-;duss·ligs·te;-5-;duss·lig·ste;duss·ligs·te;duss·lig·ste
 
