@@ -28,11 +28,11 @@ local count = {
 for line in io.lines() do
    total = total + 1
    -- Zerlege eine Zeile.
-   local p = pwl.parse(line)
+   local type = pwl.identify_record(line)
    -- gültig?
-   if p then
+   if type then
       -- Zähle Vorkommen des Typs.
-      count[p.type] = count[p.type] + 1
+      count[type] = count[type] + 1
    else
       print("ungültige Zeile: " .. line)
       invalid = invalid + 1

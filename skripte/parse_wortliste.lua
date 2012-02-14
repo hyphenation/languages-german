@@ -14,6 +14,7 @@ local M = {}
 local P = lpeg.P
 local R = lpeg.R
 local C = lpeg.C
+local Cc = lpeg.Cc
 local Ct = lpeg.Ct
 -- Muster für ein beliebiges Zeichen.
 local any = P(1)
@@ -35,9 +36,11 @@ local sep = P";"
 -- erlaubt.
 local com = P"#"
 local spc = P" "
--- Muster für ein Kommentar.  Die Capture enthält den Kommentartext ohne
--- das Kommentarzeichen.
-local opcomment = spc^0 * (com * C(any^0))^-1 * -1
+-- Muster für ein Kommentar.
+local opcomment = spc^0 * (com * any^0)^-1 * -1
+-- Muster für ein Kommentar mit Capture.  Die Capture enthält den
+-- Kommentartext ohne das Kommentarzeichen.
+local opcommentC = spc^0 * (com * C(any^0))^-1 * -1
 --
 -- Leere Felder bestehen aus der Feldnummer eingeschlossen in
 -- Minuszeichen, z. B. steht -2- für ein leeres Feld 2.
@@ -68,17 +71,17 @@ local _leer8 = sep * leer8
 -- zulässigen Wörtern in Form einer Grammatik wird später hinzugefügt.
 --
 -- Muster für ein Feld beliebigen Inhalts.
-local f = (any - (sep + spc + com))^1
--- Muster für ein Feld mit Capture.  Die Capture enthält den Feldinhalt.
-local fC = C(f)
--- Kürzel für ein Feld mit Capture mit voranstehendem Feldtrenner.
-local _fC = sep * fC
--- Muster für ein Feld beliebigen Inhalts, welches nicht mit -[0-9]-
--- beginnt.  Die Capture enthält den Feldinhalt.
-local feld = fC - leerX
--- Kürzel für Feld mit voranstehendem Feldtrenner.  Die Capture enthält
--- den Feldinhalt.
-local _feld = sep * feld
+local feld = (any - (sep + spc + com))^1
+-- Muster für ein Feld beliebigen Inhalts mit Capture.  Die Capture
+-- enthält den Feldinhalt.
+local feldC = C(feld)
+-- Kürzel für ein Feld beliebigen Inhalts mit voranstehendem
+-- Feldtrenner.
+local _feldC = sep * feldC
+-- Muster für ein belegtes Feld.
+local bfeld = feld - leerX
+-- Kürzel für ein belegtes Feld mit voranstehendem Feldtrenner.
+local _bfeld = sep * bfeld
 --
 -- Feld 1 enthält ein Wort in ungetrennter Schreibung.
 --
@@ -122,11 +125,11 @@ local _feld = sep * feld
 local _replace_empty_fields = {} for i = 1,8 do _replace_empty_fields["-"..i.."-"] = false end
 -- Muster für ein Feld mit Ersetzung.  Die Capture enthält den Feldinhalt
 -- oder 'false' für leere Felder.
-local feldR = leerX / _replace_empty_fields + feld
-local _feldR = sep * feldR
+local feldRC = leerX / _replace_empty_fields + feldC
+local _feldRC = sep * feldRC
 -- Muster für eine Zeile mit bis zu acht Feldern (mit Table-Capture) und
 -- einem optionalen Kommentar.
-local split_record = Ct(feld * _feldR^-7) * opcomment
+local split_record = Ct(C(bfeld) * _feldRC^-7) * opcommentC
 --
 --- Zerlege einen Datensatz in einzelne Felder und speichere diese in
 --- einer Tabelle.
@@ -147,49 +150,136 @@ M.split = split
 
 
 --
--- Grammatik für die Strukturprüfung der Wortliste.
--- Welche Felder sind belegt, welche unbelegt?
--- Jeder Regel folgt eine Beispielzeile.
+-- Prüfmuster für Datensatzstruktur
 --
--- Muster für Wörter, die keiner expliziten Versalschreibung
--- entsprechen.  (Die Felder 5 bis 8 existieren nicht.)
+-- Im folgenden werden unterschiedliche Typen von zulässigen Datensätzen
+-- durch Zeichenketten repräsentiert.  Zeichenpositionen korrespondieren
+-- dabei mit Feldernummern.  Das Zeichen an einer Position beschreibt,
+-- ob das jeweilige Feld belegt ist oder leer.
 --
-local ua = feld * _feld * opcomment
+-- Leere Felder werden durch '_' oder 'x' repräsentiert, wobei 'x' nur
+-- aus Gründen der Lesbarkeit für die Felder 2 und 5 verwendet wird.
+--
+-- Belegte Felder werden durch einen beschreibenden Buchstaben
+-- gekennzeichnet.  Folgende Buchstaben werden verwendet:
+--
+-- Feld     Zeichen     Beschreibung
+--
+--  1        u          ungetrennt
+--  2        a          alle
+--  3        t          traditionelle Rechtschreibung
+--  4        r          reformierte Rechtschreibung
+--  5        c          Versalschreibung, alle
+--  6        t          Versalschr., trad. Rechtschr. (D, AT)
+--  7        r          Versalschr., reform. Rechtschr.
+--  8        s          Versalschr., trad. Rechtschr. (CH)
+--
+-- Beispiele:
+--
+--   * Ein Wort, welches in allen Rechtschreibungen gleich getrennt
+-- wird: Die Felder 1 und 2 sind belegt, gekennzeichnet durch die
+-- Zeichen 'u' und 'a'.  Die Felder 3 bis 8 existieren nicht.  Typ:
+-- 'ua'.
+--
+--   * Ein Wort, welches nicht nur in Versalschreibung existiert (also
+-- ein Wort in normaler Schreibung), welches jedoch in traditioneller
+-- und reformierter Rechtschreibung unterschiedlich getrennt wird: Die
+-- Felder 1, 3 und 4 sind belegt ('u', 't', 'r').  Feld 2 ist leer
+-- ('x').  Die Felder 5 bis 8 existieren nicht. Typ: 'uxtr'.
+--
+--   * Ein Wort, welches nur in Versalschreibung existiert und dort für
+-- alle Rechtschreibungen gleich getrennt wird: Die Felder 1 und 5 sind
+-- belegt ('u' und 'c').  Die Felder 2 bis 4 sind leer ('x' und '_').
+-- Die Felder 6 bis 8 existieren nicht.  Typ: 'ux__c'.
+--
+--   * Ein Wort, welches nur in (deutsch-)schweizerischer
+-- Versalschreibung existiert: Die Felder 1 und 8 sind belegt ('u' und
+-- 's').  Die Felder 2 bis 7 sind leer ('x' und '_').  Typ: 'ux__x__s'.
+--
+--
+-- Diese Tabelle bildet Positionen (Indizes von 1-8) auf Tabellen
+-- zulässiger Zeichen ab.  Die Untertabellen enthalten die an der
+-- jeweiligen Position zulässigen Zeichen und bilden diese auf
+-- Teilmuster ab.
+local valid_flags = {
+   [1] = { u = bfeld },-- ungetrennt
+   [2] = { a = _bfeld, x = _leer2 },-- alle
+   [3] = { t = _bfeld, _ = _leer3 },-- trad. RS
+   [4] = { r = _bfeld, _ = _leer4 },-- reform. RS
+   [5] = { c = _bfeld, x = _leer5 },-- Versalschr., alle
+   [6] = { t = _bfeld, _ = _leer6 },-- Versalschr., trad. RS (D, AT)
+   [7] = { r = _bfeld, _ = _leer7 },-- Versalschr., reform. RS
+   [8] = { s = _bfeld, _ = _leer8 },-- Versalschr., trad. RS (CH)
+}
+--
+-- Diese Variable enthält ODER-verknüpft (+) sämtliche Muster, die
+-- zulässige Datensätze repräsentieren.
+local valid_records
+--
+--- <strong>nicht-öffentlich</strong> Füge der Liste aller Muster
+--- zulässiger Datensätze ein neues Muster hinzu.  Die Captures der
+--- Muster enthalten jeweils eine Zeichenkette, die den Datensatztyp
+--- repräsentiert.
+--
+-- @param rec_type Zeichenkette, die ein Muster für einen zulässigen
+-- Datensatz repräsentiert
+local function _add_to_valid_records(rec_type)
+   local ch = string.sub(rec_type, 1, 1)
+   local pat = valid_flags[1][ch]
+   for i = 2,#rec_type do
+      local ch = string.sub(rec_type, i, i)
+      pat = pat * valid_flags[i][ch]
+   end
+   pat = Cc(rec_type) * pat * opcomment
+   if valid_records then
+      valid_records = valid_records + pat
+   else
+      valid_records = pat
+   end
+end
+--
+-- Erstelle ein Muster, welches sämtliche zulässigen Datensätze
+-- repräsentiert.
+--
+-- Muster für Wörter, die nicht nur in Versalschreibung existieren.
+-- (Die Felder 5 bis 8 existieren nicht.)
+--
+_add_to_valid_records("ua")
 -- einfach;ein·fach
 --
-local uxt_ = feld * _leer2 * _feld * _leer4 * opcomment
+_add_to_valid_records("uxt_")
 -- Abfallager;-2-;Ab·fa{ll/ll·l}a·ger;-4-
 -- Abfluß;-2-;Ab-fluß;-4-
 --
-local ux_r = feld * _leer2 * _leer3 * _feld * opcomment
+_add_to_valid_records("ux_r")
 -- Abfalllager;-2-;-3-;Ab-fall=la-ger
 --
-local uxtr = feld * _leer2 * _feld * _feld * opcomment
+_add_to_valid_records("uxtr")
 -- abgelöste;-2-;ab-ge-lö-ste;ab-ge-lös-te
 --
 --
--- Muster für Wörter, die expliziter Versalschreibung entsprechen ('ß'
--- durch 'ss' ersetzt).
+-- Muster für Wörter, die nur in Versalschreibung existieren ('ß' durch
+-- 'ss' ersetzt).
 --
-local ux__c = feld * _leer2 * _leer3 * _leer4 * _feld * opcomment
+_add_to_valid_records("ux__c")
 -- Abstoss;-2-;-3-;-4-;Ab·stoss
 --
-local ux__xt__ = feld * _leer2 * _leer3 * _leer4 * _leer5 * _feld * _leer7 * _leer8 * opcomment
+_add_to_valid_records("ux__xt__")
 -- Litfasssäulenstilleben;-2-;-3-;-4-;-5-;Lit-fass-säu-len-sti{ll/ll-l}e-ben;-7-;-8-
 --
-local ux__x_r_ = feld * _leer2 * _leer3 * _leer4 * _leer5 * _leer6 * _feld * _leer8 * opcomment
+_add_to_valid_records("ux__x_r_")
 -- Fussballliga;-2-;-3-;-4-;-5-;-6-;Fuss·ball·li·ga;-8-
 --
-local ux__x__s = feld * _leer2 * _leer3 * _leer4 * _leer5 * _leer6 * _leer7 * _feld * opcomment
+_add_to_valid_records("ux__x__s")
 -- Litfassäule;-2-;-3-;-4-;-5-;-6-;-7-;Lit·fa{ss/ss·s}äu·le
 --
-local ux__xtr_ = feld * _leer2 * _leer3 * _leer4 * _leer5 * _feld * _feld * _leer8 * opcomment
+_add_to_valid_records("ux__xtr_")
 -- süsssauer;-2-;-3-;-4-;-5-;süss·sau·er;süss·sau·er;-8-
 --
-local ux__xt_s = feld * _leer2 * _leer3 * _leer4 * _leer5 * _feld * _leer7 * _feld * opcomment
+_add_to_valid_records("ux__xt_s")
 -- Fussballiga;-2-;-3-;-4-;-5-;Fuss·ba{ll/ll·l}i·ga;-7-;Fuss·ba{ll/ll·l}i·ga
 --
-local ux__xtrs = feld * _leer2 * _leer3 * _leer4 * _leer5 * _feld * _feld * _feld * opcomment
+_add_to_valid_records("ux__xtrs")
 -- Füsse;-2-;-3-;-4-;-5-;Fü·sse;Füs·se;Füs·se
 --
 --
@@ -197,73 +287,26 @@ local ux__xtrs = feld * _leer2 * _leer3 * _leer4 * _leer5 * _feld * _feld * _fel
 -- existieren, in der traditionellen Rechtschreibung jedoch nur in
 -- Versalschreibweise ('ß' durch 'ss' ersetzt).
 --
-local ux_rc = feld * _leer2 * _leer3 * _feld * _feld * opcomment
+_add_to_valid_records("ux_rc")
 -- Abfluss;-2-;-3-;Ab-fluss;Ab·fluss
 --
-local ux_rxtr_ = feld * _leer2 * _leer3 * _feld * _leer5 * _feld * _feld * _leer8 * opcomment
+_add_to_valid_records("ux_rxtr_")
 -- Litfasssäule;-2-;-3-;Lit·fass·säu·le;-5-;Lit·fass·säu·le;Lit·fass·säu·le;-8-
 --
-local ux_rxtrs = feld * _leer2 * _leer3 * _feld * _leer5 * _feld * _feld * _feld * opcomment
+_add_to_valid_records("ux_rxtrs")
 -- dussligste;-2-;-3-;duss·ligs·te;-5-;duss·lig·ste;duss·ligs·te;duss·lig·ste
-
-
---- Zerlege eine Zeile der Wortliste.
--- @param line eine Zeile aus der Wortliste
--- @return Tabelle mit gültigen Feldern
-local function parse(line)
-  local u, a, t, r
-  local ca, ct, cr, cs
-  local com
-
-  u, a, com = ua:match(line)
-  if u and a then return { u = u, a = a, comment = com, type = "ua" } end
-
-  u, t, com = uxt_:match(line)
-  if u and t then return { u = u, t = t, comment = com, type = "uxt_" } end
-
-  u, r, com = ux_r:match(line)
-  if u and r then return { u = u, r = r, comment = com, type = "ux_r" } end
-
-  u, t, r, com = uxtr:match(line)
-  if u and t and r then return { u = u, t = t, r = r, comment = com, type = "uxtr" } end
-
-
-
-  u, ca, com = ux__c:match(line)
-  if u and ca then return { u = u, ca = ca, comment = com, type = "ux__c" } end
-
-  u, ct, com = ux__xt__:match(line)
-  if u and ct then return { u = u, ct = ct, comment = com, type = "ux__xt__" } end
-
-  u, cr, com = ux__x_r_:match(line)
-  if u and cr then return { u = u, cr = cr, comment = com, type = "ux__x_r_" } end
-
-  u, cs, com = ux__x__s:match(line)
-  if u and cs then return { u = u, cs = cs, comment = com, type = "ux__x__s" } end
-
-  u, ct, cs, com = ux__xt_s:match(line)
-  if u and ct and cs then return { u = u, ct = ct, cs = cs, comment = com, type = "ux__xt_s" } end
-
-  u, ct, cr, com = ux__xtr_:match(line)
-  if u and ct and cr then return { u = u, ct = ct, cr = cr, comment = com, type = "ux__xtr_" } end
-
-  u, ct, cr, cs, com = ux__xtrs:match(line)
-  if u and ct and cr and cs then return { u = u, ct = ct, cr = cr, cs = cs, comment = com, type = "ux__xtrs" } end
-
-
-
-  u, r, ca, com = ux_rc:match(line)
-  if u and r and ca then return { u = u, r = r, ca = ca, comment = com, type = "ux_rc" } end
-
-  u, r, ct, cr, com = ux_rxtr_:match(line)
-  if u and r and ct and cr then return { u = u, r = r, ct = ct, cr = cr, comment = com, type = "ux_rxtr_" } end
-
-  u, r, ct, cr, cs, com = ux_rxtrs:match(line)
-  if u and r and ct and cr and cs then return { u = u, r = r, ct = ct, cr = cr, cs = cs, comment = com, type = "ux_rxtrs" } end
-
-  return nil
+--
+--
+--- Ermittle den Typ eines Datensatzes.
+--
+-- @param record Datensatz
+--
+-- @return Zeichenkette, die den Datensatztyp repräsentiert.
+local function identify_record(record)
+   return valid_records:match(record)
 end
-M.parse = parse
+M.identify_record = identify_record
+
 
 
 -- Exportiere Modul-Tabelle.
