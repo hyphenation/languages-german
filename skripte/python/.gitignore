@@ -1,0 +1,5 @@
+*.diff
+*.pyc
+*.py.txt
+*.py.xhtml
+*~
