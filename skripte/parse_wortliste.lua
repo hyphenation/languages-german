@@ -10,6 +10,15 @@
 local M = {}
 
 
+-- Kürzel für LPEG-Funktionen.
+local P = lpeg.P
+local R = lpeg.R
+local C = lpeg.C
+-- Muster für ein beliebiges Zeichen.
+local any = P(1)
+
+
+
 -- Kurze Beschreibung des Formats der Wortliste:
 --
 -- Jede Zeile enthält eine bestimmte Schreibvariante eines Wortes.
@@ -59,20 +68,20 @@ local M = {}
 --
 --
 -- Definiere Muster für einige Spezialzeichen.
-local sep = lpeg.P ";"-- Feldtrenner
-local com = lpeg.P "#"-- Kommentar
-local spc = lpeg.P " "-- Leerzeichen
-local num = lpeg.R "09"-- Ziffern
+local sep = P";"-- Feldtrenner
+local com = P"#"-- Kommentar
+local spc = P" "-- Leerzeichen
+local num = R"09"-- Ziffern
 --
--- Muster für Felder mit festem Inhalt (leere Felder).
-local leer2 = lpeg.P "-2-"
-local leer3 = lpeg.P "-3-"
-local leer4 = lpeg.P "-4-"
-local leer5 = lpeg.P "-5-"
-local leer6 = lpeg.P "-6-"
-local leer7 = lpeg.P "-7-"
-local leer8 = lpeg.P "-8-"
-local leerX = lpeg.P "-" * num * lpeg.P "-"
+--- Muster für Felder mit festem Inhalt (leere Felder).
+local leer2 = P"-2-"
+local leer3 = P"-3-"
+local leer4 = P"-4-"
+local leer5 = P"-5-"
+local leer6 = P"-6-"
+local leer7 = P"-7-"
+local leer8 = P"-8-"
+local leerX = P"-" * num * P"-"
 -- Kürzel für leere Felder mit voranstehendem Feldtrenner.
 local _leer2 = sep * leer2
 local _leer3 = sep * leer3
@@ -84,7 +93,7 @@ local _leer8 = sep * leer8
 --
 -- Muster für ein Feld beliebigen Inhalts, welches nicht mit -[0-9]-
 -- beginnt.  Die Capture enthält den Feldinhalt.
-local feld = (lpeg.C((1 - (sep + spc + com))^0) - leerX)
+local feld = C((any - (sep + spc + com))^0 - leerX)
 -- Kürzel für Feld mit voranstehendem Feldtrenner.
 local _feld = sep * feld
 --
@@ -92,7 +101,7 @@ local _feld = sep * feld
 -- von einem Kommentarzeichen, gefolgt von beliebigem Inhalt bis zum
 -- Zeilenende.  Die Capture enthält den eigentlichen Kommentartext ohne
 -- das Kommentarzeichen.
-local opcomment = spc^0 * (com * lpeg.C(lpeg.P(1)^0))^-1 * -1
+local opcomment = spc^0 * (com * C(any^0))^-1 * -1
 --
 --
 --
