@@ -13,9 +13,12 @@ local M = {}
 -- Kürzel für LPEG-Funktionen.
 local P = lpeg.P
 local R = lpeg.R
+local S = lpeg.S
 local C = lpeg.C
 local Cc = lpeg.Cc
+local Cf = lpeg.Cf
 local Ct = lpeg.Ct
+local V = lpeg.V
 -- Muster für ein beliebiges Zeichen.
 local any = P(1)
 
@@ -68,7 +71,8 @@ local _leer8 = sep * leer8
 --
 -- Belegte Felder bestehen aus beliebigen Zeichen außer Feldtrennern,
 -- Leerzeichen oder Kommentarzeichen.  Eine präzisere Beschreibung von
--- zulässigen Wörtern in Form einer Grammatik wird später hinzugefügt.
+-- zulässigen Wörtern in Form einer Grammatik ist weiter unten zu
+-- finden.
 --
 -- Muster für ein Feld beliebigen Inhalts.
 local feld = (any - (sep + spc + com))^1
@@ -306,6 +310,183 @@ local function identify_record(record)
    return valid_records:match(record)
 end
 M.identify_record = identify_record
+
+
+
+--
+-- Prüfmuster für Wortstruktur
+--
+--- <strong>nicht-öffentlich</strong> Füge Strings zusammen.  Diese
+--- Funktion akkumuliert Zeichen in einer Faltungscapture
+--- (<code>lpeg.Cf</code>).
+--
+-- @param acc bisheriger Akkumulator
+--
+-- @param newvalue nächster Capturewert
+--
+-- @return neuer Akkumulatorzustand
+local function _conc_cluster(acc, newvalue)
+--   io.stderr:write("'",acc,"'..'",newvalue,"'\n")-- For debugging purposes.
+   return acc..newvalue
+end
+--
+--
+-- Grammatik für ein Wort.
+--
+-- Diese Grammatik prüft /nicht/, ob:
+--
+-- * die ersten und letzten beiden Zeichen eines Wortes Buchstaben sind,
+--
+-- * Teilwörter in Alternativen [.../...] einander entsprechen,
+--
+-- * Wörter in reformierter Rechtschreibung keine Spezialtrennungen
+--   enthalten,
+--
+-- * Wörter in Versalschreibung kein 'ß' enthalten,
+--
+-- * Wörter in traditioneller Rechtschreibung in D und AT keine
+--   Dreikonsonantenregel für das 's' enthalten.
+--
+-- Die vollständige Gültigkeit von Wörtern sollte mit zusätzlichen,
+-- nachgeschalteten Prüfungen erfolgen.
+--
+local word = P{
+   -- Initialregel.
+   "word",
+   --
+   -- Wort
+   --
+   -- Ein Wort ist ein Teilwort, kann also führende oder abschließende
+   -- Trennzeichen enthalten.  Diese Generalisierung vereinfacht die
+   -- Grammatik im Zusammenhang mit Alternativen etwas.
+   word = V"part_word" * -1,
+   -- Ein Teilwort besteht aus zusammenhängenden Zeichenketten,
+   -- sogenannten Klustern, die durch Trennzeichen voneinander getrennt
+   -- sind.  Ein Teilwort kann ein optionales führendes und schließendes
+   -- Trennzeichen enthalten.  Die Capture enthält das Wort ohne
+   -- jegliche Trennzeichen.
+   part_word = V"ophyphen" * Cf(V"cluster" * (V"hyphen" * V"cluster")^0, _conc_cluster) * V"ophyphen",
+   -- Ein Kluster besteht aus mehreren aneinandergereihten fundamentalen
+   -- Klustern ohne Unterbrechung durch Trennzeichen.  Es gibt drei
+   -- Arten von fundamentalen Klustern: Buchstabenkluster,
+   -- Spezialtrennungen und Alternativen:
+   --
+   --                 Bü-cher   E{ck/k-k}e   Sto{ff/ff-f}et-zen   Wach[-s/s-]tu-be
+   -- fund. Kluster   11-2222   1222222223   11122222222233-444   1111222222233-44
+   -- Kluster         11-2222   1111111111   11111111111111-222   1111111111111-22
+   --
+   -- Die Capture enthält sämltliche Zeichen der aufeinanderfolgenden
+   -- Kluster.
+   cluster = Cf((V"cl_letter" + V"cl_nonstd" + V"cl_alt")^1, _conc_cluster),
+   --
+   -- Trennzeichen
+   --
+   -- Verschiedene Arten von Trennstellen werden durch unterschiedliche
+   -- Trennzeichen markiert.
+   --
+   -- Die folgenden Trennzeichen werden verwendet:
+   hyphen = S"-=.\183",
+   -- Ein beliebiges, optionales Trennzeichen.
+   ophyphen = V"hyphen"^-1,
+   --
+   -- Buchstabenkluster
+   --
+   -- Ein Buchstabenkluster besteht aus aufeinanderfolgenden Buchstaben.
+   -- Die Capture sammelt alle Buchstaben.
+   cl_letter = C(V"letter"^1),
+   -- Die folgenden Buchstaben sind zulässig:
+   letter = R("az", "AZ")
+   + P"\196"-- Ä
+   + P"\214"-- Ö
+   + P"\220"-- Ü
+   + P"\223"-- ß
+   + P"\224"-- à
+   + P"\225"-- á
+   + P"\226"-- â
+   + P"\228"-- ä
+   + P"\231"-- ç
+   + P"\232"-- è
+   + P"\233"-- é
+   + P"\234"-- ê
+   + P"\235"-- ë
+   + P"\237"-- í
+   + P"\238"-- î
+   + P"\241"-- ñ
+   + P"\243"-- ó
+   + P"\244"-- ô
+   + P"\246"-- ö
+   + P"\252"-- ü
+,
+   --
+   -- Spezialtrennung
+   --
+   -- Spezialtrennungen (non-standard hyphenation) beschreiben
+   -- Trennregeln, die über das bloße Einfügen eines Trennzeichens
+   -- hinausgehen.  Dazu gehören die ck-Trennung und die
+   -- Dreikonsonantenregel(n).  Spezialtrennungen sind jeweils
+   -- eingeschlossen in Klammern.  Die Capture enthält eine
+   -- Zeichenkette, die der jeweils ungetrennten Spezialtrennung
+   -- entspricht (z. B. 'ck' für die ck-Trennung).
+   cl_nonstd = V"nonstd_open" * V"nonstd_rule" * V"nonstd_close",
+   -- Aufzählung sämtlicher Spezialtrennungen.
+   nonstd_rule = V"ck" + V"fff" + V"lll" + V"mmm" + V"nnn" + V"ppp" + V"rrr" + V"ttt" + V"sss",
+   -- ck-Trennung: Die Capture enthält die Zeichenfolge 'ck'.
+   ck = C(P"ck") * V"nonstd_sep" * P"k" * V"hyphen" * P"k",
+   -- Dreikonsonantenregel: Die Capture enthält die Zeichenfolge für die
+   -- ungetrennte Konsonantenfolge.
+   fff = C(P"ff") * V"nonstd_sep" * P"ff" * V"hyphen" * P"f",
+   lll = C(P"ll") * V"nonstd_sep" * P"ll" * V"hyphen" * P"l",
+   mmm = C(P"mm") * V"nonstd_sep" * P"mm" * V"hyphen" * P"m",
+   nnn = C(P"nn") * V"nonstd_sep" * P"nn" * V"hyphen" * P"n",
+   ppp = C(P"pp") * V"nonstd_sep" * P"pp" * V"hyphen" * P"p",
+   rrr = C(P"rr") * V"nonstd_sep" * P"rr" * V"hyphen" * P"r",
+   ttt = C(P"tt") * V"nonstd_sep" * P"tt" * V"hyphen" * P"t",
+   sss = C(P"ss") * V"nonstd_sep" * P"ss" * V"hyphen" * P"s",
+   -- Klammer, die eine Spezialtrennung einführt.
+   nonstd_open = P"{",
+   -- Klammer, die eine Spezialtrennung abschließt.
+   nonstd_close = P"}",
+   -- Trennzeichen innerhalb einer Spezialtrennung.
+   nonstd_sep = P"/",
+   --
+   -- Alternative
+   --
+   -- Eine Alternative beschreibt mehrdeutige Wortteile, die
+   -- unterschiedlich getrennt werden können.  Die Capture enthält die
+   -- Zeichen der jeweils ersten Alternative ohne jegliche Trennzeichen.
+   --
+   -- Alternativen sind eingeschlossen in Klammern.
+   cl_alt = V"alt_open" * V"alt_rule" * V"alt_close",
+   -- Alternative Teilwörter werden durch ein spezielles Trennzeichen
+   -- voneinander getrennt.
+   alt_rule = V"alt_1st" * V"alt_sep" * (V"alt_2nd" / ""),
+   -- Die erste Alternative darf aus höchstens einem Kluster mit
+   -- optionalem führenden und optionalem schließenden Trennzeichen
+   -- bestehen.  Trennzeichen innerhalb des Teilwortes sind nicht
+   -- erlaubt.
+   alt_1st = V"ophyphen" * V"cluster" * V"ophyphen",
+   -- Die zweite Alternative entspricht einem Teilwort.  Dieses wird
+   -- später verworfen.
+   alt_2nd = V"part_word",
+   -- Klammer, die eine Alternative einführt.
+   alt_open = P"[",
+   -- Klammer, die eine Alternative abschließt.
+   alt_close = P"]",
+   -- Trennzeichen innerhalb einer Alternative.
+   alt_sep = P"/",
+}
+--
+--- Wende Prüfgrammatik auf ein Wort an.
+--
+-- @param rawword unbehandeltes Wort
+--
+-- @return <code>nil</code>, falls das Wort eine unzulässige Struktur
+-- hat;<br /> nicht-<code>nil</code>, sonst.
+local function parse_word(rawword)
+   -- Verwirf eventuelle weitere Captures.
+   return ( word:match(rawword) )
+end
+M.parse_word = parse_word
 
 
 
