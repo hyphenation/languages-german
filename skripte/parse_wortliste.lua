@@ -19,18 +19,59 @@ local any = P(1)
 
 
 
--- Kurze Beschreibung des Formats der Wortliste:
 --
--- Jede Zeile enthält eine bestimmte Schreibvariante eines Wortes.
--- Unterschiedliche Schreibvarianten desselben Wortes sind nicht
--- miteinander verknüpft.
+-- Beschreibung des Formats der Wortliste:
 --
--- Feldtrenner ist das Semikolon.  Kommentare werden durch '#'
--- eingeleitet und erstrecken sich bis zum Zeilenende.  Vor dem
--- Kommentarzeichen sind beliebige Leerzeichen erlaubt.
+-- Jeder Datensatz (Zeile) entspricht einer bestimmten Schreibvariante
+-- eines Wortes.  Unterschiedliche Schreibvarianten desselben Wortes
+-- sind nicht miteinander verknüpft.
+--
+-- Feldtrenner ist das Semikolon.
+local sep = P";"
+--
+-- Kommentare werden durch '#' eingeleitet und erstrecken sich bis zum
+-- Zeilenende.  Vor dem Kommentarzeichen sind beliebige Leerzeichen
+-- erlaubt.
+local com = P"#"
+local spc = P" "
+-- Muster für ein Kommentar.  Die Capture enthält den Kommentartext ohne
+-- das Kommentarzeichen.
+local opcomment = spc^0 * (com * C(any^0))^-1 * -1
 --
 -- Leere Felder bestehen aus der Feldnummer eingeschlossen in
 -- Minuszeichen, z. B. steht -2- für ein leeres Feld 2.
+--
+-- Muster für eine Ziffer.
+local digit = R"09"
+-- Muster für ein beliebiges leeres Feld.
+local leerX = P"-" * digit * P"-"
+-- Muster für leere Felder mit festem Inhalt.
+local leer2 = P"-2-"
+local leer3 = P"-3-"
+local leer4 = P"-4-"
+local leer5 = P"-5-"
+local leer6 = P"-6-"
+local leer7 = P"-7-"
+local leer8 = P"-8-"
+-- Kürzel für leere Felder mit voranstehendem Feldtrenner.
+local _leer2 = sep * leer2
+local _leer3 = sep * leer3
+local _leer4 = sep * leer4
+local _leer5 = sep * leer5
+local _leer6 = sep * leer6
+local _leer7 = sep * leer7
+local _leer8 = sep * leer8
+--
+-- Belegte Felder bestehen aus beliebigen Zeichen außer Feldtrennern,
+-- Leerzeichen oder Kommentarzeichen.  Eine präzisere Beschreibung von
+-- zulässigen Wörtern in Form einer Grammatik wird später hinzugefügt.
+--
+-- Muster für ein Feld beliebigen Inhalts, welches nicht mit -[0-9]-
+-- beginnt.  Die Capture enthält den Feldinhalt.
+local feld = C((any - (sep + spc + com))^0 - leerX)
+-- Kürzel für Feld mit voranstehendem Feldtrenner.  Die Capture enthält
+-- den Feldinhalt.
+local _feld = sep * feld
 --
 -- Feld 1 enthält ein Wort in ungetrennter Schreibung.
 --
@@ -65,44 +106,6 @@ local any = P(1)
 --  7       * reformierte Rechtschreibung,
 --
 --  8       * traditionelle Rechtschreibung in der Schweiz,
---
---
--- Definiere Muster für einige Spezialzeichen.
-local sep = P";"-- Feldtrenner
-local com = P"#"-- Kommentar
-local spc = P" "-- Leerzeichen
-local num = R"09"-- Ziffern
---
---- Muster für Felder mit festem Inhalt (leere Felder).
-local leer2 = P"-2-"
-local leer3 = P"-3-"
-local leer4 = P"-4-"
-local leer5 = P"-5-"
-local leer6 = P"-6-"
-local leer7 = P"-7-"
-local leer8 = P"-8-"
-local leerX = P"-" * num * P"-"
--- Kürzel für leere Felder mit voranstehendem Feldtrenner.
-local _leer2 = sep * leer2
-local _leer3 = sep * leer3
-local _leer4 = sep * leer4
-local _leer5 = sep * leer5
-local _leer6 = sep * leer6
-local _leer7 = sep * leer7
-local _leer8 = sep * leer8
---
--- Muster für ein Feld beliebigen Inhalts, welches nicht mit -[0-9]-
--- beginnt.  Die Capture enthält den Feldinhalt.
-local feld = C((any - (sep + spc + com))^0 - leerX)
--- Kürzel für Feld mit voranstehendem Feldtrenner.
-local _feld = sep * feld
---
--- Muster für Kommentare der Form: beliebig viele Leerzeichen, gefolgt
--- von einem Kommentarzeichen, gefolgt von beliebigem Inhalt bis zum
--- Zeilenende.  Die Capture enthält den eigentlichen Kommentartext ohne
--- das Kommentarzeichen.
-local opcomment = spc^0 * (com * C(any^0))^-1 * -1
---
 --
 --
 -- Grammatik für die Strukturprüfung der Wortliste.
