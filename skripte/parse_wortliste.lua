@@ -517,5 +517,60 @@ M.normalize_word = normalize_word
 
 
 
+--- Prüfe ein Wort auf Wohlgeformtheit.
+--
+-- @param rawword Wort (normiert oder unbehandelt)
+--
+-- @return <code>nil</code>, falls das Wort eine unzulässige Struktur
+-- hat;<br /> normalisiertes Wort, sonst.
+local function validate_word(rawword)
+   -- Normalisiere Wort.
+   local word = normalize_word(rawword)
+   -- Zulässiges Wort?
+   if not word then return nil end
+   -- Prüfe minimale Wortlänge.
+   local len = string.len(string.gsub(word, "-", ""))
+   if len < 4 then return nil end
+   -- Prüfe Wortenden auf unzulässige Trennzeichen.
+   local len = string.len(word)
+   for i = 1,2 do
+      local ch = string.sub(word, i, i)
+      if ch == "-" then return nil end
+   end
+   for i = len-1,len do
+      local ch = string.sub(word, i, i)
+      if ch == "-" then return nil end
+   end
+   return word
+end
+M.validate_word = validate_word
+
+
+
+--- Prüfe einen Datensatz auf Wohlgeformtheit.  Geprüft wird das Format
+--- des Datensatzes und die Zulässigkeit sämtlicher Wörter.
+--
+-- @param record zu prüfender Datensatz
+--
+-- @return Typ des Datensatzes, falls dieser wohlgeformt ist;<br />
+-- <code>nil</code>, falls der Datensatz kein zulässiges Format hat;<br
+-- /> <code>false</code>, falls der Datensatz unzulässige Wörter
+-- enthält.
+local function validate_record(record)
+   -- Prüfe Gültigkeit des Datensatzes.
+   local type = identify_record(record)
+   if not type then return nil end
+   -- Zerlege Datensatz.
+   local trec = split(record)
+   for i = 1,#trec do
+      local word = trec[i]
+      if word and not validate_word(word) then return false end
+   end
+   return type
+end
+M.validate_record = validate_record
+
+
+
 -- Exportiere Modul-Tabelle.
 return M

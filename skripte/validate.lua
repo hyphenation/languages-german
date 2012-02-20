@@ -27,15 +27,16 @@ local count = {
 -- Iteriere über stdin.
 for line in io.lines() do
    total = total + 1
-   -- Zerlege eine Zeile.
-   local type = pwl.identify_record(line)
-   -- gültig?
+   local type = pwl.validate_record(line)
+   -- Datensatz zulässig?
    if type then
       -- Zähle Vorkommen des Typs.
       count[type] = count[type] + 1
    else
-      print("ungültige Zeile: " .. line)
       invalid = invalid + 1
+      if type == false then print("ungültiges Wort: " .. line)
+      else print("ungültiger Datensatz: " .. line)
+      end
    end
 end
 
