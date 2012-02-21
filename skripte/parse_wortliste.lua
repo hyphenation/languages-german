@@ -14,6 +14,7 @@ local M = {}
 local P = lpeg.P
 local R = lpeg.R
 local C = lpeg.C
+local Ct = lpeg.Ct
 -- Muster für ein beliebiges Zeichen.
 local any = P(1)
 
@@ -66,9 +67,15 @@ local _leer8 = sep * leer8
 -- Leerzeichen oder Kommentarzeichen.  Eine präzisere Beschreibung von
 -- zulässigen Wörtern in Form einer Grammatik wird später hinzugefügt.
 --
+-- Muster für ein Feld beliebigen Inhalts.
+local f = (any - (sep + spc + com))^1
+-- Muster für ein Feld mit Capture.  Die Capture enthält den Feldinhalt.
+local fC = C(f)
+-- Kürzel für ein Feld mit Capture mit voranstehendem Feldtrenner.
+local _fC = sep * fC
 -- Muster für ein Feld beliebigen Inhalts, welches nicht mit -[0-9]-
 -- beginnt.  Die Capture enthält den Feldinhalt.
-local feld = C((any - (sep + spc + com))^0 - leerX)
+local feld = fC - leerX
 -- Kürzel für Feld mit voranstehendem Feldtrenner.  Die Capture enthält
 -- den Feldinhalt.
 local _feld = sep * feld
@@ -107,6 +114,38 @@ local _feld = sep * feld
 --
 --  8       * traditionelle Rechtschreibung in der Schweiz,
 --
+
+
+
+-- Tabelle mit Capture-Ersetzungen.  Bilde leere Felder auf den Wert
+-- 'false' ab.
+local _replace_empty_fields = {} for i = 1,8 do _replace_empty_fields["-"..i.."-"] = false end
+-- Muster für ein Feld mit Ersetzung.  Die Capture enthält den Feldinhalt
+-- oder 'false' für leere Felder.
+local feldR = leerX / _replace_empty_fields + feld
+local _feldR = sep * feldR
+-- Muster für eine Zeile mit bis zu acht Feldern (mit Table-Capture) und
+-- einem optionalen Kommentar.
+local split_record = Ct(feld * _feldR^-7) * opcomment
+--
+--- Zerlege einen Datensatz in einzelne Felder und speichere diese in
+--- einer Tabelle.
+--
+-- @param record Datensatz
+--
+-- @return Tabelle, die einen Datensatz repräsentiert.  Nummerische
+-- Indizes korrespondieren mit Feldnummern.  Leere Felder entsprechen
+-- dem Wert <code>false</code>.  Der Schlüssel 'comment' enthält
+-- gegebenenfalls einen Kommentar.
+local function split(record)
+   local t, comment = split_record:match(record)
+   if comment then t.comment = comment end
+   return t
+end
+M.split = split
+
+
+
 --
 -- Grammatik für die Strukturprüfung der Wortliste.
 -- Welche Felder sind belegt, welche unbelegt?
