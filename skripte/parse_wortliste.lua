@@ -490,5 +490,32 @@ M.parse_word = parse_word
 
 
 
+--- Normalisiere ein Wort.  Resultat ist ein Wort in einem für Patgen
+--- geeigneten Format, falls das Wort zulässig ist.  Sämtliche
+--- Trennzeichen werden durch '<code>-</code>' ersetzt.
+--- Spezialtrennungen und Alternativen werden aufgelöst.
+--
+-- @param rawword unbehandeltes Wort
+--
+-- @return <code>nil</code>, falls das Wort eine unzulässige Struktur
+-- hat;<br /> normalisiertes Wort, sonst.
+local function normalize_word(rawword)
+   -- vorbereitende Prüfung der Wortstruktur
+   local parsed = parse_word(rawword)
+   -- Hat das Wort eine zulässige Struktur?
+   if not parsed then return nil end
+
+   -- Ersetze Spezialtrennungen.
+   rawword = string.gsub(rawword, "{(.-)/.-}", "%1")
+   -- Ersetze Alternativen.
+   rawword = string.gsub(rawword, "%[[-=%.\183]?(.-)[-=%.\183]?/.-%]", "%1")
+   -- Ersetze Trennzeichen durch "-".
+   rawword = string.gsub(rawword, "[=%.\183]", "-")
+   return rawword
+end
+M.normalize_word = normalize_word
+
+
+
 -- Exportiere Modul-Tabelle.
 return M
