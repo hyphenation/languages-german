@@ -330,14 +330,25 @@ local function _conc_cluster(acc, newvalue)
    return acc..newvalue
 end
 --
+--- <strong>nicht-öffentlich</strong> Vergleiche Strings.  Diese
+--- Funktion wird in einer Faltungscapture (<code>lpeg.Cf</code>)
+--- verwendet, um die Gleichheit zweier Captures festzustellen.
+--
+-- @param a String 1
+--
+-- @param b String 2
+--
+-- @return a, wenn beide Captures gleich sind; '<code>?</code>', wenn
+-- beide Captures unterschiedlich sind
+local function _is_equal_part_word(a, b)
+   return (a == b) and a or "?"
+end
 --
 -- Grammatik für ein Wort.
 --
 -- Diese Grammatik prüft /nicht/, ob:
 --
 -- * die ersten und letzten beiden Zeichen eines Wortes Buchstaben sind,
---
--- * Teilwörter in Alternativen [.../...] einander entsprechen,
 --
 -- * Wörter in reformierter Rechtschreibung keine Spezialtrennungen
 --   enthalten,
@@ -459,7 +470,7 @@ local word = P{
    cl_alt = V"alt_open" * V"alt_rule" * V"alt_close",
    -- Alternative Teilwörter werden durch ein spezielles Trennzeichen
    -- voneinander getrennt.
-   alt_rule = V"alt_1st" * V"alt_sep" * (V"alt_2nd" / ""),
+   alt_rule = Cf(V"alt_1st" * V"alt_sep" * V"alt_2nd", _is_equal_part_word),
    -- Die erste Alternative darf aus höchstens einem Kluster mit
    -- optionalem führenden und optionalem schließenden Trennzeichen
    -- bestehen.  Trennzeichen innerhalb des Teilwortes sind nicht
@@ -504,6 +515,8 @@ local function normalize_word(rawword)
    local parsed = parse_word(rawword)
    -- Hat das Wort eine zulässige Struktur?
    if not parsed then return nil end
+   -- Prüfe auf unzulässige Alternativen.
+   if string.find(parsed, "%?") then return nil end
 
    -- Ersetze Spezialtrennungen.
    rawword = string.gsub(rawword, "{(.-)/.-}", "%1")
