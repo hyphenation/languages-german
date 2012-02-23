@@ -1,9 +1,22 @@
 -- -*- coding: utf-8 -*-
 
---- Diese Modul stellt Funktionen zur Zerlegung der Wortliste in einzelne
--- Felder bereit.
+--- Dieses Modul stellt Funktionen zum Zerlegen der Wortliste, zur
+--- Prüfung des Aufbaus der Wortliste und zur Prüfung des Aufbaus von
+--- Wörtern bereit.  Die API-Dokumentation kann mit <pre>
+---
+---   luadoc -d manual parse_wortliste.lua
+---
+--- </pre> erstellt werden.
+--
 -- @class module
 -- @name parse_wortliste
+-- @author Stephan Hennig
+-- @copyright 2012, Stephan Hennig
+--
+
+--[[ just for luadoc 3.0 compatibility
+module "parse_wortliste"
+--]]
 
 
 -- lokale Modul-Tabelle
