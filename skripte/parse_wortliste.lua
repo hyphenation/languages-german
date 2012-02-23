@@ -324,6 +324,7 @@ local word_property = {}
 local function _init_word_prop()
    word_property.has_invalid_alt = false
    word_property.has_nonstd = false
+   word_property.has_nonstd_sss = false
    return word_property
 end
 --
@@ -335,6 +336,17 @@ end
 -- @return Capture
 local function _word_prop_has_nonstd(c)
    word_property.has_nonstd = true
+   return c
+end
+--
+--- <strong>nicht-öffentlich</strong> Merke Eigenschaft
+--- 'Dreikonsonantenregel für s gefunden'.
+--
+-- @param c Capture
+--
+-- @return Capture
+local function _word_prop_has_nonstd_sss(c)
+   word_property.has_nonstd_sss = true
    return c
 end
 --
@@ -375,9 +387,6 @@ end
 -- * die ersten und letzten beiden Zeichen eines Wortes Buchstaben sind,
 --
 -- * Wörter in Versalschreibung kein 'ß' enthalten,
---
--- * Wörter in traditioneller Rechtschreibung in D und AT keine
---   Dreikonsonantenregel für das 's' enthalten.
 --
 -- Die vollständige Gültigkeit von Wörtern sollte mit zusätzlichen,
 -- nachgeschalteten Prüfungen erfolgen.
@@ -468,7 +477,7 @@ local word = P{
    -- Aufzählung sämtlicher Spezialtrennungen.  Das Auftreten von
    -- Spezialtrennungen wird in Tabelle <code>word_property</code>
    -- gespeichert.
-   nonstd_rule = (V"ck" + V"fff" + V"lll" + V"mmm" + V"nnn" + V"ppp" + V"rrr" + V"ttt" + V"sss") / _word_prop_has_nonstd,
+   nonstd_rule = (V"ck" + V"fff" + V"lll" + V"mmm" + V"nnn" + V"ppp" + V"rrr" + V"ttt" + V"nonstd_sss") / _word_prop_has_nonstd,
    -- ck-Trennung: Die Capture enthält die Zeichenfolge 'ck'.
    ck = C(P"ck") * V"nonstd_sep" * P"k" * V"hyphen" * P"k",
    -- Dreikonsonantenregel: Die Capture enthält die Zeichenfolge für die
@@ -481,6 +490,9 @@ local word = P{
    rrr = C(P"rr") * V"nonstd_sep" * P"rr" * V"hyphen" * P"r",
    ttt = C(P"tt") * V"nonstd_sep" * P"tt" * V"hyphen" * P"t",
    sss = C(P"ss") * V"nonstd_sep" * P"ss" * V"hyphen" * P"s",
+   -- Das Auftreten der Dreikonsonantenregel für 's' wird in Tabelle
+   -- <code>word_property</code> gespeichert.
+   nonstd_sss = V"sss" / _word_prop_has_nonstd_sss,
    -- Klammer, die eine Spezialtrennung einführt.
    nonstd_open = P"{",
    -- Klammer, die eine Spezialtrennung abschließt.
@@ -623,6 +635,8 @@ local function validate_record(record)
          if word ~= field1 then return false end
          -- Tritt eine Spezialtrennung an unzulässiger Feldnummer auf?
          if props.has_nonstd and (i==2 or i==4 or i==5 or i==7) then return false end
+         -- Tritt eine Dreikonsonantenregel für 's' an unzulässiger Feldnummer auf?
+         if props.has_nonstd_sss and (i ~= 8) then return false end
       end
    end
    return type
