@@ -325,6 +325,7 @@ local function _init_word_prop()
    word_property.has_invalid_alt = false
    word_property.has_nonstd = false
    word_property.has_nonstd_sss = false
+   word_property.has_eszett = false
    return word_property
 end
 --
@@ -347,6 +348,17 @@ end
 -- @return Capture
 local function _word_prop_has_nonstd_sss(c)
    word_property.has_nonstd_sss = true
+   return c
+end
+--
+--- <strong>nicht-öffentlich</strong> Merke Eigenschaft
+--- 'ß gefunden'.
+--
+-- @param c Capture
+--
+-- @return Capture
+local function _word_prop_has_eszett(c)
+   word_property.has_eszett = true
    return c
 end
 --
@@ -382,14 +394,9 @@ end
 --
 -- Grammatik für ein Wort.
 --
--- Diese Grammatik prüft /nicht/, ob:
---
--- * die ersten und letzten beiden Zeichen eines Wortes Buchstaben sind,
---
--- * Wörter in Versalschreibung kein 'ß' enthalten,
---
--- Die vollständige Gültigkeit von Wörtern sollte mit zusätzlichen,
--- nachgeschalteten Prüfungen erfolgen.
+-- Diese Grammatik prüft nicht, ob die ersten und letzten beiden Zeichen
+-- eines Wortes Buchstaben sind.  Die vollständige Gültigkeit von
+-- Wörtern sollte mit zusätzlichen, nachgeschalteten Prüfungen erfolgen.
 --
 local word = P{
    -- Initialregel.
@@ -445,7 +452,7 @@ local word = P{
    + P"\196"-- Ä
    + P"\214"-- Ö
    + P"\220"-- Ü
-   + P"\223"-- ß
+   + P"\223" / _word_prop_has_eszett-- ß
    + P"\224"-- à
    + P"\225"-- á
    + P"\226"-- â
@@ -637,6 +644,8 @@ local function validate_record(record)
          if props.has_nonstd and (i==2 or i==4 or i==5 or i==7) then return false end
          -- Tritt eine Dreikonsonantenregel für 's' an unzulässiger Feldnummer auf?
          if props.has_nonstd_sss and (i ~= 8) then return false end
+         -- Tritt 'ß' an unzulässiger Feldnummer auf?
+         if props.has_eszett and (i > 4) then return false end
       end
    end
    return type
