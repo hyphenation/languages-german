@@ -316,6 +316,16 @@ M.identify_record = identify_record
 --
 -- Prüfmuster für Wortstruktur
 --
+local word_property = {}
+--
+--- <strong>nicht-öffentlich</strong> Lösche alle Worteigenschaften.
+--
+-- @return Tabelle <code>word_property</code>
+local function _init_word_prop()
+   word_property.has_invalid_alt = false
+   return word_property
+end
+--
 --- <strong>nicht-öffentlich</strong> Füge Strings zusammen.  Diese
 --- Funktion akkumuliert Zeichen in einer Faltungscapture
 --- (<code>lpeg.Cf</code>).
@@ -332,16 +342,18 @@ end
 --
 --- <strong>nicht-öffentlich</strong> Vergleiche Strings.  Diese
 --- Funktion wird in einer Faltungscapture (<code>lpeg.Cf</code>)
---- verwendet, um die Gleichheit zweier Captures festzustellen.
+--- verwendet, um die Gleichheit zweier Captures festzustellen.  Falls
+--- zwei Strings ungleich sind, so wird dies in Tabelle
+--- <code>word_property</code> vermerkt.
 --
 -- @param a String 1
 --
 -- @param b String 2
 --
--- @return a, wenn beide Captures gleich sind; '<code>?</code>', wenn
--- beide Captures unterschiedlich sind
+-- @return String 1
 local function _is_equal_part_word(a, b)
-   return (a == b) and a or "?"
+   word_property.has_invalid_alt = word_property.has_invalid_alt or (a ~= b)
+   return a
 end
 --
 -- Grammatik für ein Wort.
@@ -363,10 +375,15 @@ end
 --
 local word = P{
    -- Initialregel.
-   "word",
+   "word_with_property_table",
    --
    -- Wort
    --
+   -- Während des Mustervergleichs werden verschiedene Eigenschaften des
+   -- betrachteten Wortes in einer modullokalen Tabelle gespeichert.
+   -- Die Flags innerhalb dieser Tabelle werden vor dem Mustervergleich
+   -- gelöscht.
+   word_with_property_table = P"" / _init_word_prop * V"word" * -1,
    -- Ein Wort ist ein Teilwort, kann also führende oder abschließende
    -- Trennzeichen enthalten.  Diese Generalisierung vereinfacht die
    -- Grammatik im Zusammenhang mit Alternativen etwas.
@@ -487,12 +504,13 @@ local word = P{
    alt_sep = P"/",
 }
 --
---- Wende Prüfgrammatik auf ein Wort an.
+--- Ermittle Eigenschaften eines Wortes.
 --
 -- @param rawword unbehandeltes Wort
 --
 -- @return <code>nil</code>, falls das Wort eine unzulässige Struktur
--- hat;<br /> nicht-<code>nil</code>, sonst.
+-- hat;<br /> eine Tabelle mit Eigenschaften des betrachteten Wortes,
+-- sonst.
 local function parse_word(rawword)
    -- Verwirf eventuelle weitere Captures.
    return ( word:match(rawword) )
@@ -511,12 +529,12 @@ M.parse_word = parse_word
 -- @return <code>nil</code>, falls das Wort eine unzulässige Struktur
 -- hat;<br /> normalisiertes Wort, sonst.
 local function normalize_word(rawword)
-   -- vorbereitende Prüfung der Wortstruktur
-   local parsed = parse_word(rawword)
+   -- vorbereitende Prüfung der Wortstruktur und Worteigenschaften
+   local props = parse_word(rawword)
    -- Hat das Wort eine zulässige Struktur?
-   if not parsed then return nil end
+   if not props then return nil end
    -- Prüfe auf unzulässige Alternativen.
-   if string.find(parsed, "%?") then return nil end
+   if props.has_invalid_alt then return nil end
 
    -- Ersetze Spezialtrennungen.
    rawword = string.gsub(rawword, "{(.-)/.-}", "%1")
