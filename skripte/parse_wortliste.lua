@@ -323,7 +323,19 @@ local word_property = {}
 -- @return Tabelle <code>word_property</code>
 local function _init_word_prop()
    word_property.has_invalid_alt = false
+   word_property.has_nonstd = false
    return word_property
+end
+--
+--- <strong>nicht-öffentlich</strong> Merke Eigenschaft
+--- 'Spezialtrennung gefunden'.
+--
+-- @param c Capture
+--
+-- @return Capture
+local function _word_prop_has_nonstd(c)
+   word_property.has_nonstd = true
+   return c
 end
 --
 --- <strong>nicht-öffentlich</strong> Füge Strings zusammen.  Diese
@@ -361,9 +373,6 @@ end
 -- Diese Grammatik prüft /nicht/, ob:
 --
 -- * die ersten und letzten beiden Zeichen eines Wortes Buchstaben sind,
---
--- * Wörter in reformierter Rechtschreibung keine Spezialtrennungen
---   enthalten,
 --
 -- * Wörter in Versalschreibung kein 'ß' enthalten,
 --
@@ -456,8 +465,10 @@ local word = P{
    -- Zeichenkette, die der jeweils ungetrennten Spezialtrennung
    -- entspricht (z. B. 'ck' für die ck-Trennung).
    cl_nonstd = V"nonstd_open" * V"nonstd_rule" * V"nonstd_close",
-   -- Aufzählung sämtlicher Spezialtrennungen.
-   nonstd_rule = V"ck" + V"fff" + V"lll" + V"mmm" + V"nnn" + V"ppp" + V"rrr" + V"ttt" + V"sss",
+   -- Aufzählung sämtlicher Spezialtrennungen.  Das Auftreten von
+   -- Spezialtrennungen wird in Tabelle <code>word_property</code>
+   -- gespeichert.
+   nonstd_rule = (V"ck" + V"fff" + V"lll" + V"mmm" + V"nnn" + V"ppp" + V"rrr" + V"ttt" + V"sss") / _word_prop_has_nonstd,
    -- ck-Trennung: Die Capture enthält die Zeichenfolge 'ck'.
    ck = C(P"ck") * V"nonstd_sep" * P"k" * V"hyphen" * P"k",
    -- Dreikonsonantenregel: Die Capture enthält die Zeichenfolge für die
@@ -602,14 +613,16 @@ local function validate_record(record)
    local field1 = trec[1]
    if not field1 then return false end
    for i = 1,#trec do
-      local word = trec[i]
+      local word, props = trec[i]
       if word then
          -- Hat das Wort eine zulässige Struktur?
-         word = validate_word(word)
+         word, props = validate_word(word)
          if not word then return false end
          -- Stimmt Wort mit Feld 1 überein?
          word = string.gsub(word, "-", "")
          if word ~= field1 then return false end
+         -- Tritt eine Spezialtrennung an unzulässiger Feldnummer auf?
+         if props.has_nonstd and (i==2 or i==4 or i==5 or i==7) then return false end
       end
    end
    return type
