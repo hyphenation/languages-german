@@ -562,9 +562,20 @@ local function validate_record(record)
    if not type then return nil end
    -- Zerlege Datensatz.
    local trec = split(record)
+   -- Merke Inhalt von Feld 1 für Gleichheitsprüfung der belegten
+   -- Felder.
+   local field1 = trec[1]
+   if not field1 then return false end
    for i = 1,#trec do
       local word = trec[i]
-      if word and not validate_word(word) then return false end
+      if word then
+         -- Hat das Wort eine zulässige Struktur?
+         word = validate_word(word)
+         if not word then return false end
+         -- Stimmt Wort mit Feld 1 überein?
+         word = string.gsub(word, "-", "")
+         if word ~= field1 then return false end
+      end
    end
    return type
 end
