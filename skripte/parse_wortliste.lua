@@ -527,7 +527,9 @@ M.parse_word = parse_word
 -- @param rawword unbehandeltes Wort
 --
 -- @return <code>nil</code>, falls das Wort eine unzulässige Struktur
--- hat;<br /> normalisiertes Wort, sonst.
+-- hat;<br /> <code>word, props</code>, sonst.  <code>word</code> ist
+-- das normalisierte Wort, <code>props</code> ist eine Tabelle mit
+-- Eigenschaften des betrachteten Wortes.
 local function normalize_word(rawword)
    -- vorbereitende Prüfung der Wortstruktur und Worteigenschaften
    local props = parse_word(rawword)
@@ -542,7 +544,7 @@ local function normalize_word(rawword)
    rawword = string.gsub(rawword, "%[[-=%.\183]?(.-)[-=%.\183]?/.-%]", "%1")
    -- Ersetze Trennzeichen durch "-".
    rawword = string.gsub(rawword, "[=%.\183]", "-")
-   return rawword
+   return rawword, props
 end
 M.normalize_word = normalize_word
 
@@ -553,10 +555,12 @@ M.normalize_word = normalize_word
 -- @param rawword Wort (normiert oder unbehandelt)
 --
 -- @return <code>nil</code>, falls das Wort eine unzulässige Struktur
--- hat;<br /> normalisiertes Wort, sonst.
+-- hat;<br /> <code>word, props</code>, sonst.  <code>word</code> ist
+-- das normalisierte Wort.  <code>props</code> ist eine Tabelle mit
+-- Eigenschaften des betrachteten Wortes.
 local function validate_word(rawword)
    -- Normalisiere Wort.
-   local word = normalize_word(rawword)
+   local word, props = normalize_word(rawword)
    -- Zulässiges Wort?
    if not word then return nil end
    -- Prüfe minimale Wortlänge.
@@ -572,7 +576,7 @@ local function validate_word(rawword)
       local ch = string.sub(word, i, i)
       if ch == "-" then return nil end
    end
-   return word
+   return word, props
 end
 M.validate_word = validate_word
 
