@@ -73,8 +73,8 @@ if __name__ == '__main__':
     
     # Sortieren::
     
-    # sortiert = sorted(lines, key=sortkey_wl)
-    sortiert = sorted(lines, key=sortkey_duden)
+    sortiert = sorted(lines, key=sortkey_wl)
+    # sortiert = sorted(lines, key=sortkey_duden)
     
     diff = ''.join(difflib.unified_diff(lines, sortiert,
                                         filename, '*sortiert*'))

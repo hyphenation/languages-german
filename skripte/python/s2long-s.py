@@ -230,7 +230,7 @@ def is_complete(word):
 # Rechtschreibvariante
 # --------------------
 # 
-# Angabe der Sprachvariante nach [BCP47]_ (Reformschreibung 'de' oder 'de-2006',
+# Angabe der Sprachvariante nach [BCP47]_ (Reformschreibung 'de' oder 'de-1996',
 # Schweiz 'de-CH', ...)
 # 
 # Zur Zeit werden nur Wörter in traditioneller Schreibweise behandelt::
