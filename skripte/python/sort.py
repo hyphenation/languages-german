@@ -17,26 +17,18 @@
 import unicodedata
 from werkzeug import WordFile
 
-# Erstelle einen Sortierschlüssel für die Zeile `line`:
+# Sortierschlüssel für Eintrag `entry`:
 #
-# Sortiere nach erstem Feld, alphabetisch, gemäß Duden-Regeln.
+# Sortiere nach erstem Feld, alphabetisch, gemäß Duden-Regeln::
 
-def sortkey_duden(line):
-    ersetzungen = {
-                   # ord(u'ä'): u'a',
-                   # ord(u'é'): u'e',
-                   # ord(u'ö'): u'o',
-                   # ord(u'ó'): u'o',
-                   # ord(u'ü'): u'u',
-                   # + weitere Akzente: -> siehe unten
-                   ord(u'ß'): u'ss',
-                  }
-    
+
+def sortkey_duden(entry):
     # Sortieren nach erstem Feld (ungetrenntes Wort):
-    key = line.split(';')[0]
+    key = entry[0]
     # Großschreibung ignorieren
     key = key.lower()
     # Ersetzungen
+    ersetzungen = {ord(u'ß'): u'ss'}
     key = key.translate(ersetzungen)
     # Akzente/Umlaute weglassen:
     key = unicodedata.normalize('NFKD', key) # Akzente mit 2-Zeichen-Kombi
@@ -44,18 +36,24 @@ def sortkey_duden(line):
 
     return key
 
-def sortkey_wl(line):
+# Sortiere nach dem bisher genutzten ("Lemberg-") Algorithmus::
+
+def sortkey_wl(entry):
+    # Sortieren nach gesamter Zeile
+    key = unicode(entry) 
+    
+    # Ersetzungen:
     ersetzungen = {ord(u'ß'): u'ss'}
-    # Weglassen der Feldtrenner und Trennzeichen
-    # (Simulation von `sort -d`)
+    # Weglassen der Feldtrenner und Trennzeichen (Simulation von `sort -d`)
     for char in u';-·=|[]{}':
         ersetzungen[ord(char)] = None
-    # Sortieren nach gesamter Zeile, Großschreibung ignorieren
-    key = line.lower()
     key = key.translate(ersetzungen)
+    
     # Akzente/Umlaute weglassen:
     key = unicodedata.normalize('NFKD', key) # Akzente mit 2-Zeichen-Kombi
     key = key.encode('ascii', 'ignore')     # ignoriere nicht-ASCII Zeichen
+    # Großschreibung ignorieren
+    key = key.lower()
 
     return key
 
@@ -68,22 +66,20 @@ if __name__ == '__main__':
     
     # Einlesen in eine Liste von Zeilen::
     
-    wordfile = WordFile(filename)
-    lines = wordfile.readlines(keepends=True)
+    wortfile = WordFile(filename)
+    wortliste = list(wortfile)
     
     # Sortieren::
     
-    # sortiert = sorted(lines, key=sortkey_wl)
-    sortiert = sorted(lines, key=sortkey_duden)
+    sortiert = sorted(wortliste, key=sortkey_wl)
+    # sortiert = sorted(wortliste, key=sortkey_duden)
     
-    diff = ''.join(difflib.unified_diff(lines, sortiert,
-                                        filename, '*sortiert*'))
-    if diff:
-        print diff.encode('utf8')
+    patch = udiff(wortliste, wortliste_neu, 'wortliste', 'wortliste-neu')
+    if patch:
+        print patch.encode('utf8')
+        patchfile = open('../../wortliste.patch', 'w')
+        patchfile.write(patch + '\n')
     else:
-        print 'no differences after round trip'
-
-
-# wordfile.writelines(sortiert, filename+'-sortiert')
+        print 'keine Änderungen'
 
 

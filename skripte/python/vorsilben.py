@@ -22,74 +22,98 @@
 # Importiere Python Module::
 
 import re       # Funktionen und Klassen für reguläre Ausdrücke
+import sys      # sys.exit() zum Abbruch vor Ende (für Testzwecke)
+
 from werkzeug import WordFile, join_word
 
 # Ausgangsbasis
-# =============
+# -------------
 # 
 # Die freie `Wortliste der deutschsprachigen Trennmustermannschaft`_
-# ("Lehmansche Liste")
-# 
-# ::
+# ("Lehmansche Liste")::
 
-wordfile = WordFile('../../wortliste') # volle Liste (≅ 400 000 Wörter
+wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
 
-# Trennzeichen
-# ------------
-# 
-# Die Trennzeichen der Wortliste sind
-# 
-# == ================================================================
-# \· ungewichtete Trennstellen (solche, wo noch niemand sich um die
-#    Gewichtung gekümmert hat)
-# .  unerwünschte Trennstellen (sinnverwirrend), z.B. Ur-in.stinkt
-# =  Haupttrennstellen
-# \- Nebentrennstellen
-# _  ungünstige Nebentrennstellen, z.B. Pol=ge_bie-te
-# == ================================================================
-# 
-# 
+# Wörterbucher für die Rechtschreibprüfprogramme Ispell/Aspell
+# (in Debian in den Paketen "wngerman" und "wogerman").
+# Unterschieden Groß-/Kleinschreibung und beinhalten kurze Wörter. ::
+
+spell_listen = {'de-1996': ('/usr/share/dict/ngerman', 'utf8'),
+                    'de-1901': ('/usr/share/dict/ogerman', 'latin-1'),
+                   }
+
+
 # Sprachvarianten
 # ---------------
 # 
-# Angabe der Sprachvariante nach [BCP47]_::
+# Sprach-Tag nach [BCP47]_::
 
 sprachvariante = 'de-1901'
 # sprachvariante = 'de-2006'  # Reformschreibung
-# sprachvariante = 'de-CH'    # Schweiz (ohne ß)
+# sprachvariante = 'de-x-GROSS'    # ohne ß (Großbuchstaben und Kapitälchen)
 
 
-# Ausnahmen  
+# Ausnahmen
 # ---------
 # 
 # Wörter mit "Vorsilbenkandidaten" die keine Vorsilben sind::
 
-ausnahmen = ('Aussee', 'Auster')
+ausnahmen = set(('Altausseer', 'Altaussee', 'Aussee', 'Ausseer',
+                 'Alster',
+                ))
 
+# "Nachwörter" (Wörter die nicht ohne Vorsilben vorkommen)::
 
-# 1. Durchlauf: Sortieren
-# =======================
+nachwoerter = ('bau', 'geh',
+               'Gleichs',   # Aus|gleichs
+               'Nahme',     # An|nahme
+               'Stattung',  # Er|stattung
+              )
+
+doppelvorsilben = ('mitaus', 'veraus',
+                   'voraus', # Vorauswahl, vor·aus·ge·wählt
+                   'unaus')
+
+# Globale Variablen
+# -----------------
 # 
-# Mengen der Wörter der Sprachvariante::
-
-words = {}
-
-# Liste der Datenfelder::
+# Sammeln der Wörter/Daten für die angegebene Sprachvariante.
+# 
+# Einträge der "Wortliste"::
 
 wortliste = []
 
+# Wörterbuch zum Aufsuchen der Restwörter.
+# Initialisiert mit Ausnahmen und Wörtern der Rechtschreiblisten::
 
-for fields in wordfile:
+words = {}
 
-    words[fields[0]] = fields # Eintrag in Wörterbuch mit Wort als key
-    # TODO: Wörter nach Sprachvariante sortieren?
-    wortliste.append(fields)
+for word in open(spell_listen[sprachvariante][0]):
+    word = word.decode(spell_listen[sprachvariante][1]).rstrip()
+    words[word] = ''
+
+# print len(words), "Wörter aus", spell_listen[sprachvariante]
+# 
+# 
+# 1. Durchlauf: Erstellen der Ausgangslisten
+# ==========================================
+# 
+# 
+# ::
+
+for entry in wordfile:
+    if entry.lang_index(sprachvariante) is not None:
+        words[entry[0]] = entry # Eintrag in Wörterbuch mit Wort als key
+        wortliste.append(entry)
 
 # print len(wortliste), len(words), "Wörter"
-
-# TODO: add Wortlisten 
-# /usr/share/dict/ngerman, /usr/share/dict/ogerman
- 
+# 
+# for k,v in words.iteritems():
+#     if v == '':
+#         print k.encode('utf8')
+# 
+# sys.exit()
+# 
 # 
 # 2. Durchlauf: Analyse
 # =====================
@@ -103,9 +127,9 @@ pattern = '[%s%s]%s' % (silbe[0].upper(), silbe[0], silbe[1:]) # [Aa]us
 # Sortierung in::
 
 fertig = []             # Restwort existiert
-test = []               # zum Test neuer Regeln
-unbestimmt    = []      # Restwort nicht in der Wortliste
-
+test = []               # zum Test neuer Regeln, z Zt. Groß-/Kleinschreibung
+kandidat = []           # Restwort nicht in der Wortliste
+mittig = []             # Silbe nicht am Wortanfang
 
 for entry in wortliste:
 
@@ -127,21 +151,30 @@ for entry in wortliste:
         rest = match.group(3)
         ersetzung = '%s%s|%s' %(vorspann, silbe, rest)
 
-
-# Wenn der Wortbestandteil hinter der getesteten Silbe im Wörterbuch
-# vorhanden ist, kann davon ausgegangen werden, daß es sich um eine Vorsilbe
-# handelt::
-
         restwort = join_word(rest)
         # Groß/Kleinschreibung übertragen
         if wort[0].isupper(): # str.title() geht nicht wegen der Trennzeichen
             restwort = restwort.title()
 
+# Ausnahmen aus der Ausnahmeliste::
+
+        if wort in ausnahmen:
+            continue
+
+# Wenn der Wortbestandteil hinter der getesteten Silbe im Wörterbuch
+# vorhanden ist, kann davon ausgegangen werden, daß es sich um eine Vorsilbe
+# oder ein Teilwort handelt::
+
         if restwort in words:
-            if not re.search(u'[-=_]', restwort):  # Restwort ist ungewichtet
-                einzelwort = words[join_word(restwort)].get(sprachvariante)
-                rest = rest[0] + einzelwort[1:]
-                ersetzung = '%s%s|%s' %(vorspann, silbe, rest)
+            if not re.search(u'[-=_|]', rest):  # Rest ist ungewichtet
+                try:
+                    einzelwort = words[restwort].get(sprachvariante)
+                    # Groß-/Kleinschreibung erhalten:
+                    rest = rest[0] + einzelwort[1:]
+                    # Update Ersetzung mit (evt.) kategorisiertem Rest:
+                    ersetzung = '%s%s|%s' %(vorspann, silbe, rest)
+                except AttributeError:
+                    pass
             entry.set(ersetzung, sprachvariante)
             fertig.append(ersetzung)
             continue
@@ -166,13 +199,22 @@ for entry in wortliste:
             (restwort[:-1].lower() in words
              or restwort[:-1].title() in words)):
             # Extra abspeichern für manuelle Qualitätskontrolle
-            test.append(ersetzung)
+            test.append(' '.join((ersetzung, restwort)))
             continue
 
+# Restwort nicht gefunden::
 
-# unklarer Fall::
+        kandidat.append(ersetzung)
 
-        unbestimmt.append(ersetzung)
+# Silbe nicht am Wortanfang::
+
+    elif re.search(u'[-·](%s)[-·]'%pattern, wort):
+        is_mittig = True
+        for vorsilben in doppelvorsilben:
+            if join_word(wort).lower().startswith(vorsilben):
+                is_mittig = False
+        if is_mittig:
+            mittig.append(wort)
 
 
 # Ausgabe
@@ -180,18 +222,17 @@ for entry in wortliste:
 # 
 # ::
 
-completed_file = file('vorsilbe-OK', 'w')
-completed_file.write(u'\n'.join(unicode(entry) for entry in fertig
-                               ).encode('utf8'))
-completed_file.write('\n')
+fertig_file = file('vorsilbe-OK', 'w')
+fertig_file.write(u'\n'.join(fertig).encode('utf8') + '\n')
 
 test_file = file('vorsilbe-test', 'w')
-test_file.write(u'\n'.join(test).encode('utf8'))
-test_file.write('\n')
+test_file.write(u'\n'.join(test).encode('utf8') + '\n')
 
-uncompleted_file = file('vorsilbe-kandidaten', 'w')
-uncompleted_file.write(u'\n'.join(unbestimmt).encode('utf8'))
-uncompleted_file.write('\n')
+kandidat_file = file('vorsilbe-kandidat', 'w')
+kandidat_file.write(u'\n'.join(kandidat).encode('utf8') + '\n')
+
+kandidat_file = file('vorsilbe-TODO', 'w')
+kandidat_file.write(u'\n'.join(mittig).encode('utf8') + '\n')
 
 
 # Auswertung
@@ -199,8 +240,42 @@ uncompleted_file.write('\n')
 # 
 # ::
 
-print "Gesamtwortzahl (traditionelle Rechtschreibung)", len(words)
-print "Mit (Vor-) Silbe", silbe, len(unbestimmt) + len(fertig)
-print "Restwort erkannt", len(fertig)
-print "Restwort mit anderer Groß-/Kleinschreibung", len(test)
-print "Kandidaten (Restwort nicht gefunden)", len(unbestimmt)
+print 'Gesamtwortzahl (w*german+Wortliste, %s):' % sprachvariante, len(words)
+print 'Einträge (%s):' % sprachvariante, len(wortliste)
+print 'Mit (Vor-) Silbe: "%s"' % silbe, len(fertig) + len(test) + len(kandidat)
+print 'Restwort erkannt:', len(fertig)
+print 'Restwort mit anderer Groß-/Kleinschreibung:', len(test)
+print 'Kandidaten (Restwort nicht gefunden):', len(kandidat)
+print 'unsichere Kandidaten (Silbe im Wortinneren)', len(mittig)
+
+# Mit (Vor-) Silbe "aus" 8248
+# 
+# Ohne die "spell" Wortlisten:
+# 
+# Restwort erkannt 6328
+# Restwort mit anderer Groß-/Kleinschreibung 612
+# Kandidaten (Restwort nicht gefunden) 1705
+# 
+# Mit "spell" Wortlisten:
+# 
+# Restwort erkannt 6427
+# Restwort mit anderer Groß-/Kleinschreibung 589
+# Kandidaten (Restwort nicht gefunden) 1629
+# 
+# Mit Ausnahmen:
+# 
+# Restwort erkannt: 6553
+# Restwort mit anderer Groß-/Kleinschreibung: 533
+# Kandidaten (Restwort nicht gefunden): 1559
+# 
+# Alle Kandidaten geprüft.
+# 
+# Quellen
+# =======
+# 
+# .. [BCP47]  A. Phillips und M. Davis, (Editoren.),
+#    `Tags for Identifying Languages`, http://www.rfc-editor.org/rfc/bcp/bcp47.txt
+# 
+# .. _Wortliste der deutschsprachigen Trennmustermannschaft:
+#    http://mirrors.ctan.org/language/hyphenation/dehyph-exptl/projektbeschreibung.pdf
+# 

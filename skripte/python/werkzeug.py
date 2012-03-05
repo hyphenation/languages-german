@@ -20,7 +20,12 @@
 # mit der  freien `Wortliste der deutschsprachigen Trennmustermannschaft`_
 # ("Lehmansche Liste")
 # 
+# Vorspann
 # 
+# ::
+
+import difflib
+
 # WordFile
 # ========
 # 
@@ -47,7 +52,7 @@ class WordFile(file):
 # (`unicode` Strings ohne Zeilenendezeichen)::
 
     def readlines(self, keepends=False):
-        
+
 # Lesen als `bytes` String::
 
         inhalt = self.read()
@@ -66,10 +71,10 @@ class WordFile(file):
 # Splitten in eine Liste der Zeilen und zurückgeben::
 
         inhalt = inhalt.splitlines(keepends)
-        if inhalt and not inhalt[-1]:  
+        if inhalt and not inhalt[-1]:
             # letzte Zeile leer wegen abschließendem \n
             del inhalt[-1]
-            
+
         return inhalt
 
 # Iteration
@@ -93,10 +98,10 @@ class WordFile(file):
 # (assoziatives Array) ein::
 
     def asdict(self):
-        dictionary = dict()
-        for fields in self:
-            dictionary[fields[0]] = fields
-        return dictionary
+        words = dict()
+        for entry in self:
+            words[entry[0]] = entry
+        return words
 
 # write_lines
 # -----------
@@ -109,20 +114,20 @@ class WordFile(file):
             encoding = self.encoding
         outfile = open(destination, 'w')
         outfile.write(u'\n'.join(lines).encode(encoding))
-        outfile.write('\n')        
+        outfile.write('\n')
 
-# write_fields
+# write_entry
 # ------------
 # 
 # Schreibe eine Liste von Datenfeldern (geparste Zeilen) in die Datei
 # `destination`::
 
-    def write_fields(self, wortliste, destination, encoding=None):
-        lines = [unicode(fields) for fields in wortliste]
+    def write_entry(self, wortliste, destination, encoding=None):
+        lines = [unicode(entry) for entry in wortliste]
         self.writelines(lines, destination, encoding)
-        
 
-# WordEntry  
+
+# WordEntry
 # =========
 # 
 # Klasse für Einträge (Zeilen) der Wortliste
@@ -145,10 +150,6 @@ class WordEntry(list):
 # Kommentare (aktualisiert, wenn Kommentar vorhanden)::
 
     comment = None
-
-# Kodierung beim Rückwandeln in string::
-
-    encoding = 'utf8'
 
 # Feldbelegung:
 # 
@@ -178,20 +179,21 @@ class WordEntry(list):
     sprachvarianten = {
         'de':         1, # Deutsch, allgemeingültig
         'de-1901':    2, # "traditionell" (nach Rechtschreibreform 1901)
-        'de-2006':    3, # reformierte Reformschreibung (2006)
-        'de-CH':      4, # Schweiz oder GROSS (ohne ß) allgemein
-        'de-CH-1901': 5, # Schweiz oder GROSS (ohne ß) "traditionell"
-        'de-CH-2006': 6, # Schweiz oder GROSS (ohne ß) "reformiert"
-        'de-CH-alt':  7, # Schweiz (ohne ß) "süssauer"
+        'de-1996':    3, # reformierte Reformschreibung (1996)
+        'de-x-GROSS':      4, # ohne ß (Schweiz oder GROSS) allgemein
+        'de-1901-x-GROSS': 5, # ohne ß (Schweiz oder GROSS) "traditionell"
+        'de-1996-x-GROSS': 6, # ohne ß (Schweiz oder GROSS) "reformiert"
+        # 'de-CH-1996':      6, # Alias für 'de-1996-x-GROSS'
+        'de-CH-1901':      7, # ohne ß (Schweiz) "traditionell" ("süssauer")
         }
 
 
 # Initialisierung::
 
-    def __init__(self, line, delimiter=';'):
-        
+    def __init__(self, line, delimiter=';', encoding = 'utf8'):
         self.delimiter = delimiter
-        
+        self.encoding = encoding # Kodierung beim Rückwandeln in string
+
 # eventuell vorhandenen Kommentar abtrennen,
 # Zerlegen in Datenfelder,
 # in Liste eintragen::
@@ -200,16 +202,16 @@ class WordEntry(list):
             line, self.comment = line.split('#')
             line = line.rstrip()
 
-        fields = line.split(delimiter)
+        entry = line.split(delimiter)
 
 # Liste mit Datenfeldern initialisieren::
-  
-        list.__init__(self, fields)
+
+        list.__init__(self, entry)
 
 
 # Rückverwandlung in String
 # -----------------------------------
-#   
+# 
 # Erzeugen eines Eintrag-Strings (Zeile) aus der Liste der Datenfelder und
 # dem Kommentar
 # 
@@ -223,10 +225,10 @@ class WordEntry(list):
         if self.comment is not None:
             line += ' #' + self.comment
         return line
-    
+
     def __str__(self):
         return unicode(self).encode(self.encoding)
-    
+
 
 # lang_index
 # ---------------
@@ -237,29 +239,29 @@ class WordEntry(list):
 # 1
 # >>> aalbestand.lang_index('de-1901')
 # 1
-# >>> aalbestand.lang_index('de-2006')
+# >>> aalbestand.lang_index('de-1996')
 # 1
 # >>> abbeissen = WordEntry(
 # ...     u'abbeissen;-2-;-3-;-4-;-5-;ab|bei-ssen;ab|beis-sen;ab|beis-sen')
 # >>> print abbeissen.lang_index('de')
 # None
-# >>> print abbeissen.lang_index('de-CH')
+# >>> print abbeissen.lang_index('de-x-GROSS')
 # None
 # >>> abbeissen.lang_index('de-CH-1901')
-# 5
+# 7
 # 
 # ::
 
     def lang_index(self, sprachvariante):
-    
+
         assert sprachvariante in self.sprachvarianten, \
             'Sprachvariante nicht in ' + str(self.sprachvarianten.keys())
-        
+
 # Einfacher Fall: eine allgemeine Schreibweise::
 
         if len(self) == 2:
             return 1
-        
+
 # Spezielle Schreibung::
 
         try:
@@ -270,26 +272,28 @@ class WordEntry(list):
                 # Allgemeine Schweiz/GROSS Schreibung:
                 return 4
             return None  # Feld nicht vorhanden
-        
+
         if muster.startswith('-'):   # '-1-', '-2-', ...
             return None  # leeres Feld
-    
+
         return i
-    
+
 # Trennmuster für Sprachvariante ausgeben
 # 
 # >>> aalbestand.get('de')
 # u'Aal=be-stand'
 # >>> aalbestand.get('de-1901')
 # u'Aal=be-stand'
-# >>> aalbestand.get('de-2006')
+# >>> aalbestand.get('de-1996')
 # u'Aal=be-stand'
 # >>> print abbeissen.get('de')
 # None
-# >>> print abbeissen.get('de-CH')
+# >>> print abbeissen.get('de-x-GROSS')
 # None
-# >>> abbeissen.get('de-CH-1901')
+# >>> abbeissen.get('de-1901-x-GROSS')
 # u'ab|bei-ssen'
+# >>> abbeissen.get('de-CH-1901')
+# u'ab|beis-sen'
 # 
 # ::
 
@@ -301,7 +305,7 @@ class WordEntry(list):
 
 # Trennmuster für Sprachvariante setzen
 # 
-# >>> abbeissen.set('test', 'de-CH-1901')
+# >>> abbeissen.set('test', 'de-1901-x-GROSS')
 # >>> print abbeissen
 # abbeissen;-2-;-3-;-4-;-5-;test;ab|beis-sen;ab|beis-sen
 # 
@@ -381,19 +385,53 @@ def join_word(word):
 
     if '[' in word or '{' in word:
         raise AssertionError('Spezialtrennung %s' % word.encode('utf8'))
-    
+
 
 # Einfache Trennzeichen entfernen, Resultat zurückgeben::
 
     return word.translate(table)
 
+# udiff
+# ------------
+# 
+# Vergleiche zwei Sequenzen von `WordEntries`, gib einen "unified diff" als
+# Bytes-String zurück. Die Kodierung ist durch das `encoding` Argument der
+# WordEntries gegeben (Vorgabe 'utf8').
+# 
+# Beispiel:
+# 
+# >>> from werkzeug import udiff
+# >>> print udiff([abbeissen, aalbestand], [abbeissen], 'alt', 'neu')
+# --- alt
+# +++ neu
+# @@ -1,2 +1 @@
+#  abbeissen;-2-;-3-;-4-;-5-;test;ab|beis-sen;ab|beis-sen
+# -Aalbestand;Aal=be-stand # Test
+# 
+# ::
+
+def udiff(a, b, fromfile='', tofile='',
+          fromfiledate='', tofiledate='', n=1):
+
+    a = [str(entry) for entry in a]
+    b = [str(entry) for entry in b]
+
+    diff = difflib.unified_diff(a, b, fromfile, tofile,
+                                fromfiledate, tofiledate, n, lineterm='')
+
+    if diff:
+        return '\n'.join(diff)
+    else:
+        return None
+
 
 # Test
+# ====
 # 
 # ::
 
 if __name__ == '__main__':
-    import sys, difflib
+    import sys
 
     print "Test der Werkzeuge"
 
@@ -412,13 +450,13 @@ if __name__ == '__main__':
 # Iteration über "geparste" Zeilen (i.e. Datenfelder)::
 
     ##
-    # for fields in wordfile:
+    # for entry in wordfile:
     #     # Sprachauswahl:
-    #     traditionell = get_field(fields, 'de-1901')
+    #     traditionell = get_field(entry, 'de-1901')
     #     # Trennstellentfernung:
     #     if traditionell is not None:
     #         rejoined = join_word(traditionell)
-    #         assert rejoined == fields[0], "Rejoined %s != %s" % (rejoined, fields[0])
+    #         assert rejoined == entry[0], "Rejoined %s != %s" % (rejoined, entry[0])
 
     # wordfile.seek(0)            # Pointer zurücksetzen
 
@@ -451,7 +489,7 @@ if __name__ == '__main__':
 
     wordfile_gewichtet = WordFile('../../wortliste-gewichtet')
     gewichtet = wordfile_gewichtet.asdict()
-    
+
     print len(gewichtet), "gewichtete Einträge"
 
 # Einträge die in der "gewichteten" liste fehlen:
@@ -474,18 +512,18 @@ if __name__ == '__main__':
     # words = {}
     # for entry in wortliste:
     #     words[entry[0]] = entry
-    #     
+    #
     # for wort in gewichtet:
     #     if wort not in words:
     #         if wort.lower() in words or wort.title() in words:
     #             continue
     #         print '+', gewichtet[wort]
-        
+
 
 # Quellen
 # =======
 # 
-# .. [BCP47]  A. Phillips und M. Davis, (Editoren.), 
+# .. [BCP47]  A. Phillips und M. Davis, (Editoren.),
 #    `Tags for Identifying Languages`, http://www.rfc-editor.org/rfc/bcp/bcp47.txt
 # 
 # .. _Wortliste der deutschsprachigen Trennmustermannschaft:
