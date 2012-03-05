@@ -9,16 +9,16 @@
 
 # teilwoerter.py: Test und Komplettierung von Wortteilen/Teilwörtern
 # ==================================================================
-#
+# 
 # ::
 
 """Analyse der Teilwörter in der `Wortliste`"""
 
 # .. contents::
-#
+# 
 # Vorspann
 # ========
-#
+# 
 # Importiere Python Module::
 
 import re       # Funktionen und Klassen für reguläre Ausdrücke
@@ -30,7 +30,7 @@ from werkzeug import WordFile, join_word, unified_diff
 
 # Ausgangsbasis
 # -------------
-#
+# 
 # Die freie `Wortliste der deutschsprachigen Trennmustermannschaft`_
 # ("Lehmansche Liste")::
 
@@ -47,17 +47,17 @@ wgerman = {'de-1996': ('/usr/share/dict/ngerman', 'utf8'),
 
 # Sprachvarianten
 # ---------------
-#
+# 
 # Sprach-Tag nach [BCP47]_::
 
-sprachvariante = 'de-1901'         # "traditionell"
-# sprachvariante = 'de-1996'       # Reformschreibung
+# sprachvariante = 'de-1901'         # "traditionell"
+sprachvariante = 'de-1996'       # Reformschreibung
 # sprachvariante = 'de-x-GROSS'    # ohne ß (Großbuchstaben und Kapitälchen)
 
 
 # Globale Variablen
 # -----------------
-#
+# 
 # Häufige Teilwörter die im Wörterbuch nicht vorkommen
 # (zu kurz, oder keine eigenständigen Wörter)::
 
@@ -107,7 +107,7 @@ vorsilben = defaultdict(list)   # Teilwörter mit zusätzlicher Vorsilbe
 
 # 1. Durchlauf: Erstellen der Ausgangslisten
 # ==========================================
-#
+# 
 # ::
 
 
@@ -118,7 +118,7 @@ for entry in wordfile:
         
 # 2. Durchlauf: Analyse
 # =====================
-#
+# 
 # Durchlaufe alle Einträge::
 
 wortliste_alt = deepcopy(wortliste)
@@ -130,6 +130,8 @@ for entry in wortliste:
     wort = entry.get(sprachvariante)
     if wort is None: # Wort existiert nicht in der Sprachvariante
         continue
+    # if wort[0] is not '-1-': # Wort mit allgemeingültiger Trennung
+    #     continue
 
 # Trenne an Wortfugen (markiert durch '=')::
 
@@ -139,6 +141,8 @@ for entry in wortliste:
         continue
 
 # Wortteile analysieren und ggf. Trennungen übertragen
+# 
+# ::
 
     neuteile = []
     for teil in teile:
@@ -204,7 +208,7 @@ for entry in wortliste:
 
 # Ausgabe
 # =======
-#
+# 
 # ::
 
 def testausgabe(checkdict):
@@ -226,7 +230,7 @@ vorsilben_file.write(testausgabe(vorsilben))
 
 # Auswertung
 # ==========
-#
+# 
 # ::
 
 patch = unified_diff(wortliste_alt, wortliste, 'wortliste', 'wortliste-neu')
@@ -249,10 +253,10 @@ print 'Teilwort nicht gefunden:', len(unbekannt)
 
 # Quellen
 # =======
-#
+# 
 # .. [BCP47]  A. Phillips und M. Davis, (Editoren.),
 #    `Tags for Identifying Languages`, http://www.rfc-editor.org/rfc/bcp/bcp47.txt
-#
+# 
 # .. _Wortliste der deutschsprachigen Trennmustermannschaft:
 #    http://mirrors.ctan.org/language/hyphenation/dehyph-exptl/projektbeschreibung.pdf
-#
+# 

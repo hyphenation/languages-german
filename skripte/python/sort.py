@@ -77,7 +77,7 @@ if __name__ == '__main__':
     # sortiert = sorted(lines, key=sortkey_duden)
     
     diff = ''.join(difflib.unified_diff(lines, sortiert,
-                                        filename, '*sortiert*'))
+                                        filename, '*sortiert*', n=1))
     if diff:
         print diff.encode('utf8')
     else:

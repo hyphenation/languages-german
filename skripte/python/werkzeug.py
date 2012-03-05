@@ -415,7 +415,7 @@ def join_word(word):
 # ::
 
 def unified_diff(a, b, fromfile='', tofile='',
-                 fromfiledate='', tofiledate='', n=3):
+                 fromfiledate='', tofiledate='', n=1):
 
     a = [str(entry) for entry in a]
     b = [str(entry) for entry in b]
