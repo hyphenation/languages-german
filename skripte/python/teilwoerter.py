@@ -26,7 +26,7 @@ import sys      # sys.exit() zum Abbruch vor Ende (für Testzwecke)
 from collections import defaultdict  # Wörterbuch mit Default
 from copy import deepcopy
 
-from werkzeug import WordFile, join_word, unified_diff
+from werkzeug import WordFile, join_word, udiff
 
 # Ausgangsbasis
 # -------------
@@ -61,7 +61,8 @@ sprachvariante = 'de-1996'       # Reformschreibung
 # Häufige Teilwörter die im Wörterbuch nicht vorkommen
 # (zu kurz, oder keine eigenständigen Wörter)::
 
-ausnahmen = ('End',
+ausnahmen = ('Bus',
+             'End',
              'Erd',
              'Farb',
              'Grenz',
@@ -233,7 +234,7 @@ vorsilben_file.write(testausgabe(vorsilben))
 # 
 # ::
 
-patch = unified_diff(wortliste_alt, wortliste, 'wortliste', 'wortliste-neu')
+patch = udiff(wortliste_alt, wortliste, 'wortliste', 'wortliste-neu')
 if patch:
     print patch
     patchfile = open('../../wortliste.patch', 'w')

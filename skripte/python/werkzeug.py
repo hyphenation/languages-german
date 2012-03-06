@@ -98,10 +98,10 @@ class WordFile(file):
 # (assoziatives Array) ein::
 
     def asdict(self):
-        dictionary = dict()
-        for fields in self:
-            dictionary[fields[0]] = fields
-        return dictionary
+        words = dict()
+        for entry in self:
+            words[entry[0]] = entry
+        return words
 
 # write_lines
 # -----------
@@ -116,14 +116,14 @@ class WordFile(file):
         outfile.write(u'\n'.join(lines).encode(encoding))
         outfile.write('\n')
 
-# write_fields
+# write_entry
 # ------------
 # 
 # Schreibe eine Liste von Datenfeldern (geparste Zeilen) in die Datei
 # `destination`::
 
-    def write_fields(self, wortliste, destination, encoding=None):
-        lines = [unicode(fields) for fields in wortliste]
+    def write_entry(self, wortliste, destination, encoding=None):
+        lines = [unicode(entry) for entry in wortliste]
         self.writelines(lines, destination, encoding)
 
 
@@ -150,10 +150,6 @@ class WordEntry(list):
 # Kommentare (aktualisiert, wenn Kommentar vorhanden)::
 
     comment = None
-
-# Kodierung beim Rückwandeln in string::
-
-    encoding = 'utf8'
 
 # Feldbelegung:
 # 
@@ -194,9 +190,9 @@ class WordEntry(list):
 
 # Initialisierung::
 
-    def __init__(self, line, delimiter=';'):
-
+    def __init__(self, line, delimiter=';', encoding = 'utf8'):
         self.delimiter = delimiter
+        self.encoding = encoding # Kodierung beim Rückwandeln in string
 
 # eventuell vorhandenen Kommentar abtrennen,
 # Zerlegen in Datenfelder,
@@ -206,11 +202,11 @@ class WordEntry(list):
             line, self.comment = line.split('#')
             line = line.rstrip()
 
-        fields = line.split(delimiter)
+        entry = line.split(delimiter)
 
 # Liste mit Datenfeldern initialisieren::
 
-        list.__init__(self, fields)
+        list.__init__(self, entry)
 
 
 # Rückverwandlung in String
@@ -395,17 +391,17 @@ def join_word(word):
 
     return word.translate(table)
 
-# unified_diff
+# udiff
 # ------------
 # 
 # Vergleiche zwei Sequenzen von `WordEntries`, gib einen "unified diff" als
 # Bytes-String zurück. Die Kodierung ist durch das `encoding` Argument der
-# WortEntries gegeben (Vorgabe 'utf8').
+# WordEntries gegeben (Vorgabe 'utf8').
 # 
 # Beispiel:
 # 
-# >>> from werkzeug import unified_diff
-# >>> print unified_diff([abbeissen, aalbestand], [abbeissen], 'alt', 'neu')
+# >>> from werkzeug import udiff
+# >>> print udiff([abbeissen, aalbestand], [abbeissen], 'alt', 'neu')
 # --- alt
 # +++ neu
 # @@ -1,2 +1 @@
@@ -414,8 +410,8 @@ def join_word(word):
 # 
 # ::
 
-def unified_diff(a, b, fromfile='', tofile='',
-                 fromfiledate='', tofiledate='', n=1):
+def udiff(a, b, fromfile='', tofile='',
+          fromfiledate='', tofiledate='', n=1):
 
     a = [str(entry) for entry in a]
     b = [str(entry) for entry in b]
@@ -454,13 +450,13 @@ if __name__ == '__main__':
 # Iteration über "geparste" Zeilen (i.e. Datenfelder)::
 
     ##
-    # for fields in wordfile:
+    # for entry in wordfile:
     #     # Sprachauswahl:
-    #     traditionell = get_field(fields, 'de-1901')
+    #     traditionell = get_field(entry, 'de-1901')
     #     # Trennstellentfernung:
     #     if traditionell is not None:
     #         rejoined = join_word(traditionell)
-    #         assert rejoined == fields[0], "Rejoined %s != %s" % (rejoined, fields[0])
+    #         assert rejoined == entry[0], "Rejoined %s != %s" % (rejoined, entry[0])
 
     # wordfile.seek(0)            # Pointer zurücksetzen
 
