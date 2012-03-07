@@ -26,6 +26,9 @@ from copy import deepcopy
 
 from werkzeug import WordFile, join_word, udiff
 
+# Globale Variablen
+# -----------------
+
 # Ausgangsbasis
 # -------------
 #
@@ -33,15 +36,6 @@ from werkzeug import WordFile, join_word, udiff
 # ("Lehmansche Liste")::
 
 wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
-
-# Wörterbucher für die Rechtschreibprüfprogramme Ispell/Aspell
-# (in Debian in den Paketen "wngerman" und "wogerman").
-# Unterschieden Groß-/Kleinschreibung und beinhalten kurze Wörter. ::
-
-wgerman = {'de-1996': ('/usr/share/dict/ngerman', 'utf8'),
-                    'de-1901': ('/usr/share/dict/ogerman', 'latin-1'),
-                   }
-
 
 # Sprachvarianten
 # ---------------
@@ -53,64 +47,72 @@ sprachvariante = 'de-1901'         # "traditionell"
 # sprachvariante = 'de-x-GROSS'    # ohne ß (Großbuchstaben und Kapitälchen)
 
 
-# Globale Variablen
-# -----------------
+# Textdateien mit Wortbestandteilen
+# ---------------------------------
+#
+# * Ein Wortteil/Zeile
+# * Groß/Kleinschreibung unterschieden
+# * Kodierung: utf8 (bis auf 'ogerman')
 
-vorsilben = set()
-for v in open('vorsilben.txt'):
-    vorsilben.add(v.decode('utf8').rstrip())
-
-endungen = set()
-for e in open('endungen.txt'):
-    endungen.add(e.decode('utf8').rstrip())
-
-# Häufige Teilwörter die im Wörterbuch nicht vorkommen
-# (zu kurz, oder keine eigenständigen Wörter)::
-
-ausnahmen = (u'Bus',
-             u'End',
-             u'Erd',
-             u'Farb',
-             u'Grenz',
-             u'Kontroll',
-             u'Lehr',
-             u'Leit',
-             u'Ost',
-             u'Sach',
-             u'Schul',
-             u'Süd',
-             u'Wohn',
-             u'bewerbs',
-             u'hör',
-             u'nahme',
-             u'ost',
-             u'Sach',
-             u'schul',
-             u'seh',
-            )
+# Wörterbucher für die Rechtschreibprüfprogramme Ispell/Aspell
+# (in Debian in den Paketen "wngerman" und "wogerman").
+# Unterschieden Groß-/Kleinschreibung und beinhalten auch kurze Wörter. ::
 
 
-# Einträge der "Wortliste"::
+if sprachvariante == 'de-1996':
+    wgerman = set(line.rstrip().decode('utf8')
+                  for line in open('/usr/share/dict/ngerman'))
+elif sprachvariante == 'de-1901':
+    wgerman = set(line.rstrip().decode('latin-1')
+                  for line in open('/usr/share/dict/ogerman'))
+
+
+# Erstsilben: Wörter, die häufig als erste
+# Silbe eines Wortes (aber nicht oder nur selten als Teilwörter) auftreten
+# aber keine Vorsilben sind ::
+
+erstsilben = set(line.rstrip().decode('utf8') for line in open('erstsilben.txt'))
+
+# Vorsilben (auch mehrsilbige Präfixe)::
+
+vorsilben = set(line.rstrip().decode('utf8') for line in open('vorsilben.txt'))
+
+# Endsilben, die keine eigenständigen Wörter sind
+# (nicht (nur) Endungen im morphologischen Sinne, sondern ganze Silben)::
+
+endsilben = set(line.rstrip().decode('utf8') for line in open('endsilben.txt'))
+
+# Teilwörter: Wörter die in der Wortliste nur in Wortverbindungen vorkommen
+# (zu kurz, keine eigenständigen Wörter, andere Großschreibung)
+# und auch im Rechtschreibwörterbuch (wgerman) fehlen ::
+
+teilwoerter = set(line.rstrip().decode('utf8')
+                  for line in open('teilwoerter.txt'))
+
+
+# Wörter, die in Zusammensetzungen verkürzt vorkommen (und daher nicht an
+# letzter Stelle), z.b. "Farb"::
+
+kurzwoerter = set(line.rstrip().decode('utf8')
+                  for line in open('kurzwoerter.txt'))
+
+# Bereits gesammelte Neueinträge::
+
+neu_todo = set(join_word(line.rstrip().decode('utf8'))
+               for line in open('neu.todo'))
+
+# Einträge der "Wortliste"
+# ------------------------
+# ::
 
 wortliste = []
 
-# Wörterbuch zum Aufsuchen der Restwörter,
+# Wörterbuch zum Aufsuchen der Teilwörter
+# ---------------------------------------
+
 # initialisiert mit Ausnahmen und Wörtern der Rechtschreiblisten::
 
-words = dict([(a, '') for a in ausnahmen])
-
-# Wörterbuch zum Aufsuchen der Restwörter,
-# initialisiert mit Ausnahmen und Wörtern der Rechtschreiblisten::
-
-words = {}
-
-for word in open(wgerman[sprachvariante][0]):
-    word = word.decode(wgerman[sprachvariante][1]).rstrip()
-    words[word] = ''
-
-
-for wort in open('neu.todo'):
-    words[wort.decode('utf8').rstrip()] = ''
+words = dict([(w, '') for w in wgerman.union(teilwoerter, kurzwoerter, neu_todo)])
 
 # Sortierung in::
 
@@ -162,17 +164,16 @@ for entry in wortliste:
         erstwort = u'·'.join(teile[:i+1])
         zweitwort =  u'·'.join(teile[i+1:])
 
+# Suche (zunächst) nur nach Wörtern mit Fugen-s::
+
+        # if not erstwort.endswith('s'):
+        #     continue
 
 # Restliche zweisilbigen Wörter:
 
         # print ' '.join([erstwort,zweitwort]).encode('utf8')
         # continue
 
-
-# Suche (zunächst) nur nach Wörtern mit Fugen-s::
-
-        # if not erstwort.endswith('s'):
-        #     continue
 
 # Teilwort ohne Trennung, Groß/Kleinschreibung übertragen::
 
@@ -182,34 +183,43 @@ for entry in wortliste:
         except AssertionError:  # Spezialtrennung
             continue
         if wort[0].istitle():
-            zweitwort = zweitwort[0].title() + zweitwort[1:]
+            zweitkey = zweitkey.title()
 
 # Suche als Einzelwort::
 
-        # if (erstkey in words and zweitkey in words 
-        #     and erstkey.lower() not in vorsilben
-        #     and zweitkey.lower() not in endungen):
-        #     print str(entry), (u'%s=%s'% (erstkey,zweitkey)).encode('utf8')
-        #     entry.set('='.join((erstwort, zweitwort.lower())), sprachvariante)
+        if (erstkey in words and erstkey not in erstsilben
+            and erstkey not in vorsilben
+            and zweitkey in words
+            and zweitkey.lower() not in endsilben
+            and zweitkey not in kurzwoerter
+           ):
+            print str(entry), (u'%s=%s'% (erstkey,zweitkey)).encode('utf8')
+            entry.set('='.join((erstwort, zweitwort.lower())), sprachvariante)
 
-
-# Suche nach Vorsilben und Endungen::
+# Vorsilben::
 
         # if erstkey.lower() in vorsilben and zweitkey in words:
         #     print str(entry), (u'%s-%s'% (erstkey,zweitkey)).encode('utf8')
         #     entry.set('-'.join((erstwort, zweitwort.lower())), sprachvariante)
 
-        # if erstkey in words and zweitkey.lower() in endungen:
+# endsilben::
+
+        # if erstkey in words and zweitkey.lower() in endsilben:
         #     print str(entry), (u'%s-%s'% (erstkey,zweitkey)).encode('utf8')
         #     entry.set('-'.join((erstwort, zweitwort.lower())), sprachvariante)
 
-# Neueintragskandidaten::
-
-        if (erstkey in words and zweitkey not in endungen
-           and len(zweitkey) > 3):
-            print " ".join([erstwort, zweitwort]).encode('utf8')
-            
-            
+# # Neueintragskandidaten::
+# 
+#         if (erstkey in words 
+#             and erstkey not in erstsilben
+#             and zweitkey not in words
+#             and zweitkey.lower() not in endsilben:
+#             # if erstkey in vorsilben:
+#             #     print ("%s  (%s|%s)" %
+#             #            (zweitkey, erstwort, zweitwort)).encode('utf8')
+#             else:
+#                 print ("%s  (%s-%s)" %
+#                        (zweitkey, erstwort, zweitwort)).encode('utf8')
 
 
 # Ausgabe
@@ -225,4 +235,3 @@ if patch:
     patchfile.write(patch + '\n')
 else:
     print "empty patch"
-
