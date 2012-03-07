@@ -158,7 +158,7 @@ for entry in wortliste:
     if len(teile) != 2:
         continue
 
-# Wortteile analysieren und ggf. Trennungen übertragen
+# Wortteile analysieren::
 
     for i in range(len(teile)-1):
         erstwort = u'·'.join(teile[:i+1])
@@ -185,41 +185,49 @@ for entry in wortliste:
         if wort[0].istitle():
             zweitkey = zweitkey.title()
 
-# Suche als Einzelwort::
+# Komposita::
 
-        if (erstkey in words and erstkey not in erstsilben
-            and erstkey not in vorsilben
-            and zweitkey in words
-            and zweitkey.lower() not in endsilben
-            and zweitkey not in kurzwoerter
-           ):
-            print str(entry), (u'%s=%s'% (erstkey,zweitkey)).encode('utf8')
-            entry.set('='.join((erstwort, zweitwort.lower())), sprachvariante)
+        # if (erstkey in words and erstkey not in erstsilben
+        #     and erstkey not in vorsilben
+        #     and zweitkey in words
+        #     and zweitkey.lower() not in endsilben
+        #     and zweitkey not in kurzwoerter
+        #    ):
+        #     print str(entry), (u'%s=%s'% (erstkey,zweitkey)).encode('utf8')
+        #     entry.set('='.join((erstwort, zweitwort.lower())), sprachvariante)
 
 # Vorsilben::
 
-        # if erstkey.lower() in vorsilben and zweitkey in words:
-        #     print str(entry), (u'%s-%s'% (erstkey,zweitkey)).encode('utf8')
-        #     entry.set('-'.join((erstwort, zweitwort.lower())), sprachvariante)
+        # if (erstkey in vorsilben
+        #     # and zweitkey in words
+        #    ):
+        #     print str(entry), (u'%s|%s'% (erstkey,zweitwort)).encode('utf8')
+        #     entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
 
-# endsilben::
+# Endsilben::
 
-        # if erstkey in words and zweitkey.lower() in endsilben:
-        #     print str(entry), (u'%s-%s'% (erstkey,zweitkey)).encode('utf8')
-        #     entry.set('-'.join((erstwort, zweitwort.lower())), sprachvariante)
+        # if (erstkey in words and
+        #     zweitkey.lower() in endsilben):
+        #     print str(entry), (u'%s-%s'% (erstkey,zweitwort)).encode('utf8')
+        #     entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
 
-# # Neueintragskandidaten::
-# 
-#         if (erstkey in words 
-#             and erstkey not in erstsilben
-#             and zweitkey not in words
-#             and zweitkey.lower() not in endsilben:
-#             # if erstkey in vorsilben:
-#             #     print ("%s  (%s|%s)" %
-#             #            (zweitkey, erstwort, zweitwort)).encode('utf8')
-#             else:
-#                 print ("%s  (%s-%s)" %
-#                        (zweitkey, erstwort, zweitwort)).encode('utf8')
+# Erstsilben::
+
+        if (erstkey in erstsilben):
+            print str(entry), (u'%s-%s'% (erstkey,zweitwort)).encode('utf8')
+            entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
+
+
+# Neueintragskandidaten::
+
+        # if (erstkey not in words
+        #     # and erstkey not in vorsilben
+        #     # erstkey in words 
+        #     # and erstkey not in erstsilben
+        #     and zweitkey not in words
+        #     # and zweitkey.lower() not in endsilben
+        #    ):
+        #     print ("%s-%s %s" % (erstwort, zweitwort, entry)).encode('utf8')
 
 
 # Ausgabe
