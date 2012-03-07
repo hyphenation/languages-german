@@ -61,7 +61,7 @@ def fehleintraege(wortliste):
 
 def grossklein(wortliste):
     """Groß-/Kleinschreibung umstellen"""
-    
+
     korrekturen = open('grossklein.todo').readlines()
     # Dekodieren, Zeilenende entfernen
     korrekturen = [line.decode('utf8').strip() for line in korrekturen]
@@ -69,7 +69,7 @@ def grossklein(wortliste):
     korrekturen = [join_word(line.split(';')[0]) for line in korrekturen]
     korrekturen = set(korrekturen)
     wortliste_neu = [] # korrigierte Liste
-    
+
     for entry in wortliste:
         if entry[0] in korrekturen:
             original = entry[0]
@@ -80,7 +80,7 @@ def grossklein(wortliste):
             entry = WordEntry(';'.join(fields))
             korrekturen.discard(original) # erledigt
         wortliste_neu.append(entry)
-    
+
     if korrekturen:
         print korrekturen # übrige Einträge
     return wortliste_neu
@@ -98,16 +98,16 @@ def grossklein(wortliste):
 
 def reformschreibung(wortliste):
     """Wörter die nur in (allgemeiner) Reformschreibung existieren"""
-    
+
     korrekturen = open('reformschreibung.todo').readlines()
     # Dekodieren, Zeilenende entfernen
     korrekturen = [line.decode('utf8').strip() for line in korrekturen]
     # erstes Feld
     korrekturen = [line.split(';')[0] for line in korrekturen]
     korrekturen = set(korrekturen)
-    
+
     wortliste_neu = [] # korrigierte Liste
-    
+
     for entry in wortliste:
         if entry[0] in korrekturen:
             key = entry[0]
@@ -115,7 +115,7 @@ def reformschreibung(wortliste):
             entry = WordEntry('%s;-2-;-3-;%s' % (key, wort))
             korrekturen.discard(key) # erledigt
         wortliste_neu.append(entry)
-    
+
     if korrekturen:
         print korrekturen # übrige Einträge
     return wortliste_neu
@@ -170,6 +170,42 @@ def neu(wortliste, encoding='utf8'):
 
     return wortliste_neu
 
+# Allgemeine Korrektur (z.B. Fehltrennung)
+#
+# Format:
+#  * ein Wort mit Trennstellen (für allgemeingültige Trennstellen):
+#    Das ungetrennte Wort wird vorangestellt (durch Semikolon getrennt),
+#    oder
+#  * vollständiger Eintrag (für Wörter mit Sprachvarianten).
+# 
+# ::
+
+def korrektur(wortliste, encoding='utf8'):
+    """Patch aus korrigierten Einträgen"""
+    korrekturen = {}
+    for line in open('fehltrennungen.todo'):
+        # Dekodieren, Zeilenende entfernen
+        line = line.decode('utf8').strip()
+        # Eintrag ggf. komplettieren
+        if u';' in line:
+            key = u';'.split(line)[0]
+        else:
+            key = join_word(line)
+            line = u'%s;%s' % (key, line)
+        korrekturen[key] = line
+
+    wortliste_neu = [] # korrigierte Liste
+
+    for entry in wortliste:
+        if entry[0] in korrekturen:
+            entry = WordEntry(korrekturen[entry[0]])
+            del(korrekturen[entry[0]])
+        wortliste_neu.append(entry)
+
+    if korrekturen:
+        print korrekturen # übrige Einträge
+    return wortliste_neu
+
 
 # Default-Aktion::
 
@@ -185,7 +221,8 @@ if __name__ == '__main__':
     # wortliste_neu = fehleintraege(wortliste)
     # wortliste_neu = grossklein(wortliste)
     # wortliste_neu = neu(wortliste, wordfile.encoding)
-    wortliste_neu = reformschreibung(wortliste)
+    # wortliste_neu = reformschreibung(wortliste)
+    wortliste_neu = korrektur(wortliste)
 
 # Patch erstellen::
 

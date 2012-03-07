@@ -111,7 +111,6 @@ fen
 fer
 ga
 ge
-gek
 gem
 gen
 ger
@@ -333,7 +332,6 @@ schend
 schest
 schist
 schig
-schl
 se
 seits
 sem
@@ -378,7 +376,6 @@ ten
 ter
 ters
 tes
-test
 tet
 tett
 tetts
@@ -403,15 +400,12 @@ tóks
 tüm
 ulär
 ung
-up
-ups
 ur
 ve
 ven
 ver
 vot
 weil
-wil
 win
 xit
 yo
@@ -420,7 +414,6 @@ zelt
 zen
 zent
 zer
-zgl
 zhou
 zig
 ziv
