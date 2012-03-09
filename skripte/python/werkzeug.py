@@ -266,14 +266,13 @@ class WordEntry(list):
 
         try:
             i = self.sprachvarianten[sprachvariante]
-            muster = self[i]
-        except IdexError:
-            if 'CH' in sprachvariante and len(self) == 5:
-                # Allgemeine Schweiz/GROSS Schreibung:
-                return 4
+            feld = self[i]
+        except IndexError:
+            if i > 4 and len(self) == 5:
+                return 4 # Allgemeine Schweiz/GROSS Schreibung:
             return None  # Feld nicht vorhanden
 
-        if muster.startswith('-'):   # '-1-', '-2-', ...
+        if feld.startswith('-'):   # '-1-', '-2-', ...
             return None  # leeres Feld
 
         return i
@@ -286,6 +285,15 @@ class WordEntry(list):
 # u'Aal=be-stand'
 # >>> aalbestand.get('de-1996')
 # u'Aal=be-stand'
+# >>> aalbestand.get('de-x-GROSS')
+# u'Aal=be-stand'
+# >>> aalbestand.get('de-1901-x-GROSS')
+# u'Aal=be-stand'
+# >>> aalbestand.get('de-1996-x-GROSS')
+# u'Aal=be-stand'
+# >>> aalbestand.get('de-CH-1901')
+# u'Aal=be-stand'
+# 
 # >>> print abbeissen.get('de')
 # None
 # >>> print abbeissen.get('de-x-GROSS')
@@ -316,11 +324,68 @@ class WordEntry(list):
 # 
 # ::
 
-    def set(self, muster, sprachvariante):
+    def set(self, wort, sprachvariante):
         i = self.lang_index(sprachvariante)
         if i is None:
             raise IndexError, "kann kein leeres Feld setzen"
-        self[i] = muster
+        self[i] = wort
+
+# Felder für alle Sprachvarianten ausfüllen
+# 
+# >>> print str(aalbestand), len(aalbestand)
+# Aalbestand;Aal=be-stand # Test 2
+# >>> aalbestand.expand_fields()
+# >>> print len(aalbestand)
+# 8
+# >>> abbeissen.expand_fields()
+# >>> print abbeissen
+# abbeissen;-2-;-3-;-4-;-5-;test;ab|beis-sen;ab|beis-sen
+
+# ::
+
+    def expand_fields(self):
+        fields = [self.get(sv) or '-%d-' % (self.sprachvarianten[sv] + 1)
+                  for sv in sorted(self.sprachvarianten.keys(),
+                                   key=self.sprachvarianten.get)]
+        # return fields
+        for i, field in enumerate(fields):
+            try:
+                self[i+1] = field # Feld 1 ist "key" (ungetrennt)
+            except IndexError:
+                self.append(field)
+
+
+# Felder für Sprachvarianten zusammenfassen
+
+# >>> aalbestand.conflate_fields()
+# >>> print aalbestand
+# Aalbestand;Aal=be-stand # Test
+# >>> abbeissen.conflate_fields()
+# >>> print abbeissen
+# abbeissen;-2-;-3-;-4-;-5-;test;ab|beis-sen
+
+
+# ::
+
+    def conflate_fields(self):
+        if len(self) == 8:
+            if self[7] == self[6] == self[5]: 
+                self[4] = self[5] # umschreiben auf GROSS-allgemein
+                self.pop()
+                self.pop()
+                self.pop()
+        if len(self) == 5:
+            if self[4] == self[2]: # de-x-GROSS == de-1901
+                self.pop()
+            else:
+                return
+        if len(self) >= 4:
+            if self[3] == self[2]: # de-1996 == de-1901
+                self[1] = self[2] # Umschreiben auf de (allgemein)
+                self.pop()
+                self.pop()
+            
+            
 
 # Funktionen
 # ==========
@@ -385,7 +450,6 @@ def join_word(word):
 
     if '[' in word or '{' in word:
         raise AssertionError('Spezialtrennung %s' % word.encode('utf8'))
-
 
 # Einfache Trennzeichen entfernen, Resultat zurückgeben::
 

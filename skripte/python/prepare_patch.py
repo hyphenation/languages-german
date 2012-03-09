@@ -37,7 +37,7 @@ def korrektur(wortliste, encoding='utf8'):
         line = line.decode('utf8').strip()
         # Eintrag ggf. komplettieren
         if u';' in line:
-            key = u';'.split(line)[0]
+            key = line.split(';')[0]
         else:
             key = join_word(line)
             line = u'%s;%s' % (key, line)

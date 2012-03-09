@@ -15,7 +15,7 @@
 """Sortieren der `Wortliste` nach Duden-Regeln"""
 
 import unicodedata
-from werkzeug import WordFile
+from werkzeug import WordFile, udiff
 
 # Sortierschlüssel für Eintrag `entry`:
 #
@@ -59,8 +59,6 @@ def sortkey_wl(entry):
 
 if __name__ == '__main__':
 
-    import difflib
-
     # filename = '../../wortliste-gewichtet'
     filename = '../../wortliste'
     
@@ -74,9 +72,9 @@ if __name__ == '__main__':
     sortiert = sorted(wortliste, key=sortkey_wl)
     # sortiert = sorted(wortliste, key=sortkey_duden)
     
-    patch = udiff(wortliste, wortliste_neu, 'wortliste', 'wortliste-neu')
+    patch = udiff(wortliste, sortiert, 'wortliste', 'wortliste-sortiert')
     if patch:
-        print patch.encode('utf8')
+        print patch
         patchfile = open('../../wortliste.patch', 'w')
         patchfile.write(patch + '\n')
     else:
