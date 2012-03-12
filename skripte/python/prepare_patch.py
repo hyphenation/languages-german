@@ -19,6 +19,43 @@ from werkzeug import WordFile, WordEntry, join_word, udiff
 from sort import sortkey_wl, sortkey_duden
 
 
+# Allgemeine Korrektur (z.B. Fehltrennung)
+#
+# Format:
+#  * ein Wort mit Trennstellen (für allgemeingültige Trennstellen):
+#    Das ungetrennte Wort wird vorangestellt (durch Semikolon getrennt),
+#    oder
+#  * vollständiger Eintrag (für Wörter mit Sprachvarianten).
+# 
+# ::
+
+def korrektur(wortliste, encoding='utf8'):
+    """Patch aus korrigierten Einträgen"""
+    korrekturen = {}
+    for line in open('korrekturen.todo'):
+        # Dekodieren, Zeilenende entfernen
+        line = line.decode('utf8').strip()
+        # Eintrag ggf. komplettieren
+        if u';' in line:
+            key = line.split(';')[0]
+        else:
+            key = join_word(line)
+            line = u'%s;%s' % (key, line)
+        korrekturen[key] = line
+
+    wortliste_neu = [] # korrigierte Liste
+
+    for entry in wortliste:
+        if entry[0] in korrekturen:
+            entry = WordEntry(korrekturen[entry[0]])
+            del(korrekturen[entry[0]])
+        wortliste_neu.append(entry)
+
+    if korrekturen:
+        print korrekturen # übrige Einträge
+    return wortliste_neu
+
+
 # Fehleinträge
 # ------------
 #::
@@ -169,43 +206,6 @@ def neu(wortliste, encoding='utf8'):
     # wortliste_neu.sort(key=sortkey_duden)
 
     return wortliste_neu
-
-# Allgemeine Korrektur (z.B. Fehltrennung)
-#
-# Format:
-#  * ein Wort mit Trennstellen (für allgemeingültige Trennstellen):
-#    Das ungetrennte Wort wird vorangestellt (durch Semikolon getrennt),
-#    oder
-#  * vollständiger Eintrag (für Wörter mit Sprachvarianten).
-# 
-# ::
-
-def korrektur(wortliste, encoding='utf8'):
-    """Patch aus korrigierten Einträgen"""
-    korrekturen = {}
-    for line in open('fehltrennungen.todo'):
-        # Dekodieren, Zeilenende entfernen
-        line = line.decode('utf8').strip()
-        # Eintrag ggf. komplettieren
-        if u';' in line:
-            key = u';'.split(line)[0]
-        else:
-            key = join_word(line)
-            line = u'%s;%s' % (key, line)
-        korrekturen[key] = line
-
-    wortliste_neu = [] # korrigierte Liste
-
-    for entry in wortliste:
-        if entry[0] in korrekturen:
-            entry = WordEntry(korrekturen[entry[0]])
-            del(korrekturen[entry[0]])
-        wortliste_neu.append(entry)
-
-    if korrekturen:
-        print korrekturen # übrige Einträge
-    return wortliste_neu
-
 
 # Default-Aktion::
 
