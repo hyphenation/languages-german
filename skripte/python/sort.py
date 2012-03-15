@@ -5,50 +5,96 @@
 #             the conditions of the `LaTeX Project Public License`,
 #             either version 1.3 of this license or (at your option)
 #             any later  version.
-# :Version:   0.1 (2012-02-15)
+# :Version:   0.2 (2012-03-16)
 
 # sort.py
-# ***********
-# 
+# *******
+#
 # ::
 
-"""Sortieren der `Wortliste` nach Duden-Regeln"""
+u"""
+Sortiere die Wortliste und erstelle einen Patch im "unified diff" Format.
 
-import unicodedata
+Es wird wahlweise nach Duden, oder nach der bis März 2012 für die Wortliste
+genutzten Regel sortiert.
+"""
+
+usage = '%prog [Optionen]\n' + __doc__
+
+
+import unicodedata, sys, optparse
 from werkzeug import WordFile, udiff
 
-# Sortierschlüssel für Eintrag `entry`:
-#
-# Sortiere nach erstem Feld, alphabetisch, gemäß Duden-Regeln::
+# Sortierschlüssel
+# ================
 
+# sortkey_duden
+# -------------
+#
+# Sortiere nach erstem Feld, alphabetisch gemäß Duden-Regeln::
 
 def sortkey_duden(entry):
-    # Sortieren nach erstem Feld (ungetrenntes Wort):
+
+# Sortieren nach erstem Feld (ungetrenntes Wort)::
+
     key = entry[0]
-    # Großschreibung ignorieren
+
+# Großschreibung ignorieren:
+
+# (Der Duden sortiert Wörter, die sich nur in der Großschreibung
+# unterscheiden "klein vor groß". In der `Trennmuster-Wortliste`
+# kommen diese Wörter nur mit der häufiger anzutreffenden
+# Großschreibung vor.) ::
+
     key = key.lower()
-    # Ersetzungen
-    ersetzungen = {ord(u'ß'): u'ss'}
-    key = key.translate(ersetzungen)
-    # Akzente/Umlaute weglassen:
-    key = unicodedata.normalize('NFKD', key) # Akzente mit 2-Zeichen-Kombi
-    key = key.encode('ascii', 'ignore')     # ignoriere nicht-ASCII Zeichen
+
+# Ersetzungen
+
+# ß -> ss
+
+# Ein Nachsatz nach einem Leerzeichen sorgt für das
+# Einsortieren nach einem gleichen Wort mit ss im Original
+# (Masse < Maße):
+
+    if u'ß' in key:
+        key = key.replace(u'ß', u'ss')
+        key += u' ß'
+
+# Akzente/Umlaute weglassen:
+
+# Wandeln in Darstellung von Buchstaben mit Akzent als "Grundzeichen +
+# kombinierender Akzent". Anschließend alle nicht-ASCII-Zeichen ignorieren::
+
+    key = unicodedata.normalize('NFKD', key)
+    key = key.encode('ascii', 'ignore')
+
+# Gib den Sortierschlüssel zurück::
 
     return key
 
-# Sortiere nach dem bisher genutzten ("Lemberg-") Algorithmus::
+# sortkey_wl
+# ----------
+
+# Sortierschlüssel für den bisher genutzten ("W.-Lemberg-") Algorithmus,
+# d.h # Emulation von:
+#
+# * Sortieren nach gesamter Zeile
+# * mit dem Unix-Aufruf `sort -d`
+# * und locale DE.
+#
+# ::
 
 def sortkey_wl(entry):
     # Sortieren nach gesamter Zeile
-    key = unicode(entry) 
-    
+    key = unicode(entry)
+
     # Ersetzungen:
-    ersetzungen = {ord(u'ß'): u'ss'}
-    # Weglassen der Feldtrenner und Trennzeichen (Simulation von `sort -d`)
+    ersetzungen = {ord(u'ß'): u'ss'} # ß -> ss
+    # Feldtrenner und Trennzeichen ignorieren (Simulation von `sort -d`)
     for char in u';-·=|[]{}':
         ersetzungen[ord(char)] = None
     key = key.translate(ersetzungen)
-    
+
     # Akzente/Umlaute weglassen:
     key = unicodedata.normalize('NFKD', key) # Akzente mit 2-Zeichen-Kombi
     key = key.encode('ascii', 'ignore')     # ignoriere nicht-ASCII Zeichen
@@ -57,27 +103,49 @@ def sortkey_wl(entry):
 
     return key
 
+
+# Aufruf von der Kommandozeile
+# ============================
+
+# ::
+
 if __name__ == '__main__':
 
-    # filename = '../../wortliste-gewichtet'
-    filename = '../../wortliste'
-    
-    # Einlesen in eine Liste von Zeilen::
-    
-    wortfile = WordFile(filename)
-    wortliste = list(wortfile)
-    
+    # Optionen:
+
+    parser = optparse.OptionParser(usage=usage)
+    parser.add_option('-i', '--file', dest='wortliste',
+                      help='Eingangsdatei',
+                      default='../../wortliste')
+    parser.add_option('-o', '--outfile', dest='patchfile',
+                      help='Ausgangsdatei (Patch)',
+                      default='../../wortliste.patch')
+    parser.add_option('-a', '--legacy-sort', action="store_false",
+                      help='alternative (historische) Sortierordnung',
+                      default='True')
+
+    (options, args) = parser.parse_args()
+
+    if options.legacy_sort:
+        sortkey = sortkey_wl
+    else:
+        sortkey = sortkey_duden
+
+    # Einlesen in eine Liste::
+
+    wordfile = WordFile(options.wortliste)
+    wortliste = list(wordfile)
+
     # Sortieren::
-    
-    sortiert = sorted(wortliste, key=sortkey_wl)
-    # sortiert = sorted(wortliste, key=sortkey_duden)
-    
-    patch = udiff(wortliste, sortiert, 'wortliste', 'wortliste-sortiert')
+
+    sortiert = sorted(wortliste, key=sortkey)
+
+    patch = udiff(wortliste, sortiert, 
+                  options.wortliste, options.wortliste+'-sortiert')
     if patch:
         print patch
-        patchfile = open('../../wortliste.patch', 'w')
-        patchfile.write(patch + '\n')
+        if options.patchfile:
+            patchfile = open(options.patchfile, 'w')
+            patchfile.write(patch + '\n')
     else:
         print 'keine Änderungen'
-
-

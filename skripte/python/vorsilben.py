@@ -61,6 +61,7 @@ sprachvariante = 'de-1901'
 ausnahmen = set(('Altausseer', 'Altaussee', 'Aussee', 'Ausseer',
                  'Alster',
                 ))
+# TODO: fehler: Alt=aus|see !!!!!!!!!!!!!!!!!!!!!!!!!!1
 
 # "Nachwörter" (Wörter die nicht ohne Vorsilben vorkommen)::
 
