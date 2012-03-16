@@ -16,7 +16,7 @@ u"""
 Sortiere die Wortliste und erstelle einen Patch im "unified diff" Format.
 
 Es wird wahlweise nach Duden, oder nach der bis März 2012 für die Wortliste
-genutzten Regel sortiert.
+genutzten Regel sortiert. Voreinstellung ist Dudensortierung.
 """
 
 usage = '%prog [Optionen]\n' + __doc__
@@ -115,18 +115,20 @@ if __name__ == '__main__':
 
     parser = optparse.OptionParser(usage=usage)
     parser.add_option('-i', '--file', dest='wortliste',
-                      help='Eingangsdatei',
+                      help='Eingangsdatei, Vorgabe "../../wortliste"',
                       default='../../wortliste')
     parser.add_option('-o', '--outfile', dest='patchfile',
-                      help='Ausgangsdatei (Patch)',
-                      default='../../wortliste.patch')
-    parser.add_option('-a', '--legacy-sort', action="store_false",
+                      help='Ausgangsdatei (Patch), Vorgabe "wortliste.patch"',
+                      default='wortliste.patch')
+    parser.add_option('-a', '--legacy-sort', action="store_true",
                       help='alternative (historische) Sortierordnung',
-                      default='True')
+                      default=False)
 
     (options, args) = parser.parse_args()
 
-    if options.legacy_sort:
+    # Achtung: bool(options.legacy_sort) ist immer True, daher nicht
+    # ``if options.legacy_sort: ...`` verwenden!
+    if options.legacy_sort is True:
         sortkey = sortkey_wl
     else:
         sortkey = sortkey_duden
@@ -141,7 +143,8 @@ if __name__ == '__main__':
     sortiert = sorted(wortliste, key=sortkey)
 
     patch = udiff(wortliste, sortiert, 
-                  options.wortliste, options.wortliste+'-sortiert')
+                  options.wortliste, options.wortliste+'-sortiert',
+                  encoding=wordfile.encoding)
     if patch:
         print patch
         if options.patchfile:
