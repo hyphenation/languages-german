@@ -116,7 +116,7 @@ wortliste = []
 #
 # initialisiert mit Ausnahmen und Wörtern der Rechtschreiblisten::
 
-words = dict([(w, '') 
+words = dict([(w, '')
               for w in wgerman.union(teilwoerter, kurzwoerter, neu_todo)])
 
 # Sammeln unbekannter Wortteile::
@@ -169,7 +169,7 @@ for entry in wortliste:
 # Trenne an unkategorisierten Trennstellen (markiert durch '·')::
 
     teile = wort.split(u'·')
-        
+
 # Zunächst nur 2-silbige Wörter::
 
     if len(teile) != 2:
@@ -205,7 +205,7 @@ for entry in wortliste:
 
 # Komposita::
 
-        if (#erstkey in words and 
+        if (erstkey in words and
             erstkey not in erstsilben
             and erstkey not in vorsilben
             and zweitkey in words
@@ -225,20 +225,20 @@ for entry in wortliste:
 
 # Endsilben::
 
-        # if (#erstkey in words and
-        #     zweitkey.lower() in endsilben):
+        # if (erstkey in words
+        #     and zweitkey.lower() in endsilben
+        #    ):
         #     print str(entry), (u'%s-%s'% (erstkey,zweitwort)).encode('utf8')
         #     entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
 
 # # Erstsilben::
- 
+
         # if (erstkey in erstsilben or erstkey in vorsilben):
         #     print str(entry), (u'%s-%s'% (erstkey,zweitwort)).encode('utf8')
         #     entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
 
-
 # # Neueintragskandidaten::
-# 
+#
 #         if (erstkey not in words
 #             and erstkey not in vorsilben
 #             and erstkey not in erstsilben
@@ -275,10 +275,13 @@ if unbekannt2:
 
 # Ein Patch für die wortliste::
 
-patch = udiff(wortliste_alt, wortliste, 'wortliste', 'wortliste-neu')
+patch = udiff(wortliste_alt, wortliste,
+              wordfile.name, wordfile.name+'-neu',
+              encoding=wordfile.encoding)
+
 if patch:
     # print patch
-    patchfile = open('../../wortliste.patch', 'w')
+    patchfile = open('wortliste.patch', 'w')
     patchfile.write(patch + '\n')
 else:
-    print "empty patch"
+    print 'keine Änderungen'

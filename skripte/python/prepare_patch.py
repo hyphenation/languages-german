@@ -226,10 +226,11 @@ if __name__ == '__main__':
 
 # Patch erstellen::
 
-    patch = udiff(wortliste, wortliste_neu, 'wortliste', 'wortliste-neu')
+    patch = udiff(wortliste, wortliste_neu, 'wortliste', 'wortliste-neu',
+                  encoding= wordfile.encoding)
     if patch:
         print patch
-        patchfile = open('../../wortliste.patch', 'w')
+        patchfile = open('wortliste.patch', 'w')
         patchfile.write(patch + '\n')
     else:
         print "empty patch"
