@@ -3,3 +3,6 @@
 *.py.txt
 *.py.xhtml
 *~
+vorsilbe-*
+wortliste.patch
+teilwoerter.txt
