@@ -5,7 +5,7 @@
 #             GNU General Public License (v. 2 or later)
 # :Id: $Id:  $
 
-# Abgleich der mit Zweig "keine Trennstellen in zweisilbigen Wörtern
+# Abgleich mit Zweig "keine Trennstellen in zweisilbigen Wörtern
 # ==================================================================
 # ::
 

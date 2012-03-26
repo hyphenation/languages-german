@@ -34,7 +34,7 @@ sprachvariante = 'de-1901'         # "traditionell"
 
 # Funktionen
 # -----------
-
+#
 # Übertrage die Trennzeichen von `wort1` auf `wort2`:
 #
 # >>> from abgleich_teilwoerter import uebertrage
@@ -46,24 +46,24 @@ sprachvariante = 'de-1901'         # "traditionell"
 #
 # >>> print uebertrage(u'Haupt=stel-le', u'Haupt=stel·le')
 # Haupt=stel-le
-
+#
 # >>> print uebertrage(u'Haupt·stel-le', u'Haupt=stel·le')
 # Haupt=stel-le
 #
 # Keine Übertragung, wenn die Zahl oder Position der Trennstellen
 # unterschiedlich ist oder bei unterschiedlichen Wörtern:
 #
-# >>> print uebertrage(u'Ha-upt=stel-le', u'Haupt=stel·le')
-# Haupt=stel·le
-# >>> print uebertrage(u'Haupt=ste-lle', u'Haupt=stel·le')
-# Haupt=stel·le
-# >>> print uebertrage(u'Waupt=stel-le', u'Haupt=stel·le')
-# Haupt=stel·le
+# >>> try:
+# ...     uebertrage(u'Ha-upt=stel-le', u'Haupt=stel·le')
+# ...     uebertrage(u'Haupt=ste-lle', u'Haupt=stel·le')
+# ...     uebertrage(u'Waupt=stel-le', u'Haupt=stel·le')
+# ... except ValueError:
+# ...     pass
 #
 # ::
 
 def uebertrage(wort1, wort2):
-    
+
     trennzeichen1 = re.sub(u'[^-·._|=]', '', wort1)
     trennzeichen2 = re.sub(u'[^-·._|=]', '', wort2)
 
@@ -71,9 +71,9 @@ def uebertrage(wort1, wort2):
     silben2 = re.split(u'[-·._|=]+', wort2)
 
     if silben1 != silben2:
-        msg = u'Inkompatible Wörter: %s %s\n' % (wort1, wort2)
+        msg = u'Inkompatibel: %s %s' % (wort1, wort2)
         raise ValueError(msg.encode('utf8'))
-    
+
     wort3 = silben2.pop(0)
     for t1,t2 in zip(trennzeichen1, trennzeichen2):
         if t2 == u'·' and t1 != u'.':
@@ -86,66 +86,123 @@ def uebertrage(wort1, wort2):
     return wort3
 
 
+# Großschreibung in Kleinschreibung wandeln und umgekehrt
+#
+# Diese Version funktioniert auch für Wörter mit Trennzeichen (während
+# str.title() nach jedem Trennzeichen wieder groß anfängt)
+#
+# >>> from abgleich_teilwoerter import toggle_case
+# >>> toggle_case('Ha-se')
+# 'ha-se'
+# >>> toggle_case('arm')
+# 'Arm'
+# >>> toggle_case('frei=bier')
+# 'Frei=bier'
+#
+# ::
+
+def toggle_case(wort):
+    if wort[0].istitle():
+        return wort.lower()
+    else:
+        return wort[0].upper() + wort[1:]
+
+
 # Übertrag kategorisierter Trennstellen aus Teilwort-Datei auf die
 # `wortliste`::
 
-def teilwortabgleich(wortliste):
+def teilwortabgleich(wort, ignore_case=False):
+
+        teile = [teilabgleich(teil)
+                 for teil in wort.split(u'=')]
+        return u'='.join(teile)
+
+def teilabgleich(teil, ignore_case=False):
+        key = join_word(teil)
+        if key not in words.trennungen:
+            if ignore_case:
+                neuteil = toggle_case(teilabgleich(toggle_case(teil)))
+            else:
+                return teil
+        if len(words.trennungen[key]) != 1:
+            return teil
+        try:
+            return uebertrage(words.trennungen[key][0], teil)
+        except ValueError, e:
+            print e
+            return teil
+
+# Übertrag kategorisierter Trennungen auf Grundwörter mit anderer Endung:
+#
+# ::
+
+def grundwortabgleich(wort):
+
+    endung = 'm'  # mit trennmarkern
+
+    if not wort.endswith(endung):
+        return wort
+
+    teile = wort.split('=')
+    grundwort = teile[-1]
+    stamm = grundwort[:-len(endung)]
+    key = join_word(stamm)
+
+    if (key in words.trennungen and
+        len(words.trennungen[key]) == 1):
+        try:
+            neustamm = uebertrage(words.trennungen[key][0], stamm)
+            teile[-1] =  neustamm + endung
+        except ValueError, e:
+            print e
+
+    return u'='.join(teile)
+
+
+
+if __name__ == '__main__':
+
+
+# Teilwörter einlesen::
+
+    words = read_teilwoerter()
+
+    # for key, value in words.trennungen.iteritems():
+    #     if len(value) != 1:
+    #         print value
+    # sys.exit()
+
+# `Wortliste` einlesen::
+
+    wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
+    wortliste = list(wordfile)
+    wortliste_alt = deepcopy(wortliste)
+
+# Bearbeiten der wortliste "in-place"::
 
     for entry in wortliste:
 
-# Wort mit Trennungen in Sprachvariante::
-
+        # Wort mit Trennungen in Sprachvariante
         wort = entry.get(sprachvariante)
         if wort is None: # Wort existiert nicht in der Sprachvariante
             continue
 
         if u'·' not in wort: # Alle Trennstellen kategorisiert
             continue
-        
-        teile = []
-        for teil in wort.split(u'='):
-            key = join_word(teil) 
-            if (join_word(teil) in words.trennungen and
-                len(words.trennungen[key]) == 1):
-                try:
-                    neuteil = uebertrage(words.trennungen[key][0], teil)
-                except ValueError, e:
-                    print e
-                    neuteil = teil
-                teile.append(neuteil)
-            else:
-                teile.append(teil)
-                
-        wort2 = u'='.join(teile)
-        
-        if wort == wort2:
-            continue
-        
-        entry.set(wort2, sprachvariante)
-        # print ('%s -> %s' % (wort, wort2)).encode('utf8')
 
+        wort2 = teilwortabgleich(wort, ignore_case=True)
+        # wort2 = grundwortabgleich(wort)
 
+        if wort != wort2:
+            entry.set(wort2, sprachvariante)
+            # print ('%s -> %s' % (wort, wort2)).encode('utf8')
 
-if __name__ == '__main__':
-
-    # Die `Wortliste`::
-
-    wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
-    wortliste = list(wordfile)
-    wortliste_alt = deepcopy(wortliste)
-    
-    words = read_teilwoerter()
-
-    # Bearbeiten der wortliste "in-place"
-
-    teilwortabgleich(wortliste)
-
-    # Patch erstellen::
+# Patch erstellen::
 
     patch = udiff(wortliste_alt, wortliste, 'wortliste', 'wortliste-neu',
                  encoding=wordfile.encoding)
     if patch:
-        print patch
+        # print patch
         patchfile = open('wortliste.patch', 'w')
         patchfile.write(patch + '\n')
     else:
