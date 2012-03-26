@@ -512,13 +512,13 @@ if __name__ == '__main__':
 # Iteration über "geparste" Zeilen (i.e. Datenfelder)::
 
     ##
-    # for entry in wordfile:
-    #     # Sprachauswahl:
-    #     traditionell = get_field(entry, 'de-1901')
-    #     # Trennstellentfernung:
-    #     if traditionell is not None:
-    #         rejoined = join_word(traditionell)
-    #         assert rejoined == entry[0], "Rejoined %s != %s" % (rejoined, entry[0])
+    for entry in wordfile:
+        # Sprachauswahl:
+        traditionell = entry.get('de-1901')
+        # Trennstellentfernung:
+        if traditionell is not None:
+            rejoined = join_word(traditionell)
+            assert rejoined == entry[0], "Rejoined %s != %s" % (rejoined, entry[0])
 
     # wordfile.seek(0)            # Pointer zurücksetzen
 

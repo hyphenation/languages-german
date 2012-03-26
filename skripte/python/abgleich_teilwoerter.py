@@ -60,9 +60,26 @@ sprachvariante = 'de-1901'         # "traditionell"
 # ... except ValueError:
 # ...     pass
 #
+# Übertragung auch bei unterschiedlicher Schreibung oder Position der
+# Trennstellen mit `strict=False` (für Abgleich zwischen Sprachvarianten):
+
+# >>> uebertrage(u'er-ster', u'ers·ter', strict=False)
+# u'ers-ter'
+# >>> uebertrage(u'Fluß=bett', u'Fluss·bett', strict=False)
+# u'Fluss=bett'
+
+# Auch mit `strict=False` muß die Zahl der Trennstellen übereinstimmen:
+
+# >>> try:
+# ...     uebertrage(u'Ha-upt=ste-lle', u'Haupt=stel·le', strict=False)
+# ... except ValueError:
+# ...     pass
+
+
+
 # ::
 
-def uebertrage(wort1, wort2):
+def uebertrage(wort1, wort2, strict=True):
 
     trennzeichen1 = re.sub(u'[^-·._|=]', '', wort1)
     trennzeichen2 = re.sub(u'[^-·._|=]', '', wort2)
@@ -70,7 +87,8 @@ def uebertrage(wort1, wort2):
     silben1 = re.split(u'[-·._|=]+', wort1)
     silben2 = re.split(u'[-·._|=]+', wort2)
 
-    if silben1 != silben2:
+    if len(trennzeichen1) != len(trennzeichen2) or (
+        silben1 != silben2 and strict):
         msg = u'Inkompatibel: %s %s' % (wort1, wort2)
         raise ValueError(msg.encode('utf8'))
 
@@ -111,34 +129,33 @@ def toggle_case(wort):
 # Übertrag kategorisierter Trennstellen aus Teilwort-Datei auf die
 # `wortliste`::
 
-def teilwortabgleich(wort, ignore_case=False):
+def teilwortabgleich(wort, grossklein=False):
 
-        teile = [teilabgleich(teil)
+        teile = [teilabgleich(teil, grossklein)
                  for teil in wort.split(u'=')]
         return u'='.join(teile)
 
-def teilabgleich(teil, ignore_case=False):
-        key = join_word(teil)
-        if key not in words.trennungen:
-            if ignore_case:
-                neuteil = toggle_case(teilabgleich(toggle_case(teil)))
-            else:
-                return teil
-        if len(words.trennungen[key]) != 1:
-            return teil
-        try:
-            return uebertrage(words.trennungen[key][0], teil)
-        except ValueError, e:
-            print e
-            return teil
+def teilabgleich(teil, grossklein=False):
+    if grossklein:
+        return toggle_case(teilabgleich(toggle_case(teil)))
+    key = join_word(teil)
+    if key not in words.trennungen:
+        # print teil.encode('utf8'), 'not in words'
+        return teil
+    if len(words.trennungen[key]) != 1:
+        print 'mehrdeutig:', words.trennungen[key]
+        return teil
+    try:
+        return uebertrage(words.trennungen[key][0], teil)
+    except ValueError, e: # Inkompatible Wörter
+        print e
+        return teil
 
 # Übertrag kategorisierter Trennungen auf Grundwörter mit anderer Endung:
 #
 # ::
 
-def grundwortabgleich(wort):
-
-    endung = 'm'  # mit trennmarkern
+def grundwortabgleich(wort, endung):
 
     if not wort.endswith(endung):
         return wort
@@ -152,7 +169,7 @@ def grundwortabgleich(wort):
         len(words.trennungen[key]) == 1):
         try:
             neustamm = uebertrage(words.trennungen[key][0], stamm)
-            teile[-1] =  neustamm + endung
+            teile[-1] =  neustamm + endung.replace(u'·', u'-')
         except ValueError, e:
             print e
 
@@ -190,8 +207,8 @@ if __name__ == '__main__':
         if u'·' not in wort: # Alle Trennstellen kategorisiert
             continue
 
-        wort2 = teilwortabgleich(wort, ignore_case=True)
-        # wort2 = grundwortabgleich(wort)
+        # wort2 = teilwortabgleich(wort, grossklein=False)
+        wort2 = grundwortabgleich(wort, endung=u't')
 
         if wort != wort2:
             entry.set(wort2, sprachvariante)
