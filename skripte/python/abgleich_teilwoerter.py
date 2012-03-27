@@ -155,20 +155,23 @@ def teilabgleich(teil, grossklein=False):
 #
 # ::
 
-def grundwortabgleich(wort, endung):
+def grundwortabgleich(wort, endung, vergleichsendung=u''):
 
     if not wort.endswith(endung):
         return wort
 
     teile = wort.split('=')
     grundwort = teile[-1]
-    stamm = grundwort[:-len(endung)]
+    stamm = grundwort[:-len(endung)] + vergleichsendung
     key = join_word(stamm)
 
     if (key in words.trennungen and
         len(words.trennungen[key]) == 1):
         try:
             neustamm = uebertrage(words.trennungen[key][0], stamm)
+            # Vergleichsendung abtrennen
+            neustamm = neustamm[:-len(vergleichsendung)]
+            # Mit Originalendung einsetzen
             teile[-1] =  neustamm + endung.replace(u'·', u'-')
         except ValueError, e:
             print e
@@ -208,7 +211,8 @@ if __name__ == '__main__':
             continue
 
         # wort2 = teilwortabgleich(wort, grossklein=False)
-        wort2 = grundwortabgleich(wort, endung=u't')
+        wort2 = grundwortabgleich(wort, endung=u'r·bar', 
+                                  vergleichsendung=u'-ren')
 
         if wort != wort2:
             entry.set(wort2, sprachvariante)
