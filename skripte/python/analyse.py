@@ -78,7 +78,7 @@ class teilwoerter(object):
     L = defaultdict(int)   # letztes Wort in Verbindungen
 
 
-def read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante):
+def read_teilwoerter(path):
 
     words = teilwoerter()
 

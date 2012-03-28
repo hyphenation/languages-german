@@ -433,7 +433,9 @@ def join_word(word):
 
     if '[' in word:
         word = word.replace(u'[cker·/ck·er.]',  u'cker')
+        word = word.replace(u'[·cker·/ck·er.]', u'cker')
         word = word.replace(u'[·b/b·]',         u'b')
+        word = word.replace(u'[·be·/b·e]',      u'b')
         word = word.replace(u'[·g/g·]',         u'g')
         word = word.replace(u'[·l/l·]',         u'l')
         word = word.replace(u'[ll·/ll]',        u'll')

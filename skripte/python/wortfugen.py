@@ -174,7 +174,9 @@ for entry in wortliste:
 
     if len(teile) != 2:
         continue
-
+    
+    print '-'.join(teile).encode('utf8')
+    
 
 # Wortteile analysieren::
 
@@ -192,7 +194,8 @@ for entry in wortliste:
         try:
             erstkey = join_word(erstwort)
             zweitkey = join_word(zweitwort)
-        except AssertionError:  # Spezialtrennung
+        except AssertionError, e:  # Spezialtrennung
+            print e
             continue
         if wort[0].istitle():
             zweitkey = zweitkey.title()

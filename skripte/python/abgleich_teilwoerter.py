@@ -62,22 +62,34 @@ sprachvariante = 'de-1901'         # "traditionell"
 #
 # Übertragung auch bei unterschiedlicher Schreibung oder Position der
 # Trennstellen mit `strict=False` (für Abgleich zwischen Sprachvarianten):
-
+#
 # >>> uebertrage(u'er-ster', u'ers·ter', strict=False)
 # u'ers-ter'
 # >>> uebertrage(u'Fluß=bett', u'Fluss·bett', strict=False)
 # u'Fluss=bett'
-
+#
 # Auch mit `strict=False` muß die Zahl der Trennstellen übereinstimmen:
-
+#
 # >>> try:
 # ...     uebertrage(u'Ha-upt=ste-lle', u'Haupt=stel·le', strict=False)
 # ... except ValueError:
 # ...     pass
-
-
-
+#
+# Akzeptiere unterschiedliche Anzahl von Trennungen bei st und ck nach
+# Selbstlaut:
+#
+# >>> uebertrage(u'acht=ecki-ge', u'acht·e{ck/k·k}i·ge', strict=False)
+# u'acht=e{ck/k-k}i-ge'
+# >>> uebertrage(u'As-to-ria', u'Asto·ria', strict=False)
+# u'Asto-ria'
+# >>> uebertrage(u'Asto-ria', u'As·to·ria', strict=False)
+# u'As-to-ria'
+# >>> uebertrage(u'So-fa=ecke', u'So·fa=e{ck/k-k}e', strict=False)
+# u'So-fa=e{ck/k-k}e'
+#
 # ::
+
+selbstlaute = u'aeiouäöüAEIOUÄÖÜ'
 
 def uebertrage(wort1, wort2, strict=True):
 
@@ -89,6 +101,30 @@ def uebertrage(wort1, wort2, strict=True):
 
     if len(trennzeichen1) != len(trennzeichen2) or (
         silben1 != silben2 and strict):
+        # Selbstlaut + st oder ck?
+        for selbstlaut in selbstlaute:
+            if wort2.find(selbstlaut+u'{ck/k·k}') != -1:
+                wort2a = wort2.replace(selbstlaut+u'{ck/k·k}',
+                                       selbstlaut+u'ck')
+                wort3 = uebertrage(wort1, wort2a, strict)
+                return wort3.replace(selbstlaut+u'ck',
+                                     selbstlaut+u'{ck/k-k}')
+            if wort2.find(selbstlaut+u'{ck/k-k}') != -1:
+                wort2a = wort2.replace(selbstlaut+u'{ck/k-k}',
+                                       selbstlaut+u'ck')
+                wort3 = uebertrage(wort1, wort2a, strict)
+                return wort3.replace(selbstlaut+u'ck',
+                                     selbstlaut+u'{ck/k-k}')
+            if wort2.find(selbstlaut+u's·t') != -1:
+                wort2a = wort2.replace(selbstlaut+u's·t',
+                                       selbstlaut+u'st')
+                wort3 = uebertrage(wort1, wort2a, strict)
+                return wort3.replace(selbstlaut+u'st',
+                                     selbstlaut+u's-t')
+            if wort1.find(selbstlaut+u's-t') != -1:
+                wort1a = wort1.replace(selbstlaut+u's-t',
+                                       selbstlaut+u'st')
+                return uebertrage(wort1a, wort2, strict)
         msg = u'Inkompatibel: %s %s' % (wort1, wort2)
         raise ValueError(msg.encode('utf8'))
 
@@ -152,7 +188,6 @@ def teilabgleich(teil, grossklein=False):
         return teil
 
 # Übertrag kategorisierter Trennungen auf Grundwörter mit anderer Endung:
-#
 # ::
 
 def grundwortabgleich(wort, endung, vergleichsendung=u''):
@@ -164,13 +199,16 @@ def grundwortabgleich(wort, endung, vergleichsendung=u''):
     grundwort = teile[-1]
     stamm = grundwort[:-len(endung)] + vergleichsendung
     key = join_word(stamm)
+    # print ' '.join([wort, key]).encode('utf8')
 
     if (key in words.trennungen and
         len(words.trennungen[key]) == 1):
+        # print 'fundum', key.encode('utf8')
         try:
             neustamm = uebertrage(words.trennungen[key][0], stamm)
             # Vergleichsendung abtrennen
-            neustamm = neustamm[:-len(vergleichsendung)]
+            if vergleichsendung:
+                neustamm = neustamm[:-len(vergleichsendung)]
             # Mit Originalendung einsetzen
             teile[-1] =  neustamm + endung.replace(u'·', u'-')
         except ValueError, e:
@@ -179,17 +217,22 @@ def grundwortabgleich(wort, endung, vergleichsendung=u''):
     return u'='.join(teile)
 
 
-
 if __name__ == '__main__':
 
 
 # Teilwörter einlesen::
 
-    words = read_teilwoerter()
+    words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
 
     # for key, value in words.trennungen.iteritems():
-    #     if len(value) != 1:
-    #         print value
+    #     # if len(value) != 1:
+    #         # print key.encode('utf8'), value
+    # sys.exit()
+
+
+# Test::
+
+    # print grundwortabgleich(u'Aa·chen·ern', 'n').encode('utf8')
     # sys.exit()
 
 # `Wortliste` einlesen::
@@ -211,12 +254,12 @@ if __name__ == '__main__':
             continue
 
         # wort2 = teilwortabgleich(wort, grossklein=False)
-        wort2 = grundwortabgleich(wort, endung=u'r·bar', 
-                                  vergleichsendung=u'-ren')
+        wort2 = grundwortabgleich(wort, endung=u'·res',
+                                  vergleichsendung=u'r')
 
         if wort != wort2:
             entry.set(wort2, sprachvariante)
-            # print ('%s -> %s' % (wort, wort2)).encode('utf8')
+            print ('%s -> %s' % (wort, wort2)).encode('utf8')
 
 # Patch erstellen::
 

@@ -7,10 +7,10 @@
 
 # prepare_patch.py: Helfer für kleine Editieraufgaben
 # =============================================
-# 
+#
 # Erstelle einen Patch für kleinere Korrekturen der Wortliste.
 # Ausganspunkt sind "todo"-Dateien mit einer Korrektur pro Zeile.
-# 
+#
 # ::
 
 from copy import deepcopy
@@ -26,10 +26,10 @@ from sort import sortkey_wl, sortkey_duden
 #    Das ungetrennte Wort wird vorangestellt (durch Semikolon getrennt),
 #    oder
 #  * vollständiger Eintrag (für Wörter mit Sprachvarianten).
-# 
+#
 # ::
 
-def korrektur(wortliste, encoding='utf8'):
+def korrektur(wortliste):
     """Patch aus korrigierten Einträgen"""
     korrekturen = {}
     for line in open('korrekturen.todo'):
@@ -64,10 +64,10 @@ def fehleintraege(wortliste):
     """Entfernen der Einträge aus einer Liste von Fehleinträgen """
 
 # Fehleinträge aus Datei.
-# 
+#
 # Format:
 #   Ein Eintrag/Zeile, mit oder ohne Trennzeichen
-# 
+#
 # ::
 
     korrekturen = open('fehleintraege.todo').readlines()
@@ -87,13 +87,13 @@ def fehleintraege(wortliste):
 
 # Groß-/Kleinschreibung ändern
 # ----------------------------
-# 
+#
 # Umstellen der Groß- oder Kleinschreibung auf die Variante in der Datei
 # ``grossklein.todo``
-# 
+#
 # Format:
 #   ein Eintrag oder Wort pro Zeile, mit vorhandener Groß-/Kleinschreibung.
-# 
+#
 # ::
 
 def grossklein(wortliste):
@@ -124,13 +124,13 @@ def grossklein(wortliste):
 
 # Sprachvariante ändern
 # ---------------------
-# 
+#
 # Einträge mit allgemeingültiger (oder sonstwie mehrfacher) Sprachvariante
 # in "nur in Reformschreibung" (allgemein) ändern.
-# 
+#
 # Format:
 #   ein Wort/(Alt-)Eintrag pro Zeile.
-# 
+#
 # ::
 
 def reformschreibung(wortliste):
@@ -158,22 +158,48 @@ def reformschreibung(wortliste):
     return wortliste_neu
 
 
+# Getrennte Einträge für Sprachvarianten
+# --------------------------------------
+#
+# Korrigiere fehlende Spezifizierung nach Sprachvarianten, z.B.
+# 
+# - System;Sy-stem
+# + System;-2-;Sy-stem;Sys-tem
+
+def sprachvariante_split(wortliste, alt, neu,
+                         altsprache='de-1901', neusprache='de-1996'):
+
+    wortliste_neu = [] # korrigierte Liste
+
+    for entry in wortliste:
+        if len(entry) == 2: # Allgemeine Schreibung
+            altwort = entry.get(altsprache)
+            neuwort = altwort.replace(alt, neu)
+            if altwort != neuwort:
+                entry = WordEntry('%s;-2-;3;4' % (join_word(altwort)))
+                entry.set(altwort, altsprache)
+                entry.set(neuwort, neusprache)
+        wortliste_neu.append(entry)
+    return wortliste_neu
+
+
+
 # Neueinträge prüfen und vorbereiten
 # ----------------------------------
-# 
+#
 # Die in einer Datei (ein Neueintrag pro Zeile) gesammelten Vorschläge auf
 # auf Neuwert testen (vorhandene Wörter werden ignoriert, unabhängig von der
 # Groß-/Kleinschreibung) und einsortieren.
-# 
+#
 # Format:
 #  * ein Wort mit Trennstellen (für allgemeingültige Trennstellen):
 #    Das ungetrennte Wort wird vorangestellt (durch Semikolon getrennt),
 #    oder
 #  * vollständiger Eintrag (für Wörter mit Sprachvarianten).
-# 
+#
 # ::
 
-def neu(wortliste, encoding='utf8'):
+def neu(wortliste):
     """Neueinträge prüfen und vorbereiten."""
 
     korrekturen = open('neu.todo')
@@ -199,7 +225,7 @@ def neu(wortliste, encoding='utf8'):
             else:
                 print 'mit anderer Groß-/Kleinschreibung vorhanden'
             continue
-        wortliste_neu.append(WordEntry(line, encoding=encoding))
+        wortliste_neu.append(WordEntry(line))
 
     # Sortieren
     wortliste_neu.sort(key=sortkey_wl)
@@ -220,9 +246,11 @@ if __name__ == '__main__':
 
     # wortliste_neu = fehleintraege(wortliste)
     # wortliste_neu = grossklein(wortliste)
-    # wortliste_neu = neu(wortliste, wordfile.encoding)
+    # wortliste_neu = neu(wortliste)
     # wortliste_neu = reformschreibung(wortliste)
-    wortliste_neu = korrektur(wortliste)
+    # wortliste_neu = sprachvariante_split(wortliste, 
+    #                                      u'Sy-stem', u'Sys-tem')
+    # wortliste_neu = korrektur(wortliste)
 
 # Patch erstellen::
 
