@@ -196,6 +196,10 @@ for entry in wortliste:
             zweitkey = join_word(zweitwort)
         except AssertionError, e:  # Spezialtrennung
             print e
+            if erstwort.endswith('{ck/k'):
+                entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
+            else:
+                print e
             continue
         if wort[0].istitle():
             zweitkey = zweitkey.title()
@@ -208,15 +212,15 @@ for entry in wortliste:
 
 # Komposita::
 
-        if (erstkey in words and
-            erstkey not in erstsilben
-            and erstkey not in vorsilben
-            and zweitkey in words
-            and zweitkey.lower() not in endsilben
-            and zweitkey not in kurzwoerter
-           ):
-            entry.set('='.join((erstwort, zweitwort.lower())), sprachvariante)
-            print str(entry), (u'%s %s'% (erstkey,zweitkey)).encode('utf8')
+        # if (erstkey in words and
+        #     erstkey not in erstsilben
+        #     and erstkey not in vorsilben
+        #     and zweitkey in words
+        #     and zweitkey.lower() not in endsilben
+        #     and zweitkey not in kurzwoerter
+        #    ):
+        #     entry.set('='.join((erstwort, zweitwort.lower())), sprachvariante)
+        #     print str(entry), (u'%s %s'% (erstkey,zweitkey)).encode('utf8')
 
 # Vorsilben::
 
@@ -233,6 +237,7 @@ for entry in wortliste:
         #    ):
         #     print str(entry), (u'%s-%s'% (erstkey,zweitwort)).encode('utf8')
         #     entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
+        
 
 # # Erstsilben::
 

@@ -248,8 +248,8 @@ if __name__ == '__main__':
     # wortliste_neu = grossklein(wortliste)
     # wortliste_neu = neu(wortliste)
     # wortliste_neu = reformschreibung(wortliste)
-    # wortliste_neu = sprachvariante_split(wortliste, 
-    #                                      u'Sy-stem', u'Sys-tem')
+    wortliste_neu = sprachvariante_split(wortliste, 
+                                         u'{ck/k-k}', u'-ck')
     # wortliste_neu = korrektur(wortliste)
 
 # Patch erstellen::

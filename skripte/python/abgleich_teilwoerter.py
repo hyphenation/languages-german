@@ -68,7 +68,8 @@ sprachvariante = 'de-1901'         # "traditionell"
 # >>> uebertrage(u'Fluß=bett', u'Fluss·bett', strict=False)
 # u'Fluss=bett'
 #
-# Auch mit `strict=False` muß die Zahl der Trennstellen übereinstimmen:
+# Auch mit `strict=False` muß die Zahl der Trennstellen übereinstimmen
+# (Ausnahmen siehe unten):
 #
 # >>> try:
 # ...     uebertrage(u'Ha-upt=ste-lle', u'Haupt=stel·le', strict=False)
@@ -174,7 +175,11 @@ def teilwortabgleich(wort, grossklein=False):
 def teilabgleich(teil, grossklein=False):
     if grossklein:
         return toggle_case(teilabgleich(toggle_case(teil)))
-    key = join_word(teil)
+    try:
+        key = join_word(teil)
+    except AssertionError, e:
+        print e
+        return teil
     if key not in words.trennungen:
         # print teil.encode('utf8'), 'not in words'
         return teil

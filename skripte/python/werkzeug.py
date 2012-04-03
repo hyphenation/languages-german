@@ -419,15 +419,18 @@ def join_word(word):
 # Spezielle Trennungen für die traditionelle Rechtschreibung::
 
     if '{' in word:
-            word = word.replace(u'{ck/k·k}',  u'ck')
-            word = word.replace(u'{ck/k-k}',  u'ck')
-            word = word.replace(u'{ff/ff·f}', u'ff')
-            word = word.replace(u'{ll/ll·l}', u'll')
-            word = word.replace(u'{mm/mm·m}', u'mm')
-            word = word.replace(u'{nn/nn·n}', u'nn')
-            word = word.replace(u'{pp/pp·p}', u'pp')
-            word = word.replace(u'{rr/rr·r}', u'rr')
-            word = word.replace(u'{tt/tt·t}', u'tt')
+        word = word.replace(u'{ck/k·k}',  u'ck')
+        word = word.replace(u'{ck/k-k}',  u'ck')
+        word = word.replace(u'{ff/ff=f}', u'ff')
+        word = word.replace(u'{ll/ll=l}', u'll')
+        word = word.replace(u'{mm/mm=m}', u'mm')
+        word = word.replace(u'{nn/nn=n}', u'nn')
+        word = word.replace(u'{pp/pp=p}', u'pp')
+        word = word.replace(u'{rr/rr=r}', u'rr')
+        word = word.replace(u'{tt/tt=t}', u'tt')
+    if '{' in word: # immer noch?
+        # versuche "halbe" Spezialtrennungen:
+        word = clean_up_teilword(word)
 
 # Trennstellen in doppeldeutigen Wörtern::
 
@@ -435,7 +438,7 @@ def join_word(word):
         word = word.replace(u'[cker·/ck·er.]',  u'cker')
         word = word.replace(u'[·cker·/ck·er.]', u'cker')
         word = word.replace(u'[·b/b·]',         u'b')
-        word = word.replace(u'[·be·/b·e]',      u'b')
+        word = word.replace(u'[·be·/b·e]',      u'be')
         word = word.replace(u'[·g/g·]',         u'g')
         word = word.replace(u'[·l/l·]',         u'l')
         word = word.replace(u'[ll·/ll]',        u'll')
@@ -456,6 +459,31 @@ def join_word(word):
 
     return word.translate(table)
 
+
+
+def clean_up_teilword(word):
+    # "Halbe" Spezialtrennungen auflösen
+    # (falls word in Spezialtrennung getrennt)
+    word = word.replace(u'{ck/k',  u'k')
+    word = word.replace(u'k}',     u'k')
+    word = word.replace(u'{ff/ff', u'ff')
+    word = word.replace(u'f}',     u'f')
+    word = word.replace(u'{ll/ll', u'll')
+    word = word.replace(u'l}',     u'l')
+    word = word.replace(u'{mm/mm', u'mm')
+    word = word.replace(u'm}',     u'm')
+    word = word.replace(u'{nn/nn', u'nn')
+    word = word.replace(u'n}',     u'n')
+    word = word.replace(u'{pp/pp', u'pp')
+    word = word.replace(u'p}',     u'p')
+    word = word.replace(u'{rr/rr', u'rr')
+    word = word.replace(u'r}',     u'r')
+    word = word.replace(u'{tt/tt', u'tt')
+    word = word.replace(u't}',     u't')
+    
+    return word
+    
+    
 # udiff
 # ------------
 #
@@ -516,11 +544,14 @@ if __name__ == '__main__':
     ##
     for entry in wordfile:
         # Sprachauswahl:
-        traditionell = entry.get('de-1901')
-        # Trennstellentfernung:
-        if traditionell is not None:
-            rejoined = join_word(traditionell)
-            assert rejoined == entry[0], "Rejoined %s != %s" % (rejoined, entry[0])
+        wort = entry.get('de-1901')
+        if wort is None:
+            continue
+        # Test der Trennstellentfernung:
+        if wort is not None:
+            key = join_word(wort)
+            if key != entry[0]:
+                print ("key %s != %s" % (key, entry[0])).encode('utf8')
 
     # wordfile.seek(0)            # Pointer zurücksetzen
 

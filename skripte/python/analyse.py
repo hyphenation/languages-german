@@ -87,14 +87,18 @@ def read_teilwoerter(path):
         wort, flags = line.split()
         
         key = join_word(wort)
-        if u'.' not in wort:
-            words.trennungen[key].append(wort)
-        
         flags = [int(n) for n in flags.split(u';')]
         
         for kategorie, n in zip([words.S, words.E, words.M, words.L], flags):
-            if n > 0:
+            if n > 0: # denn += 0 erzeugt "key" (`kategorie` ist defaultdict)
                 kategorie[key] += n
+        
+        # Ignoriere Spezialtrennungen:
+        for s in u'.{[]}':
+            if s in wort:
+                break
+        else: # ausgeführt, wenn die for-Schleife ohne break durchläuft
+            words.trennungen[key].append(wort)
 
     return words
 
@@ -191,7 +195,7 @@ if __name__ == '__main__':
 
 # Test::
 
-    words = read_teilwoerter()
+    words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
     
     for key in sorted(words.trennungen):
         line = u' '.join([key]+words.trennungen[key]) + u'\n'
