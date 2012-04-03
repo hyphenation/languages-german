@@ -52,24 +52,21 @@
 #
 #   s| { ( [^/]* ) / [^}]* } | \1 |gx
 #
-# Ungewichtete Trennstellen (das sind solche, wo noch niemand sich um die
-# Gewichtung gekümmert hat) werden durch `·' repräsentiert,
-# Haupttrennstellen durch `=' und Nebentrennstellen durch `-'. Unerwünschte
-# Trennstellen, wo eine Trennung sinnverwirrend ist, sind mit `.' markiert
-# (Beispiel: Ur-in.stinkt).
+# Folgende Trennzeichen kennzeichnen die Kategorie der Trennstellen:
 #
-# Trennstellen, die nach einer Haupttrennstelle auftreten, selbst keine
-# Haupttrennstellen sind und deren Distanz zur Haupttrennstelle geringer als
-# vier Buchstaben ist, sind generell ungünstig.  Man kann sie z.B. mit `_'
-# markieren:
-#
-#   Pol=ge_bie-te
-#
-# Der folgende reguläre Ausdruck für `perl' konvertiert solche betroffenen
-# Trennstellen:
-#
-#   s| = ( [^=-]{2,3} ) - | = $1 _ |gx
-#
+#   =  Trennstelle an Wortfugen (Wort=fu-ge)
+#   |  Trennstelle nach Präfix (Vor|sil-be)
+#   -  Trennstelle in einfachem oder suffigiertem Wort (ne-ben)
+#   ·  (noch) nicht kategorisierte Trennstelle
+# 
+# Ungünstige Trennstellen, sind mit einem Punkt markiert. Der Punkt kann
+# einem Trennzeichen zur Kategorisierung folgen. Besonders ungünstige
+# Trennstellen können mit mehreren Punkten gekennzeichnet sein.
+# 
+#   .    irreführend (An·den.ken, Ost=en.de, Re|im|.port)
+#   ..   sinnentstellend (Ge·winn·er..war·tung)
+#   ...  anstößig (An|al-...pha-bet)
+# 
 # Doppeldeutige Trennstellen werden folgendermaßen deklariert:
 #
 #   er[b-/-b]recht
