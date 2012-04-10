@@ -50,6 +50,12 @@ sprachvariante = 'de-1901'         # "traditionell"
 # >>> print uebertrage(u'Haupt·stel-le', u'Haupt=stel·le')
 # Haupt=stel-le
 #
+# >>> print uebertrage(u'Aus|stel-ler', u'Aus-stel-ler')
+# Aus|stel-ler
+#
+# >>> print uebertrage(u'Aus|tausch=dien-stes', u'Aus-tausch=diens-tes', False)
+# Aus|tausch=diens-tes
+#
 # Keine Übertragung, wenn die Zahl oder Position der Trennstellen
 # unterschiedlich ist oder bei unterschiedlichen Wörtern:
 #
@@ -90,7 +96,13 @@ sprachvariante = 'de-1901'         # "traditionell"
 #
 # ::
 
+class TransferError(ValueError):
+    def __init__(self, wort1, wort2):
+        msg = u'Inkompatibel: %s %s' % (wort1, wort2)
+        ValueError.__init__(self, msg.encode('utf8'))
+
 selbstlaute = u'aeiouäöüAEIOUÄÖÜ'
+
 
 def uebertrage(wort1, wort2, strict=True):
 
@@ -100,35 +112,26 @@ def uebertrage(wort1, wort2, strict=True):
     silben1 = re.split(u'[-·._|=]+', wort1)
     silben2 = re.split(u'[-·._|=]+', wort2)
 
-    if len(trennzeichen1) != len(trennzeichen2) or (
-        silben1 != silben2 and strict):
+    # Prüfe strikte Übereinstimmung:
+    if silben1 != silben2 and strict:
+        raise TransferError(wort1, wort2)
+    # Prüfe ungefähre Übereinstimmung:
+    if len(trennzeichen1) != len(trennzeichen2):
         # Selbstlaut + st oder ck?
-        for selbstlaut in selbstlaute:
-            if wort2.find(selbstlaut+u'{ck/k·k}') != -1:
-                wort2a = wort2.replace(selbstlaut+u'{ck/k·k}',
-                                       selbstlaut+u'ck')
-                wort3 = uebertrage(wort1, wort2a, strict)
-                return wort3.replace(selbstlaut+u'ck',
-                                     selbstlaut+u'{ck/k-k}')
-            if wort2.find(selbstlaut+u'{ck/k-k}') != -1:
-                wort2a = wort2.replace(selbstlaut+u'{ck/k-k}',
-                                       selbstlaut+u'ck')
-                wort3 = uebertrage(wort1, wort2a, strict)
-                return wort3.replace(selbstlaut+u'ck',
-                                     selbstlaut+u'{ck/k-k}')
-            if wort2.find(selbstlaut+u's·t') != -1:
-                wort2a = wort2.replace(selbstlaut+u's·t',
-                                       selbstlaut+u'st')
-                wort3 = uebertrage(wort1, wort2a, strict)
-                return wort3.replace(selbstlaut+u'st',
-                                     selbstlaut+u's-t')
-            if wort1.find(selbstlaut+u's-t') != -1:
-                wort1a = wort1.replace(selbstlaut+u's-t',
-                                       selbstlaut+u'st')
+        for s in selbstlaute:
+            if (wort2.find(s+u'{ck/k·k}') != -1 or
+                wort2.find(s+u'{ck/k-k}') != -1):
+                wort1a = wort1.replace(s+u'ck', s+u'-ck')
                 return uebertrage(wort1a, wort2, strict)
-        msg = u'Inkompatibel: %s %s' % (wort1, wort2)
-        raise ValueError(msg.encode('utf8'))
+            if wort2.find(s+u's·t') != -1:
+                wort1a = wort1.replace(s+u'st', s+u's-t')
+                return uebertrage(wort1a, wort2, strict)
+            if wort1.find(s+u's-t') != -1:
+                wort1a = wort1.replace(s+u's-t', s+u'st')
+                return uebertrage(wort1a, wort2, strict)
+        raise TransferError(wort1, wort2)
 
+    # Baue wort3 aus silben2 und spezifischeren Trennzeichen:
     wort3 = silben2.pop(0)
     for t1,t2 in zip(trennzeichen1, trennzeichen2):
         if t2 == u'·' and t1 != u'.':
@@ -147,27 +150,39 @@ def uebertrage(wort1, wort2, strict=True):
 # str.title() nach jedem Trennzeichen wieder groß anfängt)
 #
 # >>> from abgleich_teilwoerter import toggle_case
-# >>> toggle_case('Ha-se')
-# 'ha-se'
-# >>> toggle_case('arm')
-# 'Arm'
-# >>> toggle_case('frei=bier')
-# 'Frei=bier'
+# >>> toggle_case(u'Ha-se')
+# u'ha-se'
+# >>> toggle_case(u'arm')
+# u'Arm'
+# >>> toggle_case(u'frei=bier')
+# u'Frei=bier'
+# >>> toggle_case(u'L}a-ger')
+# u'l}a-ger'
+#
+# Keine Änderung bei wörtern mit Großbuchstaben im Inneren:
+
+# >>> toggle_case(u'USA')
+# u'USA'
 #
 # ::
 
 def toggle_case(wort):
-    if wort[0].istitle():
+    try:
+        key = join_word(wort)
+    except AssertionError, e:
+        print e
+        return wort
+    if key.istitle():
         return wort.lower()
-    else:
+    elif key.islower():
         return wort[0].upper() + wort[1:]
-
+    else:
+        return wort
 
 # Übertrag kategorisierter Trennstellen aus Teilwort-Datei auf die
 # `wortliste`::
 
 def teilwortabgleich(wort, grossklein=False):
-
         teile = [teilabgleich(teil, grossklein)
                  for teil in wort.split(u'=')]
         return u'='.join(teile)
@@ -222,6 +237,46 @@ def grundwortabgleich(wort, endung, vergleichsendung=u''):
     return u'='.join(teile)
 
 
+# Übertrag kategorisierter Trennstellen zwischen den Feldern aller Einträge
+# in `wortliste`::
+
+def sprachabgleich(entry):
+
+    if len(entry) <= 2:
+        return # allgemeine Schreibung
+
+    # if u'{' in unicode(entry):
+    #     continue # Spezialtrennung
+    vorsilbe = None
+    gewichtet = None
+    ungewichtet = None
+    for field in entry[1:]:
+        if field.startswith('-'): # -2-, -3-, ...
+            continue
+        if u'|' in field:
+            vorsilbe = field
+        elif u'·' not in field:
+            gewichtet = field
+        else:
+            ungewichtet = field
+    if vorsilbe and (gewichtet or ungewichtet):
+        for i in range(1,len(entry)):
+            if u'|' not in entry[i]:
+                try:
+                    entry[i] = uebertrage(vorsilbe, entry[i], strict=False)
+                except ValueError, e:
+                    print e
+        print vorsilbe.encode('utf8'), str(entry)
+    elif gewichtet and ungewichtet:
+        for i in range(1,len(entry)):
+            if u'·' in entry[i]:
+                try:
+                    entry[i] = uebertrage(gewichtet, entry[i], strict=False)
+                except ValueError, e:
+                    print e
+        print gewichtet.encode('utf8'), str(entry)
+
+
 if __name__ == '__main__':
 
 
@@ -230,10 +285,9 @@ if __name__ == '__main__':
     words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
 
     # for key, value in words.trennungen.iteritems():
-    #     # if len(value) != 1:
-    #         # print key.encode('utf8'), value
+    #     if len(value) != 1:
+    #         print key.encode('utf8'), value
     # sys.exit()
-
 
 # Test::
 
@@ -255,16 +309,18 @@ if __name__ == '__main__':
         if wort is None: # Wort existiert nicht in der Sprachvariante
             continue
 
-        if u'·' not in wort: # Alle Trennstellen kategorisiert
-            continue
+        # if u'·' not in wort: # Alle Trennstellen kategorisiert
+        #     continue
 
-        # wort2 = teilwortabgleich(wort, grossklein=False)
-        wort2 = grundwortabgleich(wort, endung=u'·res',
-                                  vergleichsendung=u'r')
+        wort2 = teilwortabgleich(wort, grossklein=False)
+        # wort2 = grundwortabgleich(wort, endung=u'·res',
+        #                           vergleichsendung=u'r')
 
         if wort != wort2:
             entry.set(wort2, sprachvariante)
             print ('%s -> %s' % (wort, wort2)).encode('utf8')
+            if len(entry) > 2:
+                sprachabgleich(entry)
 
 # Patch erstellen::
 

@@ -19,7 +19,7 @@
 from copy import deepcopy
 import re, sys
 from werkzeug import WordFile, WordEntry, join_word, udiff
-from abgleich_teilwoerter import uebertrage
+from abgleich_teilwoerter import sprachabgleich
 
 
 # Zusammenfassen von Feldern mit gleichem Inhalt z.B.
@@ -50,40 +50,6 @@ def conflate(wortliste):
         entry.conflate_fields()
         continue
 
-# Übertrag kategorisierter Trennstellen zwischen den Feldern aller Einträge
-# in `wortliste`::
-
-def sprachabgleich(wortliste):
-
-    for entry in wortliste:
-
-        if len(entry) <= 2:
-            continue # allgemeine Schreibung
-
-        # if u'{' in unicode(entry):
-        #     continue # Spezialtrennung
-        gewichtet = None
-        ungewichtet = None
-        for field in entry[1:]:
-            if field.startswith('-'): # -2-, -3-, ...
-                continue
-            if u'·' not in field:
-                gewichtet = field
-            else:
-                ungewichtet = field
-        if gewichtet is None or ungewichtet is None:
-            continue
-        # print 'Abgleich', str(entry)
-
-        for i in range(1,len(entry)):
-            if u'·' in entry[i]:
-                try:
-                    entry[i] = uebertrage(gewichtet, entry[i], strict=False)
-                except ValueError, e:
-                    print e
-        print gewichtet.encode('utf8'), str(entry)
-
-
 if __name__ == '__main__':
 
     # Die `Wortliste`::
@@ -96,7 +62,8 @@ if __name__ == '__main__':
     # Bearbeiten der wortliste "in-place"
     # conflate(wortliste)
 
-    sprachabgleich(wortliste)
+    for entry in wortliste:
+        sprachabgleich(entry)
 
     # Patch erstellen::
 

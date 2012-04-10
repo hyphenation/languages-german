@@ -25,6 +25,7 @@
 # ::
 
 import difflib
+import re
 
 # WordFile
 # ========
@@ -394,10 +395,10 @@ class WordEntry(list):
 #
 # Trennzeichen entfernen::
 
-def join_word(word):
+def join_word(word, assert_complete=False):
 
-# Die Trennzeichen der Wortliste sind
-#
+# Einfache Trennzeichen:
+
 # ==  ================================================================
 # \·  ungewichtete Trennstelle (solche, wo noch niemand sich um die
 #     Gewichtung gekümmert hat)
@@ -407,83 +408,46 @@ def join_word(word):
 # \=  Haupttrennstelle an Wortfugen (Wort=fu-ge)
 # \|  Haupttrennstelle nach Vorsilbe (Vor|sil-be)
 # \-  Nebentrennstelle
-# \_  ungünstige Nebentrennstellen, z.B. Elek-tro_nik=fir-ma
 # ==  ================================================================
-#
-# Ersetzungstabelle für `unicode.translate()`::
+
+# ::
 
     table = {}
     for char in u'·.=|-_':
         table[ord(char)] = None
+    key = word.translate(table)
 
-# Spezielle Trennungen für die traditionelle Rechtschreibung::
+# Spezielle Trennungen für die traditionelle Rechtschreibung
+# (siehe ../../dokumente/dateikopf)::
 
-    if '{' in word:
-        word = word.replace(u'{ck/k·k}',  u'ck')
-        word = word.replace(u'{ck/k-k}',  u'ck')
-        word = word.replace(u'{ff/ff=f}', u'ff')
-        word = word.replace(u'{ll/ll=l}', u'll')
-        word = word.replace(u'{mm/mm=m}', u'mm')
-        word = word.replace(u'{nn/nn=n}', u'nn')
-        word = word.replace(u'{pp/pp=p}', u'pp')
-        word = word.replace(u'{rr/rr=r}', u'rr')
-        word = word.replace(u'{tt/tt=t}', u'tt')
-    if '{' in word: # immer noch?
-        # versuche "halbe" Spezialtrennungen:
-        word = clean_up_teilword(word)
+    if '{' in key or '}' in key:
+        key = key.replace(u'{ck/kk}',  u'ck')
+        key = key.replace(u'{ck/k',  u'k')
+        key = key.replace(u'k}',     u'k')
+        # Konsonanthäufungen an Wortfuge: '{xx/xxx}' -> 'xx':
+        key = re.sub(ur'\{(.)\1/\1\1\1\}', ur'\1\1', key)
+        # schon getrennt: ('{xx/xx' -> 'xx' und 'x}' -> 'x'):
+        key = re.sub(ur'\{(.)\1/\1\1$', ur'\1\1', key)
+        key = re.sub(ur'^(.)\}', ur'\1', key)
 
 # Trennstellen in doppeldeutigen Wörtern::
 
-    if '[' in word:
-        word = word.replace(u'[cker·/ck·er.]',  u'cker')
-        word = word.replace(u'[·cker·/ck·er.]', u'cker')
-        word = word.replace(u'[·b/b·]',         u'b')
-        word = word.replace(u'[·be·/b·e]',      u'be')
-        word = word.replace(u'[·g/g·]',         u'g')
-        word = word.replace(u'[·l/l·]',         u'l')
-        word = word.replace(u'[ll·/ll]',        u'll')
-        word = word.replace(u'[·ker·/k·er.]',   u'ker')
-        word = word.replace(u'[·st/st·]',       u'st')
-        word = word.replace(u'[·r/r·]',         u'r')
-        word = word.replace(u'[·s/s·]',         u's')
-        word = word.replace(u'[·st/st·]',       u'st')
-        word = word.replace(u'[·ſt/ſt·]',       u'ſt')
-        word = word.replace(u'[·t/t·]',         u't')
+    if '[' in key or ']' in key:
+        key = re.sub(ur'\[(.+)/\1\]', ur'\1', key)
+        # schon getrennt:
+        key = re.sub(ur'\[([^/\[]+)$', ur'\1', key)
+        key = re.sub(ur'^([^/\]]+)\]', ur'\1', key)
 
-# # Test auf verbliebene komplexe Trennstellen::
+# Test auf verbliebene komplexe Trennstellen::
 
-    if '[' in word or '{' in word:
-        raise AssertionError('Spezialtrennung %s' % word.encode('utf8'))
+    if assert_complete:
+        for spez in u'[{/}]':
+            if  spez in key:
+                raise AssertionError('Spezialtrennung %s' % key.encode('utf8'))
 
-# Einfache Trennzeichen entfernen, Resultat zurückgeben::
-
-    return word.translate(table)
+    return key
 
 
-
-def clean_up_teilword(word):
-    # "Halbe" Spezialtrennungen auflösen
-    # (falls word in Spezialtrennung getrennt)
-    word = word.replace(u'{ck/k',  u'k')
-    word = word.replace(u'k}',     u'k')
-    word = word.replace(u'{ff/ff', u'ff')
-    word = word.replace(u'f}',     u'f')
-    word = word.replace(u'{ll/ll', u'll')
-    word = word.replace(u'l}',     u'l')
-    word = word.replace(u'{mm/mm', u'mm')
-    word = word.replace(u'm}',     u'm')
-    word = word.replace(u'{nn/nn', u'nn')
-    word = word.replace(u'n}',     u'n')
-    word = word.replace(u'{pp/pp', u'pp')
-    word = word.replace(u'p}',     u'p')
-    word = word.replace(u'{rr/rr', u'rr')
-    word = word.replace(u'r}',     u'r')
-    word = word.replace(u'{tt/tt', u'tt')
-    word = word.replace(u't}',     u't')
-    
-    return word
-    
-    
 # udiff
 # ------------
 #
@@ -548,10 +512,9 @@ if __name__ == '__main__':
         if wort is None:
             continue
         # Test der Trennstellentfernung:
-        if wort is not None:
-            key = join_word(wort)
-            if key != entry[0]:
-                print ("key %s != %s" % (key, entry[0])).encode('utf8')
+        key = join_word(wort)
+        if key != entry[0]:
+            print ("key %s != %s" % (key, entry[0])).encode('utf8')
 
     # wordfile.seek(0)            # Pointer zurücksetzen
 

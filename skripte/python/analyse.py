@@ -44,19 +44,6 @@ from collections import defaultdict  # Wörterbuch mit Default
 from werkzeug import WordFile, join_word, udiff
 
 
-# Sprachvarianten
-# ---------------
-#
-# Sprach-Tag nach [BCP47]_::
-
-sprachvariante = 'de-1901'         # "traditionell"
-# sprachvariante = 'de-1996'         # Reformschreibung
-# sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
-# sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
-# sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
-# sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
-
-
 # teilwoerter
 # -----------
 
@@ -85,14 +72,14 @@ def read_teilwoerter(path):
     for line in open(path):
         line = line.decode('utf8')
         wort, flags = line.split()
-        
+
         key = join_word(wort)
         flags = [int(n) for n in flags.split(u';')]
-        
+
         for kategorie, n in zip([words.S, words.E, words.M, words.L], flags):
             if n > 0: # denn += 0 erzeugt "key" (`kategorie` ist defaultdict)
                 kategorie[key] += n
-        
+
         # Ignoriere Spezialtrennungen:
         for s in u'.{[]}':
             if s in wort:
@@ -105,12 +92,24 @@ def read_teilwoerter(path):
 
 # Analyse
 # =====================
-#
+
+# Hilfsfunktion: Erkenne (Nicht-)Teile wie ``/{ll/ll``  aus
+# ``Fuß=ba[ll=/{ll/ll=l}]eh-re``::
+
+def is_spezialteil(teil):
+    if u'/' in teil:
+        try:
+            join_word(teil)
+        except AssertionError:
+            return True
+    return False
+
 # Zerlege Wörter der Wortliste (unter `path`). Gib eine "teilwoerter"-Instanz
 # mit dictionaries mit getrennten Teilwörtern als key und deren Häufigkeiten
 # an der entsprechenden Position als Wert zurück::
 
-def analyse(path='../../wortliste', sprachvariante=sprachvariante):
+
+def analyse(path='../../wortliste', sprachvariante='de-1901'):
 
     wordfile = WordFile(path)
     words = teilwoerter()
@@ -125,7 +124,8 @@ def analyse(path='../../wortliste', sprachvariante=sprachvariante):
 
 # Teilwörter suchen::
 
-        teile = wort.split(u'=')
+        teile = [teil for teil in wort.split(u'=')
+                 if not is_spezialteil(teil)]
 
         # Einzelwort
         if len(teile) == 1:
@@ -164,19 +164,19 @@ def analyse(path='../../wortliste', sprachvariante=sprachvariante):
 
 # Schreibe das Resultat von `analyse` in eine Datei `path`::
 
-def write_teilwoerter(words, path='teilwoerter-%s.txt'%sprachvariante):
+def write_teilwoerter(words, path):
 
     outfile = open(path, 'w')
 
     # Menge aller Teilwörter:
-    allwords = set()
+    teilwoerter = set()
 
     for kategorie in (words.S, words.E, words.M, words.L):
-        allwords.update(set(kategorie.keys()))
+        teilwoerter.update(set(kategorie.keys()))
 
-    for key in sorted(allwords):
+    for teil in sorted(teilwoerter):
         line = '%s %d;%d;%d;%d\n' % (
-            key, words.S[key], words.E[key], words.M[key], words.L[key])
+            teil, words.S[teil], words.E[teil], words.M[teil], words.L[teil])
         outfile.write(line.encode('utf8'))
 
 
@@ -186,18 +186,23 @@ if __name__ == '__main__':
 
 # erstelle/aktualisiere die Datei ``teilwoerter.txt`` mit den Häufigkeiten
 # nicht zusammengesetzer Wörter als Einzelwort oder in erster, mittlerer,
-# oder letzeter Position in Wortverbindungen ::
+# oder letzeter Position in Wortverbindungen.
 
-    words = analyse()
-    write_teilwoerter(words)
+    sprachvariante = 'de-1901'         # "traditionell"
+    # sprachvariante = 'de-1996'         # Reformschreibung
+    # sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
+    # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
+    # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
+    # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
+
+    words = analyse(sprachvariante=sprachvariante)
+    write_teilwoerter(words, 'teilwoerter-%s.txt'%sprachvariante)
     sys.exit()
-    
 
 # Test::
 
     words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
-    
-    for key in sorted(words.trennungen):
-        line = u' '.join([key]+words.trennungen[key]) + u'\n'
-        print line.encode('utf8'), 
-    
+
+    for teil in sorted(words.trennungen):
+        line = u' '.join([teil]+words.trennungen[teil]) + u'\n'
+        print line.encode('utf8'),
