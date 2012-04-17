@@ -75,9 +75,25 @@ else:
 for solitaer in ('Ra', 'He', 'As', 'Co', 'Fa'):
     wgerman.discard(solitaer)
 
-# Vorsilben (auch mehrsilbige Präfixe)::
+# Präfixe (auch als Präfix verwendete Partikel, Adjektive, ...)::
+
+praefixe = set(w for w in wortdatei('wortteile/praefixe'))
+
+# Vorsilben (auch mehrsilbige Präfixe) die keine selbständigen Wörter sind::
+
+# Aussortieren selbständiger Wörter:
+words = dict(wortdatei)
+for vs in sorted(vorsilben - wgerman, key=unicode.lower):
+    if (vs not in words 
+        and vs.lower() not in words and vs.title() not in words
+        and vs.lower() not in wgerman and vs.title() not in wgerman):
+        print vs.encode('utf8')
+    
+sys.exit()
 
 vorsilben = set(w for w in wortdatei('wortteile/vorsilben'))
+
+
 
 # Erstsilben: Wörter, die häufig als erste
 # Silbe eines Wortes (aber nicht oder nur selten als Teilwörter) auftreten

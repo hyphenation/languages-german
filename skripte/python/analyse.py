@@ -81,10 +81,8 @@ def read_teilwoerter(path):
                 kategorie[key] += n
 
         # Ignoriere Spezialtrennungen:
-        for s in u'.{[]}':
-            if s in wort:
-                break
-        else: # ausgeführt, wenn die for-Schleife ohne break durchläuft
+        # if not re.search(r'[.\[{/\]}]', wort):
+        if not re.search(r'[.]', wort):
             words.trennungen[key].append(wort)
 
     return words
@@ -96,13 +94,13 @@ def read_teilwoerter(path):
 # Hilfsfunktion: Erkenne (Nicht-)Teile wie ``/{ll/ll``  aus
 # ``Fuß=ba[ll=/{ll/ll=l}]eh-re``::
 
-def is_spezialteil(teil):
-    if u'/' in teil:
-        try:
-            join_word(teil)
-        except AssertionError:
-            return True
-    return False
+def spezialbehandlung(teil):
+    if re.search(r'[\[{/\]}]', teil):
+        teil = re.sub(r'\{([^/]*)[^}]*$', r'\1', teil)
+        teil = re.sub(r'\[([^/]*)[^\]]*$', r'\1', teil)
+        teil = re.sub(r'^(.)}', r'\1', teil)
+        # print teil.encode('utf8')
+    return teil
 
 # Zerlege Wörter der Wortliste (unter `path`). Gib eine "teilwoerter"-Instanz
 # mit dictionaries mit getrennten Teilwörtern als key und deren Häufigkeiten
@@ -124,9 +122,8 @@ def analyse(path='../../wortliste', sprachvariante='de-1901'):
 
 # Teilwörter suchen::
 
-        teile = [teil for teil in wort.split(u'=')
-                 if not is_spezialteil(teil)]
-
+        teile = [spezialbehandlung(teil) for teil in wort.split(u'=')]
+        
         # Einzelwort
         if len(teile) == 1:
             if u'·' not in wort:
@@ -148,6 +145,9 @@ def analyse(path='../../wortliste', sprachvariante='de-1901'):
 
         # mittlere Teilwörter
         for teil in teile[1:-1]:
+            if u'/' in teil:
+                if not re.search(r'[\[{].*[\]}]', teil):
+                    continue
             if u'·' in teil:
                 # unkategorisierte Trennstelle(n): es könnte sich um ein
                 # zusammengesetzes Wort handeln -> überspringen
@@ -186,7 +186,7 @@ if __name__ == '__main__':
 
 # erstelle/aktualisiere die Datei ``teilwoerter.txt`` mit den Häufigkeiten
 # nicht zusammengesetzer Wörter als Einzelwort oder in erster, mittlerer,
-# oder letzeter Position in Wortverbindungen.
+# oder letzter Position in Wortverbindungen.
 
     sprachvariante = 'de-1901'         # "traditionell"
     # sprachvariante = 'de-1996'         # Reformschreibung

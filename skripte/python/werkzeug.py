@@ -433,7 +433,7 @@ def join_word(word, assert_complete=False):
 # Trennstellen in doppeldeutigen Wörtern::
 
     if '[' in key or ']' in key:
-        key = re.sub(ur'\[(.+)/\1\]', ur'\1', key)
+        key = re.sub(ur'\[(.*)/\1\]', ur'\1', key)
         # schon getrennt:
         key = re.sub(ur'\[([^/\[]+)$', ur'\1', key)
         key = re.sub(ur'^([^/\]]+)\]', ur'\1', key)

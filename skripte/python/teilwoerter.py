@@ -12,7 +12,7 @@
 # 
 # ::
 
-"""Analyse der Teilwörter in der `Wortliste`"""
+"""Erkennen und Markieren von Komposita in der `Wortliste`"""
 
 # .. contents::
 # 
