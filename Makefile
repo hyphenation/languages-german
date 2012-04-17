@@ -23,7 +23,7 @@
 #
 #
 # Dieses Makefile erzeugt deutsche Trennmuster in den
-# Unterverzeichnissen $(TRAD) und $(REFO für die traditionelle
+# Unterverzeichnissen $(TRAD) und $(REFO) für die traditionelle
 # bzw. reformierte Rechtschreibung.  Trennmuster für tradionelles
 # deutschschweizerisches Deutsch werden Verzeichnis $(SWISS) erzeugt.
 #
