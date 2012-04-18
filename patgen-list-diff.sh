@@ -29,19 +29,22 @@ then
   echo 'corresponding to the spelling.'
   exit 1
 fi
-if git checkout $1
-then
-  make dehyphn-x/words.hyphenated.refo
-  make dehypht-x/words.hyphenated.trad
-  make dehyphts-x/words.hyphenated.swiss
-  mv dehyphn-x/words.hyphenated.refo dehyphn-x/words.hyphenated.refo.$1
-  mv dehypht-x/words.hyphenated.trad dehypht-x/words.hyphenated.trad.$1
-  mv dehyphts-x/words.hyphenated.swiss dehyphts-x/words.hyphenated.swiss.$1
-  git checkout master
-  make dehyphn-x/words.hyphenated.refo
-  make dehypht-x/words.hyphenated.trad
-  make dehyphts-x/words.hyphenated.swiss
-  diff dehyphn-x/words.hyphenated.refo.$1 dehyphn-x/words.hyphenated.refo > dehyphn-x/$1.diff
-  diff dehypht-x/words.hyphenated.trad.$1 dehypht-x/words.hyphenated.trad > dehypht-x/$1.diff
-  diff dehyphts-x/words.hyphenated.swiss.$1 dehyphts-x/words.hyphenated.swiss > dehyphts-x/$1.diff
-fi
+TEMPSCRIPT=temp-patgen-list-diff.sh
+echo 'if git checkout $1' > $TEMPSCRIPT
+echo 'then' >> $TEMPSCRIPT
+echo '  make dehyphn-x/words.hyphenated.refo' >> $TEMPSCRIPT
+echo '  make dehypht-x/words.hyphenated.trad' >> $TEMPSCRIPT
+echo '  make dehyphts-x/words.hyphenated.swiss' >> $TEMPSCRIPT
+echo '  mv dehyphn-x/words.hyphenated.refo dehyphn-x/words.hyphenated.refo.$1' >> $TEMPSCRIPT
+echo '  mv dehypht-x/words.hyphenated.trad dehypht-x/words.hyphenated.trad.$1' >> $TEMPSCRIPT
+echo '  mv dehyphts-x/words.hyphenated.swiss dehyphts-x/words.hyphenated.swiss.$1' >> $TEMPSCRIPT
+echo '  git checkout master' >> $TEMPSCRIPT
+echo '  make dehyphn-x/words.hyphenated.refo' >> $TEMPSCRIPT
+echo '  make dehypht-x/words.hyphenated.trad' >> $TEMPSCRIPT
+echo '  make dehyphts-x/words.hyphenated.swiss' >> $TEMPSCRIPT
+echo '  diff dehyphn-x/words.hyphenated.refo.$1 dehyphn-x/words.hyphenated.refo > dehyphn-x/$1.diff' >> $TEMPSCRIPT
+echo '  diff dehypht-x/words.hyphenated.trad.$1 dehypht-x/words.hyphenated.trad > dehypht-x/$1.diff' >> $TEMPSCRIPT
+echo '  diff dehyphts-x/words.hyphenated.swiss.$1 dehyphts-x/words.hyphenated.swiss > dehyphts-x/$1.diff' >> $TEMPSCRIPT
+echo 'fi' >> $TEMPSCRIPT
+echo 'exec rm -f ' $TEMPSCRIPT >> $TEMPSCRIPT
+exec $TEMPSCRIPT $1
