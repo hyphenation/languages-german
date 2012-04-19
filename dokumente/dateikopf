@@ -54,19 +54,22 @@
 #
 # Folgende Trennzeichen kennzeichnen die Kategorie der Trennstellen:
 #
-#   =  Trennstelle an Wortfugen (Wort=fu-ge)
+#   =  Trennstelle an Wortfugen (Wort=fu-ge); kann auch mehrfach
+#      hintereinander auftreten, um eine Gewichtung auszudrücken
+#      (Zei-tungs==her|aus=ge-ber)
 #   |  Trennstelle nach Präfix (Vor|sil-be)
 #   -  Trennstelle in einfachem oder suffigiertem Wort (ne-ben)
 #   ·  (noch) nicht kategorisierte Trennstelle
-# 
-# Ungünstige Trennstellen, sind mit einem Punkt markiert. Der Punkt kann
-# einem Trennzeichen zur Kategorisierung folgen. Besonders ungünstige
-# Trennstellen können mit mehreren Punkten gekennzeichnet sein.
-# 
+#
+# Ungünstige Trennstellen sind mit einem Punkt markiert.  Der Punkt kann
+# einem (oder mehreren) Trennzeichen zur Kategorisierung folgen.
+# Besonders ungünstige Trennstellen können mit mehreren Punkten
+# gekennzeichnet sein.
+#
 #   .    irreführend (An·den.ken, Ost=en.de, Re|im|.port)
 #   ..   sinnentstellend (Ge·winn·er..war·tung)
 #   ...  anstößig (An|al-...pha-bet)
-# 
+#
 # Doppeldeutige Trennstellen werden folgendermaßen deklariert:
 #
 #   er[b-/-b]recht
