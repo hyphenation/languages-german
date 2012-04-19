@@ -62,7 +62,7 @@ while (<>) {
   # Ausgabe von Wörtern mit ungewichteten Trennstellen?
   next if $zeile =~ /\xb7/ and $opt_g;
   # reduziere Trennstellenmarker zu `-', falls gewollt
-  $zeile =~ s/[\xb7|=]/-/g if not $opt_g;
+  $zeile =~ s/[\xb7|=-]+/-/g if not $opt_g;
 
   print "$zeile\n";
 }
