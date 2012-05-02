@@ -194,19 +194,15 @@ class WordEntry(list):
     def __init__(self, line, delimiter=';'):
         self.delimiter = delimiter
 
-# eventuell vorhandenen Kommentar abtrennen,
-# Zerlegen in Datenfelder,
-# in Liste eintragen::
+# eventuell vorhandenen Kommentar abtrennen und speichern::
 
         if '#' in line:
             line, self.comment = line.split('#')
             line = line.rstrip()
 
-        entry = line.split(delimiter)
+# Zerlegen in Datenfelder, in Liste eintragen::
 
-# Liste mit Datenfeldern initialisieren::
-
-        list.__init__(self, entry)
+        list.__init__(self, line.split(delimiter))
 
 
 # Rückverwandlung in String
@@ -364,6 +360,14 @@ class WordEntry(list):
 # >>> auffrass.conflate_fields()
 # >>> print auffrass
 # auffrass;-2-;-3-;-4-;auf-frass
+
+# Aber nicht, wenn die Trennstellen sich unterscheiden:
+
+# >>> abenddienste = WordEntry(
+# ...    u'Abenddienste;-2-;Abend=dien-ste;Abend=diens-te')
+# >>> abenddienste.conflate_fields()
+# >>> print abenddienste
+# Abenddienste;-2-;Abend=dien-ste;Abend=diens-te
 #
 # ::
 
@@ -515,8 +519,14 @@ if __name__ == '__main__':
         key = join_word(wort)
         if key != entry[0]:
             print ("key %s != %s" % (key, entry[0])).encode('utf8')
+        # Doppelauszeichnungen:
+        # if wort.find('==') + wort.find('||') != -2:
+        if '=' in wort and '|' in wort:
+            print wort.encode('utf8')
 
+    sys.exit()
     # wordfile.seek(0)            # Pointer zurücksetzen
+    
 
 
 # Liste der Datenfelder (die Klasseninstanz als Argument für `list` liefert

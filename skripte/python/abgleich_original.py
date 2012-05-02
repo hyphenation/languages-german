@@ -52,7 +52,10 @@ for entry in wortliste:
         silben1 = re.split(u'[-·._|=]+', o_entry.get('de-1901') or '')
         silben2 = re.split(u'[-·._|=]+', o_entry.get('de-1996') or '')
         if silben1 == silben2:
-            print "Bereinigt:", str(o_entry)
+            if len(entry) == 2:
+                print "Bereinigt:", str(o_entry)
+            else:
+                print "noch offen", str(o_entry)
             neu.append(entry) # so lassen
             continue
     

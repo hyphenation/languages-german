@@ -23,7 +23,7 @@ from analyse import read_teilwoerter
 # ---------------
 # Sprach-Tag nach [BCP47]_::
 
-sprachvariante = 'de-1901'         # "traditionell"
+# sprachvariante = 'de-1901'         # "traditionell"
 # sprachvariante = 'de-1996'         # Reformschreibung
 # sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
 # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
@@ -35,9 +35,27 @@ sprachvariante = 'de-1901'         # "traditionell"
 # Funktionen
 # -----------
 #
+# Zerlege ein Wort mit Trennzeichen in eine Liste von Silben und eine Liste
+# von Trennzeichen)
+#
+# >>> from abgleich_teilwoerter import zerlege
+#
+# >>> zerlege(u'Haupt=stel-le')
+# ([u'Haupt', u'stel', u'le'], [u'=', u'-'])
+# >>> zerlege(u'Ge|samt||be|triebs=rats==chef')
+# ([u'Ge', u'samt', u'be', u'triebs', u'rats', u'chef'], [u'|', u'||', u'|', u'=', u'=='])
+#
+# ::
+
+def zerlege(wort):
+    silben = re.split(u'[-·._|=]+', wort)
+    trennzeichen = re.split(u'[^-·._|=]+', wort)
+    return silben, [tz for tz in trennzeichen if tz]
+
+
 # Übertrage die Trennzeichen von `wort1` auf `wort2`:
 #
-# >>> from abgleich_teilwoerter import uebertrage
+# >>> from abgleich_teilwoerter import uebertrage, TransferError
 #
 # >>> uebertrage(u'Haupt=stel-le', u'Haupt·stel·le')
 # u'Haupt=stel-le'
@@ -63,7 +81,7 @@ sprachvariante = 'de-1901'         # "traditionell"
 # ...     uebertrage(u'Ha-upt=stel-le', u'Haupt=stel·le')
 # ...     uebertrage(u'Haupt=ste-lle', u'Haupt=stel·le')
 # ...     uebertrage(u'Waupt=stel-le', u'Haupt=stel·le')
-# ... except ValueError:
+# ... except TransferError:
 # ...     pass
 #
 # Übertragung auch bei unterschiedlicher Schreibung oder Position der
@@ -79,7 +97,7 @@ sprachvariante = 'de-1901'         # "traditionell"
 #
 # >>> try:
 # ...     uebertrage(u'Ha-upt=ste-lle', u'Haupt=stel·le', strict=False)
-# ... except ValueError:
+# ... except TransferError:
 # ...     pass
 #
 # Akzeptiere unterschiedliche Anzahl von Trennungen bei st und ck nach
@@ -103,46 +121,48 @@ class TransferError(ValueError):
 
 selbstlaute = u'aeiouäöüAEIOUÄÖÜ'
 
-
 def uebertrage(wort1, wort2, strict=True):
 
-    trennzeichen1 = re.sub(u'[^-·._|=]', '', wort1)
-    trennzeichen2 = re.sub(u'[^-·._|=]', '', wort2)
-
-    silben1 = re.split(u'[-·._|=]+', wort1)
-    silben2 = re.split(u'[-·._|=]+', wort2)
-
+    silben1, trennzeichen1 = zerlege(wort1)
+    silben2, trennzeichen2 = zerlege(wort2)
     # Prüfe strikte Übereinstimmung:
     if silben1 != silben2 and strict:
-        raise TransferError(wort1, wort2)
+        if u'|' in trennzeichen1 or u'·' in trennzeichen2:
+            raise TransferError(wort1, wort2)
+        else:
+            return wort2
     # Prüfe ungefähre Übereinstimmung:
     if len(trennzeichen1) != len(trennzeichen2):
         # Selbstlaut + st oder ck?
         for s in selbstlaute:
             if (wort2.find(s+u'{ck/k·k}') != -1 or
                 wort2.find(s+u'{ck/k-k}') != -1):
-                wort1a = wort1.replace(s+u'ck', s+u'-ck')
-                return uebertrage(wort1a, wort2, strict)
+                wort1 = wort1.replace(s+u'ck', s+u'-ck')
+                silben1, trennzeichen1 = zerlege(wort1)
             if wort2.find(s+u's·t') != -1:
-                wort1a = wort1.replace(s+u'st', s+u's-t')
-                return uebertrage(wort1a, wort2, strict)
-            if wort1.find(s+u's-t') != -1:
-                wort1a = wort1.replace(s+u's-t', s+u'st')
-                return uebertrage(wort1a, wort2, strict)
-        raise TransferError(wort1, wort2)
+                wort1 = wort1.replace(s+u'st', s+u's-t')
+                silben1, trennzeichen1 = zerlege(wort1)
+            elif wort1.find(s+u's-t') != -1:
+                wort1 = wort1.replace(s+u's-t', s+u'st')
+                silben1, trennzeichen1 = zerlege(wort1)
+        # immer noch ungleiche Zahl an Trennstellen?
+        if len(trennzeichen1) != len(trennzeichen2):
+            raise TransferError(wort1, wort2)
 
     # Baue wort3 aus silben2 und spezifischeren Trennzeichen:
     wort3 = silben2.pop(0)
     for t1,t2 in zip(trennzeichen1, trennzeichen2):
-        if t2 == u'·' and t1 != u'.':
+        if (t2 == u'·' and t1 != u'.' # unspezifisch
+            or t2 == u'-' and t1 in (u'|', u'||')  # Vorsilben
+                          or t1 in (u'=', u'==')   # Wortfugen
+           ):
             wort3 += t1
-        elif t2 == u'-' and t1 == u'|':  # Vorsilben
-            wort3 += t1
+        # elif t2 == u'-' and t1 == u'=': # in "gewichtet" wahrscheinlich Vorsilbe
+        #     wort3 += u'|'
         else:
             wort3 += t2
         wort3 += silben2.pop(0)
     return wort3
-
 
 # Großschreibung in Kleinschreibung wandeln und umgekehrt
 #
@@ -160,7 +180,7 @@ def uebertrage(wort1, wort2, strict=True):
 # u'l}a-ger'
 #
 # Keine Änderung bei wörtern mit Großbuchstaben im Inneren:
-
+#
 # >>> toggle_case(u'USA')
 # u'USA'
 #
@@ -178,14 +198,14 @@ def toggle_case(wort):
 # Übertrag kategorisierter Trennstellen aus Teilwort-Datei auf die
 # `wortliste`::
 
-def teilwortabgleich(wort, grossklein=False):
-        teile = [teilabgleich(teil, grossklein)
+def teilwortabgleich(wort, grossklein=False, strict=True):
+        teile = [teilabgleich(teil, grossklein, strict)
                  for teil in wort.split(u'=')]
         return u'='.join(teile)
 
-def teilabgleich(teil, grossklein=False):
+def teilabgleich(teil, grossklein=False, strict=True):
     if grossklein:
-        return toggle_case(teilabgleich(toggle_case(teil)))
+        return toggle_case(teilabgleich(toggle_case(teil), strict=strict))
     try:
         key = join_word(teil)
     except AssertionError, e:
@@ -194,15 +214,19 @@ def teilabgleich(teil, grossklein=False):
     if key not in words.trennungen:
         # print teil.encode('utf8'), 'not in words'
         return teil
-    if len(words.trennungen[key]) != 1:
-        # print 'Mehrdeutig:', words.trennungen[key]
-        return teil
-    try:
-        return uebertrage(words.trennungen[key][0], teil)
-    except ValueError, e: # Inkompatible Wörter
-        print e
-        return teil
-
+    # Gibt es eine eindeutige Trennung für Teil?
+    if len(words.trennungen[key]) > 2:
+            print 'Mehrdeutig:', words.trennungen[key]
+            # return teil
+    for wort in words.trennungen[key]:
+        # Übertrag der Trennungen
+        try:
+            teil = uebertrage(wort, teil, strict)
+        except TransferError, e: # Inkompatible Wörter
+            print e
+            
+    return teil
+    
 # Übertrag kategorisierter Trennungen auf Grundwörter mit anderer Endung:
 # ::
 
@@ -227,7 +251,7 @@ def grundwortabgleich(wort, endung, vergleichsendung=u''):
                 neustamm = neustamm[:-len(vergleichsendung)]
             # Mit Originalendung einsetzen
             teile[-1] =  neustamm + endung.replace(u'·', u'-')
-        except ValueError, e:
+        except TransferError, e:
             print e
 
     return u'='.join(teile)
@@ -257,19 +281,20 @@ def sprachabgleich(entry):
             ungewichtet = field
     if mit_vorsilbe and (gewichtet or ungewichtet):
         for i in range(1,len(entry)):
+            if entry[i].startswith('-'): # -2-, -3-, ...
+                continue
             if u'|' not in entry[i]:
                 try:
                     entry[i] = uebertrage(mit_vorsilbe, entry[i], strict=False)
-                except ValueError, e:
-                    if not entry[i].startswith('-'): # -2-, -3-, ...
-                        print 'Sprachabgleich:', e
+                except TransferError, e:
+                    print 'Sprachabgleich:', e
         print mit_vorsilbe.encode('utf8')+':', str(entry)
     elif gewichtet and ungewichtet:
         for i in range(1,len(entry)):
             if u'·' in entry[i]:
                 try:
                     entry[i] = uebertrage(gewichtet, entry[i], strict=False)
-                except ValueError, e:
+                except TransferError, e:
                     print e
         print gewichtet.encode('utf8'), str(entry)
 
@@ -331,9 +356,9 @@ if __name__ == '__main__':
 
 # Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
 
-        wort2 = teilwortabgleich(wort, grossklein=True)
-        # wort2 = grundwortabgleich(wort, endung=u'·res',
-        #                           vergleichsendung=u'r')
+        wort2 = teilwortabgleich(wort, grossklein=False, strict=True)
+        # wort2 = grundwortabgleich(wort, endung=u'i-ge',
+        #                           vergleichsendung=u'ig')
         # wort2 = vorsilbentest(wort)
 
         if wort != wort2:

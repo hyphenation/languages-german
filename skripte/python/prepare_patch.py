@@ -18,13 +18,22 @@ from copy import deepcopy
 from werkzeug import WordFile, WordEntry, join_word, udiff
 from sort import sortkey_wl, sortkey_duden
 
+# Sprachvarianten
+# ---------------
+# Sprach-Tag nach [BCP47]_::
+
+sprachvariante = 'de-1901'         # "traditionell"
+# sprachvariante = 'de-1996'         # Reformschreibung
+# sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
+# sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
+# sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
+# sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
+
 
 # Allgemeine Korrektur (z.B. Fehltrennung)
 #
 # Format:
-#  * ein Wort mit Trennstellen (für allgemeingültige Trennstellen):
-#    Das ungetrennte Wort wird vorangestellt (durch Semikolon getrennt),
-#    oder
+#  * ein Wort mit Trennstellen (für "Sprachvariante"):
 #  * vollständiger Eintrag (für Wörter mit Sprachvarianten).
 #
 # ::
@@ -40,15 +49,18 @@ def korrektur(wortliste):
             key = line.split(';')[0]
         else:
             key = join_word(line)
-            line = u'%s;%s' % (key, line)
         korrekturen[key] = line
 
     wortliste_neu = [] # korrigierte Liste
 
     for entry in wortliste:
-        if entry[0] in korrekturen:
-            entry = WordEntry(korrekturen[entry[0]])
-            del(korrekturen[entry[0]])
+        key = entry[0]
+        if key in korrekturen:
+            korrektur = korrekturen.pop(key)
+            if u';' in korrektur:
+                entry = WordEntry(korrektur)
+            else:
+                entry.set(korrektur, sprachvariante)
         wortliste_neu.append(entry)
 
     if korrekturen:
@@ -73,7 +85,8 @@ def fehleintraege(wortliste):
     korrekturen = open('fehleintraege.todo').readlines()
     # Dekodieren, Zeilenende entfernen, Trennzeichen entfernen
     korrekturen = set(join_word(line.decode('utf8').strip())
-                        for line in korrekturen)
+                      for line in korrekturen
+                      if not line.startswith('#'))
     wortliste_neu = [] # korrigierte Liste
     for entry in wortliste:
         if entry[0] in korrekturen: # nicht kopieren
@@ -103,7 +116,8 @@ def grossklein(wortliste):
     # Dekodieren, Zeilenende entfernen
     korrekturen = [line.decode('utf8').strip() for line in korrekturen]
     # erstes Feld, Trennzeichen entfernen
-    korrekturen = [join_word(line.split(';')[0]) for line in korrekturen]
+    korrekturen = [join_word(line.split(';')[0]) for line in korrekturen
+                   if not line.startswith('#')]
     korrekturen = set(korrekturen)
     wortliste_neu = [] # korrigierte Liste
 
@@ -162,7 +176,7 @@ def reformschreibung(wortliste):
 # --------------------------------------
 #
 # Korrigiere fehlende Spezifizierung nach Sprachvarianten, z.B.
-# 
+#
 # - System;Sy-stem
 # + System;-2-;Sy-stem;Sys-tem
 
@@ -248,8 +262,8 @@ if __name__ == '__main__':
     # wortliste_neu = grossklein(wortliste)
     # wortliste_neu = neu(wortliste)
     # wortliste_neu = reformschreibung(wortliste)
-    wortliste_neu = sprachvariante_split(wortliste, 
-                                         u'{ck/k-k}', u'-ck')
+    # wortliste_neu = sprachvariante_split(wortliste,
+    #                                      u'knien', u'kni-en')
     # wortliste_neu = korrektur(wortliste)
 
 # Patch erstellen::

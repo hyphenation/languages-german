@@ -95,9 +95,8 @@ sprachvariante = 'de-1901'
 #
 # Wörter mit "Vorsilbenkandidaten" die keine Vorsilben sind::
 
-ausnahmen = set(('Aussee', 'Ausseer',
-                 'Alster',
-                ))
+ausnahmen = set(line.decode('utf8').strip() 
+                for line in open('wortteile/vorsilbenausnahmen'))
 
 # "Nachwörter" (Wörter die nicht ohne Vorsilben vorkommen)::
 
@@ -115,10 +114,23 @@ nachwoerter = (#'bau', 'geh',
 
 words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
 
-trennungen = deepcopy(words.trennungen)
+# Grundwörter welche Vorsilben folgen::
+
+grundwoerter = set()
+for wort in words.trennungen.values():
+    match = re.search(ur'\|([^|]+)$', wort[-1])
+    # if len(wort) > 1:
+    #     print wort
+    if match:
+        grundwoerter.add(match.group(1))
+
+# print grundwoerter
+# print len(trennungen), len(grundwoerter)
+# sys.exit()
+
+# Teilwörterdatei für die zeilenweise Modifikation::
 
 teilwoerter = io.open('teilwoerter-%s.txt'%sprachvariante, encoding='utf8')
-
 neuteile = [] # Übertrag
 
 # Analyse
@@ -126,39 +138,48 @@ neuteile = [] # Übertrag
 #
 # Suche nach Wörtern mit (Vor-) Silbe::
 
-silbe = 'aus'
+silbe = 'ab'
 
 pattern = '[%s%s]%s' % (silbe[0].upper(), silbe[0], silbe[1:]) # [Aa]us
 
 # Sortierung in::
 
-fertig = []             # Restwort existiert
-nicht = []              # erkannte Ausnahmen
-test = []               # zum Test neuer Regeln, z Zt. Groß-/Kleinschreibung
+ist_ausnahme = []       # erkannte Ausnahmen
+teil_und_grundwort = [] # Restwort existiert als Teil- und Grundwort
+mit_teilwort = []       # Restwort existiert als Teilwort
+mit_grundwort = []      # Restwort existiert mit anderer Vorsilbe
+grossklein = []         # Restwort mit anderer Groß-/Kleinschreibung
 kandidat = []           # Restwort nicht in der Wortliste
-mittig = []             # Silbe nicht am Wortanfang
-
 
 # Iteration über bekannte Einzelwörter::
 
 for line in teilwoerter:
-    wort, tags = line.split()
+    try:
+        wort, tags = line.split()
+    except ValueError:
+        if line.startswith('#'):
+            neuteile.append(line)
+            continue
+        else:
+            raise
+            
 
 # Test auf Vorsilben
 # ------------------
 #
 # Suche nach der Silbe am Anfang eines Teilwortes::
 
-    match = re.match(u'(%s)[-·](.+)'%pattern, wort)
+    match = re.match(ur'(.+\|)?(%s)[-·](.+)'%pattern, wort)
     if not match:
         neuteile.append(line)
         continue
 
 # Zerlegung::
 
-    silbe = match.group(1)
-    rest = match.group(2)
-    ersetzung = '%s|%s' %(silbe, rest)
+    vorsilbe = match.group(1) or ''
+    silbe = match.group(2)
+    rest = match.group(3)
+    ersetzung = '%s%s|%s' %(vorsilbe, silbe, rest)
     key = join_word(rest)
     if wort[0].isupper():
         key = key.title()
@@ -166,14 +187,24 @@ for line in teilwoerter:
 # Ausnahmen aus der Ausnahmeliste::
 
     if join_word(wort) in ausnahmen:
-        nicht.append(wort)
+        ist_ausnahme.append(wort)
 
 # Wenn der Wortbestandteil hinter der getesteten Silbe im Wörterbuch
 # vorhanden ist, kann davon ausgegangen werden, daß es sich um eine Vorsilbe
 # oder ein Teilwort handelt::
 
+    elif key in words.trennungen and key in grundwoerter:
+        teil_und_grundwort.append(ersetzung)
+        # Zeile ändern:
+        line = u'%s %s\n' % (ersetzung, tags)
+
     elif key in words.trennungen:
-        fertig.append(ersetzung)
+        mit_teilwort.append(ersetzung)
+        # Zeile ändern:
+        line = u'%s %s\n' % (ersetzung, tags)
+
+    elif key in grundwoerter:
+        mit_grundwort.append(ersetzung)
         # Zeile ändern:
         line = u'%s %s\n' % (ersetzung, tags)
 
@@ -181,7 +212,7 @@ for line in teilwoerter:
 
     elif key.lower() in words.trennungen or key.title() in words.trennungen:
         # Extra abspeichern für manuelle Qualitätskontrolle
-        test.append(' '.join((ersetzung, key)))
+        grossklein.append(' '.join((ersetzung, key)))
         # Zeile ändern:
         line = u'%s %s\n' % (ersetzung, tags)
 
@@ -190,7 +221,7 @@ for line in teilwoerter:
     else:
         kandidat.append(ersetzung)
         # Zeile ändern:
-        # line = u'%s %s\n' % (ersetzung, tags)
+        line = u'%s %s\n' % (ersetzung, tags)
 
     neuteile.append(line)
 
@@ -200,27 +231,42 @@ for line in teilwoerter:
 #
 # ::
 
-print 'Mit (Vor-) Silbe: "%s"' % silbe, len(fertig) + len(test) + len(kandidat)
+print 'Mit (Vor-) Silbe: "%s"' % silbe, 
+print len(mit_teilwort) + len(grossklein) + len(kandidat)
 print
-print '* Grundwort existiert:', len(fertig)
-for wort in fertig:
+
+print '* erkannte Ausnahmen:', len(ist_ausnahme)
+for wort in ist_ausnahme:
     print wort.encode('utf8')
 print
-print '* erkannte Ausnahmen:', len(nicht)
-for wort in nicht:
+
+print '* Grundwort existiert als Teil- und Grundwort:', len(teil_und_grundwort)
+for wort in teil_und_grundwort:
     print wort.encode('utf8')
 print
-print '* Grundwort mit anderer Groß-/Kleinschreibung:', len(test)
-for wort in test:
+
+print '* Grundwort existiert als Teilwort:', len(mit_teilwort)
+for wort in mit_teilwort:
     print wort.encode('utf8')
 print
-print '* Kandidaten (Grundwort nicht gefunden):', len(kandidat)
+
+print '* Grundwort existiert mit anderer Vorsilbe:', len(mit_grundwort)
+for wort in mit_grundwort:
+    print wort.encode('utf8')
+print
+
+print '* Grundwort mit anderer Groß-/Kleinschreibung:', len(grossklein)
+for wort in grossklein:
+    print wort.encode('utf8')
+print
+
+print '* Grundwort nicht gefunden:', len(kandidat)
 for wort in kandidat:
     print wort.encode('utf8')
 
 # Ausgabe
 # =======
-
+# ::
 
 ausgabedatei = io.open('teilwoerter-neu', mode='w', encoding='utf8')
 ausgabedatei.writelines(neuteile)

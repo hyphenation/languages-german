@@ -71,7 +71,13 @@ def read_teilwoerter(path):
 
     for line in open(path):
         line = line.decode('utf8')
-        wort, flags = line.split()
+        try:
+            wort, flags = line.split()
+        except ValueError:
+            if line.startswith('#'):
+                continue
+            else:
+                raise ValueError('cannot parse line '+line.encode('utf8')) 
 
         key = join_word(wort)
         flags = [int(n) for n in flags.split(u';')]
@@ -122,7 +128,10 @@ def analyse(path='../../wortliste', sprachvariante='de-1901'):
 
 # Teilwörter suchen::
 
-        teile = [spezialbehandlung(teil) for teil in wort.split(u'=')]
+        # Zerlegen, leere Teile (wegen Mehrfachtrennzeichen '==') weglassen,
+        # "halbe" Spezialtrennungen entfernen:
+        teile = [spezialbehandlung(teil) for teil in wort.split(u'=')
+                 if teil]
         
         # Einzelwort
         if len(teile) == 1:
@@ -168,12 +177,15 @@ def write_teilwoerter(words, path):
 
     outfile = open(path, 'w')
 
+    header = u'# wort S;E;M;L (Solitär, erstes/mittleres/letztes Wort)'
+
     # Menge aller Teilwörter:
     teilwoerter = set()
 
     for kategorie in (words.S, words.E, words.M, words.L):
         teilwoerter.update(set(kategorie.keys()))
 
+    outfile.write(header.encode('utf8'))
     for teil in sorted(teilwoerter):
         line = '%s %d;%d;%d;%d\n' % (
             teil, words.S[teil], words.E[teil], words.M[teil], words.L[teil])
@@ -194,15 +206,18 @@ if __name__ == '__main__':
     # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
-
+    # 
     words = analyse(sprachvariante=sprachvariante)
     write_teilwoerter(words, 'teilwoerter-%s.txt'%sprachvariante)
-    sys.exit()
 
 # Test::
 
-    words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
+    # sys.exit()
 
+    words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
+    
     for teil in sorted(words.trennungen):
+        if len(words.trennungen[teil]) == 1:
+            continue
         line = u' '.join([teil]+words.trennungen[teil]) + u'\n'
         print line.encode('utf8'),
