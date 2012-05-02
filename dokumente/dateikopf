@@ -36,6 +36,45 @@
 # (deutsch)schweizerische die Felder 2, 3, 5, 6 und 8.  Felder mit höherer
 # Feldnummer haben Priorität.
 #
+#
+# Folgende Zeichen kennzeichnen Trennstellen:
+#
+#   =  Trennstelle an Wortfugen (Wort=fu-ge)
+#   |  Trennstelle nach Präfix (Vor|sil-be)
+#   -  Trennstelle in einfachem oder suffigiertem Wort (ne-ben)
+#   ·  (noch) nicht kategorisierte Trennstelle
+#
+# Für die Bindungsstärke B von Trennstellen verschiedener Kategorien gilt
+# B(-) > B(|) > B(=)
+#
+#   Aus|wahl=lis-te:        (Aus + wahl) + liste
+#   fern=ab||ge|le-gen      fern + (ab + (ge + legen))
+#
+# Mehrfach hintereinander auftretende Trennzeichen markieren die
+# unterschiedliche Bindungsstärke von Trennungen der gleichen Kategorie:
+#
+#   Abend=brot=zeit:    (Abend + brot) + zeit
+#   un||voll|ständig:	un + (voll + ständig)
+#
+# Das gemischte Trennzeichen »|=« kennzeichnet die Bindungverhältnisse,
+# wenn sich ein echter Präfix auf das gesamte folgende Kompositum bezieht:
+#
+#   un|=wahr=schein-li-ch:  un + (wahr + scheinlich)
+#
+# Ebenso wie die Characterisierung ist die Markierung der Bindungstärke
+# unvollständig.
+#
+#
+# Ungünstige Trennstellen sind mit einem Punkt markiert.  Der Punkt kann
+# einem (oder mehreren) Trennzeichen zur Kategorisierung folgen.
+# Besonders ungünstige Trennstellen können mit mehreren Punkten
+# gekennzeichnet sein.
+#
+#   .    irreführend (An·den.ken, Ost=en.de, Re|im|.port)
+#   ..   sinnentstellend (Ge·winn·er..war·tung)
+#   ...  anstößig (An|al-...pha-bet)
+#
+#
 # Folgende Notation wird verwendet, um spezielle Trennungen (für die
 # traditionelle Rechtschreibung) zu kennzeichnen:
 #
@@ -52,23 +91,6 @@
 #
 #   s| { ( [^/]* ) / [^}]* } | \1 |gx
 #
-# Folgende Trennzeichen kennzeichnen die Kategorie der Trennstellen:
-#
-#   =  Trennstelle an Wortfugen (Wort=fu-ge); kann auch mehrfach
-#      hintereinander auftreten, um eine Gewichtung auszudrücken
-#      (Zei-tungs==her|aus=ge-ber)
-#   |  Trennstelle nach Präfix (Vor|sil-be)
-#   -  Trennstelle in einfachem oder suffigiertem Wort (ne-ben)
-#   ·  (noch) nicht kategorisierte Trennstelle
-#
-# Ungünstige Trennstellen sind mit einem Punkt markiert.  Der Punkt kann
-# einem (oder mehreren) Trennzeichen zur Kategorisierung folgen.
-# Besonders ungünstige Trennstellen können mit mehreren Punkten
-# gekennzeichnet sein.
-#
-#   .    irreführend (An·den.ken, Ost=en.de, Re|im|.port)
-#   ..   sinnentstellend (Ge·winn·er..war·tung)
-#   ...  anstößig (An|al-...pha-bet)
 #
 # Doppeldeutige Trennstellen werden folgendermaßen deklariert:
 #
@@ -78,4 +100,3 @@
 # entfernen und die häufigeren Fälle in einem \hyphenation-Block zu
 # behandeln.  Sowohl in `[...]' als auch in `{...}' können alle Arten von
 # gewichteten und ungewichteten Trennstellen auftreten.
-#
