@@ -47,19 +47,26 @@
 # Für die Bindungsstärke B von Trennstellen verschiedener Kategorien gilt
 # B(-) > B(|) > B(=)
 #
-#   Aus|wahl=lis-te:        (Aus + wahl) + liste
-#   fern=ab||ge|le-gen      fern + (ab + (ge + legen))
+#   Aus|wahl=lis-te        (Aus + wahl) + liste
+#   fern=ab||ge|le-gen     fern + (ab + (ge + legen))
 #
-# Mehrfach hintereinander auftretende Trennzeichen markieren die
-# unterschiedliche Bindungsstärke von Trennungen der gleichen Kategorie:
+# Doppeltrennzeichen (auch Dreifach- ...) markieren die unterschiedliche
+# Bindungsstärke von Trennungen der gleichen Kategorie:
 #
-#   Abend=brot=zeit:    (Abend + brot) + zeit
-#   un||voll|ständig:	un + (voll + ständig)
+#   Alp==horn=trio            Alp + (horn + trio)
+#   un||voll|ständig 	      un + (voll + ständig)
+#   nach|||zu||voll|zie-hend  nach + (zu + (voll + ziehend))
+#
+# Verschiedene Trennstellen der gleichen Kategorie ohne Doppelung bezeichnen
+# entweder gleichwertige Wortbestandteile, Zerlegungsalternativen oder sind
+# einfach noch nicht behandelt:
+#
+#   Abend=brot=zeit        (Abend + brot) + zeit oder Abend + (brot + zeit)
 #
 # Das gemischte Trennzeichen »|=« kennzeichnet die Bindungverhältnisse,
 # wenn sich ein echter Präfix auf das gesamte folgende Kompositum bezieht:
 #
-#   un|=wahr=schein-li-ch:  un + (wahr + scheinlich)
+#   un|=wahr=schein-li-ch  un + (wahr + scheinlich)
 #
 # Ebenso wie die Characterisierung ist die Markierung der Bindungstärke
 # unvollständig.
