@@ -84,23 +84,6 @@
 \newcommand*{\Abk}[1]{\mbox{\textsc{\lsstyle#1}}}
 \newcommand*{\Programm}[1]{\textsc{\lsstyle#1}}
 \newcommand*{\Datei}[1]{\texttt{#1}}
-%%% Randnotiz am linken Rand.
-\newcommand{\lrand}[1]{%
-  \mbox{}%
-  \marginpar{%
-    \hspace*{-2\marginparsep}%
-    \hspace*{-\textwidth}%
-    \hspace*{-\marginparwidth}%
-    \parbox[t]{\marginparwidth}{%
-      \raggedright%
-      \small%
-      \sffamily%
-      \bfseries%
-      #1%
-    }%
-  }%
-  \ignorespaces%
-}
 \colorlet{richtigcol}{green!80!black}
 \colorlet{falschcol}{red!80!black}
 \colorlet{tradcol}{green!50!black}
@@ -148,7 +131,7 @@
   varieties of Standard German.  The patterns can be used with packages
   \texttt{Babel} and \texttt{hyphsubst} from the \Programm{Oberdiek
     bundle}.  More information can be found in the Trennmuster-Wiki%
-  \footnote{\url{http://projekte.dante.de/Trennmuster/WebHome}}
+  \footnote{\url{http://projekte.dante.de/Trennmuster}}
   %
   (in German).
 \end{abstract}
@@ -328,7 +311,11 @@ Zur Installation der experimentellen Trennmuster siehe
 \autoref{sec:installation} und die Datei \Datei{INSTALL}.  Beachte, in
 den folgenden Abschnitten ist \verb+<datum>+ durch das bei der
 Installation angegebene Datum in \Abk{iso}-Notation (\verb+JJJJ-MM-TT+)
-oder die Zeichenkette \verb+latest+ zu ersetzen!
+oder die Zeichenkette \verb+latest+ zu ersetzen.  \autoref{sec:fragen}
+enthält Hinweise, wie das Datum ermittelt werden kann, falls die
+experimentellen Trennmuster in Ihrer \TeX-Verteilung schon
+vorinstalliert sind.
+
 
 \subsection{Sprachvarietät und Rechtschreibung}
 \label{sec:varietaeten}
@@ -389,7 +376,11 @@ Sprachvarietäten bereitgestellt werden können.
 \subsection{Aktivieren der Trennmuster}
 \label{sec:aktivieren}
 Das folgende Beispiel zeigt eine \LaTeX-Präambel für die Aktivierung der
-experimentellen Trennmuster für die reformierte Rechtschreibung.
+experimentellen Trennmuster für die reformierte Rechtschreibung.  Die
+Trennmusterbezeichner, die vom Paket \texttt{Babel} verwendet werden,
+werden dazu mit Hilfe des Pakets \texttt{hyphsubst} aus dem
+\Programm{Oberdiek-Bündel} so geändert, dass sie auf die experimentellen
+Trennmuster verweisen:
 
 \begin{lstlisting}[style=LaTeX]
 \RequirePackage[ngerman=ngerman-x-<datum>]{hyphsubst}
@@ -464,7 +455,13 @@ Die Regeln lassen gewisse Freiheiten bei der Schreibung und Trennung von
 Wörtern zu.  Da sich solche Freiheiten nicht ohne weiteres auf die
 maschinelle Worttrennung übertragen lassen, wurden die im folgenden
 beschriebenen Konventionen getroffen.  Hauptsächlich betreffen diese die
-reformierte Rechtschreibung, die zusätzliche Freiheiten eingeführt hat.
+reformierte Rechtschreibung, die zusätzliche Freiheiten eingeführt
+hat.\footnote{%
+  Im Ergebnis weicht in reformierter Rechtschreibung die Trennung zum
+  Beispiel des Dudens (nach Sprechsilben) von der Trennung mit diesen
+  Trennmustern (bevorzugt etymologisch) ab, siehe auch
+  \regelref{enum:reformEtymo} und \regelref{enum:reformClusterLR} sowie
+  \autoref{sec:fragen}.}
 Beziehen sich die Konventionen für die reformierte Rechtschreibung auf
 die traditionelle Rechtschreibung, so werden die entsprechenden Regeln
 etwas ausführlicher dargestellt.  Die folgenden Abschnitte enthalten
@@ -552,18 +549,19 @@ allgemeine Hinweise:
   nur an übereinstimmenden Trennstellen zugelassen.
 
   \begin{tabular}[t]{TUUU}
-    Druckerzeug-nis & Druck-erzeugnis & Drucker-zeugnis\\
-    Fuß-balleh-re & Fußball-ehre & Fußball-lehre\\
-    Mu-sikerle-ben & Musik-erleben & Musi-ker-leben\\
     nachtritt & nach-tritt & Nacht-ritt\\
     Wachstu-be & Wach-stube & Wachs-tube\\
+    Druckerzeug-nis & Druck-erzeugnis & Drucker-zeugnis\\
+    Mu-sikerle-ben & Musik-erleben & Musi-ker-leben\\
+    Fuß-balleh-re & Fußball-ehre & Fußball-lehre\\
   \end{tabular}
 
   Beachte, die Trennstellen ">Drucker-zeugnis"< und ">Musiker-leben"<
   sind in den Interpretationen \emph{Druck-Erzeugnis} und
   \emph{Musik-Erleben} irreführend.  Sie entfallen nach
   \regelref{enum:tradSinn} und sind nicht als übereinstimmende
-  Trennstellen anzusehen.
+  Trennstellen anzusehen.  Zur Spezialtrennung ">Fußball-lehre"< siehe
+  auch \regelref{enum:tradnstd}.
 
   Für diese Regel gelten die folgenden Einschränkungen:
   \begin{itemize}
@@ -606,16 +604,16 @@ allgemeine Hinweise:
     \lstinline[style=LaTeX]+\\discretionary\{k-\}\{k\}\{ck\}+ ersetzt,
     wodurch \emph{k-k}-Trennungen möglich werden.}
 
-  \begin{tabular}[t]{TU}
-    drucken & drucken\\
-    Zuckerbäcker & Zucker-bäcker\\
-    Stoffetzen & Stoffet-zen\\
-    Metallegierung & Me-talle-gie-rung\\
+  \begin{tabular}[t]{lT}
+    \lstinline[style=LaTeX]+drucken+ & drucken\\
+    \lstinline[style=LaTeX]+Zuckerbäcker+ & Zucker-bäcker\\
+    \lstinline[style=LaTeX]+Stoffetzen+ & Stoffet-zen\\
+    \lstinline[style=LaTeX]+Metallegierung+ & Me-talle-gie-rung\\
   \end{tabular}
   \par\nobreak
   \textit{aber:}
 
-  \begin{tabular}[t]{TU}
+  \begin{tabular}[t]{lT}
       \lstinline[style=LaTeX]+dru"cken+ & druk-ken \\
       \lstinline[style=LaTeX]+Meta"llegierung+ & Me-tall-legierung \\
   \end{tabular}
@@ -851,11 +849,10 @@ erfüllt ist:
 
 \end{enumerate}
 
-\autoref{sec:wortliste} beschreibt, wie auf die Wortliste zugegriffen
-werden kann.  Einige bekannte Fehler in den Trennmustern sind in der
-Datei \Datei{CHANGES} verzeichnet.  Noch nicht bekannte falsche,
-fehlende und unerwünschte Worttrennungen können an die folgenden
-E-Mail-Adressen gerichtet werden:
+Einige bekannte Fehler in den Trennmustern sind in der Datei
+\Datei{CHANGES} verzeichnet.  Noch nicht bekannte falsche, fehlende und
+unerwünschte Worttrennungen können an die folgenden E-Mail-Adressen
+gerichtet werden:
 \begin{itemize}
 \item
   \href{mailto:trennmuster@dante.de}{trennmuster@dante.de},
@@ -870,10 +867,12 @@ können mit Hilfe einer privaten Ausnahmeliste behandelt werden:
 
 Die aktuelle und ältere Ausgaben der Trennmuster sind im Dateibereich
 des Trennmuster-Wikis erhältlich.%
-\footnote{\url{http://projekte.dante.de/Trennmuster/WebHome}}
+\footnote{\url{http://projekte.dante.de/Trennmuster}}
 %
-Im \Programm{Git}-Repositorium (siehe Anhang) befindet sich ein
-Makefile, mit dem jederzeit neue Trennmuster erzeugt werden können.
+Im Entwicklerrepositorium\footnote{%
+  siehe \url{http://projekte.dante.de/Trennmuster/Entwickler}}
+befindet sich ein Makefile, mit dem jederzeit neue Trennmuster erzeugt
+werden können.
 
 \nobreak
 \noindent\parbox{\linewidth}{%
@@ -916,57 +915,8 @@ Bei der Installation werden die Manteldateien an die in
 \autoref{tab:varietaeten} gezeigten Trennmusterbezeichner gebunden.
 Diese Schritte werden für verschiedene \TeX-Verteilungen in der Datei
 \Datei{INSTALL} beschrieben.  Nach der Installation können die
-experimentellen Trennmuster wie in \autoref{sec:aktivieren} gezeigt mit
-den Paketen \texttt{Babel} und \texttt{hyphsubst} aus dem
-\Programm{Oberdiek-Bündel} aktiviert werden.
-
-
-\section{Die Wortliste}
-\label{sec:wortliste}
-\begin{description}
-\item[Bezug] Die Wortliste ist über das öffentliche
-  Entwicklerrepositorium%
-  \footnote{\url{http://repo.or.cz/w/wortliste.git}}
-  %
-  des Projekts%
-  \footnote{\url{http://projekte.dante.de/Trennmuster/WebHome}}
-  %
-  erhältlich.  Eine Kopie kann mit
-\begin{lstlisting}[style=shell]
-$git clone git://repo.or.cz/wortliste.git
-\end{lstlisting}
-  bezogen werden.%
-  \footnote{\url{http://repo.or.cz/}}
-
-  \emph{Hinweis:} Ältere \Programm{Git}-Versionen als v1.5.6.5 enthalten
-  einen Fehler im Netzwerkzugriff, der dazu führt, dass statt eines
-  Satzes von Änderungen häufig die komplette Wortliste übertragen wird.
-
-  Für einen reibungslosen Betrieb sollte nach dem Klonen dieses
-  Repositoriums die Konfigurationsvariable
-  \verb+core.DeltaBaseCacheLimit+ vom Standardwert 16\,MB auf mindestens
-  64\,MB erhöht werden.  Mit älteren \Programm{Git}-Versionen können
-  auch deutlich höhere Werte sinnvoll sein.  Die Konfiguration kann
-  beispielhaft so erfolgen:
-\begin{lstlisting}[style=shell]
-$git config core.DeltaBaseCacheLimit 64m
-$git config --get core.DeltaBaseCacheLimit
-\end{lstlisting}
-  Das letzte Kommando sollte nun den Wert \verb+64m+ zurückliefern.
-
-\item[Dateiformat] Das Format der Wortliste wird in der Datei
-  \Datei{dateikopf} beschrieben.
-
-\item[Version] Der \Abk{sha1}-Commit-Hash der Repositoriumversion, die
-  den Musterdateien
-\begin{lstlisting}
-dehypht-x-<datum>.pat
-dehyphts-x-<datum>.pat
-dehyphn-x-<datum>.pat
-\end{lstlisting}
-  zugrundeliegt, sowie eine \Abk{url} zum direkten Herunterladen der
-  Wortliste (ca. 15\,MB) kann dem Kopf der Dateien entnommen werden.
-\end{description}
+experimentellen Trennmuster wie in \autoref{sec:aktivieren} gezeigt
+verwendet werden.
 
 
 \section{Fragen \& Antworten}
@@ -994,6 +944,7 @@ dehyphn-x-<datum>.pat
 %%% Fuegt eine neue Themenueberschrift ein.
 \newcommand*{\fragenthema}[1]{%
   \par
+  \pagebreak[1]
   \vspace{.25\baselineskip plus .1\baselineskip minus .1\baselineskip}
   \refstepcounter{cntfrage}
   \stepcounter{thema}
@@ -1054,6 +1005,52 @@ dehyphn-x-<datum>.pat
 
 
 \zeigefragen
+
+
+\fragenthema{Verwenden der Trennmuster}
+
+\begin{frageantwort}{Die experimentellen Trennmuster waren in der
+    \TeX-Verteilung bereits vorinstalliert.  Wie kann das Datum
+    ermittelt werden, das Teil des Trennmusterbezeichners ist, wie in
+    \autoref{sec:verwenden} erwähnt?}
+  Die Trennmusterbezeichner werden in der Datei \Datei{language.dat}
+  definiert, wo auch die Verbindung zu den Manteldateien hergestellt
+  wird.  Da ein Teil der Trennmusterbezeichner bereits bekannt ist,
+  \verb+german-x+, vgl. \autoref{tab:varietaeten}, kann die Datei
+  \Datei{language.dat} danach durchsucht werden.  Zunächst muss der Ort
+  der Datei mit Hilfe des Kommandos \lstinline[style=shell]{kpsewhich}
+  ermittelt werden.  Es folgen die vollständigen Kommandos für
+  unixähnliche Shells und die Windows-Kommandozeile \Datei{cmd.exe}.
+  Achtung, bei den einfachen Anführungszeichen handelt es sich um
+  Gravis ("`Backquotes"').
+
+  \begin{lstlisting}[style=shell, caption=shell]
+grep -i german-x `kpsewhich language.dat`
+  \end{lstlisting}
+
+  \begin{lstlisting}[style=shell, caption=\Datei{cmd.exe}]
+for /F "usebackq" %f in (`kpsewhich language.dat`) do find /i "german-x" %f
+  \end{lstlisting}
+
+  Die Ausgabe dieser Kommandos sieht etwa wie folgt aus (das Datum kann
+  abweichen):
+
+\begin{lstlisting}
+german-x-2009-06-19 dehypht-x-2009-06-19.tex
+=german-x-latest
+ngerman-x-2009-06-19 dehyphn-x-2009-06-19.tex
+=ngerman-x-latest
+\end{lstlisting}
+  Die gesuchten Trennmusterbezeichner befinden sich in der ersten Spalte
+  und lauten in diesem Beispiel
+  \lstinline[style=LaTeX]{german-x-2009-06-19} und
+  \lstinline[style=LaTeX]{ngerman-x-2009-06-19}.  In der zweiten Spalte
+  kann man die Namen der Manteldateien erkennen
+  (vgl. \autoref{tab:dateien}).  Die mit einem Gleichheitszeichen
+  beginnenden Zeilen definieren ein Synonym für den
+  Trennmusterbezeichner der unmittelbar vorangehenden Zeile in der Datei
+  \Datei{language.dat}.
+\end{frageantwort}
 
 
 \fragenthema{Rechtschreibung}
@@ -1121,7 +1118,7 @@ dehyphn-x-<datum>.pat
 \begin{frageantwort}{Wie kann ich mich über dieses Projekt informieren?}
   Zentrale Anlaufstelle ist das Trennmuster-Wiki, welches sich momentan
   jedoch noch im Aufbau befindet.%
-  \footnote{\url{http://projekte.dante.de/Trennmuster/WebHome}}
+  \footnote{\url{http://projekte.dante.de/Trennmuster}}
 %
   Für Fragen und Hinweise kann nach Anmeldung die Mailingliste%
 %

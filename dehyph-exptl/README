@@ -1,67 +1,71 @@
-Package: dehyph-exptl (experimental German hyphenation patterns)
-Version: v0.22
-Date: 2011-07-02
-License: LPPL
-Author: Werner Lemberg
-Email: wl@gnu.org
-URL: http://projekte.dante.de/Trennmuster/WebHome
+# Package information
+
+* Package name: dehyph-exptl
+* Summary description: experimental hyphenation patterns for the German
+  language
+* Version: 0.22
+* Date: 2011-07-02
+* License: [LPPL](http://www.latex-project.org/lppl.txt)
+* Author: Werner Lemberg, <wl@gnu.org>
+* URL: [Trennmuster-Wiki](http://projekte.dante.de/Trennmuster)
 
 
-English:
+# Package description
+
+## English
 This package provides experimental hyphenation patterns for
 the German language, covering traditional and reformed
 orthography for several varieties of Standard German.  The
 patterns can be used with packages Babel and hyphsubst from
 the Oberdiek bundle.
 
-Deutsch:
-Dieses Paket enthaelt experimentelle Trennmuster fuer die
+
+## Deutsch
+Dieses Paket enthält experimentelle Trennmuster für die
 deutsche Sprache.  Die Trennmuster decken das in
-Deutschland, Oesterreich und der Schweiz gebraeuchliche
+Deutschland, Österreich und der Schweiz gebräuchliche
 Standarddeutsch in der traditionellen und reformierten
-Rechtschreibung ab und koennen mit den Paketen Babel und
-hyphsubst aus dem Oberdiek-Buendel verwendet werden.
+Rechtschreibung ab und können mit den Paketen Babel und
+hyphsubst aus dem Oberdiek-Bündel verwendet werden.
 
 
-*****************
-**  File List  **
-*****************
-CHANGES                  - documentation (ISO-8859-15)
-INSTALL                  - documentation (ISO-8859-15)
-LICENSE                  - documentation (ASCII)
-README                   - documentation (ASCII)
-dehyph-exptl.bib         - documentation (ASCII)
-dehyph-exptl.pdf         - documentation
-dehyph-exptl.tex         - documentation (ISO-8859-15)
-dehyphn-x-<date>.pat     - patterns for reformed orthography of
-                            Standard German as used in Germany,
-                            Austria, and Switzerland (UTF-8)
-dehyphn-x-<date>.tex     - wrapper for 8-bit TeX
-dehypht-x-<date>.pat     - patterns for traditional orthography
-                            of Standard German as used in
-                            Germany and Austria (UTF-8)
-dehypht-x-<date>.tex     - wrapper for 8-bit TeX
-dehyphts-x-<date>.pat    - patterns for traditional orthography
-                            of Standard German as used in
-                            Switzerland (UTF-8)
-dehyphts-x-<date>.tex    - wrapper for 8-bit TeX
-projektbeschreibung.bib  - documentation (ASCII)
-projektbeschreibung.pdf  - documentation
-projektbeschreibung.tex  - documentation (ISO-8859-15)
+# Package installation
+
+See file `INSTALL` for German and English installation instructions.
 
 
-********************
-**  Installation  **
-********************
-See file INSTALL for German and English installation
-instructions.
+# Package documentation
+
+Documentation can be found in file `dehyph-exptl.pdf` (German only).
 
 
-**********************
-**   Documentation  **
-**********************
-Documentation can be found in file dehyph-exptl.pdf (German
-only).
+# File list
+
+    CHANGES                   UTF-8         documentation
+    INSTALL                   ISO-8859-15   documentation
+    LICENSE                   ASCII         documentation
+    README                    UTF-8         documentation
+    dehyph-exptl.bib          ASCII         documentation
+    dehyph-exptl.pdf          binary        documentation
+    dehyph-exptl.tex          ISO-8859-15   documentation
+    dehyphn-x-<date>.pat      UTF-8         patterns for reformed orthography of Standard German as used in Germany, Austria, and Switzerland
+    dehyphn-x-<date>.tex                    wrapper for 8-bit TeX
+    dehypht-x-<date>.pat      UTF-8         patterns for traditional orthography of Standard German as used in Germany and Austria
+    dehypht-x-<date>.tex                    wrapper for 8-bit TeX
+    dehyphts-x-<date>.pat     UTF-8         patterns for traditional orthography of Standard German as used in Switzerland
+    dehyphts-x-<date>.tex                   wrapper for 8-bit TeX
+    projektbeschreibung.bib   ASCII         documentation
+    projektbeschreibung.pdf   binary        documentation
+    projektbeschreibung.tex   ISO-8859-15   documentation
 
 
 END.
+
+
+
+<!--
+%%% Local Variables: 
+%%% coding: utf-8
+%%% mode: markdown
+%%% End: 
+-->
