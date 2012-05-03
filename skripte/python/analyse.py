@@ -77,7 +77,7 @@ def read_teilwoerter(path):
             if line.startswith('#'):
                 continue
             else:
-                raise ValueError('cannot parse line '+line.encode('utf8')) 
+                raise ValueError('cannot parse line '+line.encode('utf8'))
 
         key = join_word(wort)
         flags = [int(n) for n in flags.split(u';')]
@@ -105,6 +105,7 @@ def spezialbehandlung(teil):
         teil = re.sub(r'\{([^/]*)[^}]*$', r'\1', teil)
         teil = re.sub(r'\[([^/]*)[^\]]*$', r'\1', teil)
         teil = re.sub(r'^(.)}', r'\1', teil)
+        teil = re.sub(r'^(.)\]', r'\1', teil)
         # print teil.encode('utf8')
     return teil
 
@@ -132,17 +133,18 @@ def analyse(path='../../wortliste', sprachvariante='de-1901'):
         # "halbe" Spezialtrennungen entfernen:
         teile = [spezialbehandlung(teil) for teil in wort.split(u'=')
                  if teil]
-        
+
         # Einzelwort
         if len(teile) == 1:
-            if u'·' not in wort:
+            if u'·' not in wort: # skip unkategorisiert, könnte Kopositum sein
                 words.S[wort] += 1
             continue
 
         gross = wort[0].istitle()
 
         # erstes Teilwort:
-        if u'·' not in teile[0]:
+        if (u'·' not in teile[0]
+            and u'|' not in wort): # Präfix wie un|=wahr=schein-lich
             words.E[teile[0]] += 1
 
         # letztes Teilwort:
@@ -206,7 +208,7 @@ if __name__ == '__main__':
     # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
-    # 
+    #
     words = analyse(sprachvariante=sprachvariante)
     write_teilwoerter(words, 'teilwoerter-%s.txt'%sprachvariante)
 
@@ -215,9 +217,14 @@ if __name__ == '__main__':
     # sys.exit()
 
     words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
-    
+
+    # Trennungsvarianten zum gleichen Key:
     for teil in sorted(words.trennungen):
         if len(words.trennungen[teil]) == 1:
+            continue
+        # Bekannte Mehrdeutigkeiten:
+        if teil in ('Base',  'Mode', 'Page', 'Planes', 'Rate', 'Real',
+                    'Spar', 'Wales', 'Ware',):
             continue
         line = u' '.join([teil]+words.trennungen[teil]) + u'\n'
         print line.encode('utf8'),

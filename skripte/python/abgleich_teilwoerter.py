@@ -23,7 +23,7 @@ from analyse import read_teilwoerter
 # ---------------
 # Sprach-Tag nach [BCP47]_::
 
-# sprachvariante = 'de-1901'         # "traditionell"
+sprachvariante = 'de-1901'         # "traditionell"
 # sprachvariante = 'de-1996'         # Reformschreibung
 # sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
 # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
@@ -153,12 +153,10 @@ def uebertrage(wort1, wort2, strict=True):
     wort3 = silben2.pop(0)
     for t1,t2 in zip(trennzeichen1, trennzeichen2):
         if (t2 == u'·' and t1 != u'.' # unspezifisch
-            or t2 == u'-' and t1 in (u'|', u'||')  # Vorsilben
-                          or t1 in (u'=', u'==')   # Wortfugen
+            or t2 in (u'-', u'|') and t1 in (u'|', u'||')  # Vorsilben
+            or t1 in (u'=', u'==')   # Wortfugen
            ):
             wort3 += t1
-        # elif t2 == u'-' and t1 == u'=': # in "gewichtet" wahrscheinlich Vorsilbe
-        #     wort3 += u'|'
         else:
             wort3 += t2
         wort3 += silben2.pop(0)
