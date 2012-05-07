@@ -169,6 +169,44 @@ def analyse(path='../../wortliste', sprachvariante='de-1901'):
 
     return words
 
+# Datenerhebung zum Stand der Präfixmarkierung in der Liste der Teilwörter::
+
+def statistik_praefixe(teilwoerter):
+    
+    # Präfixe (auch als Präfix verwendete Partikel, Adjektive, ...):
+    praefixe = set(line.rstrip().lower().decode('utf8') 
+                   for line in open('wortteile/praefixe'))
+    # Sammelboxen:
+    markiert = defaultdict(int)    # mit | markierte Präfixe
+    kandidaten = defaultdict(int)   # nicht mit | markierte Präfixe
+    grundwoerter = defaultdict(int)   # Wörter nach abtrennen markierter Präfixe
+
+    # Analyse
+    for trennungen in teilwoerter.trennungen.values():
+        for wort in trennungen:
+            teile = wort.split(u'|')
+            for teil in teile[:-1]:
+                markiert[join_word(teil.lower())] += 1
+            grundwoerter[teile[-1]] += 1
+            # erste Silbe des Grundworts
+            erstsilbe = re.match(ur'([^-|.·]*)', teile[-1]).group(1).lower()
+            if erstsilbe in praefixe:
+                kandidaten[erstsilbe] += 1
+        
+    # Ausgabe
+    print 'Präfixe aus der Liste "wortteile/praefixe" (|, -, =):"'
+    for vs in sorted(praefixe):
+        print ('%-10s %d %d %d' % 
+               (vs, markiert.pop(vs, 0), kandidaten[vs], 
+                teilwoerter.E[vs] + teilwoerter.M[vs]
+                + teilwoerter.E[vs.title()] + teilwoerter.M[vs.title()])
+              ).encode('utf8')
+    
+    print 'Markierte Präfixe die nicht in der Präfix-Liste stehen:'
+    for vs, i in markiert.items():
+        print vs.encode('utf8'), i
+
+
 
 # Ausgabe
 # ==========
@@ -208,9 +246,9 @@ if __name__ == '__main__':
     # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
-    #
-    words = analyse(sprachvariante=sprachvariante)
-    write_teilwoerter(words, 'teilwoerter-%s.txt'%sprachvariante)
+    
+    # words = analyse(sprachvariante=sprachvariante)
+    # write_teilwoerter(words, 'teilwoerter-%s.txt'%sprachvariante)
 
 # Test::
 
@@ -219,12 +257,15 @@ if __name__ == '__main__':
     words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
 
     # Trennungsvarianten zum gleichen Key:
-    for teil in sorted(words.trennungen):
-        if len(words.trennungen[teil]) == 1:
-            continue
-        # Bekannte Mehrdeutigkeiten:
-        if teil in ('Base',  'Mode', 'Page', 'Planes', 'Rate', 'Real',
-                    'Spar', 'Wales', 'Ware',):
-            continue
-        line = u' '.join([teil]+words.trennungen[teil]) + u'\n'
-        print line.encode('utf8'),
+    # for teil in sorted(words.trennungen):
+    #     if len(words.trennungen[teil]) == 1:
+    #         continue
+    #     # Bekannte Mehrdeutigkeiten:
+    #     if teil in ('Base',  'Mode', 'Page', 'Planes', 'Rate', 'Real',
+    #                 'Spare', 'Wales', 'Ware', 'griff'):
+    #         continue
+    #     line = u' '.join([teil]+words.trennungen[teil]) + u'\n'
+    #     print line.encode('utf8'),
+        
+    # Stand der Vorsilbenmarkierung:
+    statistik_praefixe(words)
