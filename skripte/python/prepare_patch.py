@@ -82,10 +82,9 @@ def fehleintraege(wortliste):
 #
 # ::
 
-    korrekturen = open('fehleintraege.todo').readlines()
     # Dekodieren, Zeilenende entfernen, Trennzeichen entfernen
     korrekturen = set(join_word(line.decode('utf8').strip())
-                      for line in korrekturen
+                      for line in open('fehleintraege.todo')
                       if not line.startswith('#'))
     wortliste_neu = [] # korrigierte Liste
     for entry in wortliste:
@@ -112,9 +111,9 @@ def fehleintraege(wortliste):
 def grossklein(wortliste):
     """Groß-/Kleinschreibung umstellen"""
 
-    korrekturen = open('grossklein.todo').readlines()
     # Dekodieren, Zeilenende entfernen
-    korrekturen = [line.decode('utf8').strip() for line in korrekturen]
+    korrekturen = [line.decode('utf8').strip() 
+                   for line in open('grossklein.todo')]
     # erstes Feld, Trennzeichen entfernen
     korrekturen = [join_word(line.split(';')[0]) for line in korrekturen
                    if not line.startswith('#')]
@@ -150,9 +149,9 @@ def grossklein(wortliste):
 def reformschreibung(wortliste):
     """Wörter die nur in (allgemeiner) Reformschreibung existieren"""
 
-    korrekturen = open('reformschreibung.todo').readlines()
     # Dekodieren, Zeilenende entfernen
-    korrekturen = [line.decode('utf8').strip() for line in korrekturen]
+    korrekturen = [line.decode('utf8').strip() 
+                   for line in open('reformschreibung.todo')]
     # erstes Feld
     korrekturen = [line.split(';')[0] for line in korrekturen]
     korrekturen = set(korrekturen)

@@ -14,10 +14,9 @@
 # ::
 
 from copy import deepcopy
-import re, sys
+import re, sys, codecs
 from werkzeug import WordFile, WordEntry, join_word, udiff
 from analyse import read_teilwoerter
-
 
 # Sprachvarianten
 # ---------------
@@ -118,6 +117,9 @@ class TransferError(ValueError):
     def __init__(self, wort1, wort2):
         msg = u'Inkompatibel: %s %s' % (wort1, wort2)
         ValueError.__init__(self, msg.encode('utf8'))
+        
+    def __unicode__(self):
+        return str(self).decode('utf8')
 
 selbstlaute = u'aeiouäöüAEIOUÄÖÜ'
 
@@ -154,6 +156,7 @@ def uebertrage(wort1, wort2, strict=True):
     for t1,t2 in zip(trennzeichen1, trennzeichen2):
         if (t2 == u'·' and t1 != u'.' # unspezifisch
             or t2 in (u'-', u'|') and t1 in (u'|', u'||')  # Vorsilben
+            or t2 in (u'-', u'|', u'||') and t1 in (u'|||')  # Vorsilben
             or t1 in (u'=', u'==')   # Wortfugen
            ):
             wort3 += t1
@@ -182,10 +185,18 @@ def uebertrage(wort1, wort2, strict=True):
 # >>> toggle_case(u'USA')
 # u'USA'
 #
+# >>> toggle_case(u'gri[f-f/{ff/ff')
+# u'Gri[f-f/{ff/ff'
+# >>> toggle_case(u'Gri[f-f/{ff/ff')
+# u'gri[f-f/{ff/ff'
+
 # ::
 
 def toggle_case(wort):
-    key = join_word(wort)
+    try:
+        key = join_word(wort, assert_complete=True)
+    except AssertionError:
+        key = wort[0]
     if key.istitle():
         return wort.lower()
     elif key.islower():
@@ -210,18 +221,18 @@ def teilabgleich(teil, grossklein=False, strict=True):
         print e
         return teil
     if key not in words.trennungen:
-        # print teil.encode('utf8'), 'not in words'
+        # print teil, u'not in words'
         return teil
     # Gibt es eine eindeutige Trennung für Teil?
     if len(words.trennungen[key]) > 2:
-            print 'Mehrdeutig:', words.trennungen[key]
+            print u'Mehrdeutig:', words.trennungen[key]
             # return teil
     for wort in words.trennungen[key]:
         # Übertrag der Trennungen
         try:
             teil = uebertrage(wort, teil, strict)
         except TransferError, e: # Inkompatible Wörter
-            print e
+            print unicode(e)
             
     return teil
     
@@ -237,11 +248,11 @@ def grundwortabgleich(wort, endung, vergleichsendung=u''):
     grundwort = teile[-1]
     stamm = grundwort[:-len(endung)] + vergleichsendung
     key = join_word(stamm)
-    # print ' '.join([wort, key]).encode('utf8')
+    # print u' '.join([wort, key])
 
     if (key in words.trennungen and
         len(words.trennungen[key]) == 1):
-        # print 'fundum', key.encode('utf8')
+        # print u'fundum', key
         try:
             neustamm = uebertrage(words.trennungen[key][0], stamm)
             # Vergleichsendung abtrennen
@@ -250,7 +261,7 @@ def grundwortabgleich(wort, endung, vergleichsendung=u''):
             # Mit Originalendung einsetzen
             teile[-1] =  neustamm + endung.replace(u'·', u'-')
         except TransferError, e:
-            print e
+            print unicode(e)
 
     return u'='.join(teile)
 
@@ -285,16 +296,16 @@ def sprachabgleich(entry):
                 try:
                     entry[i] = uebertrage(mit_vorsilbe, entry[i], strict=False)
                 except TransferError, e:
-                    print 'Sprachabgleich:', e
-        print mit_vorsilbe.encode('utf8')+':', str(entry)
+                    print u'Sprachabgleich:', unicode(e)
+        print mit_vorsilbe+u':', unicode(entry)
     elif gewichtet and ungewichtet:
         for i in range(1,len(entry)):
             if u'·' in entry[i]:
                 try:
                     entry[i] = uebertrage(gewichtet, entry[i], strict=False)
                 except TransferError, e:
-                    print e
-        print gewichtet.encode('utf8'), str(entry)
+                    print unicode(e)
+        print gewichtet, str(entry)
 
 
 # Teste, ob ein Teilwort eine Vorsilbe (oder auch mehrsilbiger Präfix) ist
@@ -304,16 +315,18 @@ def vorsilbentest(wort):
     teile = wort.split('=')
     # erstes Teilwort
     if teile[0] in vorsilben:
-        return re.sub(r'^%s=' % teile[0], '%s|' % teile[0], wort)
+        return re.sub(r'^%s=' % teile[0], u'%s|' % teile[0], wort)
     # mittlere Teilwörter
     for teil in teile[1:-1]:
         if teil in vorsilben:
-            return re.sub(r'=%s=' % teil, '=%s|' % teil, wort)
+            return re.sub(r'=%s=' % teil, u'=%s|' % teil, wort)
     return wort
 
 
 if __name__ == '__main__':
 
+    # sys.stdout mit UTF8 encoding.
+    sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
 # Teilwörter einlesen::
 
@@ -323,10 +336,10 @@ if __name__ == '__main__':
 
     # for key, value in words.trennungen.iteritems():
     #     if len(value) != 1:
-    #         print key.encode('utf8'), value
+    #         print key, value
     # sys.exit()
 
-    # print grundwortabgleich(u'Aa·chen·ern', 'n').encode('utf8')
+    # print grundwortabgleich(u'Aa·chen·ern', u'n')
     # sys.exit()
 
 # Vorsilben (auch mehrsilbige Präfixe)::
@@ -361,7 +374,7 @@ if __name__ == '__main__':
 
         if wort != wort2:
             entry.set(wort2, sprachvariante)
-            print ('%s -> %s' % (wort, wort2)).encode('utf8')
+            print u'%s -> %s' % (wort, wort2)
             if len(entry) > 2:
                 sprachabgleich(entry)
 
@@ -374,4 +387,4 @@ if __name__ == '__main__':
         patchfile = open('wortliste.patch', 'w')
         patchfile.write(patch + '\n')
     else:
-        print "empty patch"
+        print u'empty patch'

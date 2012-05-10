@@ -56,43 +56,41 @@ sprachvariante = 'de-1901'         # "traditionell"
 # * Ein Wortteil/Zeile
 # * Groß/Kleinschreibung unterschieden
 # * Kodierung: utf8 (bis auf 'ogerman')
-#
-# Generator zum Lesen von Wortdateien::
-
-def wortdatei(name, encoding='utf8'):
-    for line in open(name):
-        yield line.rstrip().decode(encoding)
 
 # Wörterbucher für die Rechtschreibprüfprogramme Ispell/Aspell
 # (in Debian in den Paketen "wngerman" und "wogerman").
-# Unterschieden Groß-/Kleinschreibung und beinhalten auch kurze Wörter. ::
+# Unterscheiden Groß-/Kleinschreibung und beinhalten auch kurze Wörter. ::
 
 if sprachvariante == 'de-1901':
-    wgerman = set(w for w in wortdatei('/usr/share/dict/ogerman', 'latin-1'))
+    wgerman = set(line.rstrip().decode('latin-1') 
+                  for line in open('/usr/share/dict/ogerman'))
 else:
-    wgerman = set(w for w in wortdatei('/usr/share/dict/ngerman'))
+    wgerman = set(line.rstrip().decode('utf8') 
+                  for line in open('/usr/share/dict/ngerman'))
 # Entferne Silben, die nie in Wortverbindungen vorkommen
 for solitaer in ('Ra', 'He', 'As', 'Co', 'Fa'):
     wgerman.discard(solitaer)
 
 # Präfixe (auch als Präfix verwendete Partikel, Adjektive, ...)::
 
-praefixe = set(w for w in wortdatei('wortteile/praefixe'))
+praefixe = set(line.rstrip().decode('utf8') 
+                  for line in open('wortteile/praefixe'))
 
-# Vorsilben (auch mehrsilbige Präfixe) die keine selbständigen Wörter sind::
-
-# Aussortieren selbständiger Wörter:
-words = dict(wortdatei)
-for vs in sorted(vorsilben - wgerman, key=unicode.lower):
-    if (vs not in words 
-        and vs.lower() not in words and vs.title() not in words
-        and vs.lower() not in wgerman and vs.title() not in wgerman):
-        print vs.encode('utf8')
-    
-sys.exit()
+# Präfixe die keine selbständigen Wörter sind::
 
 vorsilben = set(w for w in wortdatei('wortteile/vorsilben'))
 
+# Erstellen der Liste durch Aussortieren selbständiger Wörter
+# (Auskommentieren und Ausgabe unter wortteile/vorsilben abspeichern)::
+
+# words = wordfile.asdict()
+# for vs in sorted(praefixe - wgerman, key=unicode.lower):
+#     if (vs not in words 
+#         and vs.lower() not in words and vs.title() not in words
+#         and vs.lower() not in wgerman and vs.title() not in wgerman):
+#         print vs.encode('utf8')
+#     
+# sys.exit()
 
 
 # Erstsilben: Wörter, die häufig als erste
@@ -141,7 +139,7 @@ unbekannt1 = defaultdict(list)
 unbekannt2 = defaultdict(list)
 
 
-# 1. Durchlauf: Erstellen der Ausgangslisten
+# Erstellen der Ausgangslisten
 # ==========================================
 #
 # ::
@@ -167,9 +165,6 @@ for entry in wortliste:
     if wort is None: # Wort existiert nicht in der Sprachvariante
         continue
 
-    # if u'·' not in wort:  # keine unkategorisierte Trennstelle
-    #     continue
-
 # Spezielle Teilwörter suchen::
 
     # teile = wort.split(u'=')
@@ -181,6 +176,9 @@ for entry in wortliste:
     # if teile[-1] == 'burg':
     #     print ('-'.join(teile[:-1]) + '=' + teile[-1]).encode('utf8')
     # continue
+
+    if u'·' not in wort:  # keine unkategorisierte Trennstelle
+        continue
 
 # Trenne an unkategorisierten Trennstellen (markiert durch '·')::
 

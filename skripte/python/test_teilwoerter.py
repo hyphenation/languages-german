@@ -9,16 +9,16 @@
 
 # test_teilwoerter.py: Test von Wortteilen/Teilwörtern
 # ==================================================================
-# 
+#
 # ::
 
 """Test der Markierung von Komposita in der `Wortliste`"""
 
 # .. contents::
-# 
+#
 # Vorspann
 # ========
-# 
+#
 # Importiere Python Module::
 
 import re       # Funktionen und Klassen für reguläre Ausdrücke
@@ -30,7 +30,7 @@ from werkzeug import WordFile, join_word, udiff
 
 # Sprachvarianten
 # ---------------
-# 
+#
 # Sprach-Tag nach [BCP47]_::
 
 sprachvariante = 'de-1901'         # "traditionell"
@@ -40,7 +40,7 @@ sprachvariante = 'de-1901'         # "traditionell"
 
 # Wortlisten
 # -------------
-# 
+#
 # Die freie `Wortliste der deutschsprachigen Trennmustermannschaft`_
 # ("Lehmansche Liste")::
 
@@ -60,10 +60,10 @@ wortliste = list(wordfile)
 # Unterschieden Groß-/Kleinschreibung und beinhalten auch kurze Wörter. ::
 
 if sprachvariante == 'de-1901':
-    words = set(line.rstrip().decode('latin-1') 
+    words = set(line.rstrip().decode('latin-1')
                   for line in open('/usr/share/dict/ogerman'))
 else:
-    words = set(line.rstrip().decode('utf8') 
+    words = set(line.rstrip().decode('utf8')
                   for line in open('/usr/share/dict/ngerman'))
 
 
@@ -76,13 +76,35 @@ words.update((entry[0] for entry in wortliste
 # (zu kurz, oder keine eigenständigen Wörter)::
 
 words.update(u"""\
+Bob       
+Individual
+Kondolenz 
+Konsortial
+Ringel
+ländischen
+wankel
+wiß
+Dokumentar
+Stief
+Eß
+öster
+Adreß
 Bus
+Ei
+Kriminal
 Leit
 Ost
+Preß
 Süd
 Tee
+Tee
 bewerbs
-nahme\
+cup
+gebung
+legung
+nahme
+un
+ver\
 """.split())
 
 print len(words), 'Wörter aus Wörterbüchern'
@@ -95,10 +117,10 @@ grossklein = defaultdict(list) # Teilwörter mit anderer Groß/Kleinschreibung
 vorsilben = defaultdict(list)   # Teilwörter mit zusätzlicher Vorsilbe
 
 
-        
+
 # Analyse
 # =====================
-# 
+#
 # Durchlaufe alle Einträge::
 
 for entry in wortliste:
@@ -121,9 +143,9 @@ for entry in wortliste:
 # Wortteile analysieren::
 
     for teil in teile:
-        
+
 # Teilwort ohne Trennung, Groß/Kleinschreibung übertragen::
-        
+
         key = join_word(teil)
         if wort.istitle():
             key = key.title()
@@ -132,14 +154,15 @@ for entry in wortliste:
 
         if (key in words
             or key.endswith('s') and key[:-1] in words
+            or key.startswith('zu') and key[2:] in words
             or key + 'e' in words
             or key + 'en' in words):
             continue
-        
+
 # Teste ohne Berücksichtigung der Groß/Kleinschreibung::
 
         if (key.lower() in words or key.title() in words
-            or (key.endswith('s') 
+            or (key.endswith('s')
                 and key[:-1].lower() in words or key[:-1].title() in words)
             or key.lower() + 'e' in words or key.title() + 'e' in words
             or key.lower() + 'en' in words or key.title() + 'en' in words
@@ -150,7 +173,7 @@ for entry in wortliste:
 # Teilwort mit Vorsilbe::
 
         # ohne_vorsilbe = ''
-        # for silbe in ('ab', 'an', 'be', 'ex', 'ge', 'un', 
+        # for silbe in ('ab', 'an', 'be', 'ex', 'ge', 'un',
         #               'ver', 'vor', 'zu'):
         #     if (teil.lower().replace(u'·', '-').startswith(silbe+'-')
         #         and (key[len(silbe):] in words
@@ -169,11 +192,11 @@ for entry in wortliste:
 
 # Ausgabe
 # =======
-# 
+#
 # ::
 
 def testausgabe(checkdict):
-    checkliste = ['%3d %-10s %s' % 
+    checkliste = ['%3d %-10s %s' %
                   (len(checkdict[key]), key, ', '.join(checkdict[key]))
                   for key in sorted(checkdict.keys())]
     checkliste.sort()
@@ -192,7 +215,7 @@ grossklein_file.write(testausgabe(grossklein))
 
 # Auswertung
 # ==========
-# 
+#
 # ::
 
 print 'Gesamtwortzahl (w*german+Wortliste, %s):' % sprachvariante, len(words)
@@ -206,10 +229,10 @@ print 'Teilwort nicht gefunden:', len(unbekannt)
 
 # Quellen
 # =======
-# 
+#
 # .. [BCP47]  A. Phillips und M. Davis, (Editoren.),
 #    `Tags for Identifying Languages`, http://www.rfc-editor.org/rfc/bcp/bcp47.txt
-# 
+#
 # .. _Wortliste der deutschsprachigen Trennmustermannschaft:
 #    http://mirrors.ctan.org/language/hyphenation/dehyph-exptl/projektbeschreibung.pdf
-# 
+#

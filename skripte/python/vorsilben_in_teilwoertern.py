@@ -75,10 +75,14 @@ import io       # (De-) Kodierung beim Schreiben/Lesen von Dateien
 import re       # Funktionen und Klassen für reguläre Ausdrücke
 import sys      # sys.exit() zum Abbruch vor Ende (für Testzwecke)
 import difflib  # unified diff aus Vergleich zweier Listen
+import codecs
 from copy import deepcopy
 
 from werkzeug import WordFile, join_word
 from analyse import read_teilwoerter
+
+# sys.stdout mit UTF8 encoding.
+sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
 # Sprachvarianten
 # ---------------
@@ -96,6 +100,7 @@ sprachvariante = 'de-1901'
 # Wörter mit "Vorsilbenkandidaten" die keine Vorsilben sind::
 
 ausnahmen = set(line.decode('utf8').strip() 
+        
                 for line in open('wortteile/vorsilbenausnahmen'))
 
 # "Nachwörter" (Wörter die nicht ohne Vorsilben vorkommen)::
@@ -138,7 +143,10 @@ neuteile = [] # Übertrag
 #
 # Suche nach Wörtern mit (Vor-) Silbe::
 
-silbe = 'ab'
+silbe = 'her'
+
+# elek-tro, öko, bio, geo, zoo, ra-dio, ar-chäo, 
+# kontra=
 
 pattern = '[%s%s]%s' % (silbe[0].upper(), silbe[0], silbe[1:]) # [Aa]us
 
@@ -179,14 +187,17 @@ for line in teilwoerter:
     vorsilbe = match.group(1) or ''
     silbe = match.group(2)
     rest = match.group(3)
-    ersetzung = '%s%s|%s' %(vorsilbe, silbe, rest)
+    if vorsilbe:
+        ersetzung = '%s|%s|%s' %(vorsilbe, silbe, rest)
+    else:
+        ersetzung = '%s%s|%s' %(vorsilbe, silbe, rest)
     key = join_word(rest)
     if wort[0].isupper():
         key = key.title()
 
 # Ausnahmen aus der Ausnahmeliste::
 
-    if join_word(wort) in ausnahmen:
+    if join_word(silbe+rest) in ausnahmen:
         ist_ausnahme.append(wort)
 
 # Wenn der Wortbestandteil hinter der getesteten Silbe im Wörterbuch
@@ -231,38 +242,38 @@ for line in teilwoerter:
 #
 # ::
 
-print 'Mit (Vor-) Silbe: "%s"' % silbe, 
+print u'Mit (Vor-) Silbe: "%s"' % silbe, 
 print len(mit_teilwort) + len(grossklein) + len(kandidat)
 print
 
-print '* erkannte Ausnahmen:', len(ist_ausnahme)
+print u'* erkannte Ausnahmen:', len(ist_ausnahme)
 for wort in ist_ausnahme:
-    print wort.encode('utf8')
+    print wort
 print
 
-print '* Grundwort existiert als Teil- und Grundwort:', len(teil_und_grundwort)
+print u'* Grundwort existiert als Teil- und Grundwort:', len(teil_und_grundwort)
 for wort in teil_und_grundwort:
-    print wort.encode('utf8')
+    print wort
 print
 
-print '* Grundwort existiert als Teilwort:', len(mit_teilwort)
+print u'* Grundwort existiert als Teilwort:', len(mit_teilwort)
 for wort in mit_teilwort:
-    print wort.encode('utf8')
+    print wort
 print
 
-print '* Grundwort existiert mit anderer Vorsilbe:', len(mit_grundwort)
+print u'* Grundwort existiert mit anderer Vorsilbe:', len(mit_grundwort)
 for wort in mit_grundwort:
-    print wort.encode('utf8')
+    print wort
 print
 
-print '* Grundwort mit anderer Groß-/Kleinschreibung:', len(grossklein)
+print u'* Grundwort mit anderer Groß-/Kleinschreibung:', len(grossklein)
 for wort in grossklein:
-    print wort.encode('utf8')
+    print wort
 print
 
-print '* Grundwort nicht gefunden:', len(kandidat)
+print u'* Grundwort nicht gefunden:', len(kandidat)
 for wort in kandidat:
-    print wort.encode('utf8')
+    print wort
 
 # Ausgabe
 # =======

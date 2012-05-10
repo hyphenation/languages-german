@@ -26,6 +26,7 @@
 
 import difflib
 import re
+import codecs
 
 # WordFile
 # ========
@@ -34,40 +35,22 @@ import re
 
 class WordFile(file):
 
-# Argumente
-# ---------
-#
 # encoding
-# ~~~~~~~~
-#
-# Die originale Wortlisten-Datei ist mit 'latin-1' kodiert,
-# lokal existiert eine nach utf8 konvertierte Variante::
+# --------
 
     encoding = 'utf8'
-
 
 # readlines
 # ---------
 #
-# Lies die Datei in eine Liste von Zeilen
+# Iterator über reLies die Datei in eine Liste von Zeilen
 # (`unicode` Strings ohne Zeilenendezeichen)::
 
     def readlines(self, keepends=False):
 
 # Lesen als `bytes` String::
 
-        inhalt = self.read()
-
-# Dekodieren: Versuche zunächst 'utf8', bei Fehlern erneut mit 'latin-1'::
-
-        try:
-            inhalt = inhalt.decode(self.encoding)
-        except UnicodeError:
-            if self.encoding != 'latin1':
-                self.encoding = 'latin1'
-                inhalt = inhalt.decode(self.encoding)
-            else:
-                raise
+        inhalt = self.read().decode(self.encoding)
 
 # Splitten in eine Liste der Zeilen und zurückgeben::
 
@@ -87,8 +70,7 @@ class WordFile(file):
 # Liefer einen Iterator über die "geparsten" Zeilen (Datenfelder)::
 
     def __iter__(self):
-        lines = self.readlines()
-        for line in lines:
+        for line in self.readlines():
             yield WordEntry(line)
 
 # asdict
@@ -104,18 +86,17 @@ class WordFile(file):
             words[entry[0]] = entry
         return words
 
-# write_lines
+# writelines
 # -----------
 #
 # Schreibe eine Liste von `unicode` Strings (Zeilen ohne Zeilenendezeichen)
 # in die Datei `destination`::
 
     def writelines(self, lines, destination, encoding=None):
-        if encoding is None:
-            encoding = self.encoding
-        outfile = open(destination, 'w')
-        outfile.write(u'\n'.join(lines).encode(encoding))
-        outfile.write('\n')
+        outfile = codecs.open(destination, 'w', 
+                              encoding=(encoding or self.encoding))
+        outfile.write(u'\n'.join(lines))
+        outfile.write(u'\n')
 
 # write_entry
 # ------------
@@ -493,6 +474,9 @@ def udiff(a, b, fromfile='', tofile='',
 if __name__ == '__main__':
     import sys
 
+    # sys.stdout mit UTF8 encoding (wie in Python 3)
+    sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
+
     print "Test der Werkzeuge"
 
     # wordfile = WordFile('../../wortliste-binnen-s')
@@ -503,28 +487,27 @@ if __name__ == '__main__':
 
     ##
     # zeilen = wordfile.readlines()
-    # print len(zeilen), "Zeilen",
-    # print 'Kodierung:', wordfile.encoding  # aktualisiert beim Lesen
+    # print len(zeilen), u"Zeilen",
     # wordfile.seek(0)            # Pointer zurücksetzen
 
 # Iteration über "geparste" Zeilen (i.e. Datenfelder)::
 
     ##
-    for entry in wordfile:
-        # Sprachauswahl:
-        wort = entry.get('de-1901')
-        if wort is None:
-            continue
-        # Test der Trennstellentfernung:
-        key = join_word(wort)
-        if key != entry[0]:
-            print ("key %s != %s" % (key, entry[0])).encode('utf8')
-        # Doppelauszeichnungen:
-        # if wort.find('==') + wort.find('||') != -2:
-        if '=' in wort and '|' in wort:
-            print wort.encode('utf8')
+    # for entry in wordfile:
+    #     # Sprachauswahl:
+    #     wort = entry.get('de-1901')
+    #     if wort is None:
+    #         continue
+    #     # Test der Trennstellentfernung:
+    #     key = join_word(wort)
+    #     if key != entry[0]:
+    #         print (u"key %s != %s" % (key, entry[0]))
+    #     # Doppelauszeichnungen:
+    #     # if wort.find('==') + wort.find('||') != -2:
+    #     # if '=' in wort and '|' in wort:
+    #     #     print wort
 
-    sys.exit()
+    # sys.exit()
     # wordfile.seek(0)            # Pointer zurücksetzen
     
 
@@ -532,9 +515,9 @@ if __name__ == '__main__':
 # Liste der Datenfelder (die Klasseninstanz als Argument für `list` liefert
 # den Iterator über die Felder, `list` macht daraus eine Liste)::
 
-    wortliste = list(wordfile)
-
-    print len(wortliste), "Einträge"
+    # wortliste = list(wordfile)
+    # 
+    # print len(wortliste), u"Einträge"
 
     # for entry in wortliste:
     #     # Zeilenrekonstruktion:
@@ -543,7 +526,7 @@ if __name__ == '__main__':
     #         line = unicode(entry)
     #         assert original == line, "Rejoined %s != %s" % (line, ur_line)
 
-    # print "Doppeleinträge (Groß/Klein):"
+    # print u"Doppeleinträge (Groß/Klein):"
     # words = set()
     # for entry in wortliste:
     #     wort = entry[0]
@@ -556,7 +539,7 @@ if __name__ == '__main__':
 
     words = wordfile.asdict()
 
-    print len(words), "Wörterbucheinträge"
+    print len(words), u"Wörterbucheinträge"
 
 
 # Quellen
