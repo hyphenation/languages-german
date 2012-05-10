@@ -20,6 +20,7 @@
 # (`[.../...]') anzeigen, werden immer entfernt.
 
 use strict;
+use utf8;         # String-Literals direkt als UTF-8
 use Getopt::Std;
 getopts('guv');
 
@@ -27,6 +28,10 @@ our ($opt_g, $opt_u, $opt_v);
 
 my $prog = $0;
 $prog =~ s@.*/@@;
+
+# Kodierung:
+binmode(STDIN, ":encoding(utf8)"); # Eingabe (wortliste) in UTF-8
+binmode(STDOUT, ":latin1");        # patgen expects a Latin-1 encoded file
 
 while (<>) {
   chop;
@@ -50,9 +55,8 @@ while (<>) {
 
   # entferne spezielle Trennungen
   $zeile =~ s|\{(.*?)/.*?\}|$1|g;
-  # entferne Doppeldeutigkeiten; \xb7 ist `·' in
-  # Latin-1-Kodierung
-  $zeile =~ s;\[[-=|\xb7]*(.*?)[-=|\xb7]*/.*?\];$1;g;
+  # entferne Doppeldeutigkeiten;
+  $zeile =~ s;\[[-=|·]*(.*?)[-=|·]*/.*?\];$1;g;
 
   # Ausgabe von Wörtern mit unerwünschten Trennungen?
   next if $zeile =~ /[._]/ and $opt_u;
@@ -60,9 +64,9 @@ while (<>) {
   $zeile =~ s/[._]//g;
 
   # Ausgabe von Wörtern mit ungewichteten Trennstellen?
-  next if $zeile =~ /\xb7/ and $opt_g;
+  next if $zeile =~ /·/ and $opt_g;
   # reduziere Trennstellenmarker zu `-', falls gewollt
-  $zeile =~ s/[\xb7|=-]+/-/g if not $opt_g;
+  $zeile =~ s/[·|=-]+/-/g if not $opt_g;
 
   print "$zeile\n";
 }

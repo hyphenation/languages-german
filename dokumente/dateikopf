@@ -1,4 +1,4 @@
-# Wortliste deutscher Wörter mit gewichteten Trennungen
+# Wortliste deutscher WÃ¶rter mit gewichteten Trennungen
 #
 # Version @version@
 #
@@ -7,54 +7,54 @@
 # Bedeutung der Felder:
 #
 #   1 Wort ungetrennt
-#   2 Wort mit Trennungen, falls für alle Varianten identisch,
+#   2 Wort mit Trennungen, falls fÃ¼r alle Varianten identisch,
 #     anderenfalls leer
 #   3 falls Feld 2 leer, Trennung nach traditioneller Rechtschreibung
 #   4 falls Feld 2 leer, Trennung nach reformierter Rechtschreibung (2006)
-#   5 falls Feld 2 leer, Trennung für Wortform, die entweder in
-#     der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird
-#     und für traditionelle und reformierte Rechtschreibung identisch ist
-#   6 falls Feld 5 leer, Trennung für Wortform, die entweder in
-#     der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
+#   5 falls Feld 2 leer, Trennung fÃ¼r Wortform, die entweder in
+#     der Schweiz oder mit GroÃŸbuchstaben oder KapitÃ¤lchen benutzt wird
+#     und fÃ¼r traditionelle und reformierte Rechtschreibung identisch ist
+#   6 falls Feld 5 leer, Trennung fÃ¼r Wortform, die entweder in
+#     der Schweiz oder mit GroÃŸbuchstaben oder KapitÃ¤lchen benutzt wird,
 #     traditionelle Rechtschreibung
-#   7 falls Feld 5 leer, Trennung für Wortform, die entweder in
-#     der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
+#   7 falls Feld 5 leer, Trennung fÃ¼r Wortform, die entweder in
+#     der Schweiz oder mit GroÃŸbuchstaben oder KapitÃ¤lchen benutzt wird,
 #     reformierte Rechtschreibung (2006)
 #   8 falls Feld 5 leer, Trennung nach (deutsch)schweizerischer
-#     Rechtschreibung; insbesondere Wörter mit `sss' gefolgt von
+#     Rechtschreibung; insbesondere WÃ¶rter mit `sss' gefolgt von
 #     einem Vokal, die wie andere Dreifachkonsonanten gehandhabt wurden
-#     (also anders, als der Duden früher vorgeschrieben hat), z.B.
-#     `süssauer'
+#     (also anders, als der Duden frÃ¼her vorgeschrieben hat), z.B.
+#     `sÃ¼ssauer'
 #
 # Leere Felder sind mit `-x-' markiert (`x' ist die Feldnummer); Felder 3
 # und 4 als auch Felder 6, 7 und 8 treten immer simultan auf, um die
-# Lesbarkeit zu erhöhen.
+# Lesbarkeit zu erhÃ¶hen.
 #
-# Zur Erstellung von Trennmustern für die traditionelle Rechtschreibung
-# benötigt man Felder 2, 3, 5, und 6; für die reformierte Rechtschreibung
-# die Felder 2, 4, 5 und 7, und für die traditionelle
-# (deutsch)schweizerische die Felder 2, 3, 5, 6 und 8.  Felder mit höherer
-# Feldnummer haben Priorität.
+# Zur Erstellung von Trennmustern fÃ¼r die traditionelle Rechtschreibung
+# benÃ¶tigt man Felder 2, 3, 5, und 6; fÃ¼r die reformierte Rechtschreibung
+# die Felder 2, 4, 5 und 7, und fÃ¼r die traditionelle
+# (deutsch)schweizerische die Felder 2, 3, 5, 6 und 8.  Felder mit hÃ¶herer
+# Feldnummer haben PrioritÃ¤t.
 #
 #
 # Folgende Zeichen kennzeichnen Trennstellen:
 #
 #   =  Trennstelle an Wortfugen (Wort=fu-ge)
-#   |  Trennstelle nach Präfix (Vor|sil-be)
+#   |  Trennstelle nach PrÃ¤fix (Vor|sil-be)
 #   -  Trennstelle in einfachem oder suffigiertem Wort (ne-ben)
-#   ·  (noch) nicht kategorisierte Trennstelle
+#   Â·  (noch) nicht kategorisierte Trennstelle
 #
-# Für die Bindungsstärke B von Trennstellen verschiedener Kategorien gilt
+# FÃ¼r die BindungsstÃ¤rke B von Trennstellen verschiedener Kategorien gilt
 # B(-) > B(|) > B(=)
 #
 #   Aus|wahl=lis-te        (Aus + wahl) + liste
 #   fern=ab||ge|le-gen     fern + (ab + (ge + legen))
 #
 # Doppeltrennzeichen (auch Dreifach- ...) markieren die unterschiedliche
-# Bindungsstärke von Trennungen der gleichen Kategorie:
+# BindungsstÃ¤rke von Trennungen der gleichen Kategorie:
 #
 #   Alp==horn=trio            Alp + (horn + trio)
-#   un||voll|ständig 	      un + (voll + ständig)
+#   un||voll|stÃ¤ndig 	      un + (voll + stÃ¤ndig)
 #   nach|||zu||voll|zie-hend  nach + (zu + (voll + ziehend))
 #
 # Verschiedene Trennstellen der gleichen Kategorie ohne Doppelung bezeichnen
@@ -63,26 +63,26 @@
 #
 #   Abend=brot=zeit        (Abend + brot) + zeit oder Abend + (brot + zeit)
 #
-# Das gemischte Trennzeichen »|=« kennzeichnet die Bindungverhältnisse,
-# wenn sich ein echter Präfix auf das gesamte folgende Kompositum bezieht:
+# Das gemischte Trennzeichen Â»|=Â« kennzeichnet die BindungverhÃ¤ltnisse,
+# wenn sich ein echter PrÃ¤fix auf das gesamte folgende Kompositum bezieht:
 #
 #   un|=wahr=schein-li-ch  un + (wahr + scheinlich)
 #
-# Ebenso wie die Characterisierung ist die Markierung der Bindungstärke
-# unvollständig.
+# Ebenso wie die Characterisierung ist die Markierung der BindungstÃ¤rke
+# unvollstÃ¤ndig.
 #
 #
-# Ungünstige Trennstellen sind mit einem Punkt markiert.  Der Punkt kann
+# UngÃ¼nstige Trennstellen sind mit einem Punkt markiert.  Der Punkt kann
 # einem (oder mehreren) Trennzeichen zur Kategorisierung folgen.
-# Besonders ungünstige Trennstellen können mit mehreren Punkten
+# Besonders ungÃ¼nstige Trennstellen kÃ¶nnen mit mehreren Punkten
 # gekennzeichnet sein.
 #
-#   .    irreführend (An·den.ken, Ost=en.de, Re|im|.port)
-#   ..   sinnentstellend (Ge·winn·er..war·tung)
-#   ...  anstößig (An|al-...pha-bet)
+#   .    irrefÃ¼hrend (AnÂ·den.ken, Ost=en.de, Re|im|.port)
+#   ..   sinnentstellend (GeÂ·winnÂ·er..warÂ·tung)
+#   ...  anstÃ¶ÃŸig (An|al-...pha-bet)
 #
 #
-# Folgende Notation wird verwendet, um spezielle Trennungen (für die
+# Folgende Notation wird verwendet, um spezielle Trennungen (fÃ¼r die
 # traditionelle Rechtschreibung) zu kennzeichnen:
 #
 #   Ab-fa{ll/ll-l}a-ger
@@ -90,20 +90,20 @@
 # Die gleiche Konstruktion wird verwendet, um Trennungen von `ck'
 # darzustellen:
 #
-#   Dru{ck/k·k}er
+#   Dru{ck/kÂ·k}er
 #
-# Um z.B. eine Wortliste für TeX zu konstruieren (traditionelle
+# Um z.B. eine Wortliste fÃ¼r TeX zu konstruieren (traditionelle
 # Rechtschreibung), das solche speziellen Trennungen nicht benutzen kann,
-# ist folgender regulärer Ausdruck in `perl' anzuwenden:
+# ist folgender regulÃ¤rer Ausdruck in `perl' anzuwenden:
 #
 #   s| { ( [^/]* ) / [^}]* } | \1 |gx
 #
 #
-# Doppeldeutige Trennstellen werden folgendermaßen deklariert:
+# Doppeldeutige Trennstellen werden folgendermaÃŸen deklariert:
 #
 #   er[b-/-b]recht
 #
-# Für TeX-Trennmuster ist es vielleicht am besten, solche Einträge zu
-# entfernen und die häufigeren Fälle in einem \hyphenation-Block zu
-# behandeln.  Sowohl in `[...]' als auch in `{...}' können alle Arten von
+# FÃ¼r TeX-Trennmuster ist es vielleicht am besten, solche EintrÃ¤ge zu
+# entfernen und die hÃ¤ufigeren FÃ¤lle in einem \hyphenation-Block zu
+# behandeln.  Sowohl in `[...]' als auch in `{...}' kÃ¶nnen alle Arten von
 # gewichteten und ungewichteten Trennstellen auftreten.
