@@ -29,8 +29,8 @@ my $prog = $0;
 $prog =~ s@.*/@@;
 
 # Kodierung:
-binmode(STDIN, ":encoding(utf8)"); # Eingabe (wortliste) in UTF-8
-binmode(STDOUT, ":latin1");        # patgen expects a Latin-1 encoded file
+binmode(STDIN, ":encoding(utf8)");    # Eingabe (wortliste) in UTF-8
+binmode(STDOUT, ":encoding(latin1)"); # patgen erwartet Latin-1
 
 while (<>) {
   chop;
