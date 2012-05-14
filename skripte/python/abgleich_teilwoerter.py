@@ -70,8 +70,14 @@ def zerlege(wort):
 # >>> print uebertrage(u'Aus|stel-ler', u'Aus-stel-ler')
 # Aus|stel-ler
 #
-# >>> print uebertrage(u'Aus|tausch=dien-stes', u'Aus-tausch=diens-tes', False)
-# Aus|tausch=diens-tes
+# Übertragung doppelter Marker:
+#
+# >>> print uebertrage(u'ver||aus|ga-be',  u'ver|aus|ga-be')
+# ver||aus|ga-be
+
+# Kein Überschreiben doppelter Marker:
+# >>> print uebertrage(u'ver|aus|ga-be',  u'ver||aus|ga-be')
+# ver||aus|ga-be
 #
 # Keine Übertragung, wenn die Zahl oder Position der Trennstellen
 # unterschiedlich ist oder bei unterschiedlichen Wörtern:
@@ -90,6 +96,8 @@ def zerlege(wort):
 # u'ers-ter'
 # >>> uebertrage(u'Fluß=bett', u'Fluss·bett', strict=False)
 # u'Fluss=bett'
+# >>> print uebertrage(u'Aus|tausch=dien-stes', u'Aus-tausch=diens-tes', False)
+# Aus|tausch=diens-tes
 #
 # Auch mit `strict=False` muß die Zahl der Trennstellen übereinstimmen
 # (Ausnahmen siehe unten):
@@ -117,7 +125,7 @@ class TransferError(ValueError):
     def __init__(self, wort1, wort2):
         msg = u'Inkompatibel: %s %s' % (wort1, wort2)
         ValueError.__init__(self, msg.encode('utf8'))
-        
+
     def __unicode__(self):
         return str(self).decode('utf8')
 
@@ -154,9 +162,9 @@ def uebertrage(wort1, wort2, strict=True):
     # Baue wort3 aus silben2 und spezifischeren Trennzeichen:
     wort3 = silben2.pop(0)
     for t1,t2 in zip(trennzeichen1, trennzeichen2):
-        if (t2 == u'·' and t1 != u'.' # unspezifisch
-            or t2 in (u'-', u'|') and t1 in (u'|', u'||')  # Vorsilben
-            or t2 in (u'-', u'|', u'||') and t1 in (u'|||')  # Vorsilben
+        if ((t2 == u'·' and t1 != u'.') # unspezifisch
+            or (t2 in (u'-', u'|') and t1 in (u'|', u'||'))  # Vorsilben
+            or (t2 in (u'-', u'|', u'||') and t1 == u'|||')  # Vorsilben
             or t1 in (u'=', u'==')   # Wortfugen
            ):
             wort3 += t1
@@ -189,7 +197,7 @@ def uebertrage(wort1, wort2, strict=True):
 # u'Gri[f-f/{ff/ff'
 # >>> toggle_case(u'Gri[f-f/{ff/ff')
 # u'gri[f-f/{ff/ff'
-
+#
 # ::
 
 def toggle_case(wort):
@@ -233,9 +241,9 @@ def teilabgleich(teil, grossklein=False, strict=True):
             teil = uebertrage(wort, teil, strict)
         except TransferError, e: # Inkompatible Wörter
             print unicode(e)
-            
+
     return teil
-    
+
 # Übertrag kategorisierter Trennungen auf Grundwörter mit anderer Endung:
 # ::
 

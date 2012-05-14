@@ -143,9 +143,9 @@ neuteile = [] # Übertrag
 #
 # Suche nach Wörtern mit (Vor-) Silbe::
 
-silbe = 'her'
+silbe = u'ex'
 
-# elek-tro, öko, bio, geo, zoo, ra-dio, ar-chäo, 
+# elek-tro, zoo, ra-dio, ar-chäo, 
 # kontra=
 
 pattern = '[%s%s]%s' % (silbe[0].upper(), silbe[0], silbe[1:]) # [Aa]us

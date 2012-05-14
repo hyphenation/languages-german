@@ -2,3 +2,4 @@ auto/
 *~
 /skripte/python/*.todo
 /skripte/python/teilwort-*
+/skripte/python/analyse.txt

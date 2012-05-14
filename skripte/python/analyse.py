@@ -143,8 +143,8 @@ def analyse(path='../../wortliste', sprachvariante='de-1901'):
         gross = wort[0].istitle()
 
         # erstes Teilwort:
-        if (u'·' not in teile[0]
-            and u'|' not in wort): # Präfix wie un|=wahr=schein-lich
+        if (u'·' not in teile[0] 
+            and not teile[0].endswith(u'|')): # Präfix wie un|=wahr=schein-lich
             words.E[teile[0]] += 1
 
         # letztes Teilwort:
@@ -178,7 +178,8 @@ def statistik_praefixe(teilwoerter):
 
     # Präfixe (auch als Präfix verwendete Partikel, Adjektive, ...):
     praefixe = set(line.rstrip().lower().decode('utf8') 
-                   for line in open('wortteile/praefixe'))
+                   for line in open('wortteile/praefixe')
+                   if not line.startswith('#'))
     # Sammelboxen:
     markiert = defaultdict(int)    # mit | markierte Präfixe
     kandidaten = defaultdict(int)   # nicht mit | markierte Präfixe
@@ -187,31 +188,37 @@ def statistik_praefixe(teilwoerter):
     # Analyse
     for trennungen in teilwoerter.trennungen.values():
         for wort in trennungen:
-            teile = wort.split(u'|')
-            for teil in teile[:-1]:
-                if teil: # (leere Strings (wegen ||) weglassen)
-                    markiert[join_word(teil.lower())] += 1
-            grundwoerter[teile[-1]] += 1
+            for trenner in (u'||||', u'|||', u'||', u'|'):
+                teile = wort.split(trenner)
+                for teil in teile[:-1]:
+                    if teil: # (leere Strings (wegen ||||) weglassen)
+                        markiert[join_word(teil.lower())] += 1
+                wort = teile[-1]
+            grundwoerter[wort] += 1
             # Silben des Grundworts
-            silben = re.split(u'[-·._|=]+', teile[-1])
+            if join_word(wort) in ausnahmen:
+                continue
+            silben = re.split(u'[-·.]+', wort)
             silben[0] = silben[0].lower()
-            for i in (4, 3, 2, 1):
+            for i in range(len(silben)-1, 0, -1):
                 kandidat = ''.join(silben[:i])
-                if (kandidat in praefixe
-                    and join_word(teile[-1]) not in ausnahmen):
+                if kandidat in praefixe:
+                    # print kandidat, wort
                     kandidaten[kandidat] += 1
+                    break
         
     # Ausgabe
-    print u'Präfixe aus der Liste "wortteile/praefixe" (|, -, =):"'
-    print
+    print u'\nPräfixe aus der Liste "wortteile/praefixe":'
+    print u'markiert mit      |    -    ='
     for vs in sorted(praefixe):
-        print (u'%-13s %5d %4d %4d' % 
+        print (u'%-13s %5d %5d %4d' % 
                (vs, markiert.pop(vs, 0), kandidaten[vs], 
                 teilwoerter.E[vs] + teilwoerter.M[vs]
                 + teilwoerter.E[vs.title()] + teilwoerter.M[vs.title()])
               )
     
     print u'Markierte Präfixe die nicht in der Präfix-Liste stehen:'
+    markiert.pop('lang', 0) # von "ent|lang||"
     for vs, i in markiert.items():
         print vs, i
 
@@ -239,7 +246,7 @@ def write_teilwoerter(words, path):
 
     outfile = codecs.open(path, 'w', encoding='utf8')
 
-    header = u'# wort S;E;M;L (Solitär, erstes/mittleres/letztes Wort)'
+    header = u'# wort S;E;M;L (Solitär, erstes/mittleres/letztes Wort)\n'
 
     # Menge aller Teilwörter:
     teilwoerter = set()

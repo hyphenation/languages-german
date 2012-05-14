@@ -1,3 +1,34 @@
+## Kommentiert: laut online-Duden und DWDS keine Präfixe
+# auseinander
+# beisammen (Präfix im DWDS aber nicht im Duden)
+# dabei
+# dafür
+# dagegen   (Präfix im DWDS aber nicht im Duden)
+# daher
+# dahin     (Affix im DWDS aber nicht im Duden)
+# dahinter
+# daneben   (Affix im DWDS aber nicht im Duden)
+# danieder
+# daran
+# darauf    (Affix im DWDS aber nicht im Duden)
+# darein
+# darin     (Affix im DWDS aber nicht im Duden)
+# darnieder
+# darum     (Affix im DWDS aber nicht im Duden)
+# darunter  (Affix im DWDS aber nicht im Duden)
+# darüber
+# davon     (Affix im DWDS aber nicht im Duden)
+# davor     (Affix im DWDS aber nicht im Duden)
+# dawider
+# dazu 	    (Affix im DWDS aber nicht im Duden)
+# dazwischen
+# dran
+# drauf
+# drauflos
+# drauflos
+# drein
+# drin
+# drum
 Ab
 Aber
 Ad
@@ -19,9 +50,6 @@ Des
 Dezi
 Di
 Dis
-Dran
-Drauf
-Drum
 Durch
 Dys
 Ein
@@ -44,6 +72,7 @@ Inter
 Iso
 Kilo
 Kon
+Kontra
 Krypto
 Meta
 Milli
@@ -107,38 +136,15 @@ an
 anti
 auf
 aus
-# auseinander
 auto
 be
 bei
-beisammen
 bi
 bio
 choreo
 con
 da
-dabei
-dafür
-dagegen
-daher
-dahin
-dahinter
-daneben
-danieder
 dar
-daran
-darauf
-darein
-darin
-darnieder
-darum
-darunter
-darüber
-davon
-davor
-dawider
-dazu
-dazwischen
 de
 deka
 des
@@ -146,12 +152,6 @@ dezi
 dia
 dis
 down
-dran
-drauf
-drauflos
-drein
-drin
-drum
 durch
 ein
 einher
@@ -160,19 +160,19 @@ empor
 ent
 entgegen
 entlang
-entzwei
+# entzwei  (Präfix im Duden aber nicht im DWDS)
 er
 ex
 exo
-fern
+# fern
 fort
 für
 gaso
 ge
 gegen
-gegenüber
+# gegenüber
 geo
-gleich
+# gleich
 hekto
 her
 herab
@@ -197,9 +197,9 @@ hinaus
 hindurch
 hinein
 hintan
-hinter
 hintenüber
-hinterher
+hinter
+# hinterher (Präfix im DWDS aber nicht im Duden)
 hinunter
 hinweg
 hinzu
@@ -214,6 +214,7 @@ inter
 iso
 kilo
 kon
+kontra
 krypto
 los
 meta
@@ -244,6 +245,7 @@ raus
 re
 rein
 rum
+Rück
 rück
 semi
 so
@@ -263,8 +265,6 @@ uni
 unter
 ur
 ver
-veraus
-verun
 video
 voll
 von
