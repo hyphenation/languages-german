@@ -5,22 +5,22 @@
 # dafür
 # dagegen   (Präfix im DWDS aber nicht im Duden)
 # daher
-# dahin     (Affix im DWDS aber nicht im Duden)
+# dahin     (Präfix im DWDS aber nicht im Duden)
 # dahinter
-# daneben   (Affix im DWDS aber nicht im Duden)
+# daneben   (Präfix im DWDS aber nicht im Duden)
 # danieder
 # daran
-# darauf    (Affix im DWDS aber nicht im Duden)
+# darauf    (Präfix im DWDS aber nicht im Duden)
 # darein
-# darin     (Affix im DWDS aber nicht im Duden)
+# darin     (Präfix im DWDS aber nicht im Duden)
 # darnieder
-# darum     (Affix im DWDS aber nicht im Duden)
-# darunter  (Affix im DWDS aber nicht im Duden)
+# darum     (Präfix im DWDS aber nicht im Duden)
+# darunter  (Präfix im DWDS aber nicht im Duden)
 # darüber
-# davon     (Affix im DWDS aber nicht im Duden)
-# davor     (Affix im DWDS aber nicht im Duden)
+# davon     (Präfix im DWDS aber nicht im Duden)
+# davor     (Präfix im DWDS aber nicht im Duden)
 # dawider
-# dazu 	    (Affix im DWDS aber nicht im Duden)
+# dazu 	    (Präfix im DWDS aber nicht im Duden)
 # dazwischen
 # dran
 # drauf
@@ -29,6 +29,12 @@
 # drein
 # drin
 # drum
+# entzwei  (Präfix im Duden aber nicht im DWDS)
+# fern
+# gegenüber
+# gleich
+# heim      (Präfix im Duden aber nicht im DWDS)
+# hinterher (Präfix im DWDS aber nicht im Duden)
 Ab
 Aber
 Ad
@@ -36,6 +42,7 @@ Aero
 Als
 An
 Anti
+Archaeo
 Auf
 Aus
 Be
@@ -53,6 +60,7 @@ Dis
 Durch
 Dys
 Ein
+Elektro
 Emp
 Ent
 Epi
@@ -101,9 +109,11 @@ Pre
 Pro
 Put
 Ra
+Radio
 Raus
 Re
 Rein
+Rück
 So
 Sozio
 Steno
@@ -155,24 +165,21 @@ down
 durch
 ein
 einher
+elektro
 emp
 empor
 ent
 entgegen
 entlang
-# entzwei  (Präfix im Duden aber nicht im DWDS)
 er
 ex
 exo
-# fern
 fort
 für
 gaso
 ge
 gegen
-# gegenüber
 geo
-# gleich
 hekto
 her
 herab
@@ -188,7 +195,6 @@ hervor
 herzu
 herüber
 hie
-him
 hin
 hinab
 hinan
@@ -199,7 +205,6 @@ hinein
 hintan
 hintenüber
 hinter
-# hinterher (Präfix im DWDS aber nicht im Duden)
 hinunter
 hinweg
 hinzu
@@ -241,11 +246,11 @@ per
 physio
 poly
 pro
+radio
 raus
 re
 rein
 rum
-Rück
 rück
 semi
 so
@@ -295,3 +300,5 @@ zwie
 Über
 öko
 über
+Demo
+demo
