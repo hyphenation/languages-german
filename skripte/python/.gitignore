@@ -4,6 +4,6 @@
 *.py.xhtml
 *~
 vorsilbe-*
-teilwoerter*.txt
+teilwoerter-*
 wortliste.patch
 wortliste-*

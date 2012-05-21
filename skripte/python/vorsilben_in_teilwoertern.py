@@ -143,10 +143,7 @@ neuteile = [] # Übertrag
 #
 # Suche nach Wörtern mit (Vor-) Silbe::
 
-silbe = u'ex'
-
-# elek-tro, zoo, ra-dio, ar-chäo, 
-# kontra=
+silbe = u'per'
 
 pattern = '[%s%s]%s' % (silbe[0].upper(), silbe[0], silbe[1:]) # [Aa]us
 
@@ -223,7 +220,7 @@ for line in teilwoerter:
 
     elif key.lower() in words.trennungen or key.title() in words.trennungen:
         # Extra abspeichern für manuelle Qualitätskontrolle
-        grossklein.append(' '.join((ersetzung, key)))
+        grossklein.append(ersetzung)
         # Zeile ändern:
         line = u'%s %s\n' % (ersetzung, tags)
 

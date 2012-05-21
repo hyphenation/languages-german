@@ -376,6 +376,8 @@ if __name__ == '__main__':
 # Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
 
         wort2 = teilwortabgleich(wort, grossklein=False, strict=True)
+        if wort == wort2:
+            wort2 = teilwortabgleich(wort, grossklein=True, strict=True)
         # wort2 = grundwortabgleich(wort, endung=u'i-ge',
         #                           vergleichsendung=u'ig')
         # wort2 = vorsilbentest(wort)
