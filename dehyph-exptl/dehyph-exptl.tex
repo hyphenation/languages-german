@@ -510,7 +510,8 @@ allgemeine Hinweise:
   können fehlerhafte Trennungen auftreten.
 
 \item\label{enum:tradSinn} Sinnentstellende und irreführende Trennungen
-  werden möglichst vermieden \cite[R~181]{duden:1991}:
+  werden möglichst vermieden \cite[R~181]{duden:1991} (siehe auch
+  \regelref{enum:tradnstd}):
 
   \begin{tabular}[t]{TU}
     An-alpha-bet & Anal-phabet\\
@@ -594,9 +595,36 @@ allgemeine Hinweise:
   eines Trennstrichs hinausgehen, wie die \emph{ck}- oder die
   Dreikonsonantenregel, kann \TeX82 nicht automatisch behandeln.  Aus
   diesem Grund sind solche Trennstellen in diesen Trennmustern nicht
-  berücksichtigt.  Das Paket \texttt{Babel} stellt jedoch verschiedene
-  Kürzel zur Verfügung, mit denen solche Trennstellen im Quelldokument
-  ausgezeichnet werden können.%
+  berücksichtigt.
+
+  \begin{tabular}[t]{lTUU}
+    \lstinline[style=LaTeX]+drucken+ & drucken & druk-ken\\
+    \lstinline[style=LaTeX]+Zuckerbäcker+ & Zucker-bäcker & Zuk-kerbäk-ker\\
+    \lstinline[style=LaTeX]+Brennessel+ & Brennes-sel & Brenn-nessel\\
+    \lstinline[style=LaTeX]+Stoffetzen+ & Stoffet-zen & Stoff-fetzen\\
+  \end{tabular}
+
+  Die Dreikonsonantenregel birgt aufgrund des ausgefallenen Konsonanten
+  die Gefahr irreführender und sinnentstellender Trennungen (siehe auch
+  \regelref{enum:tradSinn}).  Trennstellen, die in einem Abstand von
+  zwei Lauten auf eine Wortfuge mit Anwendung der Dreikonsonantenregel
+  folgen, werden daher grundsätzlich unterdrückt.
+
+  \begin{tabular}[t]{lTUU}
+    \lstinline[style=LaTeX]+Metallegierung+ & Me-tallegie-rung & Metall-legierung & Metalle-gierung\\
+    \lstinline[style=LaTeX]+schnellebige+ & schnellebi-ge & schnell-lebige & schnelle-bige\\
+    \lstinline[style=LaTeX]+Stilleben+ & Stilleben & Still-leben & Stille-ben\\
+  \end{tabular}
+  \par\nobreak
+  \textit{auch:}
+
+  \begin{tabular}[t]{lTUU}
+    \lstinline[style=LaTeX]+Abfallager+ & Ab-fallager & Abfall-lager & Abfalla-ger\\
+    \lstinline[style=LaTeX]+Zellstoffabrik+ & Zell-stoffabrik & Zellstoff-fabrik & Zellstoffa-brik\\
+  \end{tabular}
+
+  Das Paket \texttt{Babel} stellt verschiedene Kürzel zur Verfügung, mit
+  denen Spezialtrennungen im Quelldokument ausgezeichnet werden können.%
   \footnote{Spezialtrennungen werden in \TeX\ mit Hilfe des Kommandos
     \lstinline[style=LaTeX]+\\discretionary+ kodiert.  So wird zum
     Beispiel das \texttt{Babel}-Kürzel \lstinline[style=LaTeX]+\"ck+ in
@@ -604,23 +632,14 @@ allgemeine Hinweise:
     \lstinline[style=LaTeX]+\\discretionary\{k-\}\{k\}\{ck\}+ ersetzt,
     wodurch \emph{k-k}-Trennungen möglich werden.}
 
-  \begin{tabular}[t]{lTU}
-    \lstinline[style=LaTeX]+drucken+ & drucken & druk-ken\\
-    \lstinline[style=LaTeX]+Zuckerbäcker+ & Zucker-bäcker & Zuk-kerbäk-ker\\
-    \lstinline[style=LaTeX]+Stoffetzen+ & Stoffet-zen & Stoff-fetzen\\
-    \lstinline[style=LaTeX]+Metallegierung+ & Me-talle-gie-rung & Metall-legierung\\
-  \end{tabular}
-  \par\nobreak
-  \textit{aber:}
-
   \begin{tabular}[t]{lT}
       \lstinline[style=LaTeX]+dru"cken+ & druk-ken \\
       \lstinline[style=LaTeX]+Meta"llegierung+ & Me-tall-legierung \\
   \end{tabular}
 
-  Beachte, im letzten Beispiel sind die nach der Auszeichnung liegenden
-  Trennstellen verloren gegangen.  Es handelt sich dabei um einen
-  bekannten Fehler im Paket \texttt{Babel}.%
+  Beachte, im letzten Beispiel sind sämtliche nach der Auszeichnung
+  liegenden Trennstellen verloren gegangen.  Es handelt sich dabei um
+  einen bekannten Fehler im Paket \texttt{Babel}.%
   \footnote{\url{http://www.latex-project.org/}, Kennzeichen
     \texttt{babel/3458}}
 
