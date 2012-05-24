@@ -28,6 +28,35 @@ gefunden werden:
 
 # Änderungen
 
+## vX.XX (XXXX-XX-XX)
+
+#### Wortdatenbank
+
+* _traditionelle Rechtschreibung (DE, AT, CH):_ Greift an einer Wortfuge
+  die Dreikonsonantenregel, so wird die folgende Trennstelle
+  grundsätzlich unterdrückt, sofern sie einen Abstand von nur zwei
+  Lauten hat.  Beispiele:
+
+        Metallegierung  =>  Me-tallegie-rung
+        Stilleben       =>  Stilleben
+
+    Aber:
+
+        Brennessel      =>  Brennes-sel
+        Stoffetzen      =>  Stoffet-zen
+
+#### Paket
+
+* Wenn pTeX verwendet wird, werden nun kompatible Trennmuster aus dem
+  Paket `hyph-utf8` geladen.  (Das Paket `hyph-utf8` verwendet die
+  Trennmuster dieses Pakets.  Es kann sich dabei jedoch um eine andere
+  Version der Muster handeln.)
+
+* Die Dateien `projektbeschreibung.*` wurden entfernt.  Die Inhalte sind
+  nun im [Trennmuster-Wiki](http://projekte.dante.de/Trennmuster) zu
+  finden.
+
+
 ## v0.22 (2011-07-02)
 
 #### Wortdatenbank
