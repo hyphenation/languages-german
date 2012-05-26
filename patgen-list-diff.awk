@@ -14,6 +14,17 @@
 
 
 
+# Normalize a word.
+#   * Remove hyphens.
+#   * All lower case.
+function normalize_word(word) {
+    gsub("-", "", word)
+    word = tolower(word)
+    return word
+}
+
+
+
 # Output all words of a class (added, removed, ...) to a file.  Output
 # number of words in class on command-line.
 function output_word_class(clarr, clname) {
@@ -39,10 +50,8 @@ function output_word_class(clarr, clname) {
     #   value = <patgen input word>.
     # A normalized word is lower case only with hyphens removed.  Example:
     #   word_in["tafelsilber"] = "Ta-fel-sil-ber"
+    k = normalize_word($2)
     v = $2
-    k = v
-    gsub("-", "", k)
-    k = tolower(k)
     word_in[k] = v
 }
 /^< / {
@@ -53,12 +62,12 @@ function output_word_class(clarr, clname) {
     #   value = <patgen input word>.
     # A normalized word is lower case only with hyphens removed.  Example:
     #   word_out["tafelsilber"] = "Ta-fel-sil-ber"
+    k = normalize_word($2)
     v = $2
-    k = v
-    gsub("-", "", k)
-    k = tolower(k)
     word_out[k] = v
 }
+
+
 
 END {
     for (word in word_in) {
