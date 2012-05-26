@@ -143,14 +143,14 @@ neuteile = [] # Übertrag
 #
 # Suche nach Wörtern mit (Vor-) Silbe::
 
-silbe = u'per'
+silbe = u'dis'
 
 pattern = '[%s%s]%s' % (silbe[0].upper(), silbe[0], silbe[1:]) # [Aa]us
 
 # Sortierung in::
 
 ist_ausnahme = []       # erkannte Ausnahmen
-teil_und_grundwort = [] # Restwort existiert als Teil- und Grundwort
+# teil_und_grundwort = [] # Restwort existiert als Teil- und Grundwort
 mit_teilwort = []       # Restwort existiert als Teilwort
 mit_grundwort = []      # Restwort existiert mit anderer Vorsilbe
 grossklein = []         # Restwort mit anderer Groß-/Kleinschreibung
@@ -201,10 +201,10 @@ for line in teilwoerter:
 # vorhanden ist, kann davon ausgegangen werden, daß es sich um eine Vorsilbe
 # oder ein Teilwort handelt::
 
-    elif key in words.trennungen and key in grundwoerter:
-        teil_und_grundwort.append(ersetzung)
-        # Zeile ändern:
-        line = u'%s %s\n' % (ersetzung, tags)
+    # elif key in words.trennungen and key in grundwoerter:
+    #     teil_und_grundwort.append(ersetzung)
+    #     # Zeile ändern:
+    #     line = u'%s %s\n' % (ersetzung, tags)
 
     elif key in words.trennungen:
         mit_teilwort.append(ersetzung)
@@ -248,10 +248,10 @@ for wort in ist_ausnahme:
     print wort
 print
 
-print u'* Grundwort existiert als Teil- und Grundwort:', len(teil_und_grundwort)
-for wort in teil_und_grundwort:
-    print wort
-print
+# print u'* Grundwort existiert als Teil- und Grundwort:', len(teil_und_grundwort)
+# for wort in teil_und_grundwort:
+#     print wort
+# print
 
 print u'* Grundwort existiert als Teilwort:', len(mit_teilwort)
 for wort in mit_teilwort:
