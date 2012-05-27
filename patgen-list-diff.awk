@@ -21,9 +21,12 @@ function output_word_class(clarr, clname) {
     i = 0
     for (word in clarr) {
         ++i
-        print(clarr[word]) >> fname
+        print(clarr[word]) >> fname ".unsort"
     }
     print(clname ": " i)
+    # Sort output file on shell.
+    system("LC_COLLATE=de_DE.ISO8859-15 LC_CTYPE=de_DE.ISO8859-15 sort -f " fname ".unsort > " fname)
+    system("rm -f " fname ".unsort")
 }
 
 
