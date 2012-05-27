@@ -73,12 +73,30 @@ END {
             removed[word] = word_out[word]
         }
     }
-    for (word in added)
+    # Output results.
+    print("Processed file " fdiff ".")
+    i = 0
+    for (word in added) {
+        ++i
         print(added[word]) >> fdiff".added"
-    for (word in removed)
+    }
+    print("added: " i)
+    i = 0
+    for (word in removed) {
+        ++i
         print(removed[word]) >> fdiff".removed"
-    for (word in hyph)
+    }
+    print("removed: " i)
+    i = 0
+    for (word in hyph) {
+        ++i
         print(hyph[word]) >> fdiff".hyph"
-    for (word in case)
+    }
+    print("hyph: " i)
+    i = 0
+    for (word in case) {
+        ++i
         print(case[word]) >> fdiff".case"
+    }
+    print("case: " i)
 }
