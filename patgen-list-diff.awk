@@ -10,7 +10,27 @@
 #
 # wurde.  Die Wörter werden in Dateien der Form <Eingabedatei>.<ext>
 # gespeichert.  <ext> ist entsprechend 'added', 'removed', 'case' oder
-# 'hyph'.
+# 'hyph'.  Beim Aufruf des Skripts muss die Variable 'ftr' mit dem Namen
+# der Translate-Datei für Patgen vorbelegt werden:
+#   gawk -v ftr=<translate datei> ...
+
+
+
+# Translate a string to lower case characters as defined by the rules in
+# the translate file.
+function tr_tolower(s) {
+    l = length(s)
+    trs = ""
+    for (i=1; i<=l; ++i) {
+        ch = substr(s, i, 1)
+        if (tr[ch] == "") {
+            print("Bad character '" ch "' found in string " s)
+            exit
+        }
+        trs = trs tr[ch]
+    }
+    return trs
+}
 
 
 
@@ -19,7 +39,7 @@
 #   * All lower case.
 function normalize_word(word) {
     gsub("-", "", word)
-    word = tolower(word)
+    word = tr_tolower(word)
     return word
 }
 
@@ -42,6 +62,43 @@ function output_word_class(clarr, clname) {
 
 
 
+# Process translate file, whose name is defined in variable ftr on the
+# command line.
+BEGIN {
+    if (ftr == "") {
+        print("Translate file name missing! Please set-up variable 'ftr' like: gawk -v ftr=<translate file> ...")
+        exit
+    }
+    # NR and FNR aren't updated when reading a file via getline.  So we
+    # count lines manually.
+    ln = 0
+    # Read lines from translate file.
+    while (getline < ftr > 0) {
+        ++ln
+        # Skip first line containing left and right hyphen minima and
+        # skip comments.
+        if ((ln > 1) && (match($0, /^%/) == 0)) {
+            # Check character translation table format.
+            for (i=1; i<=NF; ++i)
+                if (length($i) > 1) {
+                    print("Bad character translation table in file " ftr ", line " ln)
+                    exit
+                }
+            # Update character translation table.
+            for (i=1; i<=NF; ++i)
+                tr[$i] = $1
+        }
+    }
+    # The hyphen is a valid character.
+    tr["-"] = "-"
+#    print(ln " lines from translation file " ftr " read OK.")
+#    for (ch in tr)
+#        print(ch, tr[ch])
+}
+
+
+
+# Read DIFF file.
 /^> / {
     # Save diff input file name.
     fdiff = FILENAME
@@ -74,8 +131,8 @@ END {
         if (word in word_out) {
             # Changed word.
             # Check for case changes only.
-            lword_in = tolower(word_in[word])
-            lword_out = tolower(word_out[word])
+            lword_in = tr_tolower(word_in[word])
+            lword_out = tr_tolower(word_out[word])
             if (lword_in == lword_out) {
                 # Case change only.
                 case[word] = word_in[word]

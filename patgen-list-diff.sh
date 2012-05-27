@@ -70,9 +70,9 @@ echo '  make dehyphts-x/words.hyphenated.swiss' >> $TEMPSCRIPT
 echo '  diff dehyphn-x/words.hyphenated.refo.$1 dehyphn-x/words.hyphenated.refo > dehyphn-x/$1-$2.diff' >> $TEMPSCRIPT
 echo '  diff dehypht-x/words.hyphenated.trad.$1 dehypht-x/words.hyphenated.trad > dehypht-x/$1-$2.diff' >> $TEMPSCRIPT
 echo '  diff dehyphts-x/words.hyphenated.swiss.$1 dehyphts-x/words.hyphenated.swiss > dehyphts-x/$1-$2.diff' >> $TEMPSCRIPT
-echo '  gawk -f patgen-list-diff.awk dehyphn-x/$1-$2.diff' >> $TEMPSCRIPT
-echo '  gawk -f patgen-list-diff.awk dehypht-x/$1-$2.diff' >> $TEMPSCRIPT
-echo '  gawk -f patgen-list-diff.awk dehyphts-x/$1-$2.diff' >> $TEMPSCRIPT
+echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehyphn-x/$1-$2.diff' >> $TEMPSCRIPT
+echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehypht-x/$1-$2.diff' >> $TEMPSCRIPT
+echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehyphts-x/$1-$2.diff' >> $TEMPSCRIPT
 echo 'fi' >> $TEMPSCRIPT
 echo 'exec rm -f ' $TEMPSCRIPT >> $TEMPSCRIPT
 exec $TEMPSCRIPT $FROMHASH $TOHASH
