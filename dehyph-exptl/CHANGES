@@ -56,16 +56,19 @@ gefunden werden:
       traditionell (CH)             10464         83          594
       reformiert                     9945         69          595
 
-* In der traditionellen Rechtschreibung wird der Ersatz _ss_ für _ß_
-  berücksichtigt und wie bei der Schreibung mit _ß_ getrennt.  Das
-  Babelkürzel `"S` muss damit in Versalwörtern nur noch in
-  Ausnahmefällen verwendet werden (siehe auch Regel T2 in der
+* _traditionelle Rechtschreibung (DE, AT):_ Für alle Wörter mit _ß_
+  wurde die Ersatzschreibung mit _ss_ und Trennung wie mit _ß_
+  aufgenommen.  Das Babelkürzel `"S` muss damit in Versalwörtern nur
+  noch in Ausnahmefällen verwendet werden (siehe auch Regel T2 in der
   Paketdokumentation).  Beispiele:
+
         GRÜSSE   =>  GRÜ-SSE
         GRÖSSTE  =>  GRÖSS-TE
-  Darüber hinaus wurde für alle Wörter mit _ß_ die im Schweizer
-  Standarddeutsch gebräuchliche Schreibung mit _ss_ und Trennung als
-  _s-s_ aufgenommen.  Beispiele:
+
+* _traditionelle Rechtschreibung (CH):_ Für alle Wörter mit _ß_ wurde die
+  im Schweizer Standarddeutsch gebräuchliche Schreibung mit _ss_ und
+  Trennung als _s-s_ aufgenommen.  Beispiele:
+
         Grüs-se   statt  Grü-ße
         grös-ste  statt  größ-te
 
