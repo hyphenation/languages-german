@@ -13,6 +13,21 @@
 # 'hyph'.
 
 
+
+# Output all words of a class (added, removed, ...) to a file.  Output
+# number of words in class on command-line.
+function output_word_class(clarr, clname) {
+    fname = fdiff "." clname
+    i = 0
+    for (word in clarr) {
+        ++i
+        print(clarr[word]) >> fname
+    }
+    print(clname ": " i)
+}
+
+
+
 /^> / {
     # Save diff input file name.
     fdiff = FILENAME
@@ -75,28 +90,8 @@ END {
     }
     # Output results.
     print("Processed file " fdiff ".")
-    i = 0
-    for (word in added) {
-        ++i
-        print(added[word]) >> fdiff".added"
-    }
-    print("added: " i)
-    i = 0
-    for (word in removed) {
-        ++i
-        print(removed[word]) >> fdiff".removed"
-    }
-    print("removed: " i)
-    i = 0
-    for (word in hyph) {
-        ++i
-        print(hyph[word]) >> fdiff".hyph"
-    }
-    print("hyph: " i)
-    i = 0
-    for (word in case) {
-        ++i
-        print(case[word]) >> fdiff".case"
-    }
-    print("case: " i)
+    output_word_class(added, "added")
+    output_word_class(removed, "removed")
+    output_word_class(hyph, "hyph")
+    output_word_class(case, "case")
 }
