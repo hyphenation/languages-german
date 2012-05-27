@@ -32,7 +32,11 @@ gefunden werden:
 
 #### Wortdatenbank
 
-* Etwa 200 Einträge wurden korrigiert.
+      Rechtschreibung         hinzugefügt   entfernt   korrigiert
+    ---------------------------------------------------------------
+      traditionell (DE, AT)            39         64          109
+      traditionell (CH)                39         64          109
+      reformiert                        5         28          108
 
 #### Paket
 
@@ -45,6 +49,12 @@ gefunden werden:
 ## v0.20 (2009-06-24)
 
 #### Wortdatenbank
+
+      Rechtschreibung         hinzugefügt   entfernt   korrigiert
+    ---------------------------------------------------------------
+      traditionell (DE, AT)         10458        156         5579
+      traditionell (CH)             10464         83          594
+      reformiert                     9945         69          595
 
 * In der traditionellen Rechtschreibung wird der Ersatz _ss_ für _ß_
   berücksichtigt und wie bei der Schreibung mit _ß_ getrennt.  Das
@@ -84,6 +94,13 @@ gefunden werden:
 
 ## v0.13 (2008-07-07)
 
+#### Wortliste
+
+      Rechtschreibung   hinzugefügt   entfernt   korrigiert
+    ---------------------------------------------------------
+      traditionell                0          0            0
+      reformiert                  0          0            0
+
 #### Paket
 
 * Die Dokumentation wurde überarbeitet.
@@ -93,7 +110,10 @@ gefunden werden:
 
 #### Wortdatenbank
 
-* Etwa 40 Wörter wurden korrigiert.
+      Rechtschreibung   hinzugefügt   entfernt   korrigiert
+    ---------------------------------------------------------
+      traditionell               12          1           28
+      reformiert                 12          1           28
 
 #### Paket
 
@@ -104,7 +124,10 @@ gefunden werden:
 
 #### Wortdatenbank
 
-* Etwa 40 Wörter wurden korrigiert.
+      Rechtschreibung   hinzugefügt   entfernt   korrigiert
+    ---------------------------------------------------------
+      traditionell               18          0           44
+      reformiert                 18          0           45
 
 * Einige knifflige Wortzusammensetzungen wurden hinzugefügt
   (Patentrichter usw.)
