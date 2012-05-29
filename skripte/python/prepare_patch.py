@@ -111,29 +111,49 @@ def fehleintraege(wortliste):
 def grossklein(wortliste):
     """Groß-/Kleinschreibung umstellen"""
 
-    # Dekodieren, Zeilenende entfernen
-    korrekturen = [line.decode('utf8').strip() 
+    # Dekodieren, Feldtrenner zu Leerzeichen
+    korrekturen = [line.decode('utf8').replace(';',' ') 
                    for line in open('grossklein.todo')]
     # erstes Feld, Trennzeichen entfernen
-    korrekturen = [join_word(line.split(';')[0]) for line in korrekturen
+    korrekturen = [join_word(line.split()[0]) for line in korrekturen
                    if not line.startswith('#')]
     korrekturen = set(korrekturen)
-    wortliste_neu = [] # korrigierte Liste
+    wortliste_neu = deepcopy(wortliste) # korrigierte Liste
 
     for entry in wortliste:
         if entry[0] in korrekturen:
-            original = entry[0]
-            if original.islower():
-                fields = [field[0].title() + field[1:] for field in entry]
+            # Anfangsbuchstabe mit geänderter Großschreibung:
+            if entry[0].islower():
+                anfangsbuchstabe = entry[0][0].title()
             else:
-                fields = [field.lower() for field in entry]
-            entry = WordEntry(';'.join(fields))
+                anfangsbuchstabe = entry[0][0].lower()
+            # Einträge korrigieren:
+            for i in range(1,len(entry)):
+                if entry[i].startswith('-'):
+                    continue
+                entry[i] = anfangsbuchstabe + entry[i][1:]
             korrekturen.discard(original) # erledigt
-        wortliste_neu.append(entry)
 
     if korrekturen:
         print korrekturen # übrige Einträge
     return wortliste_neu
+
+# Anpassung der Großschreibung der Trennmuster an das erste Feld 
+# (ungetrenntes Wort). Siehe "werkzeug.py" für einen Test auf Differenzen.
+# (Differenzen sind größtenteils auf unvorsichtiges Ersetzen mit Texteditor
+# zurückzuführen.)
+# ::
+
+def abgleich_grossklein(wortliste):
+    wortliste_neu = deepcopy(wortliste) # korrigierte Liste
+    for entry in wortliste_neu:
+        # Übertrag des Anfangsbuchstabens
+        for i in range(1,len(entry)):
+            if entry[i].startswith('-'):
+                continue
+            entry[i] = entry[0][0] + entry[i][1:]
+    return wortliste_neu
+    
 
 # Sprachvariante ändern
 # ---------------------
@@ -259,6 +279,7 @@ if __name__ == '__main__':
 
     # wortliste_neu = fehleintraege(wortliste)
     # wortliste_neu = grossklein(wortliste)
+    # wortliste_neu = abgleich_grossklein(wortliste)
     # wortliste_neu = neu(wortliste)
     # wortliste_neu = reformschreibung(wortliste)
     # wortliste_neu = sprachvariante_split(wortliste,
