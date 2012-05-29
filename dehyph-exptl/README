@@ -3,8 +3,8 @@
 * Package name: dehyph-exptl
 * Summary description: experimental hyphenation patterns for the German
   language
-* Version: 0.22
-* Date: 2011-07-02
+* Version: 0.23
+* Date: 2012-05-29
 * License: [LPPL](http://www.latex-project.org/lppl.txt)
 * Author: Werner Lemberg, <wl@gnu.org>
 * URL: [Trennmuster-Wiki](http://projekte.dante.de/Trennmuster)
