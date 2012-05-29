@@ -49,14 +49,11 @@ Documentation can be found in file `dehyph-exptl.pdf` (German only).
     dehyph-exptl.pdf          binary        documentation
     dehyph-exptl.tex          ISO-8859-15   documentation
     dehyphn-x-<date>.pat      UTF-8         patterns for reformed orthography of Standard German as used in Germany, Austria, and Switzerland
-    dehyphn-x-<date>.tex                    wrapper for 8-bit TeX
+    dehyphn-x-<date>.tex                    pattern loader
     dehypht-x-<date>.pat      UTF-8         patterns for traditional orthography of Standard German as used in Germany and Austria
-    dehypht-x-<date>.tex                    wrapper for 8-bit TeX
+    dehypht-x-<date>.tex                    pattern loader
     dehyphts-x-<date>.pat     UTF-8         patterns for traditional orthography of Standard German as used in Switzerland
-    dehyphts-x-<date>.tex                   wrapper for 8-bit TeX
-    projektbeschreibung.bib   ASCII         documentation
-    projektbeschreibung.pdf   binary        documentation
-    projektbeschreibung.tex   ISO-8859-15   documentation
+    dehyphts-x-<date>.tex                   pattern loader
 
 
 END.
