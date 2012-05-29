@@ -11,10 +11,7 @@
 % \newif must be defined outside any \ifx command.
 \newif\if@dehyphx@UTF@
 \@dehyphx@UTF@false
-% Test for pTeX engine.  pTeX needs explicit 8 bit patterns.  We don't
-% provide pTeX compatible patterns, yet.  Therefore, don't load any
-% patterns for pTeX.  This strategy is necessary for pTeX format
-% generation.
+% Test for pTeX engine.  pTeX needs explicit 8 bit patterns.
 \ifx\kanjiskip\undefined
   % Non-pTeX engine.  Test for UTF-8 aware engine.
   \def\testengine#1#2!{\def\secondarg{#2}}%
@@ -112,9 +109,10 @@
 %
   \input dehyphts-x-@DATE@.pat
 \else
-  % pTeX engine.  Don't load any patterns.
-  \message{dehyph-exptl: pTeX engine detected. Experimental German
-    patterns not loaded!}%
+  % pTeX engine.  Fall-back to using 8 bit (EC) patterns provided by
+  % package hyph-utf8.
+  \message{dehyph-exptl: using pTeX engine. Loading patterns provided by package hyph-utf8.}%
+  \input hyph-de-ch-1901.ec.tex
 \fi
 %
 \endgroup
