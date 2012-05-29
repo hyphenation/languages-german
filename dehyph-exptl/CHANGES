@@ -32,6 +32,12 @@ gefunden werden:
 
 #### Wortdatenbank
 
+      Rechtschreibung         hinzugefügt   entfernt   korrigiert
+    ---------------------------------------------------------------
+      traditionell (DE, AT)            44         93          166
+      traditionell (CH)                44         93          161
+      reformiert                       45         56           67
+
 * _traditionelle Rechtschreibung (DE, AT, CH):_ Greift an einer Wortfuge
   die Dreikonsonantenregel, so wird die folgende Trennstelle
   grundsätzlich unterdrückt, sofern sie einen Abstand von nur zwei
