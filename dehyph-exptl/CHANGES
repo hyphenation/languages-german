@@ -3,10 +3,18 @@
 Diese Datei beschreibt die wichtigsten Änderungen der experimentellen
 Trennmuster und einige bekannte Probleme (hauptsächlich systematische
 Fehler).  Genauere Informationen zu den Änderungen können dem
-öffentlichen Entwicklerrepositorium entnommen werden.  Ältere
-Veröffentlichungen des Pakets können im Dateibereich des
-[Trennmuster-Wikis](http://projekte.dante.de/Trennmuster)
-gefunden werden:
+öffentlichen Entwicklerrepositorium entnommen werden.  Nähere
+Informationen zum Zugriff auf das Repositorium enthält das
+[Trennmuster-Wiki](http://projekte.dante.de/Trennmuster).
+
+Mit Hilfe des Skripts `patgen-list-diff.sh` kann man sich zum Beispiel
+einfach einen Überblick über die korrigierten, hinzugefügten und
+entfernten Wörter je Sprachvarietät in der zugrundeliegenden
+Wortdatenbank zwischen zwei Paketversionen verschaffen.
+
+Ältere Veröffentlichungen des Pakets können im Dateibereich des
+[Trennmuster-Wikis](http://projekte.dante.de/Trennmuster) gefunden
+werden:
 
 
 
