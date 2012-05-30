@@ -1,4 +1,5 @@
 #!/bin/sh
+# -*- coding: utf-8 -*-
 #
 # Dieses Skript erzeugt Differenzbilder (diff) für die
 # Patgen-Eingabelisten zwischen zwei angegebenen Commits.  Wird nur ein
@@ -55,24 +56,26 @@ then
 fi
 echo "Diff'ing patgen input files between commits $FROMHASH ($FROMCOMMIT) and $TOHASH ($TOCOMMIT)."
 TEMPSCRIPT=temp-patgen-list-diff.sh
-echo 'if git checkout $1' > $TEMPSCRIPT
-echo 'then' >> $TEMPSCRIPT
-echo '  make dehyphn-x/words.hyphenated.refo' >> $TEMPSCRIPT
-echo '  make dehypht-x/words.hyphenated.trad' >> $TEMPSCRIPT
-echo '  make dehyphts-x/words.hyphenated.swiss' >> $TEMPSCRIPT
-echo '  mv dehyphn-x/words.hyphenated.refo dehyphn-x/words.hyphenated.refo.$1' >> $TEMPSCRIPT
-echo '  mv dehypht-x/words.hyphenated.trad dehypht-x/words.hyphenated.trad.$1' >> $TEMPSCRIPT
-echo '  mv dehyphts-x/words.hyphenated.swiss dehyphts-x/words.hyphenated.swiss.$1' >> $TEMPSCRIPT
-echo '  git checkout $2' >> $TEMPSCRIPT
-echo '  make dehyphn-x/words.hyphenated.refo' >> $TEMPSCRIPT
-echo '  make dehypht-x/words.hyphenated.trad' >> $TEMPSCRIPT
-echo '  make dehyphts-x/words.hyphenated.swiss' >> $TEMPSCRIPT
-echo '  diff dehyphn-x/words.hyphenated.refo.$1 dehyphn-x/words.hyphenated.refo > dehyphn-x/$1-$2.diff' >> $TEMPSCRIPT
-echo '  diff dehypht-x/words.hyphenated.trad.$1 dehypht-x/words.hyphenated.trad > dehypht-x/$1-$2.diff' >> $TEMPSCRIPT
-echo '  diff dehyphts-x/words.hyphenated.swiss.$1 dehyphts-x/words.hyphenated.swiss > dehyphts-x/$1-$2.diff' >> $TEMPSCRIPT
-echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehyphn-x/$1-$2.diff' >> $TEMPSCRIPT
-echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehypht-x/$1-$2.diff' >> $TEMPSCRIPT
-echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehyphts-x/$1-$2.diff' >> $TEMPSCRIPT
-echo 'fi' >> $TEMPSCRIPT
-echo 'exec rm -f ' $TEMPSCRIPT >> $TEMPSCRIPT
+(
+    echo 'if git checkout $1'
+    echo 'then'
+    echo '  make dehyphn-x/words.hyphenated.refo'
+    echo '  make dehypht-x/words.hyphenated.trad'
+    echo '  make dehyphts-x/words.hyphenated.swiss'
+    echo '  mv dehyphn-x/words.hyphenated.refo dehyphn-x/words.hyphenated.refo.$1'
+    echo '  mv dehypht-x/words.hyphenated.trad dehypht-x/words.hyphenated.trad.$1'
+    echo '  mv dehyphts-x/words.hyphenated.swiss dehyphts-x/words.hyphenated.swiss.$1'
+    echo '  git checkout $2'
+    echo '  make dehyphn-x/words.hyphenated.refo'
+    echo '  make dehypht-x/words.hyphenated.trad'
+    echo '  make dehyphts-x/words.hyphenated.swiss'
+    echo '  diff dehyphn-x/words.hyphenated.refo.$1 dehyphn-x/words.hyphenated.refo > dehyphn-x/$1-$2.diff'
+    echo '  diff dehypht-x/words.hyphenated.trad.$1 dehypht-x/words.hyphenated.trad > dehypht-x/$1-$2.diff'
+    echo '  diff dehyphts-x/words.hyphenated.swiss.$1 dehyphts-x/words.hyphenated.swiss > dehyphts-x/$1-$2.diff'
+    echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehyphn-x/$1-$2.diff'
+    echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehypht-x/$1-$2.diff'
+    echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehyphts-x/$1-$2.diff'
+    echo 'fi'
+    echo 'exec rm -f ' $TEMPSCRIPT
+) > $TEMPSCRIPT
 exec $TEMPSCRIPT $FROMHASH $TOHASH
