@@ -72,9 +72,15 @@ TEMPSCRIPT=temp-patgen-list-diff.sh
     echo '  diff dehyphn-x/words.hyphenated.refo.$1 dehyphn-x/words.hyphenated.refo > dehyphn-x/$1-$2.diff'
     echo '  diff dehypht-x/words.hyphenated.trad.$1 dehypht-x/words.hyphenated.trad > dehypht-x/$1-$2.diff'
     echo '  diff dehyphts-x/words.hyphenated.swiss.$1 dehyphts-x/words.hyphenated.swiss > dehyphts-x/$1-$2.diff'
-    echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehyphn-x/$1-$2.diff'
+    echo '  TABLE=CHANGES.table.txt'
+    echo '  echo "      Rechtschreibung         hinzugefügt   entfernt   korrigiert" > $TABLE'
+    echo '  echo "    ---------------------------------------------------------------" >> $TABLE'
+    echo '  echo -n "      traditionell (DE, AT)" >> $TABLE'
     echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehypht-x/$1-$2.diff'
+    echo '  echo -n "      traditionell (CH)    " >> $TABLE'
     echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehyphts-x/$1-$2.diff'
+    echo '  echo -n "      reformiert           " >> $TABLE'
+    echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehyphn-x/$1-$2.diff'
     echo 'fi'
     echo 'exec rm -f ' $TEMPSCRIPT
 ) > $TEMPSCRIPT
