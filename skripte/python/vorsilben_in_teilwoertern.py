@@ -143,7 +143,7 @@ neuteile = [] # Übertrag
 #
 # Suche nach Wörtern mit (Vor-) Silbe::
 
-silbe = u'dis'
+silbe = u'an'
 
 pattern = '[%s%s]%s' % (silbe[0].upper(), silbe[0], silbe[1:]) # [Aa]us
 
@@ -174,7 +174,7 @@ for line in teilwoerter:
 #
 # Suche nach der Silbe am Anfang eines Teilwortes::
 
-    match = re.match(ur'(.+\|)?(%s)[-·](.+)'%pattern, wort)
+    match = re.match(ur'(.+\|)?(%s)[-·]([^|]+)$'%pattern, wort)
     if not match:
         neuteile.append(line)
         continue
@@ -184,6 +184,8 @@ for line in teilwoerter:
     vorsilbe = match.group(1) or ''
     silbe = match.group(2)
     rest = match.group(3)
+    
+    
     if vorsilbe:
         ersetzung = '%s|%s|%s' %(vorsilbe, silbe, rest)
     else:
