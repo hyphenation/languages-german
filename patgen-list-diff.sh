@@ -55,7 +55,9 @@ then
   exit 1
 fi
 echo "Diff'ing patgen input files between commits $FROMHASH ($FROMCOMMIT) and $TOHASH ($TOCOMMIT)."
-TEMPSCRIPT=temp-patgen-list-diff.sh
+TEMPSCRSH=temp-patgen-list-diff.sh
+TEMPSCRAWK=temp-patgen-list-diff.awk
+cp patgen-list-diff.awk $TEMPSCRAWK
 (
     echo 'if git checkout $1'
     echo 'then'
@@ -76,12 +78,12 @@ TEMPSCRIPT=temp-patgen-list-diff.sh
     echo '  echo "      Rechtschreibung         hinzugefügt   entfernt   korrigiert" > $TABLE'
     echo '  echo "    ---------------------------------------------------------------" >> $TABLE'
     echo '  echo -n "      traditionell (DE, AT)" >> $TABLE'
-    echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehypht-x/$1-$2.diff'
+    echo '  gawk -f' $TEMPSCRAWK '-v ftr=daten/german.tr dehypht-x/$1-$2.diff'
     echo '  echo -n "      traditionell (CH)    " >> $TABLE'
-    echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehyphts-x/$1-$2.diff'
+    echo '  gawk -f' $TEMPSCRAWK '-v ftr=daten/german.tr dehyphts-x/$1-$2.diff'
     echo '  echo -n "      reformiert           " >> $TABLE'
-    echo '  gawk -f patgen-list-diff.awk -v ftr=daten/german.tr dehyphn-x/$1-$2.diff'
+    echo '  gawk -f' $TEMPSCRAWK '-v ftr=daten/german.tr dehyphn-x/$1-$2.diff'
     echo 'fi'
-    echo 'exec rm -f ' $TEMPSCRIPT
-) > $TEMPSCRIPT
-exec $TEMPSCRIPT $FROMHASH $TOHASH
+    echo 'exec rm -f' $TEMPSCRSH $TEMPSCRAWK
+) > $TEMPSCRSH
+exec $TEMPSCRSH $FROMHASH $TOHASH
