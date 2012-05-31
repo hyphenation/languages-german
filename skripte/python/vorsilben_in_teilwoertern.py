@@ -7,19 +7,35 @@
 #             any later  version.
 # :Version:   0.1 (2012-02-07)
 
-# vorsilben.py: Bestimmung von Vorsilben
+# vorsilben_in_teilwoertern.py: Bestimmung von Vorsilben
 # ============================================================
+#
+# Suche nach Wörtern mit ::
+
+praefix = u'ex'
+
+# in der Datei ``teilwoerter-<sprachtag>.txt`` und analysiere das folgende
+# (Teil)wort. Schreibe die Datei ``teilwoerter-neu`` wobei alle Vorkommnisse
+# des gesuchten Präfix am Anfang eines Wort oder nach anderen Präfixen mit
+# ``|`` markiert sind, es sei den das Wort (ohne bereits markierte Präfixe)
+# ist in der Datei ``wortteile/vorsilbenausnahmen`` gelistet.
+# Die Ausgabe der Analyse hilft bei der Vervollständigung der Ausnahmeliste.
+
+
+# Vorbetrachtungen
+# ----------------
 #
 # Die Unterscheidung von Vorsilben (Präfixen) von
 # Teilwörtern in Komposita ist im Deutschen nicht eindeutig.
 # (Siehe z.B. `Präfixe im Deutschen` (Diss. 1999)
 # http://kups.ub.uni-koeln.de/528/1/11w1043.pdf
 #
-# Bei Verbalpräfixen ist zu unterscheiden zwischen Präfixen im engeren Sinne
-# und Partikeln. Während Erstere untrennbar mit dem Verbstamm verbunden sind
-# (z. B. sich be-nehmen), können Letztere in bestimmten Konstruktionen vom
-# Stamm gelöst werden (z. B. ab-nehmen: ich nehme den Hut ab).
-# [http://de.wikipedia.org/wiki/Präfix]
+#   Bei Verbalpräfixen ist zu unterscheiden zwischen Präfixen im engeren Sinne
+#   und Partikeln. Während Erstere untrennbar mit dem Verbstamm verbunden sind
+#   (z. B. sich be-nehmen), können Letztere in bestimmten Konstruktionen vom
+#   Stamm gelöst werden (z. B. ab-nehmen: ich nehme den Hut ab).
+#
+#   -- http://de.wikipedia.org/wiki/Präfix
 #
 # Wir brauchen eine pragmatische Entscheidung für die optimale Markierung von
 # Trennstellen nach Präfixen in der "Wortliste". Kriterien:
@@ -99,21 +115,13 @@ sprachvariante = 'de-1901'
 #
 # Wörter mit "Vorsilbenkandidaten" die keine Vorsilben sind::
 
-ausnahmen = set(line.decode('utf8').strip() 
-        
+ausnahmen = set(line.decode('utf8').strip()
+
                 for line in open('wortteile/vorsilbenausnahmen'))
-
-# "Nachwörter" (Wörter die nicht ohne Vorsilben vorkommen)::
-
-nachwoerter = (#'bau', 'geh',
-               'Gleichs',   # Aus|gleichs
-               'Nahme',     # An|nahme
-               'Stattung',  # Er|stattung
-              )
 
 # Ausgangsbasis
 # -------------
-
+#
 # Teilwörter für die angegebene Sprachvariante (extrahiert aus der
 # `Wortliste` mit ``analyse.py``)::
 
@@ -132,7 +140,7 @@ for wort in words.trennungen.values():
 # print grundwoerter
 # print len(trennungen), len(grundwoerter)
 # sys.exit()
-
+#
 # Teilwörterdatei für die zeilenweise Modifikation::
 
 teilwoerter = io.open('teilwoerter-%s.txt'%sprachvariante, encoding='utf8')
@@ -141,20 +149,18 @@ neuteile = [] # Übertrag
 # Analyse
 # =======
 #
-# Suche nach Wörtern mit (Vor-) Silbe::
+# Muster für die gesuchte Silbe unabhängig von der Großschreibung::
 
-silbe = u'an'
-
-pattern = '[%s%s]%s' % (silbe[0].upper(), silbe[0], silbe[1:]) # [Aa]us
+pattern = '[%s%s]%s' % (praefix[0].upper(), praefix[0], praefix[1:]) # [Aa]us
 
 # Sortierung in::
 
 ist_ausnahme = []       # erkannte Ausnahmen
 # teil_und_grundwort = [] # Restwort existiert als Teil- und Grundwort
 mit_teilwort = []       # Restwort existiert als Teilwort
-mit_grundwort = []      # Restwort existiert mit anderer Vorsilbe
-grossklein = []         # Restwort mit anderer Groß-/Kleinschreibung
-kandidat = []           # Restwort nicht in der Wortliste
+mit_stamm = []          # Restwort existiert mit anderer Vorsilbe
+mit_Teilwort = []         # Restwort mit anderer Groß-/Kleinschreibung
+ohne_teilwort = []           # Restwort nicht in der Wortliste
 
 # Iteration über bekannte Einzelwörter::
 
@@ -167,7 +173,7 @@ for line in teilwoerter:
             continue
         else:
             raise
-            
+
 
 # Test auf Vorsilben
 # ------------------
@@ -181,27 +187,42 @@ for line in teilwoerter:
 
 # Zerlegung::
 
-    vorsilbe = match.group(1) or ''
-    silbe = match.group(2)
+    praefix = match.group(1) or '' # bereits markierter Präfix
+    kandidat = match.group(2)         # Präfixkandidat
     rest = match.group(3)
-    
-    
-    if vorsilbe:
-        ersetzung = '%s|%s|%s' %(vorsilbe, silbe, rest)
+
+
+    if praefix:
+        ersetzung = '%s|%s|%s' % (praefix, kandidat, rest)
     else:
-        ersetzung = '%s%s|%s' %(vorsilbe, silbe, rest)
+        ersetzung = '%s|%s' % (kandidat, rest)
     key = join_word(rest)
     if wort[0].isupper():
         key = key.title()
 
+# Sortieren und ggf. Präfix markieren
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Wenn der Wortbestandteil hinter dem Präfixkandidaten
+#
+# * im Wörterbuch vorhanden ist,
+# * mit anderer Großschreibung im Wörterbuch vorhanden ist, oder
+# * als Stamm hinter anderen Präfixen vorkommt
+#
+# kann davon ausgegangen werden, daß es sich bei dem Kandidaten um einen
+# Präfix handelt.
+
 # Ausnahmen aus der Ausnahmeliste::
 
-    if join_word(silbe+rest) in ausnahmen:
+    if join_word(kandidat+rest) in ausnahmen:
         ist_ausnahme.append(wort)
 
-# Wenn der Wortbestandteil hinter der getesteten Silbe im Wörterbuch
-# vorhanden ist, kann davon ausgegangen werden, daß es sich um eine Vorsilbe
-# oder ein Teilwort handelt::
+# Ausnahme Praefixkandidat + Suffix (z.B. ein--fach)::
+
+    elif rest.startswith('-'):
+        pass
+
+# ::
 
     # elif key in words.trennungen and key in grundwoerter:
     #     teil_und_grundwort.append(ersetzung)
@@ -214,7 +235,7 @@ for line in teilwoerter:
         line = u'%s %s\n' % (ersetzung, tags)
 
     elif key in grundwoerter:
-        mit_grundwort.append(ersetzung)
+        mit_stamm.append(ersetzung)
         # Zeile ändern:
         line = u'%s %s\n' % (ersetzung, tags)
 
@@ -222,14 +243,14 @@ for line in teilwoerter:
 
     elif key.lower() in words.trennungen or key.title() in words.trennungen:
         # Extra abspeichern für manuelle Qualitätskontrolle
-        grossklein.append(ersetzung)
+        mit_Teilwort.append(ersetzung)
         # Zeile ändern:
         line = u'%s %s\n' % (ersetzung, tags)
 
 # key nicht gefunden::
 
     else:
-        kandidat.append(ersetzung)
+        ohne_teilwort.append(ersetzung)
         # Zeile ändern:
         line = u'%s %s\n' % (ersetzung, tags)
 
@@ -241,8 +262,8 @@ for line in teilwoerter:
 #
 # ::
 
-print u'Mit (Vor-) Silbe: "%s"' % silbe, 
-print len(mit_teilwort) + len(grossklein) + len(kandidat)
+print u'Mit (Vor-) Silbe: "%s"' % praefix,
+print len(mit_teilwort) + len(mit_Teilwort) + len(ohne_teilwort)
 print
 
 print u'* erkannte Ausnahmen:', len(ist_ausnahme)
@@ -254,24 +275,26 @@ print
 # for wort in teil_und_grundwort:
 #     print wort
 # print
+#
+# ::
 
-print u'* Grundwort existiert als Teilwort:', len(mit_teilwort)
+print u'* Restwort existiert als Teilwort:', len(mit_teilwort)
 for wort in mit_teilwort:
     print wort
 print
 
-print u'* Grundwort existiert mit anderer Vorsilbe:', len(mit_grundwort)
-for wort in mit_grundwort:
+print u'* Restwort existiert mit anderem Präfix:', len(mit_stamm)
+for wort in mit_stamm:
     print wort
 print
 
-print u'* Grundwort mit anderer Groß-/Kleinschreibung:', len(grossklein)
-for wort in grossklein:
+print u'* Restwort mit anderer Groß-/Kleinschreibung:', len(mit_Teilwort)
+for wort in mit_Teilwort:
     print wort
 print
 
-print u'* Grundwort nicht gefunden:', len(kandidat)
-for wort in kandidat:
+print u'* Restwort nicht gefunden:', len(ohne_teilwort)
+for wort in ohne_teilwort:
     print wort
 
 # Ausgabe
