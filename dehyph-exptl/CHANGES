@@ -46,6 +46,8 @@ werden.
       traditionell (CH)                44         93          161
       reformiert                       45         56           67
 
+* Die Wortdatenbank liegt in UTF-8-Kodierung vor.
+
 * _traditionelle Rechtschreibung (DE, AT, CH):_ Greift an einer Wortfuge
   die Dreikonsonantenregel, so wird die folgende Trennstelle
   grundsätzlich unterdrückt, sofern sie einen Abstand von nur zwei
