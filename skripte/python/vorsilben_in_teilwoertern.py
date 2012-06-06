@@ -12,7 +12,7 @@
 #
 # Suche nach Wörtern beginnend mit::
 
-term = u'hy-po'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
+term = u'ver'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
 
 # in der Datei ``teilwoerter-<sprachtag>.txt`` und analysiere das folgende
 # (Teil)wort. Schreibe die Datei ``teilwoerter-neu`` wobei alle Vorkommnisse
@@ -187,15 +187,16 @@ for line in teilwoerter:
 
 # Zerlegung::
 
-    praefix = match.group(1) or '' # bereits markierter Präfix
+    praefix = match.group(1) or u'' # bereits markierter Präfix
     kandidat = match.group(2)         # Präfixkandidat
     rest = match.group(3)
 
-
     if praefix:
-        ersetzung = '%s|%s|%s' % (praefix, kandidat, rest)
+        if not praefix.endswith(u'||'):
+            praefix = praefix.replace(u'||', u'|||') + u'|'
+        ersetzung = u'%s%s|%s' % (praefix, kandidat, rest)
     else:
-        ersetzung = '%s|%s' % (kandidat, rest)
+        ersetzung = u'%s|%s' % (kandidat, rest)
     key = join_word(rest)
     if wort[0].isupper():
         key = key.title()
