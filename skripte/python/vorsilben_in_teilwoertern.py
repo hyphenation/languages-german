@@ -10,9 +10,9 @@
 # vorsilben_in_teilwoertern.py: Bestimmung von Vorsilben
 # ============================================================
 #
-# Suche nach Wörtern mit ::
+# Suche nach Wörtern beginnend mit::
 
-praefix = u'ex'
+term = u'hy-po'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
 
 # in der Datei ``teilwoerter-<sprachtag>.txt`` und analysiere das folgende
 # (Teil)wort. Schreibe die Datei ``teilwoerter-neu`` wobei alle Vorkommnisse
@@ -151,7 +151,7 @@ neuteile = [] # Übertrag
 #
 # Muster für die gesuchte Silbe unabhängig von der Großschreibung::
 
-pattern = '[%s%s]%s' % (praefix[0].upper(), praefix[0], praefix[1:]) # [Aa]us
+pattern = '[%s%s]%s' % (term[0].upper(), term[0], term[1:]) # [Aa]us
 
 # Sortierung in::
 
@@ -262,7 +262,7 @@ for line in teilwoerter:
 #
 # ::
 
-print u'Mit (Vor-) Silbe: "%s"' % praefix,
+print u'Mit (Vor-) Silbe: "%s"' % term,
 print len(mit_teilwort) + len(mit_Teilwort) + len(ohne_teilwort)
 print
 

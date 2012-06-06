@@ -202,7 +202,7 @@ def statistik_praefixe(teilwoerter):
             silben[0] = silben[0].lower()
             for i in range(len(silben)-1, 0, -1):
                 kandidat = ''.join(silben[:i])
-                if kandidat in praefixe:
+                if kandidat.lower() in praefixe:
                     # print kandidat, wort
                     kandidaten[kandidat] += 1
                     break
