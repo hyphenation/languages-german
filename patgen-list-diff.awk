@@ -67,15 +67,18 @@ function output_word_class(clarr, clname) {
 # validating and normalizing words.  A word is valid, if it consists
 # entirely of characters that are indices in table tr.
 function read_translate_file(ftr) {
+    # Skip first line containing left and right hyphen minima.
+    getline < ftr
+    # The hyphen is a valid character.
+    tr["-"] = "-"
     # NR and FNR aren't updated when reading a file via getline.  So we
     # count lines manually.
-    ln = 0
+    ln = 1
     # Read lines from translate file.
     while (getline < ftr > 0) {
         ++ln
-        # Skip first line containing left and right hyphen minima and
-        # skip comments.
-        if ((ln > 1) && (match($0, /^%/) == 0)) {
+        # Skip comments.
+        if (match($0, /^%%/) == 0) {
             # Check character translation table format.
             for (i=1; i<=NF; ++i)
                 if (length($i) > 1) {
@@ -87,8 +90,6 @@ function read_translate_file(ftr) {
                 tr[$i] = $1
         }
     }
-    # The hyphen is a valid character.
-    tr["-"] = "-"
 #    print(ln " lines from translation file " ftr " read OK.")
 #    for (ch in tr)
 #        print(ch, tr[ch])
