@@ -50,6 +50,8 @@ function normalize_word(word) {
 function output_word_class(clarr, clname) {
     fname = fdiff "." clname
     i = 0
+    # Create output file and output word class unsorted.
+    printf "" > fname ".unsort"
     for (word in clarr) {
         ++i
         print(clarr[word]) >> fname ".unsort"
