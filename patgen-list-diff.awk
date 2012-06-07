@@ -114,8 +114,6 @@ BEGIN {
 
 # Read DIFF file's added lines.
 /^> / {
-    # Save diff input file name.
-    fdiff = FILENAME
     # Store added word in field with:
     #   key = <normalized word>,
     #   value = <patgen input word>.
@@ -127,8 +125,6 @@ BEGIN {
 }
 # Read DIFF file's removed lines.
 /^< / {
-    # Save diff input file name.
-    fdiff = FILENAME
     # Store removed word with:
     #   key = <normalized word>,
     #   value = <patgen input word>.
@@ -172,6 +168,8 @@ END {
             removed[word] = word_out[word]
         }
     }
+    # Save input file name.
+    fdiff = FILENAME
     # Output results.
     print("Processed file " fdiff ".")
     n_added = output_word_class(added, "added")
