@@ -63,13 +63,10 @@ function output_word_class(clarr, clname) {
 
 
 
-# Process translate file, whose name is defined in variable ftr on the
-# command line.
-BEGIN {
-    if (ftr == "") {
-        print("Translate file name missing! Please set-up variable 'ftr' like: gawk -v ftr=<translate file> ...")
-        exit
-    }
+# Read translate file via getline and build translate table used for
+# validating and normalizing words.  A word is valid, if it consists
+# entirely of characters that are indices in table tr.
+function read_translate_file(ftr) {
     # NR and FNR aren't updated when reading a file via getline.  So we
     # count lines manually.
     ln = 0
@@ -95,11 +92,26 @@ BEGIN {
 #    print(ln " lines from translation file " ftr " read OK.")
 #    for (ch in tr)
 #        print(ch, tr[ch])
+    return
 }
 
 
 
-# Read DIFF file.
+# First, read translate file, whose name is defined in variable ftr on the
+# command line.
+BEGIN {
+    # Check if translate file name is set.
+    if (ftr == "") {
+        print("Translate file name missing! Please set-up variable 'ftr' like: gawk -v ftr=<translate file> ...")
+        exit
+    }
+    # Read translate file and build translate table.
+    read_translate_file(ftr)
+}
+
+
+
+# Read DIFF file's added lines.
 /^> / {
     # Save diff input file name.
     fdiff = FILENAME
@@ -112,6 +124,7 @@ BEGIN {
     v = $2
     word_in[k] = v
 }
+# Read DIFF file's removed lines.
 /^< / {
     # Save diff input file name.
     fdiff = FILENAME
