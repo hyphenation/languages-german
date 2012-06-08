@@ -51,11 +51,11 @@ from werkzeug import WordFile, join_word, udiff
 
 class teilwoerter(object):
 
-# Liste möglicher Trennungen. Es kann unterschiedlche Trennungen eines
-# identischen Teilworts geben, z.B. "Ba-se" (keine Säure) vs. "Base" (in
-# Base=ball)::
+# Dictionary mit Listen möglicher Trennungen. Es kann unterschiedlche
+# Trennungen eines identischen Teilworts geben, z.B. "Ba-se" (keine Säure)
+# vs. "Base" (in Base=ball)::
 
-    trennungen = defaultdict(list)
+    trennvarianten = defaultdict(list)
 
 # Häufigkeiten des Auftretens der Teilwörter::
 
@@ -63,6 +63,14 @@ class teilwoerter(object):
     E = defaultdict(int)   # erstes Wort in Verbindungen
     M = defaultdict(int)   # mittleres Wort in Verbindungen
     L = defaultdict(int)   # letztes Wort in Verbindungen
+
+
+# Iterator über alle trennvarianten: Rückgabewert ist ein String::
+
+    def woerter(self):
+        for varianten in self.trennvarianten.values():
+            for wort in varianten:
+                yield wort
 
 
 def read_teilwoerter(path):
@@ -89,7 +97,7 @@ def read_teilwoerter(path):
         # Ignoriere Spezialtrennungen:
         # if not re.search(r'[.\[{/\]}]', wort):
         if not re.search(r'[.]', wort):
-            words.trennungen[key].append(wort)
+            words.trennvarianten[key].append(wort)
 
     return words
 
@@ -143,7 +151,7 @@ def analyse(path='../../wortliste', sprachvariante='de-1901'):
         gross = wort[0].istitle()
 
         # erstes Teilwort:
-        if (u'·' not in teile[0] 
+        if (u'·' not in teile[0]
             and not teile[0].endswith(u'|')): # Präfix wie un|=wahr=schein-lich
             words.E[teile[0]] += 1
 
@@ -172,68 +180,76 @@ def analyse(path='../../wortliste', sprachvariante='de-1901'):
 # Datenerhebung zum Stand der Präfixmarkierung in der Liste der Teilwörter::
 
 def statistik_praefixe(teilwoerter):
-    
-    ausnahmen = set(line.decode('utf8').strip() 
+
+    ausnahmen = set(line.decode('utf8').strip()
                 for line in open('wortteile/vorsilbenausnahmen'))
 
     # Präfixe (auch als Präfix verwendete Partikel, Adjektive, ...):
-    praefixe = set(line.rstrip().lower().decode('utf8') 
+    praefixe = set(line.rstrip().lower().decode('utf8')
                    for line in open('wortteile/praefixe')
                    if not line.startswith('#'))
     # Sammelboxen:
-    markiert = defaultdict(int)    # mit | markierte Präfixe
-    kandidaten = defaultdict(int)   # nicht mit | markierte Präfixe
-    grundwoerter = defaultdict(int)   # Wörter nach abtrennen markierter Präfixe
+    markiert = defaultdict(list)    # mit | markierte Präfixe
+    kandidaten = defaultdict(list)   # nicht mit | markierte Präfixe
+    # grundwoerter = defaultdict(int)   # Wörter nach Abtrennen markierter Präfixe
 
     # Analyse
-    for trennungen in teilwoerter.trennungen.values():
-        for wort in trennungen:
-            for trenner in (u'||||', u'|||', u'||', u'|'):
-                teile = wort.split(trenner)
-                for teil in teile[:-1]:
-                    if teil: # (leere Strings (wegen ||||) weglassen)
-                        markiert[join_word(teil.lower())] += 1
-                wort = teile[-1]
-            grundwoerter[wort] += 1
-            # Silben des Grundworts
-            if join_word(wort) in ausnahmen:
-                continue
-            silben = re.split(u'[-·.]+', wort)
-            silben[0] = silben[0].lower()
-            for i in range(len(silben)-1, 0, -1):
-                kandidat = ''.join(silben[:i])
-                if kandidat.lower() in praefixe:
-                    # print kandidat, wort
-                    kandidaten[kandidat] += 1
-                    break
-        
-    # Ausgabe
+    for wort in teilwoerter.woerter():
+        # abtrennen markierter Präfixe:
+        restwort = wort
+        for trenner in (u'||||', u'|||', u'||', u'|'):
+            teile = restwort.split(trenner)
+            for teil in teile[:-1]:
+                # if teil: # (leere Strings (wegen ||||) weglassen)
+                    markiert[join_word(teil.lower())] .append(wort)
+            restwort = teile[-1]
+        # grundwoerter[restwort] += 1
+        # Silben des Grundworts
+        if join_word(restwort) in ausnahmen:
+            continue
+        # silben = re.split(u'[-·.]+', restwort)
+        silben = restwort.split('-')
+        silben[0] = silben[0].lower()
+        for i in range(len(silben)-1, 0, -1):
+            kandidat = ''.join(silben[:i])
+            if kandidat.lower() in praefixe:
+                # print kandidat, wort, silben[i]
+                if silben[i-1]: # kein '--' nach dem Kandidaten
+                    kandidaten[kandidat].append(wort)
+                break
+
+# Ausgabe
     print u'\nPräfixe aus der Liste "wortteile/praefixe":'
-    print u'markiert mit      |    -    ='
+    print u'markiert mit      |     -    ='
     for vs in sorted(praefixe):
-        print (u'%-13s %5d %5d %4d' % 
-               (vs, markiert.pop(vs, 0), kandidaten[vs], 
+        print (u'%-13s %5d %5d %4d' %
+               (vs, len(markiert[vs]), len(kandidaten[vs]),
                 teilwoerter.E[vs] + teilwoerter.M[vs]
                 + teilwoerter.E[vs.title()] + teilwoerter.M[vs.title()])
-              )
-    
+              ),
+        if kandidaten[vs] and len(kandidaten[vs]) < 30:
+            print u' '.join(kandidaten[vs])
+        else:
+            print
+        markiert.pop(vs, None)
+
     print u'Markierte Präfixe die nicht in der Präfix-Liste stehen:'
-    markiert.pop('lang', 0) # von "ent|lang||"
+    # markiert.pop('lang', 0) # von "ent|lang||"
     for vs, i in markiert.items():
-        print vs, i
+        print vs, u' '.join(i)
 
 
 # Trennungsvarianten zum gleichen Key:
 
 def mehrdeutigkeiten(words):
-    for teil in sorted(words.trennungen):
-        if len(words.trennungen[teil]) == 1:
+    for teil in sorted(words.trennvarianten):
+        if len(words.trennvarianten[teil]) == 1:
             continue
         # Bekannte Mehrdeutigkeiten:
         if teil in ('Base',  'Mode', 'Page', 'Planes', 'Rate', 'Real',
                     'Spare', 'Wales', 'Ware', 'griff'):
             continue
-        line = u' '.join([teil]+words.trennungen[teil])
+        line = u' '.join([teil]+words.trennvarianten[teil])
         print line
 
 
@@ -278,7 +294,7 @@ if __name__ == '__main__':
     # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
-    
+
     words = analyse(sprachvariante=sprachvariante)
     write_teilwoerter(words, 'teilwoerter-%s.txt'%sprachvariante)
 
@@ -290,6 +306,6 @@ if __name__ == '__main__':
 
     # Trennungsvarianten zum gleichen Key:
     mehrdeutigkeiten(words)
-        
+
     # Stand der Vorsilbenmarkierung:
     statistik_praefixe(words)

@@ -17,7 +17,7 @@
 # ::
 
 from copy import deepcopy
-import re, sys
+import re, sys, codecs
 from werkzeug import WordFile, WordEntry, join_word, udiff
 from abgleich_teilwoerter import sprachabgleich
 
@@ -51,6 +51,9 @@ def conflate(wortliste):
         continue
 
 if __name__ == '__main__':
+
+    # sys.stdout mit UTF8 encoding.
+    sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
     # Die `Wortliste`::
 

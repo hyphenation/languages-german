@@ -155,6 +155,7 @@ def uebertrage(wort1, wort2, strict=True):
             elif wort1.find(s+u's-t') != -1:
                 wort1 = wort1.replace(s+u's-t', s+u'st')
                 silben1, trennzeichen1 = zerlege(wort1)
+                # print u'retry:', silben1, trennzeichen1
         # immer noch ungleiche Zahl an Trennstellen?
         if len(trennzeichen1) != len(trennzeichen2):
             raise TransferError(wort1, wort2)
@@ -228,14 +229,14 @@ def teilabgleich(teil, grossklein=False, strict=True):
     except AssertionError, e:
         print e
         return teil
-    if key not in words.trennungen:
+    if key not in words.trennvarianten:
         # print teil, u'not in words'
         return teil
     # Gibt es eine eindeutige Trennung für Teil?
-    if len(words.trennungen[key]) > 2:
-            print u'Mehrdeutig:', words.trennungen[key]
+    if len(words.trennvarianten[key]) > 2:
+            print u'Mehrdeutig:', words.trennvarianten[key]
             # return teil
-    for wort in words.trennungen[key]:
+    for wort in words.trennvarianten[key]:
         # Übertrag der Trennungen
         try:
             teil = uebertrage(wort, teil, strict)
@@ -258,11 +259,11 @@ def grundwortabgleich(wort, endung, vergleichsendung=u''):
     key = join_word(stamm)
     # print u' '.join([wort, key])
 
-    if (key in words.trennungen and
-        len(words.trennungen[key]) == 1):
+    if (key in words.trennvarianten and
+        len(words.trennvarianten[key]) == 1):
         # print u'fundum', key
         try:
-            neustamm = uebertrage(words.trennungen[key][0], stamm)
+            neustamm = uebertrage(words.trennvarianten[key][0], stamm)
             # Vergleichsendung abtrennen
             if vergleichsendung:
                 neustamm = neustamm[:-len(vergleichsendung)]
@@ -312,8 +313,8 @@ def sprachabgleich(entry):
                 try:
                     entry[i] = uebertrage(gewichtet, entry[i], strict=False)
                 except TransferError, e:
-                    print unicode(e)
-        print gewichtet, str(entry)
+                    print u'Sprachabgleich:', unicode(e)
+        print gewichtet, unicode(entry)
 
 
 # Teste, ob ein Teilwort eine Vorsilbe (oder auch mehrsilbiger Präfix) ist
@@ -342,7 +343,7 @@ if __name__ == '__main__':
 
 # Tests::
 
-    # for key, value in words.trennungen.iteritems():
+    # for key, value in words.trennvarianten.iteritems():
     #     if len(value) != 1:
     #         print key, value
     # sys.exit()

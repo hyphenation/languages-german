@@ -130,15 +130,13 @@ words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
 # Grundwörter welche Vorsilben folgen::
 
 grundwoerter = set()
-for wort in words.trennungen.values():
-    match = re.search(ur'\|([^|]+)$', wort[-1])
-    # if len(wort) > 1:
-    #     print wort
+for wort in words.woerter():
+    match = re.search(ur'\|([^|]+)$', wort)
     if match:
         grundwoerter.add(match.group(1))
 
 # print grundwoerter
-# print len(trennungen), len(grundwoerter)
+# print len(trennvarianten), len(grundwoerter)
 # sys.exit()
 #
 # Teilwörterdatei für die zeilenweise Modifikation::
@@ -192,6 +190,8 @@ for line in teilwoerter:
     rest = match.group(3)
 
     if praefix:
+        # Automatische Wichtung
+        # (auskommentieren wenn unerwünscht, z.B. bei "zu" -> "ab|zu|geben")
         if not praefix.endswith(u'||'):
             praefix = praefix.replace(u'||', u'|||') + u'|'
         ersetzung = u'%s%s|%s' % (praefix, kandidat, rest)
@@ -225,12 +225,12 @@ for line in teilwoerter:
 
 # ::
 
-    # elif key in words.trennungen and key in grundwoerter:
+    # elif key in words.trennvarianten and key in grundwoerter:
     #     teil_und_grundwort.append(ersetzung)
     #     # Zeile ändern:
     #     line = u'%s %s\n' % (ersetzung, tags)
 
-    elif key in words.trennungen:
+    elif key in words.trennvarianten:
         mit_teilwort.append(ersetzung)
         # Zeile ändern:
         line = u'%s %s\n' % (ersetzung, tags)
@@ -242,7 +242,8 @@ for line in teilwoerter:
 
 # Teste ohne Berücksichtigung der Groß/Kleinschreibung::
 
-    elif key.lower() in words.trennungen or key.title() in words.trennungen:
+    elif (key.lower() in words.trennvarianten 
+          or key.title() in words.trennvarianten):
         # Extra abspeichern für manuelle Qualitätskontrolle
         mit_Teilwort.append(ersetzung)
         # Zeile ändern:
