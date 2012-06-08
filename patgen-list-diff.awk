@@ -24,7 +24,7 @@ function tr_tolower(s) {
     for (i=1; i<=l; ++i) {
         ch = substr(s, i, 1)
         if (tr[ch] == "") {
-            printf("%s", "Error: Bad character '" ch "' in string " s " (" FILENAME ", line " FNR ")\n")
+            printf("%s", "Error: Bad character '" ch "' in string " s " (" FILENAME ", line " FNR ")\n") > "/dev/stderr"
             error = 1
             exit
         }
@@ -85,7 +85,7 @@ function read_translate_file(ftr) {
             # Check character translation table format.
             for (i=1; i<=NF; ++i)
                 if (length($i) > 1) {
-                    printf("%s", "Error: Bad character translation table in file " ftr ", line " ln "\n")
+                    printf("%s", "Error: Bad character translation table in file " ftr ", line " ln "\n") > "/dev/stderr"
                     error = 1
                     exit
                 }
@@ -107,7 +107,7 @@ function read_translate_file(ftr) {
 BEGIN {
     # Check if translate file name is set.
     if (ftr == "") {
-        printf("%s", "Error: Translate file name missing!\nPlease set-up variable 'ftr' like: gawk -v ftr=<translate file> ...\n")
+        printf("%s", "Error: Translate file name missing!\nPlease set-up variable 'ftr' like: gawk -v ftr=<translate file> ...\n") > "/dev/stderr"
         error = 1
         exit
     }
