@@ -70,7 +70,12 @@ function output_word_class(clarr, clname) {
 # validating and normalizing words.  A word is valid, if it consists
 # entirely of characters that are indices in table tr.
 function read_translate_file(ftr) {
-    # Skip first line containing left and right hyphen minima.
+    # Switch to fixed-width field splitting mode.  The separator in
+    # translate files is not known in advance and can change from line
+    # to line.
+    FIELDWIDTHS = "1 1 1 1 1 1 1"
+    # Skip first line containing hyphenation minima and hyphenation
+    # characters.
     getline < ftr
     # The hyphen is a valid character.
     tr["-"] = "-"
@@ -80,23 +85,32 @@ function read_translate_file(ftr) {
     # Read lines from translate file.
     while (getline < ftr > 0) {
         ++ln
-        # Skip comments.
-        if (match($0, /^%%/) == 0) {
-            # Check character translation table format.
-            for (i=1; i<=NF; ++i)
-                if (length($i) > 1) {
+        # Skip comments (column 1 == column 2).
+        if ($1 != $2) {
+            # Determine number of columns on line.
+            cols=0
+            while ($(cols+1) != "") {
+                cols++
+            }
+            # Check character translation table format.  Check if
+            # separators are all equal to that in column 1.
+            for (i=3; i<=cols; i=i+2) {
+                if ($i != $1) {
                     printf("%s", "Error: Bad character translation table in file " ftr ", line " ln "\n") > "/dev/stderr"
                     error = 1
                     exit
                 }
-            # Update character translation table.
-            for (i=1; i<=NF; ++i)
-                tr[$i] = $1
+            }
+            # Store characters in translation table.
+            for (i=2; i<=cols; i=i+2)
+                tr[$i] = $2
         }
     }
 #    print(ln " lines from translation file " ftr " read OK.")
 #    for (ch in tr)
 #        print(ch, tr[ch])
+    # Reset regular field splitting mode.
+    FS = FS
     return
 }
 
