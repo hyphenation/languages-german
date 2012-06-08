@@ -54,36 +54,57 @@ then
   echo 'patgen-list-diff.sh: error identifying target commit hash: ' $TOCOMMIT
   exit 1
 fi
+
+
+
+# Function definition.  If not already present, place a copy of a
+# commit's working copy in a directory 'wl-<commit hash>'.
+get_working_copy() {
+    typeset commit=$1
+    typeset commitdir=wl-$commit
+    if test ! -d $commitdir
+    then
+        git archive --format=tar --prefix=$commitdir/ $commit | tar xf -
+    fi
+}
+
+# Function definition.
+create_patgen_list() {
+    typeset commit=$1 patgenlist=$2
+    typeset commitdir=wl-$commit
+    if test ! -e $commitdir/$patgenlist
+    then
+        # 'make -C $commitdir $patgenlist' doesn't work reliably on Git
+        # for Windows shell.
+        (cd $commitdir && make $patgenlist)
+    fi
+}
+
+# Function definition.
+diff_patgen_list() {
+    typeset fromcommit=$1 tocommit=$2 dehyph=$3 spell=$4
+    typeset fromcommitdir=wl-$fromcommit tocommitdir=wl-$tocommit patgenlist=$dehyph/words.hyphenated.$spell difffile=$fromcommit-$tocommit.diff
+    create_patgen_list $fromcommit $patgenlist
+    create_patgen_list $tocommit $patgenlist
+    if test ! -d $dehyph; then mkdir $dehyph; fi
+    diff $fromcommitdir/$patgenlist $tocommitdir/$patgenlist > $dehyph/$difffile
+    gawk -f patgen-list-diff.awk -v ftr=daten/german.tr $dehyph/$difffile
+}
+
+
+
 echo "Diff'ing patgen input files between commits $FROMHASH ($FROMCOMMIT) and $TOHASH ($TOCOMMIT)."
-TEMPSCRSH=temp-patgen-list-diff.sh
-TEMPSCRAWK=temp-patgen-list-diff.awk
-cp patgen-list-diff.awk $TEMPSCRAWK
-(
-    echo 'if git checkout $1'
-    echo 'then'
-    echo '  make dehyphn-x/words.hyphenated.refo'
-    echo '  make dehypht-x/words.hyphenated.trad'
-    echo '  make dehyphts-x/words.hyphenated.swiss'
-    echo '  mv dehyphn-x/words.hyphenated.refo dehyphn-x/words.hyphenated.refo.$1'
-    echo '  mv dehypht-x/words.hyphenated.trad dehypht-x/words.hyphenated.trad.$1'
-    echo '  mv dehyphts-x/words.hyphenated.swiss dehyphts-x/words.hyphenated.swiss.$1'
-    echo '  git checkout $2'
-    echo '  make dehyphn-x/words.hyphenated.refo'
-    echo '  make dehypht-x/words.hyphenated.trad'
-    echo '  make dehyphts-x/words.hyphenated.swiss'
-    echo '  diff dehyphn-x/words.hyphenated.refo.$1 dehyphn-x/words.hyphenated.refo > dehyphn-x/$1-$2.diff'
-    echo '  diff dehypht-x/words.hyphenated.trad.$1 dehypht-x/words.hyphenated.trad > dehypht-x/$1-$2.diff'
-    echo '  diff dehyphts-x/words.hyphenated.swiss.$1 dehyphts-x/words.hyphenated.swiss > dehyphts-x/$1-$2.diff'
-    echo '  TABLE=CHANGES.table.txt'
-    echo '  echo "      Rechtschreibung         hinzugefügt   entfernt   korrigiert" > $TABLE'
-    echo '  echo "    ---------------------------------------------------------------" >> $TABLE'
-    echo '  echo -n "      traditionell (DE, AT)" >> $TABLE'
-    echo '  gawk -f' $TEMPSCRAWK '-v ftr=daten/german.tr dehypht-x/$1-$2.diff'
-    echo '  echo -n "      traditionell (CH)    " >> $TABLE'
-    echo '  gawk -f' $TEMPSCRAWK '-v ftr=daten/german.tr dehyphts-x/$1-$2.diff'
-    echo '  echo -n "      reformiert           " >> $TABLE'
-    echo '  gawk -f' $TEMPSCRAWK '-v ftr=daten/german.tr dehyphn-x/$1-$2.diff'
-    echo 'fi'
-    echo 'exec rm -f' $TEMPSCRSH $TEMPSCRAWK
-) > $TEMPSCRSH
-exec $TEMPSCRSH $FROMHASH $TOHASH
+# Get commit's working copies.
+get_working_copy $FROMHASH
+get_working_copy $TOHASH
+# Write header to summary table file.
+PLDTABLE=CHANGES.table.txt
+echo "      Rechtschreibung         hinzugefügt   entfernt   korrigiert" > $PLDTABLE
+echo "    ---------------------------------------------------------------" >> $PLDTABLE
+# Diff patgen lists and write results to summary table file.
+echo -n "      traditionell (DE, AT)" >> $PLDTABLE
+diff_patgen_list $FROMHASH $TOHASH dehypht-x trad
+echo -n "      traditionell (CH)    " >> $PLDTABLE
+diff_patgen_list $FROMHASH $TOHASH dehyphts-x swiss
+echo -n "      reformiert           " >> $PLDTABLE
+diff_patgen_list $FROMHASH $TOHASH dehyphn-x refo
