@@ -42,13 +42,13 @@ then
 else
   TOCOMMIT=$2
 fi
-FROMHASH=$(git log -1 --format=%h $FROMCOMMIT)
+FROMHASH=`git log -1 --format=%H $FROMCOMMIT`
 if test -z $FROMHASH
 then
   echo 'patgen-list-diff.sh: error identifying start commit hash: ' $FROMCOMMIT
   exit 1
 fi
-TOHASH=$(git log -1 --format=%h $TOCOMMIT)
+TOHASH=`git log -1 --format=%H $TOCOMMIT`
 if test -z $TOHASH
 then
   echo 'patgen-list-diff.sh: error identifying target commit hash: ' $TOCOMMIT
@@ -83,7 +83,7 @@ create_patgen_list() {
 # Function definition.
 diff_patgen_list() {
     typeset fromcommit=$1 tocommit=$2 dehyph=$3 spell=$4
-    typeset fromcommitdir=wl-$fromcommit tocommitdir=wl-$tocommit patgenlist=$dehyph/words.hyphenated.$spell difffile=$fromcommit-$tocommit.diff
+    typeset fromcommitdir=wl-$fromcommit tocommitdir=wl-$tocommit patgenlist=$dehyph/words.hyphenated.$spell difffile=${fromcommit:0:7}-${tocommit:0:7}.diff
     create_patgen_list $fromcommit $patgenlist
     create_patgen_list $tocommit $patgenlist
     if test ! -d $dehyph; then mkdir $dehyph; fi
