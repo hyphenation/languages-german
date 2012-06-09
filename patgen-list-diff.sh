@@ -42,13 +42,17 @@ then
 else
   TOCOMMIT=$2
 fi
-FROMHASH=`git log -1 --format=%H $FROMCOMMIT`
+typeset GITDATA=`git log -1 --format=%ci-%H $FROMCOMMIT`
+FROMDATE=${GITDATA:0:10}+${GITDATA:11:2}-${GITDATA:14:2}-${GITDATA:17:2}
+FROMHASH=${GITDATA:26}
 if test -z $FROMHASH
 then
   echo 'patgen-list-diff.sh: error identifying start commit hash: ' $FROMCOMMIT
   exit 1
 fi
-TOHASH=`git log -1 --format=%H $TOCOMMIT`
+typeset GITDATA=`git log -1 --format=%ci-%H $TOCOMMIT`
+TODATE=${GITDATA:0:10}+${GITDATA:11:2}-${GITDATA:14:2}-${GITDATA:17:2}
+TOHASH=${GITDATA:26}
 if test -z $TOHASH
 then
   echo 'patgen-list-diff.sh: error identifying target commit hash: ' $TOCOMMIT
@@ -60,8 +64,8 @@ fi
 # Function definition.  If not already present, place a copy of a
 # commit's working copy in a directory 'wl-<commit hash>'.
 get_working_copy() {
-    typeset commit=$1
-    typeset commitdir=wl-$commit
+    typeset commit=$1 commitdate=$2
+    typeset commitdir=$commitdate-$commit
     if test ! -d $commitdir
     then
         git archive --format=tar --prefix=$commitdir/ $commit | tar xf -
@@ -70,8 +74,8 @@ get_working_copy() {
 
 # Function definition.
 create_patgen_list() {
-    typeset commit=$1 patgenlist=$2
-    typeset commitdir=wl-$commit
+    typeset commit=$1 commitdate=$2 patgenlist=$3
+    typeset commitdir=$commitdate-$commit
     if test ! -e $commitdir/$patgenlist
     then
         # 'make -C $commitdir $patgenlist' doesn't work reliably on Git
@@ -82,10 +86,10 @@ create_patgen_list() {
 
 # Function definition.
 diff_patgen_list() {
-    typeset fromcommit=$1 tocommit=$2 dehyph=$3 spell=$4
-    typeset fromcommitdir=wl-$fromcommit tocommitdir=wl-$tocommit patgenlist=$dehyph/words.hyphenated.$spell difffile=${fromcommit:0:7}-${tocommit:0:7}.diff
-    create_patgen_list $fromcommit $patgenlist
-    create_patgen_list $tocommit $patgenlist
+    typeset fromcommit=$1 fromcommitdate=$2 tocommit=$3 tocommitdate=$4 dehyph=$5 spell=$6
+    typeset fromcommitdir=$fromcommitdate-$fromcommit tocommitdir=$tocommitdate-$tocommit patgenlist=$dehyph/words.hyphenated.$spell difffile=${fromcommit:0:7}-${tocommit:0:7}.diff
+    create_patgen_list $fromcommit $fromcommitdate $patgenlist
+    create_patgen_list $tocommit $tocommitdate $patgenlist
     if test ! -d $dehyph; then mkdir $dehyph; fi
     diff $fromcommitdir/$patgenlist $tocommitdir/$patgenlist > $dehyph/$difffile
     gawk -f patgen-list-diff.awk -v ftr=daten/german.tr $dehyph/$difffile
@@ -95,16 +99,16 @@ diff_patgen_list() {
 
 echo "Diff'ing patgen input files between commits $FROMHASH ($FROMCOMMIT) and $TOHASH ($TOCOMMIT)."
 # Get commit's working copies.
-get_working_copy $FROMHASH
-get_working_copy $TOHASH
+get_working_copy $FROMHASH $FROMDATE
+get_working_copy $TOHASH $TODATE
 # Write header to summary table file.
 PLDTABLE=CHANGES.table.txt
 echo "      Rechtschreibung         hinzugefügt   entfernt   korrigiert" > $PLDTABLE
 echo "    ---------------------------------------------------------------" >> $PLDTABLE
 # Diff patgen lists and write results to summary table file.
 echo -n "      traditionell (DE, AT)" >> $PLDTABLE
-diff_patgen_list $FROMHASH $TOHASH dehypht-x trad
+diff_patgen_list $FROMHASH $FROMDATE $TOHASH $TODATE dehypht-x trad
 echo -n "      traditionell (CH)    " >> $PLDTABLE
-diff_patgen_list $FROMHASH $TOHASH dehyphts-x swiss
+diff_patgen_list $FROMHASH $FROMDATE $TOHASH $TODATE dehyphts-x swiss
 echo -n "      reformiert           " >> $PLDTABLE
-diff_patgen_list $FROMHASH $TOHASH dehyphn-x refo
+diff_patgen_list $FROMHASH $FROMDATE $TOHASH $TODATE dehyphn-x refo
