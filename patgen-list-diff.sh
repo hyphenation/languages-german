@@ -38,7 +38,7 @@ fi
 FROMCOMMIT=$1
 if test $# -eq 1
 then
-  TOCOMMIT=master
+  TOCOMMIT=HEAD
 else
   TOCOMMIT=$2
 fi
