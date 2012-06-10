@@ -259,19 +259,20 @@ def grundwortabgleich(wort, endung, vergleichsendung=u''):
     key = join_word(stamm)
     # print u' '.join([wort, key])
 
-    if (key in words.trennvarianten and
-        len(words.trennvarianten[key]) == 1):
+    if key in words.trennvarianten:
         # print u'fundum', key
-        try:
-            neustamm = uebertrage(words.trennvarianten[key][0], stamm)
-            # Vergleichsendung abtrennen
-            if vergleichsendung:
-                neustamm = neustamm[:-len(vergleichsendung)]
-            # Mit Originalendung einsetzen
-            teile[-1] =  neustamm + endung.replace(u'·', u'-')
-        except TransferError, e:
-            print unicode(e)
-
+        for altstamm in words.trennvarianten[key]:
+            try:
+                neustamm = uebertrage(altstamm, stamm)
+                # Vergleichsendung abtrennen
+                if vergleichsendung:
+                    neustamm = neustamm[:-len(vergleichsendung)]
+                # Mit Originalendung einsetzen
+                teile[-1] =  neustamm + endung.replace(u'·', u'-')
+                break
+            except TransferError, e:
+                print unicode(e)
+    
     return u'='.join(teile)
 
 
@@ -376,11 +377,11 @@ if __name__ == '__main__':
 
 # Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
 
-        wort2 = teilwortabgleich(wort, grossklein=False, strict=True)
-        if wort == wort2:
-            wort2 = teilwortabgleich(wort, grossklein=True, strict=True)
-        # wort2 = grundwortabgleich(wort, endung=u'i-ge',
-        #                           vergleichsendung=u'ig')
+        # wort2 = teilwortabgleich(wort, grossklein=False, strict=True)
+        # if wort == wort2:
+        #     wort2 = teilwortabgleich(wort, grossklein=True, strict=True)
+        wort2 = grundwortabgleich(wort, endung=u'·en',
+                                  vergleichsendung=u'e')
         # wort2 = vorsilbentest(wort)
 
         if wort != wort2:
