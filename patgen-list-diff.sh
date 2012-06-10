@@ -76,11 +76,12 @@ get_working_copy() {
 create_patgen_list() {
     typeset commit=$1 commitdate=$2 patgenlist=$3
     typeset commitdir=$commitdate-$commit
+    echo "Making ${commit:0:7} file $patgenlist."
     if test ! -e $commitdir/$patgenlist
     then
         # 'make -C $commitdir $patgenlist' doesn't work reliably on Git
         # for Windows shell.
-        (cd $commitdir && make $patgenlist)
+        (cd $commitdir && make $patgenlist > /dev/null)
     fi
 }
 
@@ -97,7 +98,9 @@ diff_patgen_list() {
 
 
 
-echo "Diff'ing patgen input files between commits $FROMHASH ($FROMCOMMIT) and $TOHASH ($TOCOMMIT)."
+echo "Diff'ing patgen input files."
+printf "from: %7s  %10s  %s\n" ${FROMHASH:0:7} ${FROMDATE:0:10} $FROMCOMMIT
+printf "to:   %7s  %10s  %s\n" ${TOHASH:0:7}   ${TODATE:0:10}   $TOCOMMIT
 # Get commit's working copies.
 get_working_copy $FROMHASH $FROMDATE
 get_working_copy $TOHASH $TODATE
