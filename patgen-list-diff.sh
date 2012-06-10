@@ -42,7 +42,7 @@ then
 else
   TOCOMMIT=$2
 fi
-typeset GITDATA=`git log -1 --format=%ci-%H $FROMCOMMIT`
+typeset GITDATA=`git log -1 --format=%ci-%H $FROMCOMMIT --`
 FROMDATE=${GITDATA:0:10}+${GITDATA:11:2}-${GITDATA:14:2}-${GITDATA:17:2}
 FROMHASH=${GITDATA:26}
 if test -z $FROMHASH
@@ -50,7 +50,7 @@ then
   echo 'patgen-list-diff.sh: error identifying start commit hash: ' $FROMCOMMIT
   exit 1
 fi
-typeset GITDATA=`git log -1 --format=%ci-%H $TOCOMMIT`
+typeset GITDATA=`git log -1 --format=%ci-%H $TOCOMMIT --`
 TODATE=${GITDATA:0:10}+${GITDATA:11:2}-${GITDATA:14:2}-${GITDATA:17:2}
 TOHASH=${GITDATA:26}
 if test -z $TOHASH
