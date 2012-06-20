@@ -100,8 +100,7 @@ SORT = $(LC_ENVVARS) sort -d \
        | $(LC_ENVVARS) uniq -i
 
 GIT_VERSION := `$(CHDIR) $(SRCDIR); \
-                $(GIT) log --pretty=oneline -1 HEAD -- \
-                | $(SED) 's/ .*//'`
+                $(GIT) log --format=%H -1 HEAD --`
 TRADFILES = $(TRAD)/$(TRAD)-$(DATE).pat $(TRAD)/$(TRAD)-$(DATE).tex
 REFOFILES = $(REFO)/$(REFO)-$(DATE).pat $(REFO)/$(REFO)-$(DATE).tex
 SWISSFILES = $(SWISS)/$(SWISS)-$(DATE).pat $(SWISS)/$(SWISS)-$(DATE).tex
