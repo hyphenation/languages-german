@@ -144,6 +144,11 @@
   reformierten Rechtschreibung ab und können mit den Paketen
   \texttt{Babel} und \texttt{hyphsubst} aus dem
   \Programm{Oberdiek-Bündel} verwendet werden.
+
+  Dieses Paket richtet sich ausschließlich an Nutzer der Programme \TeX\
+  und pdf\TeX.  Lua\TeX- und Xe\TeX-Nutzer können experimentelle Muster
+  aus dem Paket \texttt{hyph-utf8} verwenden und benötigen dieses Paket
+  nicht.
 \end{abstract}
 
 \vfill
@@ -278,31 +283,30 @@ verbessern.
 \section{Verwenden der Trennmuster}
 \label{sec:verwenden}
 Dieses Paket stellt die experimentellen Trennmuster für die Verwendung
-mit \LaTeX\ und dem Sprachenpaket \texttt{Babel} zur Verfügung.  Derzeit
-werden nur eine Auswahl von \TeX-Programmen und "~Formaten unterstützt
-(siehe \autoref{tab:texkompat}).  Mit den nicht unterstützten Formaten
-können experimentelle Trennmuster dennoch verwendet werden, da das Paket
-\texttt{hyph-utf8} eine (möglicherweise ältere) Version dieser Muster
-enthält.  Werden Formate für die UTF-8-fähigen Programme Xe\TeX\ und
-Lua\TeX\ oder für p\TeX\footnote{%
+mit \LaTeX\ und dem Sprachenpaket \texttt{Babel} zur Verfügung.  Das
+Paket richtet sich derzeit ausschließlich an Nutzer der Programme \TeX\
+und pdf\TeX\ (siehe \autoref{tab:texkompat}).
+
+Mit den nicht unterstützten \TeX-Programmen können experimentelle
+Trennmuster dennoch verwendet werden, da das Paket \texttt{hyph-utf8}
+ebenfalls Muster dieses Projekts enthält.  Werden die UTF-8-fähigen
+Programme Xe\TeX\ und Lua\TeX\ oder p\TeX\footnote{%
   Eine in Japan populäre \TeX-Variante.%
-} verwendet, so werden jene Muster bereits standardmäßig aktiviert.  Die
-Trennmuster dieses Pakets sollten dann nicht verwendet werden.  Der
-Hauptzweck des Pakets \texttt{dehyph-exptl} ist die Verwendung mit den
-Formaten \texttt{latex} und \texttt{pdflatex}.
+} verwendet, so werden jene Muster standardmäßig aktiviert.  Die
+Trennmuster dieses Pakets sollten dann nicht verwendet werden.
 
 \begin{table}
   \centering
   \caption{Kompatibilität mit verschiedenen \TeX-Varianten}
   \label{tab:texkompat}
-  \begin{tabular}{l>{\ttfamily}lc}
-    Programm & \normalfont Format & Kompatibilität\\
+  \begin{tabular}{l>{\ttfamily}l}
+    Programm & \normalfont Quelle experimenteller Muster\\
     \addlinespace\toprule\addlinespace
-    \TeX & latex & ja\\
-    pdf\TeX & pdflatex & ja\\
-    XeTeX & xelatex & ja\\
-    LuaTeX & lualatex & nein\\
-    p\TeX & platex & nein\\
+    \TeX & dehyph-exptl\\
+    pdf\TeX & dehyph-exptl\\
+    XeTeX & hyph-utf8, dehyph-exptl\\
+    LuaTeX & hyph-utf8\\
+    p\TeX & hyph-utf8\\
   \end{tabular}
 \end{table}
 
