@@ -88,9 +88,13 @@ function read_translate_file(ftr) {
         # Skip comments (column 1 == column 2).
         if ($1 != $2) {
             # Determine number of columns on line.
-            cols=0
+            cols = 0
             while ($(cols+1) != "") {
                 cols++
+            }
+            # Ignore trailing separators.
+            while ((cols > 0) && ($cols == $1)) {
+                cols--
             }
             # Check character translation table format.  Check if
             # separators are all equal to that in column 1.
