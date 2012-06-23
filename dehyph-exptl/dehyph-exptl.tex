@@ -293,7 +293,9 @@ ebenfalls Muster dieses Projekts enthält.  Werden die UTF-8-fähigen
 Programme Xe\TeX\ und Lua\TeX\ oder p\TeX\footnote{%
   Eine in Japan populäre \TeX-Variante.%
 } verwendet, so werden jene Muster standardmäßig aktiviert.  Die
-Trennmuster dieses Pakets sollten dann nicht verwendet werden.
+Trennmuster dieses Pakets sollten dann nicht verwendet werden.  Siehe
+\autoref{sec:fragen} für Hinweise, wie die Version der im Paket
+\texttt{hyph-utf8} enthaltenen Muster ermittelt werden kann.
 
 \begin{table}
   \centering
@@ -1078,12 +1080,12 @@ verwendet werden.
   Achtung, bei den einfachen Anführungszeichen handelt es sich um
   Gravis ("`Backquotes"').
 
-  \begin{lstlisting}[style=shell, caption=shell]
+  \begin{lstlisting}[style=shell, caption=Shell]
 grep -i german-x `kpsewhich language.dat`
   \end{lstlisting}
 
   \begin{lstlisting}[style=shell, caption=\Datei{cmd.exe}]
-for /F "usebackq" %f in (`kpsewhich language.dat`) do find /i "german-x" %f
+for /F "usebackq" %f in (`kpsewhich language.dat`) do find /i "german-x" "%f"
   \end{lstlisting}
 
   Die Ausgabe dieser Kommandos sieht etwa wie folgt aus (das Datum kann
@@ -1104,6 +1106,31 @@ ngerman-x-2009-06-19 dehyphn-x-2009-06-19.tex
   beginnenden Zeilen definieren ein Synonym für den
   Trennmusterbezeichner der unmittelbar vorangehenden Zeile in der Datei
   \Datei{language.dat}.
+\end{frageantwort}
+
+
+\begin{frageantwort}{Wie kann die Version der experimentellen Muster
+    ermittelt werden, die im Paket \texttt{hyph-utf8} enthalten sind?}
+  Das Vorgehen ähnelt dem der vorherigen Antwort.  Zunächst wird der Ort
+  einer bestimmten Datei ermittelt.  Diese wird dann nach einer
+  hilfreichen Zeichenkette durchsucht.
+
+  \begin{lstlisting}[style=shell, caption=Shell]
+grep dehyph `kpsewhich hyph-de-1901.lic.txt`
+  \end{lstlisting}
+
+  \begin{lstlisting}[style=shell, caption=\Datei{cmd.exe}]
+for /F "usebackq" %f in (`kpsewhich hyph-de-1901.lic.txt`) do find "dehyph" "%f"
+  \end{lstlisting}
+
+  Die Ausgabe dieser Kommandos sieht etwa wie folgt aus (das Datum kann
+  abweichen):
+
+\begin{lstlisting}
+% dehypht-x-2011-06-01.pat
+\message{German Hyphenation Patterns (Traditional Orthography) `dehypht-x' 2011-
+06-01 (WL)}
+\end{lstlisting}
 \end{frageantwort}
 
 
