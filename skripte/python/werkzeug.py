@@ -18,7 +18,7 @@
 #
 # Die hier versammelten Funktionen und Klassen dienen der Arbeit an und
 # mit der  freien `Wortliste der deutschsprachigen Trennmustermannschaft`_
-# ("Lehmansche Liste")
+# ("Lembergsche Liste")
 #
 # Vorspann
 #

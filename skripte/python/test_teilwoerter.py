@@ -42,7 +42,7 @@ sprachvariante = 'de-1901'         # "traditionell"
 # -------------
 #
 # Die freie `Wortliste der deutschsprachigen Trennmustermannschaft`_
-# ("Lehmansche Liste")::
+# ("Lembergsche Liste")::
 
 wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
 wortliste = list(wordfile)
