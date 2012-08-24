@@ -32,7 +32,7 @@ from werkzeug import WordFile, join_word
 # =============
 # 
 # Die freie `Wortliste der deutschsprachigen Trennmustermannschaft`_
-# ("Lehmansche Liste")
+# ("Lembergsche Liste")
 # 
 # ::
 
