@@ -20,8 +20,8 @@ term = u'ver'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
 # ``|`` markiert sind, es sei den das Wort (ohne bereits markierte Präfixe)
 # ist in der Datei ``wortteile/vorsilbenausnahmen`` gelistet.
 # Die Ausgabe der Analyse hilft bei der Vervollständigung der Ausnahmeliste.
-
-
+#
+#
 # Vorbetrachtungen
 # ----------------
 #
@@ -203,7 +203,7 @@ for line in teilwoerter:
 
 # Sortieren und ggf. Präfix markieren
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+#
 # Wenn der Wortbestandteil hinter dem Präfixkandidaten
 #
 # * im Wörterbuch vorhanden ist,
@@ -212,7 +212,7 @@ for line in teilwoerter:
 #
 # kann davon ausgegangen werden, daß es sich bei dem Kandidaten um einen
 # Präfix handelt.
-
+#
 # Ausnahmen aus der Ausnahmeliste::
 
     if join_word(kandidat+rest) in ausnahmen:
@@ -242,7 +242,7 @@ for line in teilwoerter:
 
 # Teste ohne Berücksichtigung der Groß/Kleinschreibung::
 
-    elif (key.lower() in words.trennvarianten 
+    elif (key.lower() in words.trennvarianten
           or key.title() in words.trennvarianten):
         # Extra abspeichern für manuelle Qualitätskontrolle
         mit_Teilwort.append(ersetzung)

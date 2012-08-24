@@ -8,8 +8,14 @@
 # prepare_patch.py: Helfer für kleine Editieraufgaben
 # =============================================
 #
-# Erstelle einen Patch für kleinere Korrekturen der Wortliste.
-# Ausganspunkt sind "todo"-Dateien mit einer Korrektur pro Zeile.
+# Erstelle einen Patch für kleinere Korrekturen der Wortliste. Ausganspunkt
+# sind "todo"-Dateien mit einer Korrektur pro Zeile. Die ``*.todo``
+# Template-Dateien in diesem Verzeichnis beschreiben das erforderliche
+# Datenformat im Dateikopf. (Zeilen die mit ``#`` starten werden ignoriert.)
+#
+# Zur Auswahl der gewünschten Funktion bitte von den Zeilen 281 bis 288 die
+# entsprechende Zeile auszukommentieren.
+# TODO: Interface für Auswahl über Optionen.
 #
 # ::
 
@@ -93,7 +99,8 @@ def fehleintraege(wortliste):
         else:
             wortliste_neu.append(entry)
 
-    print korrekturen
+    for w in korrekturen:
+        print w.encode('utf8')
     return wortliste_neu
 
 
@@ -112,7 +119,7 @@ def grossklein(wortliste):
     """Groß-/Kleinschreibung umstellen"""
 
     # Dekodieren, Feldtrenner zu Leerzeichen
-    korrekturen = [line.decode('utf8').replace(';',' ') 
+    korrekturen = [line.decode('utf8').replace(';',' ')
                    for line in open('grossklein.todo')]
     # erstes Feld, Trennzeichen entfernen
     korrekturen = [join_word(line.split()[0]) for line in korrekturen
@@ -120,25 +127,25 @@ def grossklein(wortliste):
     korrekturen = set(korrekturen)
     wortliste_neu = deepcopy(wortliste) # korrigierte Liste
 
-    for entry in wortliste:
+    for entry in wortliste_neu:
         if entry[0] in korrekturen:
+            korrekturen.discard(entry[0]) # gefunden
             # Anfangsbuchstabe mit geänderter Großschreibung:
-            if entry[0].islower():
+            if entry[0][0].islower():
                 anfangsbuchstabe = entry[0][0].title()
             else:
                 anfangsbuchstabe = entry[0][0].lower()
             # Einträge korrigieren:
-            for i in range(1,len(entry)):
-                if entry[i].startswith('-'):
+            for i in range(len(entry)):
+                if entry[i].startswith('-'): # -2-, -3-, ...
                     continue
                 entry[i] = anfangsbuchstabe + entry[i][1:]
-            korrekturen.discard(original) # erledigt
 
     if korrekturen:
         print korrekturen # übrige Einträge
     return wortliste_neu
 
-# Anpassung der Großschreibung der Trennmuster an das erste Feld 
+# Anpassung der Großschreibung der Trennmuster an das erste Feld
 # (ungetrenntes Wort). Siehe "werkzeug.py" für einen Test auf Differenzen.
 # (Differenzen sind größtenteils auf unvorsichtiges Ersetzen mit Texteditor
 # zurückzuführen.)
@@ -153,7 +160,7 @@ def abgleich_grossklein(wortliste):
                 continue
             entry[i] = entry[0][0] + entry[i][1:]
     return wortliste_neu
-    
+
 
 # Sprachvariante ändern
 # ---------------------
@@ -170,7 +177,7 @@ def reformschreibung(wortliste):
     """Wörter die nur in (allgemeiner) Reformschreibung existieren"""
 
     # Dekodieren, Zeilenende entfernen
-    korrekturen = [line.decode('utf8').strip() 
+    korrekturen = [line.decode('utf8').strip()
                    for line in open('reformschreibung.todo')]
     # erstes Feld
     korrekturen = [line.split(';')[0] for line in korrekturen]
@@ -198,6 +205,8 @@ def reformschreibung(wortliste):
 #
 # - System;Sy-stem
 # + System;-2-;Sy-stem;Sys-tem
+#
+# ::
 
 def sprachvariante_split(wortliste, alt, neu,
                          altsprache='de-1901', neusprache='de-1996'):
@@ -261,8 +270,8 @@ def neu(wortliste):
         wortliste_neu.append(WordEntry(line))
 
     # Sortieren
-    wortliste_neu.sort(key=sortkey_wl)
-    # wortliste_neu.sort(key=sortkey_duden)
+    # wortliste_neu.sort(key=sortkey_wl)
+    wortliste_neu.sort(key=sortkey_duden)
 
     return wortliste_neu
 
