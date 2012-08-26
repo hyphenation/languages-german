@@ -7,19 +7,26 @@
 
 # prepare_patch.py: Helfer für kleine Editieraufgaben
 # =============================================
-#
-# Erstelle einen Patch für kleinere Korrekturen der Wortliste. Ausganspunkt
-# sind "todo"-Dateien mit einer Korrektur pro Zeile. Die ``*.todo``
-# Template-Dateien in diesem Verzeichnis beschreiben das erforderliche
-# Datenformat im Dateikopf. (Zeilen die mit ``#`` starten werden ignoriert.)
-#
-# Zur Auswahl der gewünschten Funktion bitte von den Zeilen 281 bis 288 die
-# entsprechende Zeile auszukommentieren.
-# TODO: Interface für Auswahl über Optionen.
-#
 # ::
 
+u"""
+Erstelle einen Patch für kleinere Korrekturen der Wortliste. Ausganspunkt
+sind Dateien mit einer Korrektur pro Zeile.
+(Zeilen die mit ``#`` starten werden ignoriert.)
+
+AKTION ist eine von:
+  neu:           Einträge hinzufügen,
+  fehleintraege: Einträge entfernen,
+  grossklein:    Großschreibung ändern,
+  korrektur:     Einträge durch alternative Version ersetzen.
+"""
+
+# Die ``<AKTION>.todo`` Dateien in diesem Verzeichnis beschreiben das
+# jeweils erforderliche Datenformat im Dateikopf.
+
+import optparse, sys
 from copy import deepcopy
+
 
 from werkzeug import WordFile, WordEntry, join_word, udiff
 from sort import sortkey_wl, sortkey_duden
@@ -78,7 +85,7 @@ def korrektur(wortliste):
 # ------------
 #::
 
-def fehleintraege(wortliste):
+def fehleintraege(wortliste, datei='fehleintraege.todo'):
     """Entfernen der Einträge aus einer Liste von Fehleinträgen """
 
 # Fehleinträge aus Datei.
@@ -90,7 +97,7 @@ def fehleintraege(wortliste):
 
     # Dekodieren, Zeilenende entfernen, Trennzeichen entfernen
     korrekturen = set(join_word(line.decode('utf8').strip())
-                      for line in open('fehleintraege.todo')
+                      for line in open(datei)
                       if not line.startswith('#'))
     wortliste_neu = [] # korrigierte Liste
     for entry in wortliste:
@@ -115,12 +122,12 @@ def fehleintraege(wortliste):
 #
 # ::
 
-def grossklein(wortliste):
+def grossklein(wortliste, datei='grossklein.todo'):
     """Groß-/Kleinschreibung umstellen"""
 
     # Dekodieren, Feldtrenner zu Leerzeichen
     korrekturen = [line.decode('utf8').replace(';',' ')
-                   for line in open('grossklein.todo')]
+                   for line in open(datei)]
     # erstes Feld, Trennzeichen entfernen
     korrekturen = [join_word(line.split()[0]) for line in korrekturen
                    if not line.startswith('#')]
@@ -173,12 +180,12 @@ def abgleich_grossklein(wortliste):
 #
 # ::
 
-def reformschreibung(wortliste):
+def reformschreibung(wortliste, datei='reformschreibung.todo'):
     """Wörter die nur in (allgemeiner) Reformschreibung existieren"""
 
     # Dekodieren, Zeilenende entfernen
     korrekturen = [line.decode('utf8').strip()
-                   for line in open('reformschreibung.todo')]
+                   for line in open(datei)]
     # erstes Feld
     korrekturen = [line.split(';')[0] for line in korrekturen]
     korrekturen = set(korrekturen)
@@ -241,10 +248,10 @@ def sprachvariante_split(wortliste, alt, neu,
 #
 # ::
 
-def neu(wortliste):
+def neu(wortliste, datei='neu.todo'):
     """Neueinträge prüfen und vorbereiten."""
 
-    korrekturen = open('neu.todo')
+    korrekturen = open(datei)
     wortliste_neu = deepcopy(wortliste)
     words = dict()     # vorhandene Wörter
     for entry in wortliste:
@@ -279,29 +286,61 @@ def neu(wortliste):
 
 if __name__ == '__main__':
 
+# Optionen::
+
+    usage = '%prog [Optionen] AKTION\n' + __doc__
+
+    parser = optparse.OptionParser(usage=usage)
+    parser.add_option('-i', '--file', dest='wortliste',
+                      help='Eingangsdatei, Vorgabe "../../wortliste"',
+                      default='../../wortliste')
+    parser.add_option('-k', '--todofile', dest='todo',
+                      help='Korrekturdatei, Vorgabe "<AKTION>.todo"',
+                      default='../../wortliste')
+    parser.add_option('-o', '--outfile', dest='patchfile',
+                      help='Ausgangsdatei (Patch), Vorgabe "wortliste.patch"',
+                      default='wortliste.patch')
+
+    (options, args) = parser.parse_args()
+
+    if args:
+        aktion = args[0]
+    else:
+        print 'Nichts zu tun: AKTION Argument fehlt.', '\n', usage
+        sys.exit()
+
 # Die `Wortliste`::
 
-    wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
+    wordfile = WordFile(options.wortliste)
     wortliste = list(wordfile)
 
 # Behandeln::
 
-    # wortliste_neu = fehleintraege(wortliste)
-    # wortliste_neu = grossklein(wortliste)
-    # wortliste_neu = abgleich_grossklein(wortliste)
-    # wortliste_neu = neu(wortliste)
-    # wortliste_neu = reformschreibung(wortliste)
-    # wortliste_neu = sprachvariante_split(wortliste,
-    #                                      u'knien', u'kni-en')
-    # wortliste_neu = korrektur(wortliste)
+    if aktion == 'neu':
+        wortliste_neu = neu(wortliste, options.todo)
+    elif aktion == 'fehleintraege':
+        wortliste_neu = fehleintraege(wortliste, options.todo)
+    elif aktion == 'grossklein':
+        wortliste_neu = grossklein(wortliste, options.todo)
+    elif aktion == 'korrektur':
+        wortliste_neu = korrektur(wortliste, options.todo)
+    else:
+        print 'Unbekannte AKTION', '\n', usage
+        sys.exit()
+
+        # wortliste_neu = sprachvariante_split(wortliste,
+        #                                      u'knien', u'kni-en')
+        # wortliste_neu = abgleich_grossklein(wortliste)
+        # wortliste_neu = reformschreibung(wortliste)
 
 # Patch erstellen::
 
     patch = udiff(wortliste, wortliste_neu, 'wortliste', 'wortliste-neu',
-                  encoding= wordfile.encoding)
+                  encoding=wordfile.encoding)
     if patch:
-        print patch
-        patchfile = open('wortliste.patch', 'w')
+        # print patch
+        patchfile = open(options.patchfile, 'w')
         patchfile.write(patch + '\n')
+        print u'Änderungen nach %s geschrieben' % options.patchfile
     else:
-        print "empty patch"
+        print u'keine Änderungen'
