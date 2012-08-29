@@ -6,17 +6,10 @@
 # an, wobei $2 als Translationsdatei benutzt wird (das ist diejenige Datei,
 # die `patgen' als viertes Argument benötigt).
 #
-# Beachte: Die Kodierungen des Datenstroms und der Trennmuster müssen
-# übereinstimmen!  Aufgrund von Beschränkungen des patgen-Programms kann ein
-# Buchstabe nur aus einem Byte bestehen; im Besonderen kann daher UTF-8 nicht
-# verwendet werden (weder für Eingabe noch für Trennmuster).
-#
 # Folgende Zeichen werden vor der Weiterverarbeitung aus der Eingabe
 # herausgefiltert:
 #
-#   · - = _
-#
-# (das Skript verwendet die Latin-1-Position von `·', 0xB7).
+#   · - = |
 #
 # Ist Option `-1' nicht gegeben, werden Trennungen direkt nach dem ersten
 # und vor dem letzten Buchstaben in der Ausgabe entfernt, wie z.B. bei
@@ -28,6 +21,7 @@
 # Aufruf:  perl apply-pattern.pl trennmuster german.tr < eingabe > ausgabe
 
 use strict;
+use Encode;
 use File::Spec;
 use File::Temp;
 
@@ -40,8 +34,17 @@ my $prog = $0;
 $prog =~ s@.*/@@;
 
 if ($#ARGV != 1) {
-  die "Aufruf:  $prog trennmuster german.tr < eingabe > ausgabe\n";
+  die "Aufruf:  $prog trennmuster german.tr < eingabe > ausgabe\n" .
+      "\n" .
+      "  `eingabe', `ausgabe' in UTF-8-Kodierung,\n" .
+      "  `trennmuster', `german.tr' in Latin-1-Kodierung\n";
 }
+
+sub before_exit {
+  chdir($ENV{HOME}) || chdir('/');
+}
+
+$SIG{__DIE__} = 'before_exit';
 
 my $trennmuster = File::Spec->rel2abs($ARGV[0]);
 my $translation = File::Spec->rel2abs($ARGV[1]);
@@ -57,9 +60,12 @@ my @eingabe;
 
 open TEMP, '>', $tempdatei
 || die "$prog: Kann temporäre Datei `$tempdatei' nicht öffnen: $!\n";
+
+binmode(STDIN, ":encoding(utf8)");  # Eingabe (wortliste) in UTF-8
+binmode(TEMP, ":encoding(latin1)"); # patgen erwartet Latin-1
+
 while (<STDIN>) {
-  # \xb7 ist `·' in Latin-1-Kodierung.
-  s/[\xb7=_-]//g;
+  s/[·=|-]//g;
   push(@eingabe, $_);
   print TEMP $_;
 }
@@ -105,6 +111,8 @@ while (<PATGEN>) {
 }
 close PATGEN;
 
+binmode(STDOUT, ":encoding(utf8)"); # Ausgabe ist wieder UTF-8
+
 while (@eingabe) {
   my @vorlage = split(//, shift(@eingabe));
   my @ergebnis = split(//, shift(@muster));
@@ -118,5 +126,7 @@ while (@eingabe) {
   }
   print @ergebnis;
 }
+
+before_exit();
 
 # eof
