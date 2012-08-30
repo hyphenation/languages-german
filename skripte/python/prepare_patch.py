@@ -10,9 +10,9 @@
 # ::
 
 u"""
-Erstelle einen Patch für kleinere Korrekturen der Wortliste. Ausganspunkt
-sind Dateien mit einer Korrektur pro Zeile.
-(Zeilen die mit ``#`` starten werden ignoriert.)
+Erstelle einen Patch für kleinere Korrekturen der Wortliste.
+Ausgangspunkt sind Dateien mit einer Korrektur pro Zeile.
+(Zeilen, die mit ``#`` starten, werden ignoriert.)
 
 AKTION ist eine von:
   neu:           Einträge hinzufügen,
@@ -30,6 +30,18 @@ from copy import deepcopy
 
 from werkzeug import WordFile, WordEntry, join_word, udiff
 from sort import sortkey_wl, sortkey_duden
+
+
+def teste_datei(datei):
+    """Teste, ob Datei geöffnet werden kann."""
+
+    try:
+        file = open(datei, 'r')
+        file.close()
+    except:
+        sys.stderr.write("Kann '" + datei + "' nicht öffnen\n" )
+        sys.exit()
+
 
 # Sprachvarianten
 # ---------------
@@ -51,10 +63,17 @@ sprachvariante = 'de-1901'         # "traditionell"
 #
 # ::
 
-def korrektur(wortliste):
+def korrektur(wordlist, datei):
     """Patch aus korrigierten Einträgen"""
+
+    if not datei:
+        datei = 'korrektur.todo'
+    teste_datei(datei)
+
+    wortliste = list(wordfile)
+
     korrekturen = {}
-    for line in open('korrekturen.todo'):
+    for line in open(datei, 'r'):
         # Dekodieren, Zeilenende entfernen
         line = line.decode('utf8').strip()
         # Eintrag ggf. komplettieren
@@ -78,14 +97,15 @@ def korrektur(wortliste):
 
     if korrekturen:
         print korrekturen # übrige Einträge
-    return wortliste_neu
+
+    return (wortliste, wortliste_neu)
 
 
 # Fehleinträge
 # ------------
 #::
 
-def fehleintraege(wortliste, datei='fehleintraege.todo'):
+def fehleintraege(wordfile, datei):
     """Entfernen der Einträge aus einer Liste von Fehleinträgen """
 
 # Fehleinträge aus Datei.
@@ -95,9 +115,15 @@ def fehleintraege(wortliste, datei='fehleintraege.todo'):
 #
 # ::
 
+    if not datei:
+        datei = 'fehleintraege.todo'
+    teste_datei(datei)
+
+    wortliste = list(wordfile)
+
     # Dekodieren, Zeilenende entfernen, Trennzeichen entfernen
     korrekturen = set(join_word(line.decode('utf8').strip())
-                      for line in open(datei)
+                      for line in open(datei, 'r')
                       if not line.startswith('#'))
     wortliste_neu = [] # korrigierte Liste
     for entry in wortliste:
@@ -108,7 +134,8 @@ def fehleintraege(wortliste, datei='fehleintraege.todo'):
 
     for w in korrekturen:
         print w.encode('utf8')
-    return wortliste_neu
+
+    return (wortliste, wortliste_neu)
 
 
 # Groß-/Kleinschreibung ändern
@@ -122,12 +149,18 @@ def fehleintraege(wortliste, datei='fehleintraege.todo'):
 #
 # ::
 
-def grossklein(wortliste, datei='grossklein.todo'):
+def grossklein(wordfile, datei):
     """Groß-/Kleinschreibung umstellen"""
+
+    if not datei:
+        datei = 'grossklein.todo'
+    teste_datei(datei)
+
+    wortliste = list(wordfile)
 
     # Dekodieren, Feldtrenner zu Leerzeichen
     korrekturen = [line.decode('utf8').replace(';',' ')
-                   for line in open(datei)]
+                   for line in open(datei, 'r')]
     # erstes Feld, Trennzeichen entfernen
     korrekturen = [join_word(line.split()[0]) for line in korrekturen
                    if not line.startswith('#')]
@@ -150,7 +183,8 @@ def grossklein(wortliste, datei='grossklein.todo'):
 
     if korrekturen:
         print korrekturen # übrige Einträge
-    return wortliste_neu
+
+    return (wortliste, wortliste_neu)
 
 # Anpassung der Großschreibung der Trennmuster an das erste Feld
 # (ungetrenntes Wort). Siehe "werkzeug.py" für einen Test auf Differenzen.
@@ -158,7 +192,8 @@ def grossklein(wortliste, datei='grossklein.todo'):
 # zurückzuführen.)
 # ::
 
-def abgleich_grossklein(wortliste):
+def abgleich_grossklein(wordfile):
+    wortliste = list(wordfile)
     wortliste_neu = deepcopy(wortliste) # korrigierte Liste
     for entry in wortliste_neu:
         # Übertrag des Anfangsbuchstabens
@@ -166,7 +201,7 @@ def abgleich_grossklein(wortliste):
             if entry[i].startswith('-'):
                 continue
             entry[i] = entry[0][0] + entry[i][1:]
-    return wortliste_neu
+    return (wortliste, wortliste_neu)
 
 
 # Sprachvariante ändern
@@ -180,12 +215,18 @@ def abgleich_grossklein(wortliste):
 #
 # ::
 
-def reformschreibung(wortliste, datei='reformschreibung.todo'):
+def reformschreibung(wordfile, datei):
     """Wörter die nur in (allgemeiner) Reformschreibung existieren"""
+
+    if not datei:
+        datei='reformschreibung.todo'
+    teste_datei(datei)
+
+    wortliste = list(wordfile)
 
     # Dekodieren, Zeilenende entfernen
     korrekturen = [line.decode('utf8').strip()
-                   for line in open(datei)]
+                   for line in open(datei, 'r')]
     # erstes Feld
     korrekturen = [line.split(';')[0] for line in korrekturen]
     korrekturen = set(korrekturen)
@@ -215,9 +256,10 @@ def reformschreibung(wortliste, datei='reformschreibung.todo'):
 #
 # ::
 
-def sprachvariante_split(wortliste, alt, neu,
+def sprachvariante_split(wordfile, alt, neu,
                          altsprache='de-1901', neusprache='de-1996'):
 
+    wortliste = list(wordfile)
     wortliste_neu = [] # korrigierte Liste
 
     for entry in wortliste:
@@ -229,7 +271,7 @@ def sprachvariante_split(wortliste, alt, neu,
                 entry.set(altwort, altsprache)
                 entry.set(neuwort, neusprache)
         wortliste_neu.append(entry)
-    return wortliste_neu
+    return (wortliste, wortliste_neu)
 
 
 
@@ -248,10 +290,16 @@ def sprachvariante_split(wortliste, alt, neu,
 #
 # ::
 
-def neu(wortliste, datei='neu.todo'):
+def neu(wordfile, datei):
     """Neueinträge prüfen und vorbereiten."""
 
-    korrekturen = open(datei)
+    if not datei:
+        datei = 'neu.todo'
+    teste_datei(datei)
+
+    wortliste = list(wordfile)
+
+    korrekturen = open(datei, 'r')
     wortliste_neu = deepcopy(wortliste)
     words = dict()     # vorhandene Wörter
     for entry in wortliste:
@@ -280,7 +328,7 @@ def neu(wortliste, datei='neu.todo'):
     # wortliste_neu.sort(key=sortkey_wl)
     wortliste_neu.sort(key=sortkey_duden)
 
-    return wortliste_neu
+    return (wortliste, wortliste_neu)
 
 # Default-Aktion::
 
@@ -295,8 +343,7 @@ if __name__ == '__main__':
                       help='Eingangsdatei, Vorgabe "../../wortliste"',
                       default='../../wortliste')
     parser.add_option('-k', '--todofile', dest='todo',
-                      help='Korrekturdatei, Vorgabe "<AKTION>.todo"',
-                      default='../../wortliste')
+                      help='Korrekturdatei, Vorgabe "<AKTION>.todo"')
     parser.add_option('-o', '--outfile', dest='patchfile',
                       help='Ausgangsdatei (Patch), Vorgabe "wortliste.patch"',
                       default='wortliste.patch')
@@ -306,32 +353,35 @@ if __name__ == '__main__':
     if args:
         aktion = args[0]
     else:
-        print 'Nichts zu tun: AKTION Argument fehlt.', '\n', usage
+        print 'Nichts zu tun: AKTION Argument fehlt.', '\n'
+        parser.print_help()
         sys.exit()
 
 # Die `Wortliste`::
-
     wordfile = WordFile(options.wortliste)
-    wortliste = list(wordfile)
+
+    # Da der Aufruf von `wortliste = list(wordfile)` lange dauert, wird er
+    # in den Aktionsroutinen nach dem Test auf die Eingabedatei ausgeführt.
 
 # Behandeln::
 
     if aktion == 'neu':
-        wortliste_neu = neu(wortliste, options.todo)
+        (wortliste, wortliste_neu) = neu(wordfile, options.todo)
     elif aktion == 'fehleintraege':
-        wortliste_neu = fehleintraege(wortliste, options.todo)
+        (wortliste, wortliste_neu) = fehleintraege(wordfile, options.todo)
     elif aktion == 'grossklein':
-        wortliste_neu = grossklein(wortliste, options.todo)
+        (wortliste, wortliste_neu) = grossklein(wordfile, options.todo)
     elif aktion == 'korrektur':
-        wortliste_neu = korrektur(wortliste, options.todo)
+        (wortliste, wortliste_neu) = korrektur(wordfile, options.todo)
     else:
-        print 'Unbekannte AKTION', '\n', usage
+        print 'Unbekannte AKTION', '\n'
+        parser.print_help()
         sys.exit()
 
-        # wortliste_neu = sprachvariante_split(wortliste,
-        #                                      u'knien', u'kni-en')
-        # wortliste_neu = abgleich_grossklein(wortliste)
-        # wortliste_neu = reformschreibung(wortliste)
+    # (wortliste, wortliste_neu) = sprachvariante_split(wordfile,
+    #                                                   u'knien', u'kni-en')
+    # (wortliste, wortliste_neu) = abgleich_grossklein(wordfile)
+    # (wortliste, wortliste_neu) = reformschreibung(wordfile)
 
 # Patch erstellen::
 
