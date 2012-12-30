@@ -1,9 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # Dieses Skript generiert deutsche Trennmuster.
 #
-# Aufruf:  sh make-full-pattern.sh words.hyphenated german.tr
+# Aufruf:
+#
+#   sh make-full-pattern.sh words.hyphenated german.tr
 #
 #
 # Eingabe: words.hyphenated   Liste von getrennten Wörtern.
@@ -17,57 +19,58 @@
 #
 
 
-# Die Parameter für patgen.
+# Die Parameter für patgen für die Level eins bis acht.
 
-LEVEL1_HYPH_START_FINISH="1 1"
-LEVEL2_HYPH_START_FINISH="2 2"
-LEVEL3_HYPH_START_FINISH="3 3"
-LEVEL4_HYPH_START_FINISH="4 4"
-LEVEL5_HYPH_START_FINISH="5 5"
-LEVEL6_HYPH_START_FINISH="6 6"
-LEVEL7_HYPH_START_FINISH="7 7"
-LEVEL8_HYPH_START_FINISH="8 8"
+hyph_start_finish[1]='1 1'
+hyph_start_finish[2]='2 2'
+hyph_start_finish[3]='3 3'
+hyph_start_finish[4]='4 4'
+hyph_start_finish[5]='5 5'
+hyph_start_finish[6]='6 6'
+hyph_start_finish[7]='7 7'
+hyph_start_finish[8]='8 8'
 
-LEVEL1_PAT_START_FINISH="2 5"
-LEVEL2_PAT_START_FINISH="2 5"
-LEVEL3_PAT_START_FINISH="2 6"
-LEVEL4_PAT_START_FINISH="2 6"
-LEVEL5_PAT_START_FINISH="2 7"
-LEVEL6_PAT_START_FINISH="2 7"
-LEVEL7_PAT_START_FINISH="2 13"
-LEVEL8_PAT_START_FINISH="2 13"
+pat_start_finish[1]='2 5'
+pat_start_finish[2]='2 5'
+pat_start_finish[3]='2 6'
+pat_start_finish[4]='2 6'
+pat_start_finish[5]='2 7'
+pat_start_finish[6]='2 7'
+pat_start_finish[7]='2 13'
+pat_start_finish[8]='2 13'
 
-LEVEL1_GOOD_BAD_THRES="1 1 1"
-LEVEL2_GOOD_BAD_THRES="1 2 1"
-LEVEL3_GOOD_BAD_THRES="1 1 1"
-LEVEL4_GOOD_BAD_THRES="1 4 1"
-LEVEL5_GOOD_BAD_THRES="1 1 1"
-LEVEL6_GOOD_BAD_THRES="1 6 1"
-LEVEL7_GOOD_BAD_THRES="1 4 1"
-LEVEL8_GOOD_BAD_THRES="1 8 1"
+good_bad_thres[1]='1 1 1'
+good_bad_thres[2]='1 2 1'
+good_bad_thres[3]='1 1 1'
+good_bad_thres[4]='1 4 1'
+good_bad_thres[5]='1 1 1'
+good_bad_thres[6]='1 6 1'
+good_bad_thres[7]='1 4 1'
+good_bad_thres[8]='1 8 1'
 
 
-echo "$LEVEL1_HYPH_START_FINISH
-$LEVEL1_PAT_START_FINISH
-$LEVEL1_GOOD_BAD_THRES
-y" | patgen $1 /dev/null pattern.1 $2 | tee pattern.1.log
+printf "%s\n%s\n%s\n%s" "${hyph_start_finish[1]}" \
+                        "${pat_start_finish[1]}" \
+                        "${good_bad_thres[1]}" \
+                        "y" \
+| patgen $1 /dev/null pattern.1 $2 \
+| tee pattern.1.log
 
 for i in 2 3 4 5 6 7 8; do
-  HSF=LEVEL${i}_HYPH_START_FINISH
-  PSF=LEVEL${i}_PAT_START_FINISH
-  GBT=LEVEL${i}_GOOD_BAD_THRES
-  echo "${!HSF}
-${!PSF}
-${!GBT}
-y" | patgen $1 pattern.$(($i-1)) pattern.$i $2 | tee pattern.$i.log
+  printf "%s\n%s\n%s\n%s" "${hyph_start_finish[$i]}" \
+                          "${pat_start_finish[$i]}" \
+                          "${good_bad_thres[$i]}" \
+                          "y" \
+  | patgen $1 pattern.$(($i-1)) pattern.$i $2 \
+  | tee pattern.$i.log
 done
 
 rm -f pattern.rules
 for i in 1 2 3 4 5 6 7 8; do
-  HSF=LEVEL${i}_HYPH_START_FINISH
-  PSF=LEVEL${i}_PAT_START_FINISH
-  GBT=LEVEL${i}_GOOD_BAD_THRES
-  echo "%   ${!HSF} | ${!PSF} | ${!GBT}" >> pattern.rules
+  printf "%%   %s | %s | %s\n" "${hyph_start_finish[$i]}" \
+                               "${pat_start_finish[$i]}" \
+                               "${good_bad_thres[$i]}" \
+  >> pattern.rules
 done
 
 # eof
