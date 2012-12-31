@@ -1,4 +1,5 @@
 #!/bin/bash
+# -*- coding: utf-8 -*-
 
 #
 # Dieses Skript generiert deutsche Trennmuster.
@@ -12,7 +13,7 @@
 #          german.tr          Translationsdatei für patgen.
 #
 # Ausgabe: pattmp.[1-8]       patgen-Resultate.
-#          pattern.[1-8]      Trennmuster -- pattern.8 ist die finale
+#          pattern.[0-8]      Trennmuster -- pattern.8 ist die finale
 #                             Trennmusterdatei.
 #          pattern.[1-8].log  Log-Dateien.
 #          pattern.rules      Die patgen-Parameter in kompakter Form.
@@ -49,28 +50,27 @@ good_bad_thres[7]='1 4 1'
 good_bad_thres[8]='1 8 1'
 
 
-printf "%s\n%s\n%s\n%s" "${hyph_start_finish[1]}" \
-                        "${pat_start_finish[1]}" \
-                        "${good_bad_thres[1]}" \
-                        "y" \
-| patgen $1 /dev/null pattern.1 $2 \
-| tee pattern.1.log
+# Erzeuge leere Startmuster, lösche Datei mit patgen-Parametern.
+rm -f pattern.0 pattern.rules
+touch pattern.0
 
-for i in 2 3 4 5 6 7 8; do
+for i in 1 2 3 4 5 6 7 8; do
+
+  # Erzeuge Muster des aktuellen Levels.  Steuereingaben werden patgen
+  # mittels einer Pipe übergeben.
   printf "%s\n%s\n%s\n%s" "${hyph_start_finish[$i]}" \
                           "${pat_start_finish[$i]}" \
                           "${good_bad_thres[$i]}" \
                           "y" \
   | patgen $1 pattern.$(($i-1)) pattern.$i $2 \
   | tee pattern.$i.log
-done
 
-rm -f pattern.rules
-for i in 1 2 3 4 5 6 7 8; do
+  # Sammle verwendete patgen-Parameter in Datei.
   printf "%%   %s | %s | %s\n" "${hyph_start_finish[$i]}" \
                                "${pat_start_finish[$i]}" \
                                "${good_bad_thres[$i]}" \
   >> pattern.rules
+
 done
 
 # eof
