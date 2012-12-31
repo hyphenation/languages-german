@@ -45,17 +45,17 @@
 #   ·  (noch) nicht kategorisierte Trennstelle
 #
 # Für die Bindungsstärke B von Trennstellen verschiedener Kategorien gilt
-# B(-) > B(|) > B(=)
+# B(-) > B(|) > B(=):
 #
-#   Aus|wahl=lis-te        (Aus + wahl) + liste
-#   fern=ab||ge|le-gen     fern + (ab + (ge + legen))
+#   Aus|wahl=lis-te       (Aus + wahl) + liste
+#   fern=ab||ge|le-gen    fern + (ab + (ge + legen))
 #
-# Doppeltrennzeichen (auch Dreifach- ...) markieren die unterschiedliche
+# Doppel- und Dreifachtrennzeichen markieren die unterschiedliche
 # Bindungsstärke von Trennungen der gleichen Kategorie:
 #
-#   Alp==horn=trio            Alp + (horn + trio)
-#   un||voll|ständig 	      un + (voll + ständig)
-#   nach|||zu||voll|zie-hend  nach + (zu + (voll + ziehend))
+#   Alp=horn==trio              (Alp + horn) + trio
+#   un||voll|stän-dig           un + (voll + ständig)
+#   nach|||zu||voll|zie-hend    nach + (zu + (voll + ziehend))
 #
 # Verschiedene Trennstellen der gleichen Kategorie ohne Doppelung bezeichnen
 # entweder gleichwertige Wortbestandteile, Zerlegungsalternativen oder sind
