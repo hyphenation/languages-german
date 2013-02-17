@@ -518,6 +518,42 @@ allgemeine Hinweise:
     Tal-entwäs-se-rung & Talent-wässerung\\
   \end{tabular}
 
+\item\label{enum:tradDoppeld} In mehrdeutigen Wörtern werden Trennungen
+  nur an übereinstimmenden Trennstellen zugelassen.
+
+  \begin{tabular}[t]{TUU}
+    nachtritt & nach-tritt & Nacht-ritt\\
+    Wachstu-be & Wach-stube & Wachs-tube\\
+    Druckerzeug-nis & Druck-erzeugnis & Drucker-zeugnis\\
+    Mu-sikerle-ben & Musik-erleben & Musi-ker-leben\\
+    Fuß-balleh-re & Fußball-ehre & Fußball-lehre\\
+  \end{tabular}
+
+  Beachte, die Trennstellen ">Drucker-zeugnis"< und ">Musiker-leben"<
+  sind in den Interpretationen \emph{Druck-Erzeugnis} und
+  \emph{Musik-Erleben} irreführend.  Sie entfallen nach
+  \regelref{enum:tradSinn} und sind nicht als übereinstimmende
+  Trennstellen anzusehen.  Zur Spezialtrennung ">Fußball-lehre"< siehe
+  auch \regelref{enum:tradnstd}.
+
+  Für diese Regel gelten die folgenden Einschränkungen:
+  \begin{itemize}
+
+  \item Bei mehrdeutigen Wörtern endend auf \emph{"~ende, "~enden,
+      "~endes} wird stets die Trennung der Partizipform des Verbs
+    verwendet.
+
+  \item Mehrdeutigkeiten, die durch die Ersatzschreibweise von Wörtern
+    mit~\emph{ß} auftreten, werden nicht berücksichtigt (vergleiche
+    \regelref{enum:tradEszett}).
+
+    \begin{tabular}[t]{TUU}
+      spie-len-de & Spiel-ende & spielende\\
+      Mas-se & \textls{M\kern-.4ptA-SSE} & \textls{M\kern-.4ptA\kern-.6ptSSE}\\
+    \end{tabular}
+
+  \end{itemize}
+
 \item\label{enum:tradEszett} Wird der Buchstabe~\emph{ß} durch
   \emph{ss/SS} ersetzt, so bleibt die Trennung davon unberührt
   \cite[R~179]{duden:1991}:
@@ -555,42 +591,6 @@ allgemeine Hinweise:
     \begin{tabular}[t]{TU}
       \textls{BAHN-HOFSTRASSE} & \textls{BAHNHOF-STRA-SSE}\\
                                & \textls{BAHNHOFS-TRAS-SE}\\
-    \end{tabular}
-
-  \end{itemize}
-
-\item\label{enum:tradDoppeld} In mehrdeutigen Wörtern werden Trennungen
-  nur an übereinstimmenden Trennstellen zugelassen.
-
-  \begin{tabular}[t]{TUUU}
-    nachtritt & nach-tritt & Nacht-ritt\\
-    Wachstu-be & Wach-stube & Wachs-tube\\
-    Druckerzeug-nis & Druck-erzeugnis & Drucker-zeugnis\\
-    Mu-sikerle-ben & Musik-erleben & Musi-ker-leben\\
-    Fuß-balleh-re & Fußball-ehre & Fußball-lehre\\
-  \end{tabular}
-
-  Beachte, die Trennstellen ">Drucker-zeugnis"< und ">Musiker-leben"<
-  sind in den Interpretationen \emph{Druck-Erzeugnis} und
-  \emph{Musik-Erleben} irreführend.  Sie entfallen nach
-  \regelref{enum:tradSinn} und sind nicht als übereinstimmende
-  Trennstellen anzusehen.  Zur Spezialtrennung ">Fußball-lehre"< siehe
-  auch \regelref{enum:tradnstd}.
-
-  Für diese Regel gelten die folgenden Einschränkungen:
-  \begin{itemize}
-
-  \item Bei mehrdeutigen Wörtern endend auf \emph{"~ende, "~enden,
-      "~endes} wird stets die Trennung der Partizipform des Verbs
-    verwendet.
-
-  \item Mehrdeutigkeiten, die durch die Ersatzschreibweise von Wörtern
-    mit \emph{ß} auftreten, werden nicht berücksichtigt (vergleiche
-    \regelref{enum:tradEszett}).
-
-    \begin{tabular}[t]{TUU}
-      spie-len-de & Spiel-ende & spielende\\
-      Mas-se & \textls{M\kern-.4ptA-SSE} & \textls{M\kern-.4ptA\kern-.6ptSSE}\\
     \end{tabular}
 
   \end{itemize}
@@ -767,21 +767,6 @@ aus anderen Gründen sinnvoll erscheint.
     Tal-entwäs-se-rung & Talent-wässerung\\
   \end{tabular}
 
-\item\label{enum:reformEszett} Wird der Buchstabe~\emph{ß} durch
-  \emph{ss/SS} ersetzt, so wird \emph{s-s} getrennt \cite[\S\S~25~E3,
-  110]{amtlRegeln:2006, amtlRegeln:2006:duden}:
-
-  \begin{tabular}[t]{R}
-    \textls{GRÖS-STE}\\
-    \textls{GRÜS-SE}\\
-    \textls{M\kern-.4ptA\kern-.6ptS-SES}\\
-  \end{tabular}
-
-  Beachte, wird \emph{ß} mit \lstinline[style=LaTeX]+\MakeUppercase+
-  oder in Kapitälchen in \emph{SS} gewandelt, so bleibt \emph{SS}
-  ungetrennt.  Dies ist kein Fehler in den Trennmustern, sondern im
-  \LaTeX-Kern fest implementiert.
-
 \item\label{enum:reformDoppeld} In mehrdeutigen Wörtern werden
   Trennungen nur an übereinstimmenden Trennstellen
   zugelassen:
@@ -812,6 +797,21 @@ aus anderen Gründen sinnvoll erscheint.
     \end{tabular}
 
   \end{itemize}
+
+\item\label{enum:reformEszett} Wird der Buchstabe~\emph{ß} durch
+  \emph{ss/SS} ersetzt, so wird \emph{s-s} getrennt \cite[\S\S~25~E3,
+  110]{amtlRegeln:2006, amtlRegeln:2006:duden}:
+
+  \begin{tabular}[t]{R}
+    \textls{GRÖS-STE}\\
+    \textls{GRÜS-SE}\\
+    \textls{M\kern-.4ptA\kern-.6ptS-SES}\\
+  \end{tabular}
+
+  Beachte, wird~\emph{ß} mit \lstinline[style=LaTeX]+\MakeUppercase+
+  oder in Kapitälchen in~\emph{SS} gewandelt, so bleibt~\emph{SS}
+  ungetrennt.  Dies ist kein Fehler in den Trennmustern, sondern im
+  \LaTeX-Kern fest implementiert.
 
 % \item\label{enum:reformOW} In Ableitungen von Namen auf \emph{"~ow}
 %   bleibt \emph{"~ow} ungetrennt, wenn es den Laut [o\,:] bezeichnet.
