@@ -530,32 +530,34 @@ allgemeine Hinweise:
 
   Für diese Regel gilt die folgende Einschränkung:
   \begin{itemize}
+
   \item Wenn durch den Ersatz von~\emph{ß} an dieser Stelle keine
     eindeutige Trennung möglich ist, so wird zugunsten der Bedeutung des
     Wortes in der normalen Schreibweise getrennt (siehe auch
     \regelref{enum:tradDoppeld}).
+
+    \begin{tabular}[t]{TTU}
+      \textls{FLÖS-SE} & (wegen flös-se) & \textls{FLÖ-SSE}\\
+      \textls{MAS-SE} & (wegen Mas-se) & \textls{MA-SSE}\\
+    \end{tabular}
+
+    Beachte, wird~\emph{ß} mit \lstinline[style=LaTeX]+\MakeUppercase+
+    durch~\emph{SS} ersetzt, so bleibt~\emph{SS} stets ungetrennt.  Die
+    Trennung richtet sich dann nach der Schreibweise mit~\emph{ß} im
+    Quelldokument.
+
+    Beachte, wenn durch den Ersatz des~\emph{ß} an entfernten Stellen
+    keine eindeutige Trennung möglich wird, zum Beispiel an Wortfugen,
+    so werden die betroffenen Trennungen gemäß
+    \regelref{enum:tradDoppeld} unterdrückt.  In der Folge wird
+    gegebenenfalls auch die Trennung von \emph{ss/SS} unterdrückt.
+
+    \begin{tabular}[t]{TU}
+      \textls{BAHN-HOFSTRASSE} & \textls{BAHNHOF-STRA-SSE}\\
+                               & \textls{BAHNHOFS-TRAS-SE}\\
+    \end{tabular}
+
   \end{itemize}
-
-  \begin{tabular}[t]{TTU}
-    \textls{FLÖS-SE} & (wegen flös-se) & \textls{FLÖ-SSE}\\
-    \textls{MAS-SE} & (wegen Mas-se) & \textls{MA-SSE}\\
-  \end{tabular}
-
-  Beachte, wird~\emph{ß} mit \lstinline[style=LaTeX]+\MakeUppercase+
-  durch~\emph{SS} ersetzt, so bleibt~\emph{SS} stets ungetrennt.  Die
-  Trennung richtet sich dann nach der Schreibweise mit~\emph{ß} im
-  Quelldokument.
-
-  Beachte, wenn durch den Ersatz des~\emph{ß} an entfernten Stellen
-  keine eindeutige Trennung möglich wird, zum Beispiel an Wortfugen, so
-  werden die betroffenen Trennungen gemäß \regelref{enum:tradDoppeld}
-  unterdrückt.  In der Folge wird gegebenenfalls auch die Trennung von
-  \emph{ss/SS} unterdrückt.
-
-  \begin{tabular}[t]{TU}
-    \textls{BAHN-HOFSTRASSE} & \textls{BAHNHOF-STRA-SSE}\\
-                             & \textls{BAHNHOFS-TRAS-SE}\\
-  \end{tabular}
 
 \item\label{enum:tradDoppeld} In mehrdeutigen Wörtern werden Trennungen
   nur an übereinstimmenden Trennstellen zugelassen.
@@ -577,19 +579,21 @@ allgemeine Hinweise:
 
   Für diese Regel gelten die folgenden Einschränkungen:
   \begin{itemize}
+
   \item Bei mehrdeutigen Wörtern endend auf \emph{"~ende, "~enden,
       "~endes} wird stets die Trennung der Partizipform des Verbs
     verwendet.
+
   \item Mehrdeutigkeiten, die durch die Ersatzschreibweise von Wörtern
     mit \emph{ß} auftreten, werden nicht berücksichtigt (vergleiche
     \regelref{enum:tradEszett}).
-  \end{itemize}
 
-  \begin{tabular}[t]{TUU}
-    spie-len-de & Spiel-ende & spielende\\
-    Mas-se & \textls{M\kern-.4ptA-SSE} &
-    \textls{M\kern-.4ptA\kern-.6ptSSE}\\
-  \end{tabular}
+    \begin{tabular}[t]{TUU}
+      spie-len-de & Spiel-ende & spielende\\
+      Mas-se & \textls{M\kern-.4ptA-SSE} & \textls{M\kern-.4ptA\kern-.6ptSSE}\\
+    \end{tabular}
+
+  \end{itemize}
 
 \item\label{enum:tradOW} In Ableitungen von Namen auf \emph{"~ow} wird
   die Nottrennung der Ableitungssilben \emph{"~er}, \emph{"~ern},
@@ -798,14 +802,16 @@ aus anderen Gründen sinnvoll erscheint.
 
   Für diese Regel gilt die folgende Einschränkung:
   \begin{itemize}
+
   \item Bei mehrdeutigen Wörtern endend auf \emph{"~ende, "~enden,
       "~endes} wird stets die Trennung der Partizipform des Verbs
     verwendet.
-  \end{itemize}
 
-  \begin{tabular}[t]{RUU}
-    spie-len-de & Spiel-ende & spielende\\
-  \end{tabular}
+    \begin{tabular}[t]{RUU}
+      spie-len-de & Spiel-ende & spielende\\
+    \end{tabular}
+
+  \end{itemize}
 
 % \item\label{enum:reformOW} In Ableitungen von Namen auf \emph{"~ow}
 %   bleibt \emph{"~ow} ungetrennt, wenn es den Laut [o\,:] bezeichnet.
