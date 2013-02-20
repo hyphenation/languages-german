@@ -31,6 +31,12 @@ $prog =~ s@.*/@@;
 binmode(STDIN, ":encoding(utf8)"); # Eingabe (wortliste) in UTF-8
 binmode(STDOUT, ":encoding(latin1)"); # patgen erwartet Latin-1
 
+sub entferne_marker {
+  my $arg = shift;
+  $arg =~ s/[-=|·]//g;
+  return $arg;
+}
+
 while (<>) {
   chop;
   next if /^#/;
@@ -55,7 +61,7 @@ while (<>) {
   # entferne spezielle Trennungen
   $zeile =~ s|\{ (.*?) / .*? \}|$1|gx;
   # entferne Doppeldeutigkeiten;
-  $zeile =~ s;\[ [-=|·]* (.*?) [-=|·]* / .*? \];$1;gx;
+  $zeile =~ s|\[ (.*?) / .*? \]|entferne_marker($1)|egx;
 
   # Ausgabe von Wörtern mit unerwünschten Trennungen?
   next if $zeile =~ /[._]/ and $opt_u;
