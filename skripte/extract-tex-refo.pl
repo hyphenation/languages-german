@@ -53,7 +53,7 @@ while (<>) {
   next if $zeile eq "-2-";
 
   # entferne Doppeldeutigkeiten; 
-  $zeile =~ s;\[[-=|·]*(.*?)[-=|·]*/.*?\];$1;g;
+  $zeile =~ s;\[ [-=|·]* (.*?) [-=|·]* / .*? \];$1;gx;
 
   # Ausgabe von Wörtern mit unerwünschten Trennungen?
   next if $zeile =~ /[._]/ and $opt_u;
