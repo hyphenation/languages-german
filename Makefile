@@ -197,19 +197,19 @@ $(SWISS)/$(SWISS)-$(DATE).pat: $(SWISS)/pattern.8 $(SWISS)/pattern.rules
 
 $(TRAD)/words.hyphenated.trad: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
-          | $(PERL) $(SCRIPTDIR)/extract-tex-trad.pl $(PERLMAJOR) \
+          | $(PERL) $(SCRIPTDIR)/extract-tex.pl -t $(PERLMAJOR) \
           | $(SEDMAJOR) \
           | $(SORT) > $@
 
 $(REFO)/words.hyphenated.refo: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
-          | $(PERL) $(SCRIPTDIR)/extract-tex-refo.pl $(PERLMAJOR) \
+          | $(PERL) $(SCRIPTDIR)/extract-tex.pl $(PERLMAJOR) \
           | $(SEDMAJOR) \
           | $(SORT) > $@
 
 $(SWISS)/words.hyphenated.swiss: $(SRCDIR)/$(WORDLIST)
 	$(CAT) $< \
-          | $(PERL) $(SCRIPTDIR)/extract-tex-swisstrad.pl $(PERLMAJOR) \
+          | $(PERL) $(SCRIPTDIR)/extract-tex.pl -s $(PERLMAJOR) \
           | $(SEDMAJOR) \
           | $(SORT) > $@
 
