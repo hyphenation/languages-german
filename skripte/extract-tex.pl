@@ -12,11 +12,11 @@
 # weder »-s« noch »-t« gesetzt ist, wird die reformierte deutsche
 # Rechtschreibung ausgewählt.
 #
+# Ist Option »-x« gesetzt, werden Optionen »-g« und »-u« ignoriert und die
+# die sprachspezifischen Felder unbearbeitet ausgegeben.
+#
 # Option »-g« bewirkt die Ausgabe von Wörtern mit gewichteten Trennstellen;
 # Wörter mit »·« werden ignoriert.
-#
-# Option »-d« bewirkt die Ausgabe von Doppeldeutigkeiten (also Konstrukte
-# der Art »[.../...]«).
 #
 # Option »-u« verhindert die Ausgabe von Wörtern mit Markern für
 # unerwünschte Trennungen (z.B. »An-al.pha-bet«).
@@ -27,9 +27,9 @@
 use strict;
 use utf8;         # String-Literals direkt als UTF-8
 use Getopt::Std;
-getopts('dgstuv');
+getopts('gstuvx');
 
-our ($opt_d, $opt_g, $opt_s, $opt_t, $opt_u, $opt_v);
+our ($opt_g, $opt_s, $opt_t, $opt_u, $opt_v, $opt_x);
 
 my $prog = $0;
 $prog =~ s@.*/@@;
@@ -76,20 +76,22 @@ while (<>) {
 
   next if $zeile eq "-2-";
 
-  # entferne spezielle Trennungen
-  $zeile =~ s|\{ (.*?) / .*? \}|$1|gx if ($opt_t || $opt_s);
-  # entferne Doppeldeutigkeiten
-  $zeile =~ s|\[ (.*?) / .*? \]|entferne_marker($1)|egx if !$opt_d;
+  if (!$opt_x) {
+    # entferne spezielle Trennungen
+    $zeile =~ s|\{ (.*?) / .*? \}|$1|gx;
+    # entferne Doppeldeutigkeiten
+    $zeile =~ s|\[ (.*?) / .*? \]|entferne_marker($1)|egx;
 
-  # Ausgabe von Wörtern mit unerwünschten Trennungen?
-  next if $zeile =~ /[._]/ and $opt_u;
-  # entferne Markierungen für unerwünschte Trennungen
-  $zeile =~ s/[._]//g;
+    # Ausgabe von Wörtern mit unerwünschten Trennungen?
+    next if $zeile =~ /[._]/ and $opt_u;
+    # entferne Markierungen für unerwünschte Trennungen
+    $zeile =~ s/[._]//g;
 
-  # Ausgabe von Wörtern mit ungewichteten Trennstellen?
-  next if $zeile =~ /·/ and $opt_g;
-  # reduziere Trennstellenmarker zu »-«, falls gewollt
-  $zeile =~ s/[·|=-]+/-/g if not $opt_g;
+    # Ausgabe von Wörtern mit ungewichteten Trennstellen?
+    next if $zeile =~ /·/ and $opt_g;
+    # reduziere Trennstellenmarker zu »-«, falls gewollt
+    $zeile =~ s/[·|=-]+/-/g if not $opt_g;
+  }
 
   print "$zeile\n";
 }
