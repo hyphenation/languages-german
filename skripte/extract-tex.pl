@@ -2,10 +2,13 @@
 #
 # extract-tex.pl
 #
-# Dieses Perl-Skript extrahiert aus der »wortliste«-Datei eine Eingabedatei
-# für Patgen.
+# Dieses Perl-Skript extrahiert einfache Wortlisten aus der
+# »wortliste«-Datenbank, die beispielsweise als Eingabedateien für »patgen«
+# verwendet werden können.
 #
 # Aufruf:  perl extract-tex.pl [Optionen...] < wortliste > input.patgen
+#
+# Die »wortliste«-Datei muss in UTF-8 kodiert sein.
 #
 # Option »-t« wählt die traditionelle deutsche Rechtschreibung aus, Option
 # »-s« die traditionelle (deutsch)schweizerische Rechtschreibung.  Wenn
@@ -23,20 +26,29 @@
 #
 # Option »-v« verhindert die Ausgabe von Versalformen, wo »ß« durch »ss«
 # ersetzt ist.
+#
+# Option »-l« konvertiert die Ausgabe nach latin-1 (wie von »patgen«
+# benötigt).
 
 use strict;
 use utf8;         # String-Literals direkt als UTF-8
 use Getopt::Std;
-getopts('gstuvx');
+getopts('glstuvx');
 
-our ($opt_g, $opt_s, $opt_t, $opt_u, $opt_v, $opt_x);
+our ($opt_g, $opt_l, $opt_s, $opt_t, $opt_u, $opt_v, $opt_x);
 
 my $prog = $0;
 $prog =~ s@.*/@@;
 
 # Kodierung:
-binmode(STDIN, ":encoding(utf8)");    # Eingabe (wortliste) in UTF-8
-binmode(STDOUT, ":encoding(latin1)"); # patgen erwartet Latin-1
+binmode(STDIN, ":encoding(utf8)");
+
+if ($opt_l) {
+  binmode(STDOUT, ":encoding(latin1)");
+}
+else {
+  binmode(STDOUT, ":encoding(utf8)");
+}
 
 sub entferne_marker {
   my $arg = shift;
