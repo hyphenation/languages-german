@@ -482,6 +482,28 @@ allgemeine Hinweise:
   behandelt (siehe auch \regelref{enum:tradDoppeld} und
   \regelref{enum:reformDoppeld}).
 
+\item Die von einem Programm aus diesen Mustern abgeleiteten möglichen
+  Trennstellen können (u.\,a. durch Programmfehler) durchaus von denen
+  der zugrundeliegenden Wortliste abweichen.  So führt zum Beispiel die
+  Eingabe \lstinline[style=LaTeX]+Meta"llegierung+ (Dreikonsonantenregel
+  in der traditionellen Rechtschreibung) mit dem Paket \texttt{Babel} zu
+  den in \autoref{tab:trennung-dreik} gezeigten Trennmöglichkeiten.
+
+  \begin{table}
+    \centering
+    \caption{Unterschiedlich ermittelte Trennmöglichkeiten.}
+    \label{tab:trennung-dreik}
+    \begin{tabular}{ll}
+      Quelle & Trennmöglichkeiten\\
+      \addlinespace
+      \toprule
+      \addlinespace
+      pdf\LaTeX\ mit \texttt{Babel}~3.8 & Me-tall(-l)egierung\\
+      pdf\LaTeX\ mit \texttt{Babel}~3.9 & Me-tall(-l)e-gie-rung\\
+      erwünscht \emph{(vgl. \regelref{enum:tradnstd})} & Me-tall(-l)egie-rung\\
+    \end{tabular}
+  \end{table}
+
 \item Die von \TeX\ gewählte Trennung kann in Einzelfällen mit den \TeX-
   und \texttt{Babel}-Kürzeln \lstinline[style=LaTeX]+\-+ und
   \lstinline[style=LaTeX]+"-+ geändert werden.  Für dokumentweite
@@ -658,25 +680,18 @@ allgemeine Hinweise:
     \lstinline[style=LaTeX]+Zellstoffabrik+ & Zell-stoffabrik & Zellstoff-fabrik & Zellstoffa-brik\\
   \end{tabular}
 
-  Das Paket \texttt{Babel} stellt verschiedene Kürzel zur Verfügung, mit
-  denen Spezialtrennungen im Quelldokument ausgezeichnet werden können.%
+  Das Paket \texttt{Babel} stellt verschiedene Kürzel zur Verfügung,
+  u.\,a. \lstinline[style=LaTeX]+"ck+%
   \footnote{Spezialtrennungen werden in \TeX\ mit Hilfe des Kommandos
     \lstinline[style=LaTeX]+\\discretionary+ kodiert.  So wird zum
     Beispiel das \texttt{Babel}-Kürzel \lstinline[style=LaTeX]+\"ck+ in
     der Eingabe während des Setzens durch
     \lstinline[style=LaTeX]+\\discretionary\{k-\}\{k\}\{ck\}+ ersetzt,
     wodurch \emph{k-k}-Trennungen möglich werden.}
-
-  \begin{tabular}[t]{lT}
-      \lstinline[style=LaTeX]+dru"cken+ & druk-ken \\
-      \lstinline[style=LaTeX]+Meta"llegierung+ & Me-tall-legierung \\
-  \end{tabular}
-
-  Beachte, im letzten Beispiel sind sämtliche nach der Auszeichnung
-  liegenden Trennstellen verloren gegangen.  Es handelt sich dabei um
-  einen bekannten Fehler im Paket \texttt{Babel}.%
-  \footnote{\url{http://www.latex-project.org/}, Kennzeichen
-    \texttt{babel/3458}}
+  %
+  oder \lstinline[style=LaTeX]+"ff+ \emph{etc.}, mit denen
+  Spezialtrennungen im Quelldokument ausgezeichnet werden können (siehe
+  auch \autoref{tab:trennung-dreik}).
 
   Lua\TeX%
   \footnote{\url{http://www.luatex.org/}}
