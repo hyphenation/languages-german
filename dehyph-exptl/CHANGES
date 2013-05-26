@@ -36,6 +36,28 @@ werden.
 
 # Änderungen
 
+## v0.xx (xxxx-xx-xx)
+
+#### Wortdatenbank
+
+      Rechtschreibung         hinzugefügt   entfernt   korrigiert
+    ---------------------------------------------------------------
+      traditionell (DE, AT)          5665         23          154
+      traditionell (CH)              5904         23          126
+      reformiert                     4852         12          123
+
+* Weitere Arbeiten an der Klassifizierung von Trennstellen.
+
+* Abgleich mit dem elektronischen Grimmschen Wörterbuch (ca. 1800
+  eingearbeitete Wörter).
+
+* Viele Wörter mit drei aufeinanderfolgenden Konsonanten wurden
+  hinzugefügt.
+
+* Viele weitere irreführende Trennungen der Form ...er-... werden
+  unterdrückt (z. B. ab-erkann-te).
+
+
 ## v0.23 (2012-05-30)
 
 #### Wortdatenbank
