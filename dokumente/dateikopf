@@ -68,6 +68,13 @@
 #
 #   un|=wahr=schein-lich  un + (wahr + scheinlich)
 #
+# Das gemischte Trennzeichen »-=« kennzeichnet die Bindungsverhältnisse,
+# wenn sich beispielsweise ein Suffix auf das gesamte vorhergehende
+# Kompositum bezieht:
+#
+#   Zwei=deu-tig-=kei-ten          (Zwei + deutig) + keiten
+#   Ei-gen--tüm-=lich--=kei-ten    ((Eigen + tüm ) + lich) + keiten
+#
 # Ebenso wie die Charakterisierung ist die Markierung der Bindungstärke
 # unvollständig.
 #
