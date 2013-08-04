@@ -95,7 +95,7 @@ MKDIR = mkdir -p
 PERL = perl
 PWD = pwd
 SED = sed
-SH = sh
+SH = bash
 SORT = $(LC_ENVVARS) sort -d \
        | $(LC_ENVVARS) uniq -i
 
