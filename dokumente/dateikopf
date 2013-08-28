@@ -4,7 +4,8 @@
 #
 # kompiliert von Werner Lemberg <wl@gnu.org>
 #
-# Bedeutung der Felder:
+# Bedeutung der Felder
+# ====================
 #
 #   1 Wort ungetrennt
 #   2 Wort mit Trennungen, falls für alle Varianten identisch,
@@ -36,13 +37,37 @@
 # (deutsch)schweizerische die Felder 2, 3, 5, 6 und 8.  Felder mit höherer
 # Feldnummer haben Priorität.
 #
+# Sortierung
+# ==========
+#
+# Die Sortierung erfolgt nach Dudensortierung.  Die genauen Regeln sind
+# in der Datei skripte/python/sort.py beschrieben, welche auch zur
+# maschinellen Sortierung der Liste verwendet werden kann.
+#
+# Kennzeichnung der Trennstellen
+# ==============================
+#
+# Die Charakterisierung und Wichtung der Trennstellen ist nicht vollständig.
+# Sie soll künftig die Nutzung der Wortliste für die Bestimmung der Güte
+# einer Trennstelle und für die regelbasierte Entscheidung über den Aufbruch
+# typographischer Ligaturen und die Schreibung des S-Lautes (rund-s vs.
+# lang-s) ermöglichen.
 #
 # Folgende Zeichen kennzeichnen Trennstellen:
 #
-#   =  Trennstelle an Wortfugen (Wort=fu-ge)
-#   |  Trennstelle nach Präfix (Vor|sil-be)
-#   -  Trennstelle in einfachem oder suffigiertem Wort (ne-ben)
-#   ·  (noch) nicht kategorisierte Trennstelle
+#   ·  nicht kategorisiert
+#
+#   =  an Wortfugen (zwischen Grundmorphemen): Wort=fu-ge
+#   |  nach Präfix oder Verbalpartikel: Vor|sil-be, auf|zäh-len
+#   -  innerhalb eines Morphems oder vor einem Suffix: in-nen, frag-lich
+#
+# * Die Unterscheidung, ob ein Wortbestandteil ein Präfix oder ein Grundmorphem
+#   ist, ist oft nicht eindeutig:
+#
+#     drauf=los, drauf|los, oder drauf-los?
+#
+# * Zur Zeit sind einige Trennstellen nach Präfix oder Verbalpartikel noch
+#   mit `-' oder `=' bezeichnet.
 #
 # Für die Bindungsstärke B von Trennstellen verschiedener Kategorien gilt
 # B(-) > B(|) > B(=):
@@ -50,8 +75,8 @@
 #   Aus|wahl=lis-te       (Aus + wahl) + liste
 #   fern=ab||ge|le-gen    fern + (ab + (ge + legen))
 #
-# Doppel- und Dreifachtrennzeichen markieren die unterschiedliche
-# Bindungsstärke von Trennungen der gleichen Kategorie:
+# Die unterschiedliche Bindungsstärke von Trennungen der gleichen Kategorie
+# kann durch Doppel- und Dreifachtrennzeichen markiert werden:
 #
 #   Alp=horn==trio              (Alp + horn) + trio
 #   un||voll|stän-dig           un + (voll + ständig)
@@ -59,9 +84,10 @@
 #
 # Verschiedene Trennstellen der gleichen Kategorie ohne Doppelung bezeichnen
 # entweder gleichwertige Wortbestandteile, Zerlegungsalternativen oder sind
-# einfach noch nicht behandelt:
+# (noch) nicht gewichtet:
 #
 #   Abend=brot=zeit        (Abend + brot) + zeit oder Abend + (brot + zeit)
+#   un|voll|stän-dig       un + (voll + ständig), aber nicht markiert
 #
 # Das gemischte Trennzeichen »|=« kennzeichnet die Bindungverhältnisse,
 # wenn sich ein echter Präfix auf das gesamte folgende Kompositum bezieht:
@@ -79,15 +105,26 @@
 # unvollständig.
 #
 #
-# Ungünstige Trennstellen sind mit einem Punkt markiert.  Der Punkt kann
-# einem (oder mehreren) Trennzeichen zur Kategorisierung folgen.
+# Ungünstige (irreführende oder sinnentstellende) Trennstellen sind mit einem
+# Punkt markiert.  Der Punkt ersetzt das Trennzeichen für nicht kategorisierte
+# Trennstellen oder folgt auf Trennzeichen zur Kategorisierung:
+#
+#   An·den.ken, Ost=en-.de
+#
 # Besonders ungünstige Trennstellen können mit mehreren Punkten
 # gekennzeichnet sein.
 #
-#   .    irreführend (An·den.ken, Ost=en.de, Re|im|.port)
-#   ..   sinnentstellend (Ge·winn·er..war·tung)
-#   ...  anstößig (An|al-...pha-bet)
+#   .    ungünstig: An·den.ken, Ost=en.de, Re|im|.port
+#   ..   sehr ungünstig: Ge·winn·er..war·tung
+#   ...  äußerst ungünstig: An|al-...pha-bet
 #
+# Auch die Markierung ungünstiger Trennstellen ist weder eindeutig noch
+# vollständig.  Bei der Generation der Trennmustern für TeX werden alle als
+# ungünstige markierten Trennstellen als nicht vorhanden gewertet.
+#
+#
+# Spezielle Trennungen
+# ====================
 #
 # Folgende Notation wird verwendet, um spezielle Trennungen (für die
 # traditionelle Rechtschreibung) zu kennzeichnen:

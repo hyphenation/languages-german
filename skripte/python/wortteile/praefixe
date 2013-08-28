@@ -1,6 +1,13 @@
-## Kommentiert: laut online-Duden und DWDS keine Präfixe
-## [1] http://web.hszg.de/~bgriebel/praefixe.html
-# all       (nicht im DWDS und Duden, aber z.B. in [1]
+## Liste von Präfixen der deutschen Gegenwartssprache
+#  Quellen: Einzelabfrage bei
+#  Duden: http://www.duden.de/rechtschreibung/
+#  DWDS: http://www.dwds.de/
+#  Wiktionary: ttp://de.wiktionary.org/wiki/
+#
+# Die folgenden auskommentierten "Kandidaten" sind im online-Duden bzw. DWDS
+# als Wörter, aber nicht als Präfixe aufgeführt:
+#
+# all       (nicht im DWDS und Duden, aber z.B. in http://web.hszg.de/~bgriebel/praefixe.html
 # all, allo (http://de.wikipedia.org/wiki/Liste_griechischer_Präfixe)
 # allzu
 # auseinander
@@ -33,7 +40,7 @@
 # drein
 # drin
 # drum
-# entzwei  (Präfix im Duden aber nicht im DWDS)
+# entzwei   (Präfix im Duden aber nicht im DWDS)
 # fern
 # gegenüber
 # gleich
