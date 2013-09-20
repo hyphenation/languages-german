@@ -34,8 +34,6 @@
 # dazu 	    (Präfix im DWDS aber nicht im Duden)
 # dazwischen
 # dran
-# drauf
-# drauflos
 # drauflos
 # drein
 # drin
@@ -56,6 +54,8 @@ angio
 anthropo
 anti
 archaeo
+arche
+archäo
 astro
 auf
 aus
@@ -66,6 +66,7 @@ bei
 bi
 bio
 by
+chloro
 choreo
 con
 da
@@ -75,9 +76,11 @@ deka
 demo
 des
 dezi
+di
 dia
 dis
 down
+drauf
 durch
 dys
 ein
@@ -95,6 +98,7 @@ ethno
 etymo
 ex
 exo
+femto
 fort
 für
 gaso
@@ -120,8 +124,6 @@ hexa
 hie
 hin
 hinab
-on
-tel
 hinan
 hinauf
 hinaus
@@ -169,6 +171,8 @@ non
 ob
 ober
 off
+ohn
+on
 ortho
 out
 over
@@ -198,6 +202,7 @@ sub
 super
 sus
 taxo
+tel
 tele
 topo
 trans
