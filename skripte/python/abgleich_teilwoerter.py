@@ -74,7 +74,7 @@ def zerlege(wort):
 #
 # >>> print uebertrage(u'ver||aus|ga-be',  u'ver|aus|ga-be')
 # ver||aus|ga-be
-
+#
 # Kein Überschreiben doppelter Marker:
 # >>> print uebertrage(u'ver|aus|ga-be',  u'ver||aus|ga-be')
 # ver||aus|ga-be
@@ -189,7 +189,7 @@ def uebertrage(wort1, wort2, strict=True):
 # >>> toggle_case(u'L}a-ger')
 # u'l}a-ger'
 #
-# Keine Änderung bei wörtern mit Großbuchstaben im Inneren:
+# Keine Änderung bei Wörtern mit Großbuchstaben im Inneren:
 #
 # >>> toggle_case(u'USA')
 # u'USA'
@@ -241,7 +241,8 @@ def teilabgleich(teil, grossklein=False, strict=True):
         try:
             teil = uebertrage(wort, teil, strict)
         except TransferError, e: # Inkompatible Wörter
-            print unicode(e)
+            # print unicode(e)
+            pass
 
     return teil
 
@@ -272,7 +273,7 @@ def grundwortabgleich(wort, endung, vergleichsendung=u''):
                 break
             except TransferError, e:
                 print unicode(e)
-    
+
     return u'='.join(teile)
 
 
@@ -322,9 +323,13 @@ def sprachabgleich(entry):
 # und korrigiere die Trennstellenmarkierung::
 
 def vorsilbentest(wort):
+
+    # Gleichlautende Vorsilben und Bestimmungswörter:
+    doppeldeutig = [u'Drum=com-pu-ter', u'Miss=wahl', u'Miß=wahl']
+
     teile = wort.split('=')
     # erstes Teilwort
-    if teile[0] in vorsilben:
+    if teile[0] in vorsilben and (wort not in doppeldeutig):
         return re.sub(r'^%s=' % teile[0], u'%s|' % teile[0], wort)
     # mittlere Teilwörter
     for teil in teile[1:-1]:
