@@ -37,6 +37,8 @@ class WordFile(file):
 
 # encoding
 # --------
+#
+# ::
 
     encoding = 'utf8'
 
@@ -93,7 +95,7 @@ class WordFile(file):
 # in die Datei `destination`::
 
     def writelines(self, lines, destination, encoding=None):
-        outfile = codecs.open(destination, 'w', 
+        outfile = codecs.open(destination, 'w',
                               encoding=(encoding or self.encoding))
         outfile.write(u'\n'.join(lines))
         outfile.write(u'\n')
@@ -341,9 +343,9 @@ class WordEntry(list):
 # >>> auffrass.conflate_fields()
 # >>> print auffrass
 # auffrass;-2-;-3-;-4-;auf-frass
-
+#
 # Aber nicht, wenn die Trennstellen sich unterscheiden:
-
+#
 # >>> abenddienste = WordEntry(
 # ...    u'Abenddienste;-2-;Abend=dien-ste;Abend=diens-te')
 # >>> abenddienste.conflate_fields()
@@ -383,7 +385,7 @@ class WordEntry(list):
 def join_word(word, assert_complete=False):
 
 # Einfache Trennzeichen:
-
+#
 # ==  ================================================================
 # \·  ungewichtete Trennstelle (solche, wo noch niemand sich um die
 #     Gewichtung gekümmert hat)
@@ -394,7 +396,7 @@ def join_word(word, assert_complete=False):
 # \|  Haupttrennstelle nach Vorsilbe (Vor|sil-be)
 # \-  Nebentrennstelle
 # ==  ================================================================
-
+#
 # ::
 
     table = {}
@@ -495,28 +497,29 @@ if __name__ == '__main__':
     ##
     # for entry in wordfile:
     #     # Sprachauswahl:
-    #     wort = entry.get('de-1901')
+    #     wort = entry.get('de-1901') # traditionell
+    #     # wort = entry.get('de-1996') # Reformschreibung
+    #     # wort = entry.get('de-x-GROSS')      # ohne ß (Schweiz oder GROSS) allgemein
+    #     # wort = entry.get('de-1901-x-GROSS') # ohne ß (Schweiz oder GROSS) "traditionell"
+    #     # wort = entry.get('de-1996-x-GROSS') # ohne ß (Schweiz oder GROSS) "reformiert"
+    #     # wort = entry.get('de-CH-1901')      # ohne ß (Schweiz) "traditionell" ("süssauer")
     #     if wort is None:
     #         continue
-    #     # Test der Trennstellentfernung:
+    #     # Test der Übereinstimmung ungetrenntes/getrenntes Wort:
     #     key = join_word(wort)
     #     if key != entry[0]:
-    #         print (u"key %s != %s" % (key, entry[0]))
-    #     # Doppelauszeichnungen:
-    #     # if wort.find('==') + wort.find('||') != -2:
-    #     # if '=' in wort and '|' in wort:
-    #     #     print wort
+    #         print (u"key %s != %s" % (entry[0], key))
 
     # sys.exit()
     # wordfile.seek(0)            # Pointer zurücksetzen
-    
+
 
 
 # Liste der Datenfelder (die Klasseninstanz als Argument für `list` liefert
 # den Iterator über die Felder, `list` macht daraus eine Liste)::
 
     # wortliste = list(wordfile)
-    # 
+    #
     # print len(wortliste), u"Einträge"
 
     # for entry in wortliste:
@@ -526,13 +529,13 @@ if __name__ == '__main__':
     #         line = unicode(entry)
     #         assert original == line, "Rejoined %s != %s" % (line, ur_line)
 
-    # print u"Doppeleinträge (Groß/Klein):"
-    # words = set()
-    # for entry in wortliste:
-    #     wort = entry[0]
-    #     if wort.lower() in words or wort.title() in words:
-    #         print entry
-    #     words.add(wort)
+    print u"Doppeleinträge (Groß/Klein):"
+    words = set()
+    for entry in wordfile:
+        wort = entry[0]
+        if wort.lower() in words or wort.title() in words:
+            print unicode(entry)
+        words.add(wort)
 
 
 # Ein Wörterbuch (dict Instanz)::
