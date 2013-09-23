@@ -1,4 +1,4 @@
-## Liste von Präfixen der deutschen Gegenwartssprache
+# Liste von Präfixen der deutschen Gegenwartssprache
 #  Quellen: Einzelabfrage bei
 #  Duden: http://www.duden.de/rechtschreibung/
 #  DWDS: http://www.dwds.de/
@@ -9,6 +9,7 @@
 #
 # all       (nicht im DWDS und Duden, aber z.B. in http://web.hszg.de/~bgriebel/praefixe.html
 # all, allo (http://de.wikipedia.org/wiki/Liste_griechischer_Präfixe)
+# allein
 # allzu
 # auseinander
 # beisammen (Präfix im DWDS aber nicht im Duden)
@@ -45,6 +46,7 @@
 ab
 aber
 aero
+aller
 allo
 als
 an
@@ -59,6 +61,7 @@ auf
 aus
 auto
 außer
+baro
 be
 bei
 bi
@@ -249,3 +252,5 @@ zwie
 öko
 öno
 über
+ko
+turbo
