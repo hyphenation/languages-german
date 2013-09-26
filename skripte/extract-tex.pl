@@ -97,7 +97,7 @@ while (<>) {
     # Ausgabe von Wörtern mit unerwünschten Trennungen?
     next if $zeile =~ /[._]/ and $opt_u;
     # entferne Markierungen für unerwünschte Trennungen
-    $zeile =~ s/[._]//g;
+    $zeile =~ s/[·|=-]*[._]+[·|=-]*//g;
 
     # Ausgabe von Wörtern mit ungewichteten Trennstellen?
     next if $zeile =~ /·/ and $opt_g;
