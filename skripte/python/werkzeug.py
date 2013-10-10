@@ -434,6 +434,213 @@ def join_word(word, assert_complete=False):
 
     return key
 
+# zerlege
+# -------
+#
+# Zerlege ein Wort mit Trennzeichen in eine Liste von Silben und eine Liste
+# von Trennzeichen)
+#
+# >>> from werkzeug import zerlege
+#
+# >>> zerlege(u'Haupt=stel-le')
+# ([u'Haupt', u'stel', u'le'], [u'=', u'-'])
+# >>> zerlege(u'Ge|samt||be|triebs=rats==chef')
+# ([u'Ge', u'samt', u'be', u'triebs', u'rats', u'chef'], [u'|', u'||', u'|', u'=', u'=='])
+#
+# ::
+
+def zerlege(wort):
+    silben = re.split(u'[-·._|=]+', wort)
+    trennzeichen = re.split(u'[^-·._|=]+', wort)
+    return silben, [tz for tz in trennzeichen if tz]
+
+# TransferError
+# -------------
+#
+# Fehler beim Übertragen von Trennstellen mit uebertrage_::
+
+class TransferError(ValueError):
+    def __init__(self, wort1, wort2):
+        msg = u'Inkompatibel: %s %s' % (wort1, wort2)
+        ValueError.__init__(self, msg.encode('utf8'))
+
+    def __unicode__(self):
+        return str(self).decode('utf8')
+
+
+# uebertrage
+# ----------
+#
+# Übertrage die Trennzeichen von `wort1` auf `wort2`:
+#
+# >>> from werkzeug import uebertrage, TransferError
+#
+# >>> uebertrage(u'Haupt=stel-le', u'Haupt·stel·le')
+# u'Haupt=stel-le'
+#
+# Auch teilweise Übertragung, von "kategorisiert" nach "unkategorisiert":
+#
+# >>> print uebertrage(u'Haupt=stel-le', u'Haupt=stel·le')
+# Haupt=stel-le
+#
+# >>> print uebertrage(u'Haupt·stel-le', u'Haupt=stel·le')
+# Haupt=stel-le
+#
+# >>> print uebertrage(u'Aus|stel-ler', u'Aus-stel-ler')
+# Aus|stel-ler
+#
+# Übertragung doppelter Marker:
+#
+# >>> print uebertrage(u'ver||aus|ga-be',  u'ver|aus|ga-be')
+# ver||aus|ga-be
+#
+# Kein Überschreiben doppelter Marker:
+# >>> print uebertrage(u'ver|aus|ga-be',  u'ver||aus|ga-be')
+# ver||aus|ga-be
+#
+# Keine Übertragung, wenn die Zahl oder Position der Trennstellen
+# unterschiedlich ist oder bei unterschiedlichen Wörtern:
+#
+# >>> try:
+# ...     uebertrage(u'Ha-upt=stel-le', u'Haupt=stel·le')
+# ...     uebertrage(u'Haupt=ste-lle', u'Haupt=stel·le')
+# ...     uebertrage(u'Waupt=stel-le', u'Haupt=stel·le')
+# ... except TransferError:
+# ...     pass
+#
+# Übertragung auch bei unterschiedlicher Schreibung oder Position der
+# Trennstellen mit `strict=False` (für Abgleich zwischen Sprachvarianten):
+#
+# >>> uebertrage(u'er-ster', u'ers·ter', strict=False)
+# u'ers-ter'
+# >>> uebertrage(u'Fluß=bett', u'Fluss·bett', strict=False)
+# u'Fluss=bett'
+# >>> print uebertrage(u'Aus|tausch=dien-stes', u'Aus-tausch=diens-tes', False)
+# Aus|tausch=diens-tes
+#
+# Auch mit `strict=False` muß die Zahl der Trennstellen übereinstimmen
+# (Ausnahmen siehe unten):
+#
+# >>> try:
+# ...     uebertrage(u'Ha-upt=ste-lle', u'Haupt=stel·le', strict=False)
+# ... except TransferError:
+# ...     pass
+#
+# Akzeptiere unterschiedliche Anzahl von Trennungen bei st und ck nach
+# Selbstlaut:
+#
+# >>> uebertrage(u'acht=ecki-ge', u'acht·e{ck/k·k}i·ge', strict=False)
+# u'acht=e{ck/k-k}i-ge'
+# >>> uebertrage(u'As-to-ria', u'Asto·ria', strict=False)
+# u'Asto-ria'
+# >>> uebertrage(u'Asto-ria', u'As·to·ria', strict=False)
+# u'As-to-ria'
+# >>> uebertrage(u'So-fa=ecke', u'So·fa=e{ck/k-k}e', strict=False)
+# u'So-fa=e{ck/k-k}e'
+#
+# Mit ``upgrade=False`` werden nur unspezifische Trennstellen überschrieben:
+#
+# >>> print uebertrage(u'an=stel-le', u'an|stel·le', upgrade=False)
+# an|stel-le
+#
+# >>> print uebertrage(u'Aus|stel-ler', u'Aus-stel-ler', upgrade=False)
+# Aus-stel-ler
+#
+# >>> print uebertrage(u'Aus-stel-ler', u'Aus|stel-ler', upgrade=False)
+# Aus|stel-ler
+#
+# >>> print uebertrage(u'vor|an||stel-le', u'vor-an|stel·le', upgrade=False)
+# vor-an|stel-le
+#
+# ::
+
+selbstlaute = u'aeiouäöüAEIOUÄÖÜ'
+
+def uebertrage(wort1, wort2, strict=True, upgrade=True):
+
+    silben1, trennzeichen1 = zerlege(wort1)
+    silben2, trennzeichen2 = zerlege(wort2)
+    # Prüfe strikte Übereinstimmung:
+    if silben1 != silben2 and strict:
+        if u'|' in trennzeichen1 or u'·' in trennzeichen2:
+            raise TransferError(wort1, wort2)
+        else:
+            return wort2
+    # Prüfe ungefähre Übereinstimmung:
+    if len(trennzeichen1) != len(trennzeichen2):
+        # Selbstlaut + st oder ck?
+        for s in selbstlaute:
+            if (wort2.find(s+u'{ck/k·k}') != -1 or
+                wort2.find(s+u'{ck/k-k}') != -1):
+                wort1 = wort1.replace(s+u'ck', s+u'-ck')
+                silben1, trennzeichen1 = zerlege(wort1)
+            if wort2.find(s+u's·t') != -1:
+                wort1 = wort1.replace(s+u'st', s+u's-t')
+                silben1, trennzeichen1 = zerlege(wort1)
+            elif wort1.find(s+u's-t') != -1:
+                wort1 = wort1.replace(s+u's-t', s+u'st')
+                silben1, trennzeichen1 = zerlege(wort1)
+                # print u'retry:', silben1, trennzeichen1
+        # immer noch ungleiche Zahl an Trennstellen?
+        if len(trennzeichen1) != len(trennzeichen2):
+            raise TransferError(wort1, wort2)
+
+    # Baue wort3 aus silben2 und spezifischeren Trennzeichen:
+    wort3 = silben2.pop(0)
+    for t1,t2 in zip(trennzeichen1, trennzeichen2):
+        if ((t2 == u'·' and t1 != u'.') # unspezifisch
+            or upgrade and
+            ((t2 in (u'-', u'|') and t1 in (u'|', u'||', u'|=')) # Praefixe
+             or (t2 in (u'-', u'|', u'||') and t1 == u'|||') # Praefixe
+             or (t2 == u'-' and t1 == u'--')                 # Suffixe
+             or t1 in (u'=', u'==', u'===')                  # Wortfugen
+            )
+           ):
+            wort3 += t1
+        else:
+            wort3 += t2
+        wort3 += silben2.pop(0)
+    return wort3
+
+# Großschreibung in Kleinschreibung wandeln und umgekehrt
+#
+# Diese Version funktioniert auch für Wörter mit Trennzeichen (während
+# str.title() nach jedem Trennzeichen wieder groß anfängt)
+#
+# >>> from werkzeug import toggle_case
+# >>> toggle_case(u'Ha-se')
+# u'ha-se'
+# >>> toggle_case(u'arm')
+# u'Arm'
+# >>> toggle_case(u'frei=bier')
+# u'Frei=bier'
+# >>> toggle_case(u'L}a-ger')
+# u'l}a-ger'
+#
+# Keine Änderung bei Wörtern mit Großbuchstaben im Inneren:
+#
+# >>> toggle_case(u'USA')
+# u'USA'
+#
+# >>> toggle_case(u'gri[f-f/{ff/ff')
+# u'Gri[f-f/{ff/ff'
+# >>> toggle_case(u'Gri[f-f/{ff/ff')
+# u'gri[f-f/{ff/ff'
+#
+# ::
+
+def toggle_case(wort):
+    try:
+        key = join_word(wort, assert_complete=True)
+    except AssertionError:
+        key = wort[0]
+    if key.istitle():
+        return wort.lower()
+    elif key.islower():
+        return wort[0].upper() + wort[1:]
+    else:
+        return wort
+
 
 # udiff
 # ------------
@@ -495,22 +702,23 @@ if __name__ == '__main__':
 # Iteration über "geparste" Zeilen (i.e. Datenfelder)::
 
     ##
-    # for entry in wordfile:
-    #     # Sprachauswahl:
-    #     wort = entry.get('de-1901') # traditionell
-    #     # wort = entry.get('de-1996') # Reformschreibung
-    #     # wort = entry.get('de-x-GROSS')      # ohne ß (Schweiz oder GROSS) allgemein
-    #     # wort = entry.get('de-1901-x-GROSS') # ohne ß (Schweiz oder GROSS) "traditionell"
-    #     # wort = entry.get('de-1996-x-GROSS') # ohne ß (Schweiz oder GROSS) "reformiert"
-    #     # wort = entry.get('de-CH-1901')      # ohne ß (Schweiz) "traditionell" ("süssauer")
-    #     if wort is None:
-    #         continue
-    #     # Test der Übereinstimmung ungetrenntes/getrenntes Wort:
-    #     key = join_word(wort)
-    #     if key != entry[0]:
-    #         print (u"key %s != %s" % (entry[0], key))
+    for entry in wordfile:
+        # Sprachauswahl:
+        wort = entry.get('de-1901') # traditionell
+        # wort = entry.get('de-1996') # Reformschreibung
+        # wort = entry.get('de-x-GROSS')      # ohne ß (Schweiz oder GROSS) allgemein
+        # wort = entry.get('de-1901-x-GROSS') # ohne ß (Schweiz oder GROSS) "traditionell"
+        # wort = entry.get('de-1996-x-GROSS') # ohne ß (Schweiz oder GROSS) "reformiert"
+        # wort = entry.get('de-CH-1901')      # ohne ß (Schweiz) "traditionell" ("süssauer")
+        if wort is None:
+            continue
+        # Test der Übereinstimmung ungetrenntes/getrenntes Wort:
+        # (Abgleich der Großschreibung mit `prepare-patch.py grossabgleich`)
+        key = join_word(wort)
+        if key != entry[0]:
+            print (u"key %s != %s" % (entry[0], key))
 
-    # sys.exit()
+    sys.exit()
     # wordfile.seek(0)            # Pointer zurücksetzen
 
 
@@ -529,20 +737,20 @@ if __name__ == '__main__':
     #         line = unicode(entry)
     #         assert original == line, "Rejoined %s != %s" % (line, ur_line)
 
-    print u"Doppeleinträge (Groß/Klein):"
-    words = set()
-    for entry in wordfile:
-        wort = entry[0]
-        if wort.lower() in words or wort.title() in words:
-            print unicode(entry)
-        words.add(wort)
+    # print u"Doppeleinträge (Groß/Klein):"
+    # words = set()
+    # for entry in wordfile:
+    #     wort = entry[0]
+    #     if wort.lower() in words or wort.title() in words:
+    #         print unicode(entry)
+    #     words.add(wort)
 
 
 # Ein Wörterbuch (dict Instanz)::
 
-    words = wordfile.asdict()
-
-    print len(words), u"Wörterbucheinträge"
+    # words = wordfile.asdict()
+    #
+    # print len(words), u"Wörterbucheinträge"
 
 
 # Quellen
@@ -553,4 +761,3 @@ if __name__ == '__main__':
 #
 # .. _Wortliste der deutschsprachigen Trennmustermannschaft:
 #    http://mirrors.ctan.org/language/hyphenation/dehyph-exptl/projektbeschreibung.pdf
-#

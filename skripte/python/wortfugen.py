@@ -67,7 +67,10 @@ if sprachvariante == 'de-1901':
 else:
     wgerman = set(line.rstrip().decode('utf8') 
                   for line in open('/usr/share/dict/ngerman'))
+
 # Entferne Silben, die nie in Wortverbindungen vorkommen
+# TODO: Solitäre aus einer Datei lesen. ::
+
 for solitaer in ('Ra', 'He', 'As', 'Co', 'Fa'):
     wgerman.discard(solitaer)
 

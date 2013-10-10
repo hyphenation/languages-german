@@ -26,8 +26,7 @@
 #
 # Ho-se 1;0;0;7
 #
-#
-# TODO: Vorsilben, Silben
+# .. _wortliste: ../../wortliste
 #
 # .. contents::
 #
@@ -42,12 +41,18 @@ import codecs
 from collections import defaultdict  # Wörterbuch mit Default
 # from copy import deepcopy
 
-from werkzeug import WordFile, join_word, udiff
+from werkzeug import WordFile, join_word, udiff, uebertrage, TransferError
 
 # teilwoerter
 # -----------
-
-# Sammlung von `dictionaries` mit Info über Teilwörter::
+#
+# Sammlung von `dictionaries` mit Info über Teilwörter.
+#
+# >>> from analyse import teilwoerter
+#
+# >>> words = teilwoerter()
+#
+# ::
 
 class teilwoerter(object):
 
@@ -55,7 +60,7 @@ class teilwoerter(object):
 # Trennungen eines identischen Teilworts geben, z.B. "Ba-se" (keine Säure)
 # vs. "Base" (in Base=ball)::
 
-    trennvarianten = defaultdict(list)
+    trennvarianten = {}
 
 # Häufigkeiten des Auftretens der Teilwörter::
 
@@ -64,28 +69,92 @@ class teilwoerter(object):
     M = defaultdict(int)   # mittleres Wort in Verbindungen
     L = defaultdict(int)   # letztes Wort in Verbindungen
 
+# >>> words.S['na'] += 1
+# >>> print words.S['na'], words.E['na'], words.M['na'], words.L['na']
+# 1 0 0 0
+#
+# Wort eintragen
+#
+# >>> words.add(u'ein|tra·gen')
+# >>> words.add(u'ein·tra-gen')
+# >>> words.add(u'un|klar')
+# >>> words.add(u'un-klar')
+# >>> print words.trennvarianten
+# {u'unklar': [u'un|klar', u'un-klar'], u'eintragen': [u'ein|tra-gen']}
+#
+# ::
 
-# Iterator über alle trennvarianten: Rückgabewert ist ein String::
+    def add(self, wort):
+
+        key = join_word(wort)
+
+        # Ignoriere Spezialtrennungen:
+        if re.search(r'[\[{/\]}]', wort):
+            return
+        # ungünstige Trennungen:
+        if u'.' in wort:
+            # Wort ignorieren
+            return
+            # Entferne/Ersetze Markierung
+            # wort = re.sub(ur'([-|=])\.+', ur'\1', wort)  # =. |. -.
+            # wort = re.sub(ur'\.+', ur'·', wort)
+        # wort schon vorhanden?
+        if key in self.trennvarianten:
+            # Abgleich der Trennmarker
+            eintrag = self.trennvarianten[key]
+            try:
+                wort = uebertrage(eintrag[-1], wort, upgrade=False)
+                eintrag[-1] = uebertrage(wort, eintrag[-1], upgrade=False)
+            except TransferError:
+                pass
+            if wort != eintrag[-1]:
+                self.trennvarianten[key].append(wort)
+        else:
+            self.trennvarianten[key] = [wort]
+
+# Iterator über alle trennvarianten: Rückgabewert ist ein String
+#
+# >>> print [word for word in words.woerter()]
+# [u'un|klar', u'un-klar', u'ein|tra-gen']
+#
+# ::
 
     def woerter(self):
         for varianten in self.trennvarianten.values():
             for wort in varianten:
                 yield wort
 
+# Schreibe (Teil)wörter und Häufigkeiten in eine Datei `path`::
+
+    def write(self, path):
+
+        outfile = codecs.open(path, 'w', encoding='utf8')
+        header = u'# wort S;E;M;L (Solitär, erstes/mittleres/letztes Wort)\n'
+        outfile.write(header)
+
+        for key in sorted(self.trennvarianten.keys()):
+            for wort in self.trennvarianten[key]:
+                line = u'%s %d;%d;%d;%d\n' % (wort,
+                            self.S[key], self.E[key], self.M[key], self.L[key])
+                outfile.write(line)
+
+
+# Funktion zum Einlesen der Teilwortdatei::
 
 def read_teilwoerter(path):
 
     words = teilwoerter()
 
     for line in open(path):
+        if line.startswith('#'):
+            continue
         line = line.decode('utf8')
         try:
             wort, flags = line.split()
         except ValueError:
-            if line.startswith('#'):
-                continue
-            else:
-                raise ValueError('cannot parse line '+line.encode('utf8'))
+            wort = line
+            flags = '0;0;0;0'
+            # raise ValueError('cannot parse line '+line.encode('utf8'))
 
         key = join_word(wort)
         flags = [int(n) for n in flags.split(u';')]
@@ -93,27 +162,26 @@ def read_teilwoerter(path):
         for kategorie, n in zip([words.S, words.E, words.M, words.L], flags):
             if n > 0: # denn += 0 erzeugt "key" (`kategorie` ist defaultdict)
                 kategorie[key] += n
-
-        # Ignoriere Spezialtrennungen:
-        # if not re.search(r'[.\[{/\]}]', wort):
-        if not re.search(r'[.]', wort):
-            words.trennvarianten[key].append(wort)
+        words.add(wort)
 
     return words
 
 
 # Analyse
 # =====================
-
+#
 # Hilfsfunktion: Erkenne (Nicht-)Teile wie ``/{ll/ll``  aus
 # ``Fuß=ba[ll=/{ll/ll=l}]eh-re``::
 
 def spezialbehandlung(teil):
     if re.search(ur'[\[{/\]}]', teil):
+        # print teil,
+        teil = teil.replace(u'er[|st/st', 'erst')
         teil = re.sub(ur'\{([^/]*)[^}]*$', ur'\1', teil)
         teil = re.sub(ur'\[([^/]*)[^\]]*$', ur'\1', teil)
         teil = re.sub(ur'^(.)}', ur'\1', teil)
         teil = re.sub(ur'^(.)\]', ur'\1', teil)
+        teil = re.sub(ur'^\]([^/]*$)', ur'\1', teil) # ]er.be -> er.be
         # print teil
     return teil
 
@@ -122,7 +190,8 @@ def spezialbehandlung(teil):
 # an der entsprechenden Position als Wert zurück::
 
 
-def analyse(path='../../wortliste', sprachvariante='de-1901'):
+def analyse(path='../../wortliste', sprachvariante='de-1901',
+            halbfertig=False):
 
     wordfile = WordFile(path)
     words = teilwoerter()
@@ -144,36 +213,41 @@ def analyse(path='../../wortliste', sprachvariante='de-1901'):
 
         # Einzelwort
         if len(teile) == 1:
-            if u'·' not in wort: # skip unkategorisiert, könnte Kopositum sein
-                words.S[wort] += 1
+            if u'·' not in wort: # or halbfertig:
+                # skip unkategorisiert, könnte Kopositum sein
+                words.add(wort)
+                words.S[join_word(wort)] += 1
             continue
 
         gross = wort[0].istitle()
 
         # erstes Teilwort:
-        if (u'·' not in teile[0]
-            and not teile[0].endswith(u'|')): # Präfix wie un|=wahr=schein-lich
-            words.E[teile[0]] += 1
+        if (halbfertig or u'·' not in teile[0]
+           ) and not teile[0].endswith(u'|'): # Präfix wie un|=wahr=schein-lich
+            words.add(teile[0])
+            words.E[join_word(teile[0])] += 1
 
         # letztes Teilwort:
         teil = teile[-1]
-        if u'·' not in teil:
+        if halbfertig or (u'·' not in teil):
             if gross: # Großschreibung übertragen
                 teil = teil[0].title() + teil[1:]
-            words.L[teil] += 1
+            words.add(teil)
+            words.L[join_word(teil)] += 1
 
         # mittlere Teilwörter
         for teil in teile[1:-1]:
             if u'/' in teil:
                 if not re.search(ur'[\[{].*[\]}]', teil):
                     continue
-            if u'·' in teil:
+            if not(halbfertig) and u'·' in teil:
                 # unkategorisierte Trennstelle(n): es könnte sich um ein
                 # zusammengesetzes Wort handeln -> überspringen
                 continue
             if gross: # Großschreibung übertragen
                 teil = teil[0].title() + teil[1:]
-            words.M[teil] += 1
+            words.add(teil)
+            words.M[join_word(teil)] += 1
 
     return words
 
@@ -182,7 +256,8 @@ def analyse(path='../../wortliste', sprachvariante='de-1901'):
 def statistik_praefixe(teilwoerter):
 
     ausnahmen = set(line.decode('utf8').strip()
-                for line in open('wortteile/vorsilbenausnahmen'))
+                    for line in open('wortteile/vorsilbenausnahmen')
+                    if not line.startswith('#'))
 
     # Präfixe (auch als Präfix verwendete Partikel, Adjektive, ...):
     praefixe = set(line.rstrip().lower().decode('utf8')
@@ -192,6 +267,7 @@ def statistik_praefixe(teilwoerter):
     markiert = defaultdict(list)    # mit | markierte Präfixe
     kandidaten = defaultdict(list)   # nicht mit | markierte Präfixe
     # grundwoerter = defaultdict(int)   # Wörter nach Abtrennen markierter Präfixe
+    ausnahmefaelle = defaultdict(int)
 
     # Analyse
     for wort in teilwoerter.woerter():
@@ -205,11 +281,12 @@ def statistik_praefixe(teilwoerter):
             restwort = teile[-1]
         # grundwoerter[restwort] += 1
         # Silben des Grundworts
-        if join_word(restwort) in ausnahmen:
-            continue
         # silben = re.split(u'[-·.]+', restwort)
         silben = restwort.split('-')
         silben[0] = silben[0].lower()
+        if join_word(restwort) in ausnahmen:
+            ausnahmefaelle[silben[0]] += 1
+            continue
         for i in range(len(silben)-1, 0, -1):
             kandidat = ''.join(silben[:i])
             if kandidat.lower() in praefixe:
@@ -219,18 +296,18 @@ def statistik_praefixe(teilwoerter):
                 break
 
 # Ausgabe
-    print u'\nPräfixe aus der Liste "wortteile/praefixe":'
-    print u'markiert mit      |     -    ='
+    print u'\nPräfixe aus der Liste "wortteile/praefixe" als markiert mit:'
     for vs in sorted(praefixe):
-        print (u'%-13s %5d %5d %4d' %
-               (vs, len(markiert[vs]), len(kandidaten[vs]),
-                teilwoerter.E[vs] + teilwoerter.M[vs]
-                + teilwoerter.E[vs.title()] + teilwoerter.M[vs.title()])
-              ),
-        if kandidaten[vs] and len(kandidaten[vs]) < 30:
-            print u' '.join(kandidaten[vs])
-        else:
-            print
+        einzel = (teilwoerter.E[vs] + teilwoerter.M[vs]
+                  + teilwoerter.E[vs.title()] + teilwoerter.M[vs.title()])
+        print (u'%-10s %5d = %5d | %5d -' % 
+               (vs, einzel, len(markiert[vs]), ausnahmefaelle[vs])),
+        if kandidaten[vs]:
+            print u'%5d offen:' % len(kandidaten[vs]),
+            print u' '.join(kandidaten[vs][:30]),
+            if len(kandidaten[vs]) > 30:
+                print u' ...',
+        print
         markiert.pop(vs, None)
 
     print u'Markierte Präfixe die nicht in der Präfix-Liste stehen:'
@@ -239,45 +316,28 @@ def statistik_praefixe(teilwoerter):
         print vs, u' '.join(i)
 
 
-# Trennungsvarianten zum gleichen Key:
+# Trennungsvarianten zum gleichen Key::
 
 def mehrdeutigkeiten(words):
     for teil in sorted(words.trennvarianten):
         if len(words.trennvarianten[teil]) == 1:
             continue
         # Bekannte Mehrdeutigkeiten:
-        if teil in ('Base',  'Mode', 'Page', 'Planes', 'Rate', 'Real',
-                    'Spare', 'Wales', 'Ware', 'griff'):
+        if teil in ('Base',  'Mode', 'Page', 'Pole',
+                    'Planes', 'Radio', 'Rate', 'Real',
+                    'Spare', 'Wales', 'Ware',
+                    'griff' # gri[f-f/{ff/ff=f}]est
+                   ):
             continue
-        line = u' '.join([teil]+words.trennvarianten[teil])
-        print line
+        # Einzelwort und Präfix gleichlautend:
+        if len(words.trennvarianten[teil]) == 2:
+            varianten = [i.rstrip(u'|') for i in words.trennvarianten[teil]]
+            if varianten[0] == varianten[1]:
+                continue
+        print teil + u': ' + u' '.join(words.trennvarianten[teil])
 
 
-# Ausgabe
-# ==========
-
-# Schreibe das Resultat von `analyse` in eine Datei `path`::
-
-def write_teilwoerter(words, path):
-
-    outfile = codecs.open(path, 'w', encoding='utf8')
-
-    header = u'# wort S;E;M;L (Solitär, erstes/mittleres/letztes Wort)\n'
-
-    # Menge aller Teilwörter:
-    teilwoerter = set()
-
-    for kategorie in (words.S, words.E, words.M, words.L):
-        teilwoerter.update(set(kategorie.keys()))
-
-    outfile.write(header)
-    for teil in sorted(teilwoerter):
-        line = u'%s %d;%d;%d;%d\n' % (
-            teil, words.S[teil], words.E[teil], words.M[teil], words.L[teil])
-        outfile.write(line)
-
-
-# Bei Aufruf (aber nicht bei Import):;
+# Bei Aufruf (aber nicht bei Import)::
 
 if __name__ == '__main__':
 
@@ -286,17 +346,17 @@ if __name__ == '__main__':
 
 # erstelle/aktualisiere die Datei ``teilwoerter.txt`` mit den Häufigkeiten
 # nicht zusammengesetzer Wörter als Einzelwort oder in erster, mittlerer,
-# oder letzter Position in Wortverbindungen.
+# oder letzter Position in Wortverbindungen::
 
-    sprachvariante = 'de-1901'         # "traditionell"
-    # sprachvariante = 'de-1996'         # Reformschreibung
+    # sprachvariante = 'de-1901'         # "traditionell"
+    sprachvariante = 'de-1996'         # Reformschreibung
     # sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
     # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
 
-    words = analyse(sprachvariante=sprachvariante)
-    write_teilwoerter(words, 'teilwoerter-%s.txt'%sprachvariante)
+    words = analyse(sprachvariante=sprachvariante, halbfertig=True)
+    words.write('teilwoerter-%s.txt'%sprachvariante)
 
 # Test::
 

@@ -27,7 +27,7 @@ from werkzeug import WordFile, udiff
 
 # Sortierschlüssel
 # ================
-
+#
 # sortkey_duden
 # -------------
 #
@@ -40,7 +40,7 @@ def sortkey_duden(entry):
     key = entry[0]
 
 # Großschreibung ignorieren:
-
+#
 # (Der Duden sortiert Wörter, die sich nur in der Großschreibung
 # unterscheiden "klein vor groß". In der `Trennmuster-Wortliste`
 # kommen diese Wörter nur mit der häufiger anzutreffenden
@@ -49,19 +49,21 @@ def sortkey_duden(entry):
     key = key.lower()
 
 # Ersetzungen
-
+#
 # ß -> ss
-
+#
 # Ein Nachsatz nach einem Leerzeichen sorgt für das
 # Einsortieren nach einem gleichen Wort mit ss im Original
 # (Masse < Maße):
+#
+# ::
 
     if u'ß' in key:
         key = key.replace(u'ß', u'ss')
         key += u' ß'
 
 # Akzente/Umlaute weglassen:
-
+#
 # Wandeln in Darstellung von Buchstaben mit Akzent als "Grundzeichen +
 # kombinierender Akzent". Anschließend alle nicht-ASCII-Zeichen ignorieren::
 
@@ -74,7 +76,7 @@ def sortkey_duden(entry):
 
 # sortkey_wl
 # ----------
-
+#
 # Sortierschlüssel für den bisher genutzten ("W.-Lemberg-") Algorithmus,
 # d.h # Emulation von:
 #
@@ -106,7 +108,7 @@ def sortkey_wl(entry):
 
 # Aufruf von der Kommandozeile
 # ============================
-
+#
 # ::
 
 if __name__ == '__main__':
@@ -142,7 +144,7 @@ if __name__ == '__main__':
 
     sortiert = sorted(wortliste, key=sortkey)
 
-    patch = udiff(wortliste, sortiert, 
+    patch = udiff(wortliste, sortiert,
                   options.wortliste, options.wortliste+'-sortiert',
                   encoding=wordfile.encoding)
     if patch:

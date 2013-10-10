@@ -12,16 +12,26 @@
 #
 # Suche nach Wörtern beginnend mit::
 
-term = u'ver'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
+term = u'su'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
 
-# in der Datei ``teilwoerter-<sprachtag>.txt`` und analysiere das folgende
-# (Teil)wort. Schreibe die Datei ``teilwoerter-neu`` wobei alle Vorkommnisse
-# des gesuchten Präfix am Anfang eines Wort oder nach anderen Präfixen mit
-# ``|`` markiert sind, es sei den das Wort (ohne bereits markierte Präfixe)
-# ist in der Datei ``wortteile/vorsilbenausnahmen`` gelistet.
-# Die Ausgabe der Analyse hilft bei der Vervollständigung der Ausnahmeliste.
+# in der Datei ``teilwoerter-<sprachvariante>.txt`` und analysiere das
+# folgende (Teil)wort. Schreibe die Datei ``teilwoerter-neu`` wobei alle
+# Vorkommnisse des gesuchten Präfix am Anfang eines Wort oder nach anderen
+# Präfixen mit ``|`` markiert sind, es sei den das Wort (ohne bereits
+# markierte Präfixe) ist in der Datei ``wortteile/vorsilbenausnahmen``
+# gelistet. Die Ausgabe der Analyse hilft bei der Vervollständigung der
+# Ausnahmeliste.
 #
+# Sprachvarianten
+# ---------------
 #
+# Sprach-Tag nach [BCP47]_::
+
+# sprachvariante = 'de-1901'
+sprachvariante = 'de-1996'  # Reformschreibung
+# sprachvariante = 'de-x-GROSS'    # ohne ß (Großbuchstaben und Kapitälchen)
+
+
 # Vorbetrachtungen
 # ----------------
 #
@@ -58,7 +68,7 @@ term = u'ver'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
 #
 # ``|`` nur für Präfixe, die keine eigenständigen Wörter sind:
 #
-# | An=fangs==ver=|acht
+# | An=fangs==ver|dacht
 # | Ein=gangs==lied
 # | Ge|samt==be|triebs=rats===chef
 # | Her|aus=ge-ber
@@ -100,24 +110,14 @@ from analyse import read_teilwoerter
 # sys.stdout mit UTF8 encoding.
 sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
-# Sprachvarianten
-# ---------------
-#
-# Sprach-Tag nach [BCP47]_::
-
-sprachvariante = 'de-1901'
-# sprachvariante = 'de-2006'  # Reformschreibung
-# sprachvariante = 'de-x-GROSS'    # ohne ß (Großbuchstaben und Kapitälchen)
-
-
 # Ausnahmen
 # ---------
 #
 # Wörter mit "Vorsilbenkandidaten" die keine Vorsilben sind::
 
 ausnahmen = set(line.decode('utf8').strip()
-
-                for line in open('wortteile/vorsilbenausnahmen'))
+                for line in open('wortteile/vorsilbenausnahmen')
+                if not line.startswith('#'))
 
 # Ausgangsbasis
 # -------------
@@ -192,8 +192,8 @@ for line in teilwoerter:
     if praefix:
         # Automatische Wichtung
         # (auskommentieren wenn unerwünscht, z.B. bei "zu" -> "ab|zu|geben")
-        if not praefix.endswith(u'||'):
-            praefix = praefix.replace(u'||', u'|||') + u'|'
+        # if not praefix.endswith(u'||'):
+        #     praefix = praefix.replace(u'||', u'|||') + u'|'
         ersetzung = u'%s%s|%s' % (praefix, kandidat, rest)
     else:
         ersetzung = u'%s|%s' % (kandidat, rest)
@@ -301,6 +301,16 @@ for wort in ohne_teilwort:
 
 # Ausgabe
 # =======
+#
+# Die Ausgabedatei entspricht der Eingangsdatei ``teilwoerter-<sprachvariante>``
+# zuzüglich der neu ausgezeichneten Präfix-Trennstellen.
+#
+# Sie sollte (nach Korrigieren von Fehleinträgen, ggf. über Kontrolle mit
+# ``diff``) die Eingangsdatei ersetzen.
+#
+# Mit dem Skript ``abgleich_teilwoerter.py`` können dann die Kategorisierungen
+# in alle Vorkommen der Teilwörter in der ``wortliste`` übertragen werden.
+#
 # ::
 
 ausgabedatei = io.open('teilwoerter-neu', mode='w', encoding='utf8')

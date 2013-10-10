@@ -15,10 +15,11 @@ Ausgangspunkt sind Dateien mit einer Korrektur pro Zeile.
 (Zeilen, die mit ``#`` starten, werden ignoriert.)
 
 AKTION ist eine von:
-  neu:           Einträge hinzufügen,
-  fehleintraege: Einträge entfernen,
-  grossklein:    Großschreibung ändern,
-  korrektur:     Einträge durch alternative Version ersetzen.
+  neu:            Einträge hinzufügen,
+  fehleintraege:  Einträge entfernen,
+  grossklein:     Großschreibung ändern,
+  grossabgleich:  Großschreibung der Trennmuster wie erstes Feld,
+  korrektur:      Einträge durch alternative Version ersetzen.
 """
 
 # Die ``<AKTION>.todo`` Dateien in diesem Verzeichnis beschreiben das
@@ -192,7 +193,7 @@ def grossklein(wordfile, datei):
 # zurückzuführen.)
 # ::
 
-def abgleich_grossklein(wordfile):
+def grossabgleich(wordfile):
     wortliste = list(wordfile)
     wortliste_neu = deepcopy(wortliste) # korrigierte Liste
     for entry in wortliste_neu:
@@ -371,6 +372,8 @@ if __name__ == '__main__':
         (wortliste, wortliste_neu) = fehleintraege(wordfile, options.todo)
     elif aktion == 'grossklein':
         (wortliste, wortliste_neu) = grossklein(wordfile, options.todo)
+    elif aktion == 'grossabgleich':
+        (wortliste, wortliste_neu) = grossabgleich(wordfile, options.todo)
     elif aktion == 'korrektur':
         (wortliste, wortliste_neu) = korrektur(wordfile, options.todo)
     else:
@@ -380,7 +383,6 @@ if __name__ == '__main__':
 
     # (wortliste, wortliste_neu) = sprachvariante_split(wordfile,
     #                                                   u'knien', u'kni-en')
-    # (wortliste, wortliste_neu) = abgleich_grossklein(wordfile)
     # (wortliste, wortliste_neu) = reformschreibung(wordfile)
 
 # Patch erstellen::
