@@ -7,8 +7,6 @@
 # Die folgenden auskommentierten "Kandidaten" sind im online-Duden bzw. DWDS
 # als Wörter, aber nicht als Präfixe aufgeführt:
 #
-# all       (nicht im DWDS und Duden, aber z.B. in http://web.hszg.de/~bgriebel/praefixe.html
-# all, allo (http://de.wikipedia.org/wiki/Liste_griechischer_Präfixe)
 # allein
 # allzu
 # auseinander
@@ -60,6 +58,7 @@ apo
 archaeo
 arche
 archäo
+aristo
 astro
 atmo
 auf
@@ -67,14 +66,18 @@ aus
 aut
 auto
 außer
+bakterio
 baro
 be
 bei
 bi
+biblio
 bio
 by
+büro
 chloro
 choreo
+chrono
 con
 da
 dar
@@ -82,11 +85,13 @@ de
 deka
 demo
 der
+dermato
 des
 dezi
 di
 dia
 dis
+disko
 down
 drauf
 drein
@@ -112,12 +117,16 @@ etymo
 ex
 exo
 femto
+fono
 fort
+foto
 für
 gaso
 ge
 gegen
 geo
+grafo
+grapho
 hekt
 hekto
 her
@@ -155,8 +164,10 @@ hinüber
 hoch
 homo
 hydro
+hymno
 hyper
 hypo
+ideo
 im
 in
 infra
@@ -164,19 +175,25 @@ inne
 ins
 inter
 iso
+karto
 kata
 kate
 kilo
+klino
 ko
 kon
 kontra
 korre
+kosmo
+krimino
+kristallo
 krypto
 leuk
 los
 mega
 mes
 meta
+meteoro
 mikro
 milli
 mis
@@ -212,15 +229,23 @@ para
 patho
 per
 pharma
+pharmako
 phil
+philo
+phono
+photo
 physio
+phyto
+phäno
 polit
+polito
 poly
 pre
 pro
 proto
 pseud
 pseudo
+psycho
 päd
 radio
 raus
@@ -231,10 +256,13 @@ retro
 rum
 runter
 rück
+seismo
 selb
 semi
+sino
 so
 sozio
+spektro
 steno
 su
 sub
@@ -242,12 +270,17 @@ super
 sus
 syn
 taxo
+techno
 tel
 tele
+termino
+theo
+thermo
 topo
 tran
 trans
 turbo
+typo
 ultra
 um
 umher
@@ -277,9 +310,11 @@ weiter
 wider
 wieder
 wohl
+xylo
 zenti
 zentri
 zer
+zoo
 zu
 zurecht
 zurück
