@@ -64,30 +64,45 @@
 # * Die Unterscheidung, ob ein Wortbestandteil ein Präfix oder ein Grundmorphem
 #   ist, ist oft nicht eindeutig:
 #
-#     drauf=los, drauf|los, oder drauf-los?
+#     drauf=los oder drauf|los?
 #
-# * Zur Zeit sind einige Trennstellen nach Präfix oder Verbalpartikel noch
+# * "Etymologische" Präfixe, die im heutigen Sprachverständnis nicht mehr als
+#   Präfixe wahrgenommen werden, sind nicht speziell markiert:
+#
+#     En-er-gie, Ant-wort
+#
+#   Kriterien sind neben der "Güte" der Trennstelle (Nicht-Störung des
+#   Leseflusses bei Zeilenumbruch an dieser Stelle) die Lang-s Schreibung
+#   (Schluß-s auch bei s-s, s-t, oder s-p) und der Aufbruch von Ligaturen
+#   an dieser Stelle.
+#
+# * Die Kategorisierung der Trennstellen ist nicht abgeschlossen.
+#   Zur Zeit sind einige Trennstellen nach Präfix oder Verbalpartikel noch
 #   mit `-' oder `=' bezeichnet.
 #
 # Für die Bindungsstärke B von Trennstellen verschiedener Kategorien gilt
 # B(-) > B(|) > B(=):
 #
-#   Aus|wahl=lis-te       (Aus + wahl) + liste
-#   fern=ab||ge|le-gen    fern + (ab + (ge + legen))
+#   Aus|wahl=lis-te       (Aus + wahl) + (lis-te)
+#   fern=ab|ge|le-gen    fern + (ab + (ge + (le+gen)))
 #
-# Die unterschiedliche Bindungsstärke von Trennungen der gleichen Kategorie
-# kann durch Doppel- und Dreifachtrennzeichen markiert werden:
+# Präfixe sind "rechtsbindend":
 #
+#   un|voll|stän-dig       un + (voll + ständig)
+#   un|aus|ge|go-ren       un + (aus + (ge + (go+ren)))
+#
+# Die unterschiedliche Bindungsstärke von Trennungen der Kategorien
+# `-' und `=' kann durch Doppellung des Trennzeichens markiert werden:
+#
+#   drei--fa-che                Wortbildungssuffix -fa-che
 #   Alp=horn==trio              (Alp + horn) + trio
-#   un||voll|stän-dig           un + (voll + ständig)
-#   nach|||zu||voll|zie-hend    nach + (zu + (voll + ziehend))
+#   Berg===fünf=fin-ger==kraut  Berg + ((fünf + (fin+ger)) + kraut)
 #
-# Verschiedene Trennstellen der gleichen Kategorie ohne Doppelung bezeichnen
+# Verschiedene Trennstellen diser Kategorien ohne Doppelung bezeichnen
 # entweder gleichwertige Wortbestandteile, Zerlegungsalternativen oder sind
 # (noch) nicht gewichtet:
 #
 #   Abend=brot=zeit        (Abend + brot) + zeit oder Abend + (brot + zeit)
-#   un|voll|stän-dig       un + (voll + ständig), aber nicht markiert
 #
 # Das gemischte Trennzeichen »|=« kennzeichnet die Bindungverhältnisse,
 # wenn sich ein echter Präfix auf das gesamte folgende Kompositum bezieht:
@@ -96,10 +111,9 @@
 #
 # Das gemischte Trennzeichen »-=« kennzeichnet die Bindungsverhältnisse,
 # wenn sich beispielsweise ein Suffix auf das gesamte vorhergehende
-# Kompositum bezieht:
+# Kompositum bezieht
 #
-#   Zwei=deu-tig-=kei-ten          (Zwei + deutig) + keiten
-#   Ei-gen--tüm-=lich--=kei-ten    ((Eigen + tüm ) + lich) + keiten
+#   an-dert=halb-=fach     ((an+dert) + halb) + fach
 #
 # Ebenso wie die Charakterisierung ist die Markierung der Bindungstärke
 # unvollständig.
