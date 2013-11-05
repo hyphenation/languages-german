@@ -37,10 +37,10 @@ sprachvariante = 'de-1996'         # Reformschreibung
 # `wortliste`::
 
 def teilwortabgleich(wort, grossklein=False, strict=True):
-        teile = [teilabgleich(teil, grossklein, strict)
-                 for teil in wort.split(u'=')
-                ]
-        return u'='.join(teile)
+    teile = [teilabgleich(teil, grossklein, strict)
+             for teil in wort.split(u'=')
+            ]
+    return u'='.join(teile)
 
 def teilabgleich(teil, grossklein=False, strict=True):
     if grossklein:
@@ -52,17 +52,22 @@ def teilabgleich(teil, grossklein=False, strict=True):
         return teil
     if key not in words.trennvarianten:
         # print teil, u'not in words'
-        return teil
-    # Gibt es eine eindeutige Trennung für Teil?
-    eindeutig = len(words.trennvarianten[key]) == 1
-    for wort in words.trennvarianten[key]:
-        # Übertrag der Trennungen
-        try:
-            teil = uebertrage(wort, teil, strict, upgrade=eindeutig)
-        except TransferError, e: # Inkompatible Wörter
-            # print unicode(e)
-            pass
-
+        if grossklein is None:
+            grossklein = True # retry with case toggled
+    else:
+        # Gibt es eine eindeutige Trennung für Teil?
+        eindeutig = len(words.trennvarianten[key]) == 1
+        for wort in words.trennvarianten[key]:
+            # Übertrag der Trennungen
+            try:
+                teil = uebertrage(wort, teil, strict, upgrade=eindeutig)
+            except TransferError, e: # Inkompatible Wörter
+                # print unicode(e)
+                if grossklein is None:
+                    grossklein = True # retry with case toggled
+    if grossklein:
+        return toggle_case(teilabgleich(toggle_case(teil), strict=strict))
+                    
     return teil
 
 # Übertrag kategorisierter Trennungen auf Grundwörter mit anderer Endung:
@@ -139,9 +144,11 @@ def sprachabgleich(entry):
 
 
 # Teste, ob ein Teilwort eine Vorsilbe (oder auch mehrsilbiger Präfix) ist
-# und korrigiere die Trennstellenmarkierung::
+# und korrigiere die Trennstellenmarkierung.
+# `vorsilben` ist eine Sequenz (Tupel, Liste, Set, ...) mit zu testenden
+# Vorsilben::
 
-def vorsilbentest(wort):
+def vorsilbentest(wort, vorsilben):
 
     # Gleichlautende Vorsilben und Bestimmungswörter:
     doppeldeutig = [u'Drum=com-pu-ter', u'Miss=wahl', u'Miß=wahl']
@@ -202,14 +209,12 @@ if __name__ == '__main__':
 
 # Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
 
-        wort2 = teilwortabgleich(wort, grossklein=False, strict=True)
-        if wort == wort2:
-            wort2 = teilwortabgleich(wort, grossklein=True, strict=True)
+        wort2 = teilwortabgleich(wort, grossklein=None, strict=True)
         #
-        # wort2 = grundwortabgleich(wort, endung=u'·en',
-        #                           vergleichsendung=u'e')
+        # wort2 = grundwortabgleich(wort, endung=u'·ti·sches',
+        #                           vergleichsendung=u'-tisch')
         #
-        # wort2 = vorsilbentest(wort)
+        # wort2 = vorsilbentest(wort, (u'all', u'All'))
 
         if wort != wort2:
             entry.set(wort2, sprachvariante)

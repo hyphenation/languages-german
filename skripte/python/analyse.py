@@ -206,6 +206,10 @@ def analyse(path='../../wortliste', sprachvariante='de-1901',
 
 # Teilwörter suchen::
 
+        # Suffixe für Wortverbindung (z.B.an-dert=halb-=fach): verwerfen:
+        if wort.find(u'-=') != -1:
+            continue
+
         # Zerlegen, leere Teile (wegen Mehrfachtrennzeichen '==') weglassen,
         # "halbe" Spezialtrennungen entfernen:
         teile = [spezialbehandlung(teil) for teil in wort.split(u'=')
@@ -296,15 +300,15 @@ def statistik_praefixe(teilwoerter):
                 break
 
 # Ausgabe
-    print u'\nPräfixe aus der Liste "wortteile/praefixe" als markiert mit:'
+    print (u'\nPräfixe aus der Liste "wortteile/praefixe" und '
+           u'gleiche Wortanfangssilben\nmarkiert mit:')
     for vs in sorted(praefixe):
         einzel = (teilwoerter.E[vs] + teilwoerter.M[vs]
                   + teilwoerter.E[vs.title()] + teilwoerter.M[vs.title()])
-        print (u'%-10s %5d = %5d | %5d -' % 
-               (vs, einzel, len(markiert[vs]), ausnahmefaelle[vs])),
+        print u'%-10s %5d = %5d | %5d - %5d offen' % (vs, einzel,
+            len(markiert[vs]), ausnahmefaelle[vs], len(kandidaten[vs])),
         if kandidaten[vs]:
-            print u'%5d offen:' % len(kandidaten[vs]),
-            print u' '.join(kandidaten[vs][:30]),
+            print u':', u' '.join(kandidaten[vs][:30]),
             if len(kandidaten[vs]) > 30:
                 print u' ...',
         print
