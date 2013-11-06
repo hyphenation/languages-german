@@ -67,7 +67,7 @@ while (<>) {
   s/\s+//g;
 
   my @feld = split(';');
-  next if $#feld < 0;
+  next if $#feld < 1;
 
   # reformiert:           Felder 2, 4, 5, 7
   # traditionell:         Felder 2, 3, 5, 6
