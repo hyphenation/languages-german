@@ -123,7 +123,7 @@ def fehleintraege(wordfile, datei):
     wortliste = list(wordfile)
 
     # Dekodieren, Zeilenende entfernen, Trennzeichen entfernen
-    korrekturen = set(join_word(line.decode('utf8').strip())
+    korrekturen = set(join_word(line.decode('utf8').strip().split(u';')[0];)
                       for line in open(datei, 'r')
                       if not line.startswith('#'))
     wortliste_neu = [] # korrigierte Liste
@@ -132,7 +132,8 @@ def fehleintraege(wordfile, datei):
             korrekturen.discard(entry[0]) # erledigt
         else:
             wortliste_neu.append(entry)
-
+    
+    print 'nicht gefunden:'
     for w in korrekturen:
         print w.encode('utf8')
 
