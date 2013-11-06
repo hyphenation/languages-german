@@ -54,10 +54,8 @@ wortliste = list(wordfile)
 # * Ein Wort/Zeile
 # * Groß/Kleinschreibung unterschieden
 # * Kodierung: utf8 (bis auf 'ogerman')
-
-# Wörterbucher der Rechtschreibprüfprogramme Ispell/Aspell
-# (in Debian in den Paketen "wngerman" und "wogerman").
-# Unterschieden Groß-/Kleinschreibung und beinhalten auch kurze Wörter. ::
+#
+# ::
 
 if sprachvariante == 'de-1901':
     words = set(line.rstrip().decode('latin-1')
@@ -72,41 +70,7 @@ else:
 words.update((entry[0] for entry in wortliste
               if entry.lang_index(sprachvariante)))
 
-# Häufige Teilwörter die im Wörterbuch nicht vorkommen
-# (zu kurz, oder keine eigenständigen Wörter)::
-
-words.update(u"""\
-Bob       
-Individual
-Kondolenz 
-Konsortial
-Ringel
-wankel
-wiß
-Dokumentar
-Stief
-Eß
-öster
-Adreß
-Bus
-Ei
-Kriminal
-Leit
-Ost
-Preß
-Süd
-Tee
-Tee
-bewerbs
-cup
-gebung
-legung
-nahme
-un
-ver\
-""".split())
-
-print len(words), 'Wörter aus Wörterbüchern'
+# print len(words), 'Wörter aus Wörterbüchern'
 
 
 # Sortierung in::
@@ -143,6 +107,18 @@ for entry in wortliste:
 
     for teil in teile:
 
+# gewichtete Trennzeichen (==) erzeugen "leere" Teile::
+
+        if not teil: 
+            continue
+
+
+# Vorsilben die sich auf mehrere Teilwörter beziehen (z.b. un|=regel=mäßig)
+# enden auf "|"::
+
+        if teil.endswith(u'|'):
+            continue
+
 # Teilwort ohne Trennung, Groß/Kleinschreibung übertragen::
 
         key = join_word(teil)
@@ -152,29 +128,36 @@ for entry in wortliste:
 # Suche nach Teilwort als Einzelwort::
 
         if (key in words
-            or key.endswith('s') and key[:-1] in words
-            or key.startswith('zu') and key[2:] in words
+            or key.endswith(u's') and key[:-1] in words
+            # or key.startswith('zu') and key[2:] in words
             or key + 'e' in words
             or key + 'en' in words):
             continue
 
 # Teste ohne Berücksichtigung der Groß/Kleinschreibung::
 
-        if (key.lower() in words or key.title() in words
-            or (key.endswith('s')
-                and key[:-1].lower() in words or key[:-1].title() in words)
-            or key.lower() + 'e' in words or key.title() + 'e' in words
-            or key.lower() + 'en' in words or key.title() + 'en' in words
-           ):
+        if key.lower() in words or key.title() in words:
             grossklein[key].append(wort)
+            continue
+
+        if (key.endswith('s')
+            and key[:-1].lower() in words or key[:-1].title() in words):
+            grossklein[key[:-1]+'\s'].append(wort)
+            continue
+
+        if key.lower() + 'en' in words or key.title() + 'en' in words:
+            grossklein[key+'(en)'].append(wort)
+            continue
+
+        if key.lower() + 'e' in words or key.title() + 'e' in words:
+            grossklein[key+'(e)'].append(wort)
             continue
 
 # Teilwort mit Vorsilbe::
 
         # ohne_vorsilbe = ''
-        # for silbe in ('ab', 'an', 'be', 'ex', 'ge', 'un',
-        #               'ver', 'vor', 'zu'):
-        #     if (teil.lower().replace(u'·', '-').startswith(silbe+'-')
+        # for silbe in praefixe:
+        #     if (teil.lower().replace(u'·', u'-').startswith(silbe+'-')
         #         and (key[len(silbe):] in words
         #              or key[len(silbe):].title() in words)):
         #         ohne_vorsilbe = key[len(silbe):]
@@ -195,35 +178,33 @@ for entry in wortliste:
 # ::
 
 def testausgabe(checkdict):
-    checkliste = ['%3d %-10s %s' %
+    checkliste = ['%3d %-15s %s' %
                   (len(checkdict[key]), key, ', '.join(checkdict[key]))
                   for key in sorted(checkdict.keys())]
     checkliste.sort()
     return u'\n'.join(checkliste).encode('utf8') + '\n'
-
-unbekannt_file = file('teilwort-unbekannt', 'w')
-# unbekannt_file.write(u'\n'.join(unbekannt).encode('utf8') + '\n')
-unbekannt_file.write(testausgabe(unbekannt))
-
-grossklein_file = file('teilwort-grossklein', 'w')
-grossklein_file.write(testausgabe(grossklein))
-
-# vorsilben_file = file('teilwort-vorsilben', 'w')
-# vorsilben_file.write(testausgabe(vorsilben))
-
 
 # Auswertung
 # ==========
 #
 # ::
 
+print 'Einträge in der Wortliste:', len(wortliste)
 print 'Gesamtwortzahl (w*german+Wortliste, %s):' % sprachvariante, len(words)
-print 'Einträge (%s):' % sprachvariante, len(wortliste)
-# print 'Mit (Vor-) Silbe: "%s"' % silbe, len(fertig) + len(test) + len(kandidat)
-# print 'Teilwort erkannt:', len(fertig)
-print 'Teilwort mit anderer Groß-/Kleinschreibung:', len(grossklein)
+
+print 'Teilwort mit anderer Groß-/Kleinschreibung:', len(grossklein),
+print '-> siehe Datei "teilwort-grossklein"'
+grossklein_file = file('teilwort-grossklein', 'w')
+grossklein_file.write(testausgabe(grossklein))
+
 # print 'Teilwort mit zusätzlicher Vorsilbe:', len(vorsilben)
-print 'Teilwort nicht gefunden:', len(unbekannt)
+# vorsilben_file = file('teilwort-vorsilben', 'w')
+# vorsilben_file.write(testausgabe(vorsilben))
+
+print 'Teilwort nicht gefunden:', len(unbekannt),
+print '-> siehe Datei "teilwort-unbekannt"'
+unbekannt_file = file('teilwort-unbekannt', 'w')
+unbekannt_file.write(testausgabe(unbekannt))
 
 
 # Quellen

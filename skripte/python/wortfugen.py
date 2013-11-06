@@ -61,12 +61,15 @@ sprachvariante = 'de-1901'         # "traditionell"
 # (in Debian in den Paketen "wngerman" und "wogerman").
 # Unterscheiden Groß-/Kleinschreibung und beinhalten auch kurze Wörter. ::
 
+def wortdatei(wortfile):
+    for line in open(wortfile):
+        yield line.rstrip().decode('utf8')
+
 if sprachvariante == 'de-1901':
     wgerman = set(line.rstrip().decode('latin-1') 
                   for line in open('/usr/share/dict/ogerman'))
 else:
-    wgerman = set(line.rstrip().decode('utf8') 
-                  for line in open('/usr/share/dict/ngerman'))
+    wgerman = set(w for w in wortdatei('/usr/share/dict/ngerman'))
 
 # Entferne Silben, die nie in Wortverbindungen vorkommen
 # TODO: Solitäre aus einer Datei lesen. ::
@@ -76,8 +79,7 @@ for solitaer in ('Ra', 'He', 'As', 'Co', 'Fa'):
 
 # Präfixe (auch als Präfix verwendete Partikel, Adjektive, ...)::
 
-praefixe = set(line.rstrip().decode('utf8') 
-                  for line in open('wortteile/praefixe'))
+praefixe = set(w for w in wortdatei('wortteile/praefixe'))
 
 # Präfixe die keine selbständigen Wörter sind::
 
@@ -189,10 +191,10 @@ for entry in wortliste:
 
 # Zunächst nur 2-silbige Wörter::
 
-    if len(teile) != 2:
-        continue
+    # if len(teile) != 2:
+    #     continue
     
-    print '-'.join(teile).encode('utf8')
+    # print '-'.join(teile).encode('utf8')
     
 
 # Wortteile analysieren::

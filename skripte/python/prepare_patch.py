@@ -26,7 +26,7 @@ AKTION ist eine von:
 # jeweils erforderliche Datenformat im Dateikopf.
 
 import optparse, sys
-from copy import deepcopy
+from copy import copy, deepcopy
 
 
 from werkzeug import WordFile, WordEntry, join_word, udiff
@@ -64,19 +64,21 @@ sprachvariante = 'de-1901'         # "traditionell"
 #
 # ::
 
-def korrektur(wordlist, datei):
+def korrektur(wordfile, datei):
     """Patch aus korrigierten Einträgen"""
 
     if not datei:
         datei = 'korrektur.todo'
     teste_datei(datei)
 
-    wortliste = list(wordfile)
-
     korrekturen = {}
     for line in open(datei, 'r'):
+        if line.startswith('#'):
+            continue
         # Dekodieren, Zeilenende entfernen
         line = line.decode('utf8').strip()
+        if not line:
+            continue
         # Eintrag ggf. komplettieren
         if u';' in line:
             key = line.split(';')[0]
@@ -84,6 +86,7 @@ def korrektur(wordlist, datei):
             key = join_word(line)
         korrekturen[key] = line
 
+    wortliste = list(wordfile)
     wortliste_neu = [] # korrigierte Liste
 
     for entry in wortliste:
@@ -93,12 +96,14 @@ def korrektur(wordlist, datei):
             if u';' in korrektur:
                 entry = WordEntry(korrektur)
             else:
+                entry = copy(entry)
                 entry.set(korrektur, sprachvariante)
+                # print entry
         wortliste_neu.append(entry)
 
     if korrekturen:
         print korrekturen # übrige Einträge
-
+        
     return (wortliste, wortliste_neu)
 
 
@@ -120,12 +125,11 @@ def fehleintraege(wordfile, datei):
         datei = 'fehleintraege.todo'
     teste_datei(datei)
 
-    wortliste = list(wordfile)
-
     # Dekodieren, Zeilenende entfernen, Trennzeichen entfernen
-    korrekturen = set(join_word(line.decode('utf8').strip().split(u';')[0];)
+    korrekturen = set(join_word(line.decode('utf8').strip().split(u';')[0])
                       for line in open(datei, 'r')
                       if not line.startswith('#'))
+    wortliste = list(wordfile)
     wortliste_neu = [] # korrigierte Liste
     for entry in wortliste:
         if entry[0] in korrekturen: # nicht kopieren
@@ -165,7 +169,7 @@ def grossklein(wordfile, datei):
                    for line in open(datei, 'r')]
     # erstes Feld, Trennzeichen entfernen
     korrekturen = [join_word(line.split()[0]) for line in korrekturen
-                   if not line.startswith('#')]
+                   if line.strip() and not line.startswith('#')]
     korrekturen = set(korrekturen)
     wortliste_neu = deepcopy(wortliste) # korrigierte Liste
 
