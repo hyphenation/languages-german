@@ -64,6 +64,9 @@ else:
     words = set(line.rstrip().decode('utf8')
                   for line in open('/usr/share/dict/ngerman'))
 
+words_fremd = set(line.rstrip().decode('utf8')
+                  for line in open('wortteile/teilwoerter-fremd')
+                  if not line.startswith('#'))
 
 # Wörter der Wortliste::
 
@@ -77,8 +80,8 @@ words.update((entry[0] for entry in wortliste
 
 unbekannt = defaultdict(list)  # Teilwörter nicht in der Wortliste
 grossklein = defaultdict(list) # Teilwörter mit anderer Groß/Kleinschreibung
-vorsilben = defaultdict(list)   # Teilwörter mit zusätzlicher Vorsilbe
-
+# vorsilben = defaultdict(list)   # Teilwörter mit zusätzlicher Vorsilbe
+fremd = defaultdict(list) # fremsprachige Teilwörter
 
 
 # Analyse
@@ -128,7 +131,7 @@ for entry in wortliste:
 # Suche nach Teilwort als Einzelwort::
 
         if (key in words
-            or key.endswith(u's') and key[:-1] in words
+            or (key.endswith(u's') and key[:-1] in words)
             # or key.startswith('zu') and key[2:] in words
             or key + 'e' in words
             or key + 'en' in words):
@@ -140,8 +143,8 @@ for entry in wortliste:
             grossklein[key].append(wort)
             continue
 
-        if (key.endswith('s')
-            and key[:-1].lower() in words or key[:-1].title() in words):
+        if key.endswith('s') and (
+                key[:-1].lower() in words or key[:-1].title() in words):
             grossklein[key[:-1]+'\s'].append(wort)
             continue
 
@@ -151,6 +154,12 @@ for entry in wortliste:
 
         if key.lower() + 'e' in words or key.title() + 'e' in words:
             grossklein[key+'(e)'].append(wort)
+            continue
+
+# Test auf fremdsprachige Teilwörter::
+
+        if key.lower() in words_fremd:
+            fremd[key].append(wort)
             continue
 
 # Teilwort mit Vorsilbe::
@@ -200,6 +209,11 @@ grossklein_file.write(testausgabe(grossklein))
 # print 'Teilwort mit zusätzlicher Vorsilbe:', len(vorsilben)
 # vorsilben_file = file('teilwort-vorsilben', 'w')
 # vorsilben_file.write(testausgabe(vorsilben))
+
+print 'fremdsprachige Teilwörter:', len(fremd),
+print '-> siehe Datei "teilwort-fremd"'
+fremd_file = file('teilwort-fremd', 'w')
+fremd_file.write(testausgabe(fremd))
 
 print 'Teilwort nicht gefunden:', len(unbekannt),
 print '-> siehe Datei "teilwort-unbekannt"'

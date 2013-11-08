@@ -233,7 +233,8 @@ def analyse(path='../../wortliste', sprachvariante='de-1901',
 
         # letztes Teilwort:
         teil = teile[-1]
-        if halbfertig or (u'·' not in teil):
+        if (halbfertig or u'·' not in teil
+           ) and not teil.endswith(u'|'): # Präfix wie un|=wahr=schein-lich
             if gross: # Großschreibung übertragen
                 teil = teil[0].title() + teil[1:]
             words.add(teil)
@@ -244,9 +245,8 @@ def analyse(path='../../wortliste', sprachvariante='de-1901',
             if u'/' in teil:
                 if not re.search(ur'[\[{].*[\]}]', teil):
                     continue
-            if not(halbfertig) and u'·' in teil:
-                # unkategorisierte Trennstelle(n): es könnte sich um ein
-                # zusammengesetzes Wort handeln -> überspringen
+            if (not(halbfertig) and u'·' in teil # unkategorisiert
+               ) or teil.endswith(u'|'): # Präfix wie un|=wahr=schein-lich
                 continue
             if gross: # Großschreibung übertragen
                 teil = teil[0].title() + teil[1:]
@@ -352,8 +352,8 @@ if __name__ == '__main__':
 # nicht zusammengesetzer Wörter als Einzelwort oder in erster, mittlerer,
 # oder letzter Position in Wortverbindungen::
 
-    # sprachvariante = 'de-1901'         # "traditionell"
-    sprachvariante = 'de-1996'         # Reformschreibung
+    sprachvariante = 'de-1901'         # "traditionell"
+    # sprachvariante = 'de-1996'         # Reformschreibung
     # sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
     # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)

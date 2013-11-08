@@ -446,6 +446,8 @@ def join_word(word, assert_complete=False):
 # ([u'Haupt', u'stel', u'le'], [u'=', u'-'])
 # >>> zerlege(u'Ge|samt||be|triebs=rats==chef')
 # ([u'Ge', u'samt', u'be', u'triebs', u'rats', u'chef'], [u'|', u'||', u'|', u'=', u'=='])
+# >>> zerlege(u'an|stands--los')
+# ([u'an', u'stands', u'los'], [u'|', u'--'])
 #
 # ::
 
@@ -675,6 +677,30 @@ def udiff(a, b, fromfile='', tofile='',
         return None
 
 
+def test_keys(wortliste):
+    """Teste Übereinstimmung des ungetrennten Wortes in Feld 1
+    mit den Trennmustern nach Entfernen der Trennmarker.
+    Schreibe Inkonsistenzen auf die Standardausgabe.
+
+    `wortliste` ist ein Iterator über die Einträge (Klasse `WordEntry`)
+    """
+    is_OK = True
+    for entry in wortliste:
+        # Test der Übereinstimmung ungetrenntes/getrenntes Wort
+        # für alle Felder:
+        key = entry[0]
+        for wort in entry[1:]:
+            if wort.startswith(u'-'): # leere Felder
+                continue
+            if key != join_word(wort):
+                is_OK = False
+                print u"\nkey %s != %s" % (key, wort),
+                if key.lower() == join_word(wort).lower():
+                    print(u"  Abgleich der Großschreibung mit"
+                          u"`prepare-patch.py grossabgleich`."),
+    return is_OK
+
+
 # Test
 # ====
 #
@@ -686,71 +712,84 @@ if __name__ == '__main__':
     # sys.stdout mit UTF8 encoding (wie in Python 3)
     sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
-    print "Test der Werkzeuge"
+    print u"Test der Werkzeuge und inneren Konsistenz der Wortliste\n"
 
     # wordfile = WordFile('../../wortliste-binnen-s')
     wordfile = WordFile('../../wortliste')
-    print 'Dateiobjekt:', wordfile
-
-# Liste der Zeilen mit readlines::
-
-    ##
-    # zeilen = wordfile.readlines()
-    # print len(zeilen), u"Zeilen",
-    # wordfile.seek(0)            # Pointer zurücksetzen
-
-# Iteration über "geparste" Zeilen (i.e. Datenfelder)::
-
-    ##
-    for entry in wordfile:
-        # Sprachauswahl:
-        wort = entry.get('de-1901') # traditionell
-        # wort = entry.get('de-1996') # Reformschreibung
-        # wort = entry.get('de-x-GROSS')      # ohne ß (Schweiz oder GROSS) allgemein
-        # wort = entry.get('de-1901-x-GROSS') # ohne ß (Schweiz oder GROSS) "traditionell"
-        # wort = entry.get('de-1996-x-GROSS') # ohne ß (Schweiz oder GROSS) "reformiert"
-        # wort = entry.get('de-CH-1901')      # ohne ß (Schweiz) "traditionell" ("süssauer")
-        if wort is None:
-            continue
-        # Test der Übereinstimmung ungetrenntes/getrenntes Wort:
-        # (Abgleich der Großschreibung mit `prepare-patch.py grossabgleich`)
-        key = join_word(wort)
-        if key != entry[0]:
-            print (u"key %s != %s" % (entry[0], key))
-
-    sys.exit()
-    # wordfile.seek(0)            # Pointer zurücksetzen
-
-
+    # print 'Dateiobjekt:', wordfile
 
 # Liste der Datenfelder (die Klasseninstanz als Argument für `list` liefert
 # den Iterator über die Felder, `list` macht daraus eine Liste)::
 
-    # wortliste = list(wordfile)
+    wortliste = list(wordfile)
+    print len(wortliste), u"Einträge\n"
+
+# Sprachauswahl::
+   
+    # Sprachtags:
     #
-    # print len(wortliste), u"Einträge"
+    # sprache = 'de-1901' # traditionell
+    # sprache = 'de-1996' # Reformschreibung
+    # sprache = 'de-x-GROSS'      # ohne ß (Schweiz oder GROSS) allgemein
+    # sprache = 'de-1901-x-GROSS' # ohne ß (Schweiz oder GROSS) "traditionell"
+    # sprache = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS) "reformiert"
+    # sprache = 'de-CH-1901'      # ohne ß (Schweiz) "traditionell" ("süssauer")
+    #
+    # worte = [entry.get(sprache) for entry in wortliste if wort is not None]
+    # print len(worte), u"Einträge für Sprachvariante", sprache
+            
 
-    # for entry in wortliste:
-    #     # Zeilenrekonstruktion:
-    #     if entry[0] == 'beige':
-    #         original = u'beige;beige # vgl. Scheiter-bei-ge'
-    #         line = unicode(entry)
-    #         assert original == line, "Rejoined %s != %s" % (line, ur_line)
+# Test keys::
 
-    # print u"Doppeleinträge (Groß/Klein):"
-    # words = set()
-    # for entry in wordfile:
-    #     wort = entry[0]
-    #     if wort.lower() in words or wort.title() in words:
-    #         print unicode(entry)
-    #     words.add(wort)
+    print u"Teste Schlüssel-Trennmuster-Übereinstimmung:",
+    if test_keys(wortliste):
+        print u"OK",
+    print
+
+# Doppeleinträge::
+
+    doppelte = 0
+    words = set()
+    for entry in wortliste:
+        key = entry[0].lower()
+        if key in words:
+            doppelte += 1
+            print unicode(entry)
+        words.add(key)
+    print doppelte,
+    print u"Doppeleinträge (ohne Berücksichtigung der Großschreibung)."
+    if doppelte:
+        print u"  Entfernen mit `prepare-patch.py doppelte`."
+        print u"  Patch vor Anwendung durchsehen!"
 
 
 # Ein Wörterbuch (dict Instanz)::
 
+    # wordfile.seek(0)            # Pointer zurücksetzen
     # words = wordfile.asdict()
     #
     # print len(words), u"Wörterbucheinträge"
+
+# Zeilenrekonstruktion::
+
+    # am Beispiel der Scheiterbeige:
+    # original = u'beige;beige # vgl. Scheiter-bei-ge'
+    # entry = words[u"beige"]
+    # line = unicode(entry)
+    # assert original == line, "Rejoined %s != %s" % (line, original)
+
+    # komplett:
+    # wordfile.seek(0)            # Pointer zurücksetzen
+    # OK = 0
+    # for line in wordfile.readlines():
+    #     entry = WordEntry(line)
+    #     if line == unicode(entry):
+    #         OK +=1
+    #     else:
+    #         print u'-', line,
+    #         print u'+', unicode(entry)
+    # print OK, u"Einträge rekonstruiert"
+    
 
 
 # Quellen

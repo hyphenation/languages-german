@@ -15,11 +15,12 @@ Ausgangspunkt sind Dateien mit einer Korrektur pro Zeile.
 (Zeilen, die mit ``#`` starten, werden ignoriert.)
 
 AKTION ist eine von:
-  neu:            Einträge hinzufügen,
+  doppelte:       Einträge mit gleichem Schlüssel entfernen,
   fehleintraege:  Einträge entfernen,
   grossklein:     Großschreibung ändern,
   grossabgleich:  Großschreibung der Trennmuster wie erstes Feld,
   korrektur:      Einträge durch alternative Version ersetzen.
+  neu:            Einträge hinzufügen,
 """
 
 # Die ``<AKTION>.todo`` Dateien in diesem Verzeichnis beschreiben das
@@ -103,7 +104,7 @@ def korrektur(wordfile, datei):
 
     if korrekturen:
         print korrekturen # übrige Einträge
-        
+
     return (wortliste, wortliste_neu)
 
 
@@ -136,7 +137,7 @@ def fehleintraege(wordfile, datei):
             korrekturen.discard(entry[0]) # erledigt
         else:
             wortliste_neu.append(entry)
-    
+
     print 'nicht gefunden:'
     for w in korrekturen:
         print w.encode('utf8')
@@ -302,16 +303,15 @@ def neu(wordfile, datei):
     if not datei:
         datei = 'neu.todo'
     teste_datei(datei)
+    korrekturen = open(datei, 'r')
 
     wortliste = list(wordfile)
-
-    korrekturen = open(datei, 'r')
     wortliste_neu = deepcopy(wortliste)
-    words = dict()     # vorhandene Wörter
-    for entry in wortliste:
-        words[entry[0]] = entry
+    words = set(entry[0] for entry in wortliste)     # vorhandene Wörter
 
     for line in korrekturen:
+        if line.startswith('#'):
+            continue
         # Dekodieren, Zeilenende entfernen
         line = line.decode('utf8').strip()
         # Eintrag ggf. komplettieren
@@ -321,12 +321,12 @@ def neu(wordfile, datei):
             key = join_word(line)
             line = u'%s;%s' % (key, line)
         # Test auf "Neuwert":
+        if key in words:
+            print key.encode('utf8'), 'schon vorhanden'
+            continue
         if key.lower() in words or key.title() in words:
-            print key.encode('utf8'),
-            if key in words:
-                print 'schon vorhanden'
-            else:
-                print 'mit anderer Groß-/Kleinschreibung vorhanden'
+            print (key.encode('utf8'),
+                   'mit anderer Groß-/Kleinschreibung vorhanden')
             continue
         wortliste_neu.append(WordEntry(line))
 
@@ -334,6 +334,30 @@ def neu(wordfile, datei):
     # wortliste_neu.sort(key=sortkey_wl)
     wortliste_neu.sort(key=sortkey_duden)
 
+    return (wortliste, wortliste_neu)
+
+
+def doppelte(wordfile, use_first=False):
+    """Doppeleinträge entfernen (ohne Berücksichtigung der Großschreibung).
+
+    Boolscher Wert `use_first` bestimmt, ob der erste oder der letzte von
+    Einträgen mit gleichem Schlüssel in der Liste verbleibt.
+
+    Die neue Liste ist sortiert.
+    """
+    wortliste = list(wordfile)
+    worddict = {}
+    for entry in wortliste:
+        key = entry[0].lower()
+        if use_first and key in worddict:
+            continue
+        worddict[key] = entry
+
+    wortliste_neu = worddict.values() # korrigierte Liste
+    # wortliste_neu.sort(key=sortkey_wl)
+    wortliste_neu.sort(key=sortkey_duden)
+
+    print len(wortliste) - len(wortliste_neu), u"Einträge entfernt"
     return (wortliste, wortliste_neu)
 
 # Default-Aktion::
@@ -373,12 +397,14 @@ if __name__ == '__main__':
 
     if aktion == 'neu':
         (wortliste, wortliste_neu) = neu(wordfile, options.todo)
+    elif aktion == 'doppelte':
+        (wortliste, wortliste_neu) = doppelte(wordfile)
     elif aktion == 'fehleintraege':
         (wortliste, wortliste_neu) = fehleintraege(wordfile, options.todo)
     elif aktion == 'grossklein':
         (wortliste, wortliste_neu) = grossklein(wordfile, options.todo)
     elif aktion == 'grossabgleich':
-        (wortliste, wortliste_neu) = grossabgleich(wordfile, options.todo)
+        (wortliste, wortliste_neu) = grossabgleich(wordfile)
     elif aktion == 'korrektur':
         (wortliste, wortliste_neu) = korrektur(wordfile, options.todo)
     else:

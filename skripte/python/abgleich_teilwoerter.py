@@ -23,8 +23,8 @@ from analyse import read_teilwoerter
 # ---------------
 # Sprach-Tag nach [BCP47]_::
 
-# sprachvariante = 'de-1901'         # "traditionell"
-sprachvariante = 'de-1996'         # Reformschreibung
+sprachvariante = 'de-1901'         # "traditionell"
+# sprachvariante = 'de-1996'         # Reformschreibung
 # sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
 # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
 # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
@@ -89,6 +89,7 @@ def grundwortabgleich(wort, endung, vergleichsendung=u''):
         for altstamm in words.trennvarianten[key]:
             try:
                 neustamm = uebertrage(altstamm, stamm)
+                # print u'alt/neu', wort, altstamm, neustamm
                 # Vergleichsendung abtrennen
                 if vergleichsendung:
                     neustamm = neustamm[:-len(vergleichsendung)]
@@ -209,10 +210,10 @@ if __name__ == '__main__':
 
 # Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
 
-        wort2 = teilwortabgleich(wort, grossklein=None, strict=True)
+        # wort2 = teilwortabgleich(wort, grossklein=None, strict=True)
         #
-        # wort2 = grundwortabgleich(wort, endung=u'·ti·sches',
-        #                           vergleichsendung=u'-tisch')
+        wort2 = grundwortabgleich(wort, endung=u'·se·res',
+                                  vergleichsendung=u's')
         #
         # wort2 = vorsilbentest(wort, (u'all', u'All'))
 
