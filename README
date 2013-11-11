@@ -1,0 +1,66 @@
+Makefile
+# This Makefile creates German hyphenation patterns in subdirectories
+# $(TRAD) and $(REFO) for traditional and new orthography, respectively.
+# Hyphenation patterns for traditional Swiss German are generated in
+# directory $(SWISS).
+
+arzneiwirkstoffnamen
+arzneiwirkstoffnamen-supplement
+# Wortliste deutscher Arzneiwirkstoffnamen mit Trennungen (Supplement)
+# kompiliert von Gisbert W.Selke <gws at cpan dot org>
+#
+# Das Format ist kompatibel zu Werner Lembergs großer deutscher
+# Wortliste.
+# Zeichensatz ist Latin-9 (ISO-8859-15).
+
+patgen-list-diff.awk
+# Dieses Skript liest eine DIFF-Datei der Patgen-Eingabelisten (siehe
+# Skript patgen-list-diff.sh) und zerlegt sie in Wörter,
+#
+#  * die neu hinzugefügt,
+#  * die entfernt,
+#  * deren Trennung korrigiert und
+#  * deren Klein- und Großschreibung korrigiert
+#
+# wurde.  Die Wörter werden in Dateien der Form <Eingabedatei>.<ext>
+# gespeichert.  <ext> ist entsprechend 'added', 'removed', 'case' oder
+# 'hyph'.  Beim Aufruf des Skripts muss die Variable 'ftr' mit dem Namen
+# der Translate-Datei für Patgen vorbelegt werden:
+#   gawk -v ftr=<translate datei> ...
+# latin1
+
+patgen-list-diff.sh
+# -*- coding: utf-8 -*-
+#
+# Dieses Skript erzeugt Differenzbilder (diff) für die
+# Patgen-Eingabelisten zwischen zwei angegebenen Commits.  Wird nur ein
+# Commit angegeben, wird als Zielcommit "master" verwendet.  Die
+# Ausgabedateien werden als Dateien
+#
+#   dehyph*-x/<Start-Commit-Hash>-<Ziel-Commit-Hash>.diff
+#
+# in Verzeichnissen gespeichert, die der jeweiligen Rechtschreibung
+# entsprechen.  Start- und Ziel-Commit können in jeder gültigen
+# Git-Syntax angegeben werden.  Für die Dateinamen werden die
+# entsprechenden abgekürzten alphanumerischen Commit-Hashes
+# verwendet.
+
+wortliste
+pre-1901
+# -*- coding: utf-8 -*-
+# nomen est omen.
+
+daten/
+# Hilfsdateien für Trennmustergenerierung (?)
+
+dehyph-exptl/
+# Experimentellen TeX-Paket für deutsche Trennmuster
+
+dokumente/
+# Dokumentation des Wortlisten-Formates
+ 
+skripte/
+# Dieses Verzeichnis enthält in bunter Mischung Werkzeuge, die für die
+# Generierung von Trennmustern nötig oder für die Erstellung, Kontrolle,
+# Analyse und Manipulations von Wortlisten nützlich sind.
+
