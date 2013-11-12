@@ -451,7 +451,7 @@ local word = P{
    -- Trennzeichen markiert.
    --
    -- Die folgenden Trennzeichen werden verwendet:
-   hyphen = S"-=.\183",
+   hyphen = S"-|=_.\183",
    -- Ein beliebiges, optionales Trennzeichen.
    ophyphen = V"hyphen"^-1,
    --
@@ -584,9 +584,9 @@ local function normalize_word(rawword)
    -- Ersetze Spezialtrennungen.
    rawword = string.gsub(rawword, "{(.-)/.-}", "%1")
    -- Ersetze Alternativen.
-   rawword = string.gsub(rawword, "%[[-=%.\183]?(.-)[-=%.\183]?/.-%]", "%1")
+   rawword = string.gsub(rawword, "%[[-|=_%.\183]?(.-)[-|=_%.\183]?/.-%]", "%1")
    -- Ersetze Trennzeichen durch "-".
-   rawword = string.gsub(rawword, "[=%.\183]", "-")
+   rawword = string.gsub(rawword, "[|=_%.\183]", "-")
    return rawword, props
 end
 M.normalize_word = normalize_word
