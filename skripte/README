@@ -1,0 +1,73 @@
+apply-pattern.pl
+# Dieses Perl-Skript wendet die TeX-Trennmusterdatei $1 auf den Datenstrom
+# an, wobei $2 als Translationsdatei benutzt wird (das ist diejenige Datei,
+# die `patgen' als viertes Argument benötigt).
+#
+# Folgende Zeichen werden vor der Weiterverarbeitung aus der Eingabe
+# herausgefiltert:
+#
+#   · - = |
+#
+# Ist Option `-1' nicht gegeben, werden Trennungen direkt nach dem ersten
+# und vor dem letzten Buchstaben in der Ausgabe entfernt, wie z.B. bei
+# deutschen Trennungen erforderlich.
+#
+# Dieses Skript benützt patgen, nicht TeX!  Die Trennmusterdatei darf daher
+# keine TeX-Konstrukte (Makros u.ä.) enthalten.
+#
+# Aufruf:  perl apply-pattern.pl trennmuster german.tr < eingabe > ausgabe
+
+extract-tex.pl
+# Dieses Perl-Skript extrahiert einfache Wortlisten aus der
+# »wortliste«-Datenbank, die beispielsweise als Eingabedateien für »patgen«
+# verwendet werden können.
+#
+# Aufruf:  perl extract-tex.pl [Optionen...] < wortliste > input.patgen
+#
+# Die »wortliste«-Datei muss in UTF-8 kodiert sein.
+#
+# Option »-t« wählt die traditionelle deutsche Rechtschreibung aus, Option
+# »-s« die traditionelle (deutsch)schweizerische Rechtschreibung.  Wenn
+# weder »-s« noch »-t« gesetzt ist, wird die reformierte deutsche
+# Rechtschreibung ausgewählt.
+#
+# Ist Option »-x« gesetzt, werden Optionen »-g« und »-u« ignoriert und die
+# die sprachspezifischen Felder unbearbeitet ausgegeben.
+#
+# Option »-g« bewirkt die Ausgabe von Wörtern mit gewichteten Trennstellen;
+# Wörter mit »·« werden ignoriert.
+#
+# Option »-u« verhindert die Ausgabe von Wörtern mit Markern für
+# unerwünschte Trennungen (z.B. »An-al.pha-bet«).
+#
+# Option »-v« verhindert die Ausgabe von Versalformen, wo »ß« durch »ss«
+# ersetzt ist.
+#
+# Option »-l« konvertiert die Ausgabe nach latin-1 (wie von »patgen«
+# benötigt).
+
+make-full-pattern.sh
+# -*- coding: utf-8 -*-
+#
+# Dieses Skript generiert deutsche Trennmuster.
+#
+# Aufruf:
+#
+#   sh make-full-pattern.sh words.hyphenated german.tr
+
+parse_wortliste.lua
+-- -*- coding: utf-8 -*-
+--- Diese Modul stellt Funktionen zur Zerlegung der Wortliste in einzelne
+-- Felder bereit.
+-- @class module
+-- @name parse_wortliste
+
+validate.lua
+-- -*- coding: utf-8 -*-
+local pwl = require("parse_wortliste")
+...
+Ein Lua-Skript mit unbekanntem Zweck. Der Name legt nahe, daß es um die
+Validierung der Wortlisten geht.
+
+python/
+Verzeichnis mit einem bunten Straus von Python-Skripten.
