@@ -62,6 +62,38 @@ parse_wortliste.lua
 -- @class module
 -- @name parse_wortliste
 
+patgen-list-diff.awk
+# Dieses Skript liest eine DIFF-Datei der Patgen-Eingabelisten (siehe
+# Skript patgen-list-diff.sh) und zerlegt sie in Wörter,
+#
+#  * die neu hinzugefügt,
+#  * die entfernt,
+#  * deren Trennung korrigiert und
+#  * deren Klein- und Großschreibung korrigiert
+#
+# wurde.  Die Wörter werden in Dateien der Form <Eingabedatei>.<ext>
+# gespeichert.  <ext> ist entsprechend 'added', 'removed', 'case' oder
+# 'hyph'.  Beim Aufruf des Skripts muss die Variable 'ftr' mit dem Namen
+# der Translate-Datei für Patgen vorbelegt werden:
+#   gawk -v ftr=<translate datei> ...
+# latin1
+
+patgen-list-diff.sh
+# -*- coding: utf-8 -*-
+#
+# Dieses Skript erzeugt Differenzbilder (diff) für die
+# Patgen-Eingabelisten zwischen zwei angegebenen Commits.  Wird nur ein
+# Commit angegeben, wird als Zielcommit "master" verwendet.  Die
+# Ausgabedateien werden als Dateien
+#
+#   dehyph*-x/<Start-Commit-Hash>-<Ziel-Commit-Hash>.diff
+#
+# in Verzeichnissen gespeichert, die der jeweiligen Rechtschreibung
+# entsprechen.  Start- und Ziel-Commit können in jeder gültigen
+# Git-Syntax angegeben werden.  Für die Dateinamen werden die
+# entsprechenden abgekürzten alphanumerischen Commit-Hashes
+# verwendet.
+
 validate.lua
 -- -*- coding: utf-8 -*-
 local pwl = require("parse_wortliste")
