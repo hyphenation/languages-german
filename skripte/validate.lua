@@ -27,14 +27,14 @@ local count = {
 -- Iteriere über stdin.
 for line in io.lines() do
    total = total + 1
-   local type = pwl.validate_record(line)
+   local type, field, msg = pwl.validate_record(line)
    -- Datensatz zulässig?
    if type then
       -- Zähle Vorkommen des Typs.
       count[type] = count[type] + 1
    else
       invalid = invalid + 1
-      if type == false then print("ungültiges Wort: " .. line)
+      if type == false then print("Feld " .. tostring(field) .. ": " .. msg .. ": " .. line)
       else print("ungültiger Datensatz: " .. line)
       end
    end

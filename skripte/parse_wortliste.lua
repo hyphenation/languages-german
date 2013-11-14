@@ -603,27 +603,29 @@ M.normalize_word = normalize_word
 --
 -- @param rawword Wort (normiert oder unbehandelt)
 --
--- @return <code>nil</code>, falls das Wort eine unzulässige Struktur
--- hat;<br /> <code>word, props</code>, sonst.  <code>word</code> ist
--- das normalisierte Wort.  <code>props</code> ist eine Tabelle mit
--- Eigenschaften des betrachteten Wortes.
+-- @return <code>nil, msg</code>, falls das Wort eine unzulässige
+-- Struktur hat;<br /> <code>word, props</code>, sonst.
+-- <code>msg</code> ist ein String, der die Unzulässigkeit näher
+-- beschreibt.  <code>word</code> ist das normalisierte Wort.
+-- <code>props</code> ist eine Tabelle mit Eigenschaften des
+-- betrachteten Wortes.
 local function validate_word(rawword)
    -- Normalisiere Wort.
    local word, props = normalize_word(rawword)
    -- Zulässiges Wort?
-   if not word then return nil end
+   if not word then return nil, "ungültiges Wort" end
    -- Prüfe minimale Wortlänge.
    local len = Ulen(Ugsub(word, "-", ""))
-   if len < 4 then return nil end
+   if len < 4 then return nil, "weniger als vier Buchstaben" end
    -- Prüfe Wortenden auf unzulässige Trennzeichen.
    local len = Ulen(word)
    for i = 1,2 do
       local ch = Usub(word, i, i)
-      if ch == "-" then return nil end
+      if ch == "-" then return nil, "Trennzeichen am Wortanfang" end
    end
    for i = len-1,len do
       local ch = Usub(word, i, i)
-      if ch == "-" then return nil end
+      if ch == "-" then return nil, "Trennzeichen am Wortende" end
    end
    return word, props
 end
@@ -638,8 +640,10 @@ M.validate_word = validate_word
 --
 -- @return Typ des Datensatzes, falls dieser wohlgeformt ist;<br />
 -- <code>nil</code>, falls der Datensatz kein zulässiges Format hat;<br
--- /> <code>false</code>, falls der Datensatz unzulässige Wörter
--- enthält.
+-- /> <code>false, field, msg</code>, falls der Datensatz unzulässige
+-- Wörter enthält.  <code>field</code> gibt die Nummer des fehlerhaften
+-- Feldes an.  <code>msg</code> ist ein String, der den Fehler näher
+-- beschreibt.
 local function validate_record(record)
    -- Prüfe Gültigkeit des Datensatzes.
    local type = identify_record(record)
@@ -649,22 +653,22 @@ local function validate_record(record)
    -- Merke Inhalt von Feld 1 für Gleichheitsprüfung der belegten
    -- Felder.
    local field1 = trec[1]
-   if not field1 then return false end
+   if not field1 then return false, 1, "leer" end
    for i = 1,#trec do
       local word, props = trec[i]
       if word then
          -- Hat das Wort eine zulässige Struktur?
          word, props = validate_word(word)
-         if not word then return false end
+         if not word then return false, i, props end
          -- Stimmt Wort mit Feld 1 überein?
          word = Ugsub(word, "-", "")
-         if word ~= field1 then return false end
+         if word ~= field1 then return false, i, "ungleich Feld 1" end
          -- Tritt eine Spezialtrennung an unzulässiger Feldnummer auf?
-         if props.has_nonstd and (i==2 or i==4 or i==5 or i==7) then return false end
+         if props.has_nonstd and (i==2 or i==4 or i==5 or i==7) then return false, i, "unzulässige Spezialtrennung" end
          -- Tritt eine Dreikonsonantenregel für 's' an unzulässiger Feldnummer auf?
-         if props.has_nonstd_sss and (i ~= 8) then return false end
+         if props.has_nonstd_sss and (i ~= 8) then return false, i, "unzulässige Spezialtrennung" end
          -- Tritt 'ß' an unzulässiger Feldnummer auf?
-         if props.has_eszett and (i > 4) then return false end
+         if props.has_eszett and (i > 4) then return false, i, "unzulässiges ß" end
       end
    end
    return type
