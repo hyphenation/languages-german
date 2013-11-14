@@ -23,6 +23,11 @@ module "parse_wortliste"
 local M = {}
 
 
+-- Kürzel für Selene-Unicode-Funktionen.
+local Ugsub = unicode.utf8.gsub
+local Ulen = unicode.utf8.len
+local Usub = unicode.utf8.sub
+
 -- Kürzel für LPEG-Funktionen.
 local P = lpeg.P
 local R = lpeg.R
@@ -451,7 +456,7 @@ local word = P{
    -- Trennzeichen markiert.
    --
    -- Die folgenden Trennzeichen werden verwendet:
-   hyphen = S"-|=_.\183",
+   hyphen = S"-|=_." + P"·",
    -- Ein beliebiges, optionales Trennzeichen.
    ophyphen = V"hyphen"^-1,
    --
@@ -462,26 +467,26 @@ local word = P{
    cl_letter = C(V"letter"^1),
    -- Die folgenden Buchstaben sind zulässig:
    letter = R("az", "AZ")
-   + P"\196"-- Ä
-   + P"\214"-- Ö
-   + P"\220"-- Ü
-   + P"\223" / _word_prop_has_eszett-- ß
-   + P"\224"-- à
-   + P"\225"-- á
-   + P"\226"-- â
-   + P"\228"-- ä
-   + P"\231"-- ç
-   + P"\232"-- è
-   + P"\233"-- é
-   + P"\234"-- ê
-   + P"\235"-- ë
-   + P"\237"-- í
-   + P"\238"-- î
-   + P"\241"-- ñ
-   + P"\243"-- ó
-   + P"\244"-- ô
-   + P"\246"-- ö
-   + P"\252"-- ü
+   + P"Ä"
+   + P"Ö"
+   + P"Ü"
+   + P"ß" / _word_prop_has_eszett
+   + P"à"
+   + P"á"
+   + P"â"
+   + P"ä"
+   + P"ç"
+   + P"è"
+   + P"é"
+   + P"ê"
+   + P"ë"
+   + P"í"
+   + P"î"
+   + P"ñ"
+   + P"ó"
+   + P"ô"
+   + P"ö"
+   + P"ü"
 ,
    --
    -- Spezialtrennung
@@ -582,11 +587,11 @@ local function normalize_word(rawword)
    if props.has_invalid_alt then return nil end
 
    -- Ersetze Spezialtrennungen.
-   rawword = string.gsub(rawword, "{(.-)/.-}", "%1")
+   rawword = Ugsub(rawword, "{(.-)/.-}", "%1")
    -- Ersetze Alternativen.
-   rawword = string.gsub(rawword, "%[[-|=_%.\183]?(.-)[-|=_%.\183]?/.-%]", "%1")
+   rawword = Ugsub(rawword, "%[[-|=_%.·]?(.-)[-|=_%.·]?/.-%]", "%1")
    -- Ersetze Trennzeichen durch "-".
-   rawword = string.gsub(rawword, "[|=_%.\183]", "-")
+   rawword = Ugsub(rawword, "[|=_%.·]", "-")
    return rawword, props
 end
 M.normalize_word = normalize_word
@@ -607,16 +612,16 @@ local function validate_word(rawword)
    -- Zulässiges Wort?
    if not word then return nil end
    -- Prüfe minimale Wortlänge.
-   local len = string.len(string.gsub(word, "-", ""))
+   local len = Ulen(Ugsub(word, "-", ""))
    if len < 4 then return nil end
    -- Prüfe Wortenden auf unzulässige Trennzeichen.
-   local len = string.len(word)
+   local len = Ulen(word)
    for i = 1,2 do
-      local ch = string.sub(word, i, i)
+      local ch = Usub(word, i, i)
       if ch == "-" then return nil end
    end
    for i = len-1,len do
-      local ch = string.sub(word, i, i)
+      local ch = Usub(word, i, i)
       if ch == "-" then return nil end
    end
    return word, props
@@ -651,7 +656,7 @@ local function validate_record(record)
          word, props = validate_word(word)
          if not word then return false end
          -- Stimmt Wort mit Feld 1 überein?
-         word = string.gsub(word, "-", "")
+         word = Ugsub(word, "-", "")
          if word ~= field1 then return false end
          -- Tritt eine Spezialtrennung an unzulässiger Feldnummer auf?
          if props.has_nonstd and (i==2 or i==4 or i==5 or i==7) then return false end
