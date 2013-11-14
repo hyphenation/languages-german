@@ -2,10 +2,10 @@ dateikopf
 # -*- coding: utf-8 -*-
 # Beschreibt das Wortlistenformat.
 
-NewPATTERNS
+new-patterns
 # Spartanische Anleitung zum Erzeugen und Installieren neuer Trennmuster.
 
-Hier nicht aufgenommene, aber grundlegene Dokumetation: 
+Hier nicht aufgenommene, aber grundlegene Dokumentation: 
 Frank Liang, Word Hy-phen-a-tion by Com-put-er, Stanford Ph.D. thesis on a
 hyphenation algorithm that is standard in TeX, and has been adapted to
 numerous languages.  

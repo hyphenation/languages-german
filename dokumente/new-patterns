@@ -21,4 +21,5 @@ Installation
 
 1. ~.tex und ~.pat nach $TEXMF/tex/generic/dehyph-exptl/ kopieren.
 2. $TEXMF/tex/generic/config/language.dat anpassen.
-3. $ fmtutil --refresh
+3. Alle TeX- und LaTeX-Formatdateien regenerieren, z.B. mit
+     $ fmtutil --refresh
