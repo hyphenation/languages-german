@@ -2,7 +2,11 @@ dateikopf
 # -*- coding: utf-8 -*-
 # Beschreibt das Wortlistenformat.
 
-Hier nicht aufgenommene, aber grundlegene Dokumetation: Frank Liang, Word
-Hy-phen-a-tion by Com-put-er, Stanford Ph.D. thesis on a hyphenation algorithm
-that is standard in TeX, and has been adapted to numerous languages.
+NewPATTERNS
+# Spartanische Anleitung zum Erzeugen und Installieren neuer Trennmuster.
+
+Hier nicht aufgenommene, aber grundlegene Dokumetation: 
+Frank Liang, Word Hy-phen-a-tion by Com-put-er, Stanford Ph.D. thesis on a
+hyphenation algorithm that is standard in TeX, and has been adapted to
+numerous languages.  
 http://www.tug.org/docs/liang/liang-thesis.pdf
