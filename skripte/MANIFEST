@@ -94,12 +94,21 @@ patgen-list-diff.sh
 # entsprechenden abgekürzten alphanumerischen Commit-Hashes
 # verwendet.
 
-validate.lua
--- -*- coding: utf-8 -*-
-local pwl = require("parse_wortliste")
-...
-Ein Lua-Skript mit unbekanntem Zweck. Der Name legt nahe, daß es um die
-Validierung der Wortlisten geht.
+validate.lua  
+  Syntax-Test der Wortliste. Testskript für `parse_wortliste.lua`.
+  Benötigt ``texlua`` als Interpreter.
+  
+  Aufruf:  ``texlua validate.lua < ../wortliste``
 
-python/
-Verzeichnis mit einem bunten Straus von Python-Skripten.
+sort.py
+  Sortiere die Wortliste und erstelle einen Patch im "unified diff" Format.
+
+  Aufruf: ``./sort.py`` oder ``python sort.py``
+  
+  Anwenden des Patches: ``patch ../wortliste < wortliste-sortiert.patch``
+  
+  Details mit ``./sort.py -h``
+  
+python/ 
+  Python-Module, Hilfsdateien und experimentelle Skripte zur Arbeit mit der
+  Wortliste.

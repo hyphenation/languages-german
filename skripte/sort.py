@@ -15,14 +15,15 @@
 u"""
 Sortiere die Wortliste und erstelle einen Patch im "unified diff" Format.
 
-Es wird wahlweise nach Duden, oder nach der bis März 2012 für die Wortliste
+Es wird wahlweise nach Duden oder nach der bis März 2012 für die Wortliste
 genutzten Regel sortiert. Voreinstellung ist Dudensortierung.
 """
 
-usage = '%prog [Optionen]\n' + __doc__
+usage = u'%prog [Optionen]\n' + __doc__
 
 
 import unicodedata, sys, optparse
+sys.path.append('./python')  # path for local Python modules 
 from werkzeug import WordFile, udiff
 
 # Sortierschlüssel
@@ -160,11 +161,13 @@ if __name__ == '__main__':
                       help='Eingangsdatei, Vorgabe "../../wortliste"',
                       default='../../wortliste')
     parser.add_option('-o', '--outfile', dest='patchfile',
-                      help='Ausgangsdatei (Patch), Vorgabe "wortliste.patch"',
-                      default='wortliste.patch')
+                      help='Ausgangsdatei (Patch), Vorgabe "wortliste-sortiert.patch"',
+                      default='wortliste-sortiert.patch')
     parser.add_option('-a', '--legacy-sort', action="store_true",
                       help='alternative (historische) Sortierordnung',
                       default=False)
+    parser.add_option('-d', '--dump', action="store_true", default=False,
+                      help='Schreibe sortierte Liste auf die Standardausgabe.')
 
     (options, args) = parser.parse_args()
 
@@ -183,6 +186,11 @@ if __name__ == '__main__':
     # Sortieren::
 
     sortiert = sorted(wortliste, key=sortkey)
+    
+    if options.dump:
+        for line in sortiert:
+            print unicode(line).encode('utf8')
+        sys.exit()
 
     patch = udiff(wortliste, sortiert,
                   options.wortliste, options.wortliste+'-sortiert',
