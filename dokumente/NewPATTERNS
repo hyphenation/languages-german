@@ -1,0 +1,24 @@
+Erzeugen und Installation neuer Trennmuster
+-------------------------------------------
+
+Erzeugung
+
+$ make pattern-trad
+
+Mögliche „Targets“:
+- pattern-trad
+- pattern-refo
+- pattern-all
+
+erzeugt ein Verzeichnis wie dehypht-x/ (oder so) mit
+- dehypht-x-<datum>.tex
+- dehypht-x-<datum>.pat
+
+dauert ca 20 min (+/-)
+
+
+Installation
+
+1. ~.tex und ~.pat nach $TEXMF/tex/generic/dehyph-exptl/ kopieren.
+2. $TEXMF/tex/generic/config/language.dat anpassen.
+3. $ fmtutil --refresh
