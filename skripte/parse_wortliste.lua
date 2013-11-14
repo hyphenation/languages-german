@@ -502,11 +502,12 @@ local word = P{
    -- Aufzählung sämtlicher Spezialtrennungen.  Das Auftreten von
    -- Spezialtrennungen wird in Tabelle <code>word_property</code>
    -- gespeichert.
-   nonstd_rule = (V"ck" + V"fff" + V"lll" + V"mmm" + V"nnn" + V"ppp" + V"rrr" + V"ttt" + V"nonstd_sss") / _word_prop_has_nonstd,
+   nonstd_rule = (V"ck" + V"bbb" + V"fff" + V"lll" + V"mmm" + V"nnn" + V"ppp" + V"rrr" + V"ttt" + V"nonstd_sss") / _word_prop_has_nonstd,
    -- ck-Trennung: Die Capture enthält die Zeichenfolge 'ck'.
    ck = C(P"ck") * V"nonstd_sep" * P"k" * V"hyphen" * P"k",
    -- Dreikonsonantenregel: Die Capture enthält die Zeichenfolge für die
    -- ungetrennte Konsonantenfolge.
+   bbb = C(P"bb") * V"nonstd_sep" * P"bb" * V"hyphen" * P"b",
    fff = C(P"ff") * V"nonstd_sep" * P"ff" * V"hyphen" * P"f",
    lll = C(P"ll") * V"nonstd_sep" * P"ll" * V"hyphen" * P"l",
    mmm = C(P"mm") * V"nonstd_sep" * P"mm" * V"hyphen" * P"m",
