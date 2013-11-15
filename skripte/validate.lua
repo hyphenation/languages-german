@@ -1,5 +1,26 @@
 -- -*- coding: utf-8 -*-
 
+--[[
+
+Copyright 2012, 2013 Stephan Hennig
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+--]]
+
+
+
 local pwl = require("parse_wortliste")
 
 -- Anzahl Gesamtzeilen
@@ -27,15 +48,16 @@ local count = {
 -- Iteriere über stdin.
 for line in io.lines() do
    total = total + 1
-   -- Zerlege eine Zeile.
-   local p = pwl.parse(line)
-   -- gültig?
-   if p then
+   local type, field, msg = pwl.validate_record(line)
+   -- Datensatz zulässig?
+   if type then
       -- Zähle Vorkommen des Typs.
-      count[p.type] = count[p.type] + 1
+      count[type] = count[type] + 1
    else
-      print("ungültige Zeile: " .. line)
       invalid = invalid + 1
+      if type == false then print("Feld " .. tostring(field) .. ": " .. msg .. ": " .. line)
+      else print("ungültiger Datensatz: " .. line)
+      end
    end
 end
 
@@ -54,5 +76,5 @@ print("ux__xtrs  ", count.ux__xtrs)
 print("ux_rc     ", count.ux_rc)
 print("ux_rxtr_  ", count.ux_rxtr_)
 print("ux_rxtrs  ", count.ux_rxtrs)
-io.stderr:write("gesamt    ", total, "\n")
-io.stderr:write("ungültig  ", invalid, "\n")
+print("gesamt    ", total)
+print("ungültig  ", invalid)
