@@ -471,16 +471,6 @@ local word = P{
    -- Kluster.
    cluster = Cf((V"cl_letter" + V"cl_nonstd" + V"cl_alt")^1, _conc_cluster),
    --
-   -- Trennzeichen
-   --
-   -- Verschiedene Arten von Trennstellen werden durch unterschiedliche
-   -- Trennzeichen markiert.
-   --
-   -- Die folgenden Trennzeichen werden verwendet:
-   hyphen = S"-|=_." + P"·",
-   -- Ein beliebiges, optionales Trennzeichen.
-   ophyphen = V"hyphen"^-1,
-   --
    -- Buchstabenkluster
    --
    -- Ein Buchstabenkluster besteht aus aufeinanderfolgenden Buchstaben.
@@ -571,6 +561,53 @@ local word = P{
    alt_close = P"]",
    -- Trennzeichen innerhalb einer Alternative.
    alt_sep = P"/",
+   --
+   -- Trennstellen
+   --
+   -- Die Markierung von Trennstellen erfolgt zunächst nach deren
+   -- morphologischer Struktur.  Wahlweise kann auch eine zusätzliche,
+   -- qualitative Bewertung erfolgen.
+   --
+   -- morphologisch
+   --
+   -- innerhalb von Wortstämmen oder vor Suffixen
+   hyphen_inner = V"hyphen_ch_inner",
+   -- nach Präfixen oder Verbalpartikeln
+   hyphen_prefix = V"hyphen_ch_prefix",
+   -- an Wortfugen
+   hyphen_compound = V"hyphen_ch_compound",
+   --
+   -- qualitativ
+   --
+   -- Nottrennung
+   hyphen_emergency = V"hyphen_ch_emergency",
+   -- unästhetisch, fehlleitend usw.
+   hyphen_unesthetic = V"hyphen_ch_unesthetic" * V"hyphen_ch_unesthetic"^-2,
+   --
+   -- unkategorisiert
+   --
+   hyphen_uncategorized = V"hyphen_ch_uncategorized",
+   --
+   -- Ein beliebiges Trennzeichen.
+   hyphen =
+      V"hyphen_inner"
+      + V"hyphen_prefix"
+      + V"hyphen_compound"
+      + V"hyphen_emergency"
+      + V"hyphen_unesthetic"
+      + V"hyphen_uncategorized"
+,
+   --
+   -- Ein beliebiges, optionales Trennzeichen.
+   ophyphen = V"hyphen"^-1,
+   --
+   -- Die folgenden Trennzeichen werden verwendet:
+   hyphen_ch_inner = P"-",
+   hyphen_ch_prefix = P"|",
+   hyphen_ch_compound = P"=",
+   hyphen_ch_emergency = P"_",
+   hyphen_ch_unesthetic = P".",
+   hyphen_ch_uncategorized = P"·",
 }
 --
 --- Ermittle Eigenschaften eines Wortes.
