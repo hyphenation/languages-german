@@ -23,3 +23,5 @@ Installation
 2. $TEXMF/tex/generic/config/language.dat anpassen.
 3. Alle TeX- und LaTeX-Formatdateien regenerieren, z.B. mit
      $ fmtutil --refresh
+
+Ausführliche Information unter dehyph-exptl/INSTALL.
