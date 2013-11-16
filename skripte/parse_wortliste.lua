@@ -556,15 +556,14 @@ local word = P{
    -- Alternativen sind eingeschlossen in Klammern.
    cl_alt = V"alt_open" * V"alt_rule" * V"alt_close",
    -- Alternative Teilwörter werden durch ein spezielles Trennzeichen
-   -- voneinander getrennt.
+   -- voneinander getrennt.  Beide Alternativen werden auf
+   -- Buchstabengleichheit geprüft.  Die Capture enthält abschließend
+   -- die Buchstaben der ersten Alternative.
    alt_rule = Cf(V"alt_1st" * V"alt_sep" * V"alt_2nd", _is_equal_part_word),
-   -- Die erste Alternative darf aus höchstens einem Kluster mit
-   -- optionalem führenden und optionalem schließenden Trennzeichen
-   -- bestehen.  Trennzeichen innerhalb des Teilwortes sind nicht
-   -- erlaubt.
-   alt_1st = V"ophyphen" * V"cluster" * V"ophyphen",
-   -- Die zweite Alternative entspricht einem Teilwort.  Dieses wird
-   -- später verworfen.
+   -- Die erste Alternative ist ein Teilwort (mit Capture).
+   alt_1st = V"part_word",
+   -- Die zweite Alternative ist ebenfalls ein Teilwort.  Diese Capture
+   -- wird später verworfen.
    alt_2nd = V"part_word",
    -- Klammer, die eine Alternative einführt.
    alt_open = P"[",
