@@ -576,9 +576,17 @@ local word = P{
    hyphen_prefix = V"hyphen_ch_prefix"^1,
    -- an Wortfugen
    hyphen_compound = V"hyphen_ch_compound"^1,
-   -- eine morphologische Markierung
+   -- Präfix eines zusammengesetzten Wortes
+   hyphen_compound_prefix = V"hyphen_ch_prefix" * V"hyphen_compound",
+   -- Suffix eines zusammengesetzten Wortes
+   hyphen_compound_suffix = V"hyphen_ch_inner" * V"hyphen_compound",
+   -- eine morphologische Markierung (Achtung: In der folgenden Regel
+   -- ist die Reihenfolge der Prüfung relevant.  Gemischte Trennzeichen
+   -- müssen vor reinen Trennzeichen geprüft werden.)
    hyphen_morph =
-      V"hyphen_inner"
+      V"hyphen_compound_prefix"
+      + V"hyphen_compound_suffix"
+      + V"hyphen_inner"
       + V"hyphen_prefix"
       + V"hyphen_compound",
    --
