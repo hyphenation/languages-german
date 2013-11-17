@@ -571,11 +571,11 @@ local word = P{
    -- morphologisch
    --
    -- innerhalb von Wortstämmen oder vor Suffixen
-   hyphen_inner = V"hyphen_ch_inner",
+   hyphen_inner = V"hyphen_ch_inner"^1,
    -- nach Präfixen oder Verbalpartikeln
-   hyphen_prefix = V"hyphen_ch_prefix",
+   hyphen_prefix = V"hyphen_ch_prefix"^1,
    -- an Wortfugen
-   hyphen_compound = V"hyphen_ch_compound",
+   hyphen_compound = V"hyphen_ch_compound"^1,
    -- eine morphologische Markierung
    hyphen_morph =
       V"hyphen_inner"
