@@ -576,6 +576,11 @@ local word = P{
    hyphen_prefix = V"hyphen_ch_prefix",
    -- an Wortfugen
    hyphen_compound = V"hyphen_ch_compound",
+   -- eine morphologische Markierung
+   hyphen_morph =
+      V"hyphen_inner"
+      + V"hyphen_prefix"
+      + V"hyphen_compound",
    --
    -- qualitativ
    --
@@ -583,19 +588,21 @@ local word = P{
    hyphen_emergency = V"hyphen_ch_emergency",
    -- unästhetisch, fehlleitend usw.
    hyphen_unesthetic = V"hyphen_ch_unesthetic" * V"hyphen_ch_unesthetic"^-2,
+   -- eine beliebige Bewertung
+   hyphen_quality = V"hyphen_emergency" + V"hyphen_unesthetic",
+   -- eine optionale, beliebige Bewertung
+   hyphen_opt_quality = V"hyphen_quality"^-1,
    --
    -- unkategorisiert
    --
    hyphen_uncategorized = V"hyphen_ch_uncategorized",
    --
-   -- Ein beliebiges Trennzeichen.
-   hyphen =
-      V"hyphen_inner"
-      + V"hyphen_prefix"
-      + V"hyphen_compound"
-      + V"hyphen_emergency"
-      + V"hyphen_unesthetic"
-      + V"hyphen_uncategorized"
+   -- Eine beliebige Trennstelle ist entweder unkategorisiert oder
+   -- morphologisch markiert mit optional folgender Bewertung.  Die
+   -- Bewertung kann auch alleinstehen.
+   hyphen = V"hyphen_uncategorized"
+      + V"hyphen_morph" * V"hyphen_opt_quality"
+      + V"hyphen_quality"
 ,
    --
    -- Ein beliebiges, optionales Trennzeichen.
