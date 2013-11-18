@@ -83,8 +83,8 @@ for line in io.lines() do
       count[type] = count[type] + 1
    else
       invalid = invalid + 1
-      if type == false then print("Feld " .. tostring(field) .. ": " .. msg .. ": " .. line)
-      else print("ungültiger Datensatz: " .. line)
+      if type == false then io.stderr:write("Feld ", tostring(field), ": ", msg, ": ", line, "\n")
+      else io.stderr:write("ungültiger Datensatz: ", line, "\n")
       end
    end
 end
@@ -108,3 +108,7 @@ if opt.s then
 end
 print("gesamt    ", total)
 print("ungültig  ", invalid)
+
+
+-- Ende mit Fehlerkode?
+if invalid > 0 then os.exit(1) end
