@@ -592,13 +592,9 @@ local word = P{
    --
    -- qualitativ
    --
-   -- Nottrennung
-   hyphen_emergency = V"hyphen_ch_emergency",
-   -- unästhetisch, fehlleitend usw.
-   hyphen_unesthetic = V"hyphen_ch_unesthetic" * V"hyphen_ch_unesthetic"^-2,
-   -- eine beliebige Bewertung
-   hyphen_quality = V"hyphen_emergency" + V"hyphen_unesthetic",
-   -- eine optionale, beliebige Bewertung
+   -- eine Bewertung
+   hyphen_quality = V"hyphen_ch_quality" * V"hyphen_ch_quality"^-2,
+   -- eine optionale Bewertung
    hyphen_opt_quality = V"hyphen_quality"^-1,
    --
    -- unkategorisiert
@@ -620,8 +616,7 @@ local word = P{
    hyphen_ch_inner = P"-",
    hyphen_ch_prefix = P"|",
    hyphen_ch_compound = P"=",
-   hyphen_ch_emergency = P"_",
-   hyphen_ch_unesthetic = P".",
+   hyphen_ch_quality = P".",
    hyphen_ch_uncategorized = P"·",
 }
 --
