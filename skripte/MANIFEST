@@ -55,13 +55,6 @@ make-full-pattern.sh
 #
 #   sh make-full-pattern.sh words.hyphenated german.tr
 
-parse_wortliste.lua
--- -*- coding: utf-8 -*-
---- Diese Modul stellt Funktionen zur Zerlegung der Wortliste in einzelne
--- Felder bereit.
--- @class module
--- @name parse_wortliste
-
 patgen-list-diff.awk
 # Dieses Skript liest eine DIFF-Datei der Patgen-Eingabelisten (siehe
 # Skript patgen-list-diff.sh) und zerlegt sie in Wörter,
@@ -95,11 +88,16 @@ patgen-list-diff.sh
 # verwendet.
 
 validate.lua
+Validiert eine angegebene Wortliste. 
+Aufruf:    $ texlua validate.lua < ../wortliste
+
+parse_wortliste.lua
 -- -*- coding: utf-8 -*-
-local pwl = require("parse_wortliste")
-...
-Ein Lua-Skript mit unbekanntem Zweck. Der Name legt nahe, daß es um die
-Validierung der Wortlisten geht.
+--- Diese Modul stellt Funktionen zur Zerlegung der Wortliste in einzelne
+-- Felder bereit.
+-- @class module
+-- @name parse_wortliste
+
 
 python/
 Verzeichnis mit einem bunten Straus von Python-Skripten.
