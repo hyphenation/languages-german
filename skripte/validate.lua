@@ -21,7 +21,33 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+-- Suche im TEXMF-Baum nach Modulen (benötigt texlua-Interpreter).
+kpse.set_program_name('luatex')
+
+-- Lade verwendete Module.
+local alt_getopt = require("alt_getopt")
 local pwl = require("parse_wortliste")
+
+
+-- Erkläre zulässige Optionen.
+local long_opts = {
+   help = "h",
+}
+local opt = alt_getopt.get_opts(arg, "h", long_opts)
+
+
+-- Option --help
+if opt.h then
+   print([[
+Aufruf: texlua validate.lua [OPTIONEN]
+Dieses Skript prüft eine Wortliste auf Wohlgeformtheit.  Die Wortliste
+wird von der Standardeingabe gelesen.
+  -h, --help                print help
+]]
+   )
+   os.exit()
+end
+
 
 -- Anzahl Gesamtzeilen
 local total = 0
