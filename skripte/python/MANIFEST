@@ -1,0 +1,134 @@
+skripte/python
+==============
+
+Vorwort
+=======
+
+Selbstdokumentierende Python-Module, Hilfsdateien und experimentelle Skripte
+zur Arbeit mit der Wortliste.
+
+Das Program PyLit_ kann die ausführbaren Dateien ``*.py`` reversibel in
+Textdokumente ``*.py.txt`` konvertieren. Mit Docutils_ lassen sich aus den
+in reStructuredText_ geschriebenen Texten Dokumentationen im HTML- oder
+PDF-Format erstellen.
+
+.. _PyLit: http://pylit.berlios.de
+.. _reStructuredText: http://docutils.sourceforge.net/rst.html
+.. _Docutils: http://docutils.sourceforge.net/rst.html
+
+
+Unterverzeichnisse
+==================
+
+wortteile/
+  Verzeichnis für Hilfsdateien (Daten/Text)
+
+
+Module
+======
+
+werkzeug.py
+  Python-Module für die Arbeit mit der `Wortliste` 
+  Wird von den anderen Python-Skripten importiert.
+  
+  Aufruf mit ``python werkzeug.py`` startet einen Selbsttest.
+
+
+Skripte zur Trennstellenkategorisierung
+=======================================
+
+Achtung experimentell:
+
+* Die Skripte wurden für die eigene Arbeit mit der Wortliste entwickelt und
+  erfordern zum Teil Anpassungen im Quelltext, eine gewisse Einarbeitung, 
+  Lesen der enthaltenen Dokumentation und gegebenenfalls Rücksprachen mit
+  dem Autor.
+
+* Die Skripte können ohne Schaden anzurichten probiert werden, denn sie
+  ändern nicht direkt die Wortliste sondern erstellen eine Datei
+  ``wortliste.patch``.
+
+* Die Änderungen in dieser Datei können nach Korrekturlesen mittels ::
+  
+    patch ../../wortliste < wortliste.patch
+    
+  auf die Wortliste angewendet werden.
+
+
+analyse.py
+  Sammeln und Sortieren von Teilwörtern
+  
+  Aufruf: ``python analyse.py``
+  
+          Vorher in Zeile 355 ff. die gewünschte Sprachvariante
+          durch ein/auskommentieren wählen.
+
+  Schreibt eine Liste der Teilwörter von in der Wortliste markierten
+  zusammengesetzten Wörtern mit den Häufigkeiten des Auftretens
+  in eine Datei ``teilwoerter-<Sprachtag>.txt``
+  (z.B. ``teilwoerter-de-1901.txt``).
+
+  Auf der Standardausgabe erscheint eine Zusammenfassung zum Stand der
+  Präfixauszeichnung.
+
+
+abgleich_sprachvarianten.py
+  Abgleich der Trennstellen zwischen Sprachvarianten
+  
+  Aufruf: ``python abgleich_sprachvarianten.py``
+  
+  * Übertragen von kategorisierten Trennstellen zwischen Sprachvarianten
+    desselben Wortes, und/oder
+
+  * Zusammenfassen von Feldern mit gleichem Inhalt wenn das Ergebnis ein
+    wohlgeformter Eintrag ist.
+  
+
+abgleich_teilwoerter.py
+  Übertragen von kategorisierten Trennstellen von Teilwörtern auf
+  Vorkommen dieser Teilwörter mit unkategorisierten Trennstellen.
+  
+  Aufruf: ``python abgleich_teilwoerter.py``
+
+          Vorher in Zeile 26 ff. die gewünschte Sprachvariante
+          durch ein/auskommentieren wählen.
+
+  Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
+  kann.
+
+prepare_patch.py
+  Helfer für kleine Editieraufgaben
+  
+  Aufruf: siehe ``./prepare_patch.py -h``
+
+
+wortfugen.py
+  Suche nach "Teilwortkandidaten" in der Wortliste.
+  
+test_teilwoerter.py
+  Test der Markierung von Komposita in der Wortliste
+  
+vorsilben_in_teilwoertern.py
+  Spezialwerkzeug zur Präfixmarkierung.
+
+  Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
+  kann.
+
+vorsilben.py
+  Spezialwerkzeug zur Präfixmarkierung. Obsolet?
+
+
+Lang-s Schreibung
+=================
+
+s2long-s.py
+  Automatische Bestimmung der S-Schreibung auf Basis der Silbentrennung
+  in der `Wortliste der deutschsprachigen Trennmustermannschaft`.
+  
+  Unvollständig:
+  
+  Gesamtwortzahl (traditionelle Rechtschreibung): 422395
+  Automatisch konvertiert: 396140
+  Kategorisierung der Trennstellen fehlt: 4067
+  noch offen: 22188
+

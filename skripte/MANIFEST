@@ -55,13 +55,6 @@ make-full-pattern.sh
 #
 #   sh make-full-pattern.sh words.hyphenated german.tr
 
-parse_wortliste.lua
--- -*- coding: utf-8 -*-
---- Diese Modul stellt Funktionen zur Zerlegung der Wortliste in einzelne
--- Felder bereit.
--- @class module
--- @name parse_wortliste
-
 patgen-list-diff.awk
 # Dieses Skript liest eine DIFF-Datei der Patgen-Eingabelisten (siehe
 # Skript patgen-list-diff.sh) und zerlegt sie in Wörter,
@@ -94,21 +87,25 @@ patgen-list-diff.sh
 # entsprechenden abgekürzten alphanumerischen Commit-Hashes
 # verwendet.
 
-validate.lua  
+validate.lua
   Syntax-Test der Wortliste. Testskript für `parse_wortliste.lua`.
   Benötigt ``texlua`` als Interpreter.
-  
+
   Aufruf:  ``texlua validate.lua < ../wortliste``
+
+parse_wortliste.lua
+  Funktionen zur Zerlegung der Wortliste in einzelne Felder.
+  Anwendungsbeispiel: validate.lua
 
 sort.py
   Sortiere die Wortliste und erstelle einen Patch im "unified diff" Format.
 
   Aufruf: ``./sort.py`` oder ``python sort.py``
-  
+
   Anwenden des Patches: ``patch ../wortliste < wortliste-sortiert.patch``
-  
+
   Details mit ``./sort.py -h``
-  
-python/ 
+
+python/
   Python-Module, Hilfsdateien und experimentelle Skripte zur Arbeit mit der
-  Wortliste.
+  Wortliste. Siehe python/MANIFEST

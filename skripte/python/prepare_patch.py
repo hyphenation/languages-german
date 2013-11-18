@@ -6,7 +6,7 @@
 # :Id: $Id:  $
 
 # prepare_patch.py: Helfer für kleine Editieraufgaben
-# =============================================
+# ===================================================
 # ::
 
 u"""
@@ -25,12 +25,16 @@ AKTION ist eine von:
 
 # Die ``<AKTION>.todo`` Dateien in diesem Verzeichnis beschreiben das
 # jeweils erforderliche Datenformat im Dateikopf.
+# 
+# ::
 
-import optparse, sys
+import optparse, sys, os
 from copy import copy, deepcopy
 
 
 from werkzeug import WordFile, WordEntry, join_word, udiff
+# sort.py im Überverzeichnis:
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from sort import sortkey_wl, sortkey_duden
 
 
@@ -58,11 +62,11 @@ sprachvariante = 'de-1901'         # "traditionell"
 
 
 # Allgemeine Korrektur (z.B. Fehltrennung)
-#
+# 
 # Format:
 #  * ein Wort mit Trennstellen (für "Sprachvariante"):
 #  * vollständiger Eintrag (für Wörter mit Sprachvarianten).
-#
+# 
 # ::
 
 def korrektur(wordfile, datei):
@@ -116,10 +120,10 @@ def fehleintraege(wordfile, datei):
     """Entfernen der Einträge aus einer Liste von Fehleinträgen """
 
 # Fehleinträge aus Datei.
-#
+# 
 # Format:
 #   Ein Eintrag/Zeile, mit oder ohne Trennzeichen
-#
+# 
 # ::
 
     if not datei:
@@ -147,13 +151,13 @@ def fehleintraege(wordfile, datei):
 
 # Groß-/Kleinschreibung ändern
 # ----------------------------
-#
+# 
 # Umstellen der Groß- oder Kleinschreibung auf die Variante in der Datei
 # ``grossklein.todo``
-#
+# 
 # Format:
 #   ein Eintrag oder Wort pro Zeile, mit vorhandener Groß-/Kleinschreibung.
-#
+# 
 # ::
 
 def grossklein(wordfile, datei):
@@ -213,13 +217,13 @@ def grossabgleich(wordfile):
 
 # Sprachvariante ändern
 # ---------------------
-#
+# 
 # Einträge mit allgemeingültiger (oder sonstwie mehrfacher) Sprachvariante
 # in "nur in Reformschreibung" (allgemein) ändern.
-#
+# 
 # Format:
 #   ein Wort/(Alt-)Eintrag pro Zeile.
-#
+# 
 # ::
 
 def reformschreibung(wordfile, datei):
@@ -255,12 +259,12 @@ def reformschreibung(wordfile, datei):
 
 # Getrennte Einträge für Sprachvarianten
 # --------------------------------------
-#
+# 
 # Korrigiere fehlende Spezifizierung nach Sprachvarianten, z.B.
-#
+# 
 # - System;Sy-stem
 # + System;-2-;Sy-stem;Sys-tem
-#
+# 
 # ::
 
 def sprachvariante_split(wordfile, alt, neu,
@@ -284,17 +288,17 @@ def sprachvariante_split(wordfile, alt, neu,
 
 # Neueinträge prüfen und vorbereiten
 # ----------------------------------
-#
+# 
 # Die in einer Datei (ein Neueintrag pro Zeile) gesammelten Vorschläge auf
 # auf Neuwert testen (vorhandene Wörter werden ignoriert, unabhängig von der
 # Groß-/Kleinschreibung) und einsortieren.
-#
+# 
 # Format:
 #  * ein Wort mit Trennstellen (für allgemeingültige Trennstellen):
 #    Das ungetrennte Wort wird vorangestellt (durch Semikolon getrennt),
 #    oder
 #  * vollständiger Eintrag (für Wörter mit Sprachvarianten).
-#
+# 
 # ::
 
 def neu(wordfile, datei):

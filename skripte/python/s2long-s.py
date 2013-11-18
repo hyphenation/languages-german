@@ -36,8 +36,8 @@ from werkzeug import WordFile, join_word
 # 
 # ::
 
-# wordfile = WordFile('../../wortliste') # volle Liste (≅ 400 000 Wörter
-wordfile = WordFile('../../wortliste-binnen-s') # vorsortierte Liste (≅ 200 000 Wörter)
+wordfile = WordFile('../../wortliste') # volle Liste (≅ 400 000 Wörter
+# wordfile = WordFile('../../wortliste-binnen-s') # vorsortierte Liste (≅ 200 000 Wörter)
 
 # Trennzeichen
 # ------------
@@ -50,7 +50,7 @@ wordfile = WordFile('../../wortliste-binnen-s') # vorsortierte Liste (≅ 200 00
 # .  unerwünschte Trennstellen (sinnverwirrend), z.B. Ur-in.stinkt
 # =  Haupttrennstellen
 # \- Nebentrennstellen
-# _  ungünstige Nebentrennstellen, z.B. Pol=ge_bie-te
+# |  Trennstellen nach Vorsilben.
 # == ================================================================
 # 
 # 
@@ -94,21 +94,18 @@ def s_ersetzen(word):
 # 
 # s bleibt rund vor einer Haupttrennstelle (Trennung an der Grenze zweier
 # Wortbestandteile (Vorsilbe=Stamm, Bestimmungswort=Grundwort), im Auslaut und
-# nach Vorsilben wie (r)aus-, dis-, konfis-, ple-bis- (zur Zeit mit
-# Nebentrennstelle markiert)::
+# nach Vorsilben wie (r)aus-, dis-, konfis-, ple-bis- (mit ``|`` markiert)::
 
-    # word = word.replace(u's-ſ', u'ſ-ſ')
+    word = word.replace(u's-ſ', u'ſ-ſ')
     word = word.replace(u's.ſ', u'ſ.ſ')
-    # word = word.replace(u's-p', u'ſ-p')
+    word = word.replace(u's-p', u'ſ-p')
     word = word.replace(u's.p', u'ſ.p')
-    # word = word.replace(u's-t', u'ſ-t') # Reformschreibung
+    word = word.replace(u's-t', u'ſ-t') # Reformschreibung
     word = word.replace(u's.t', u'ſ.t')
 
     # für sz/ſz wurden Spezialregeln erstellt, die Vorkommnisse
     # in der Wortliste erfassen
 
-# TODO: Vorsilben mit Haupttrennstelle markieren oder Ausnahmeliste erstellen.
-# 
 # Spezialfälle
 # ~~~~~~~~~~~~
 # 
@@ -123,15 +120,14 @@ def s_ersetzen(word):
 
    # Basel, Beisel, Pilsen, drechseln, wechseln, häckseln
     word = word.replace(u'Bas-ler', u'Baſ-ler')
-    word = word.replace(u'Pils·ner', u'Pilſ-ner')
     word = word.replace(u'Pils-ner', u'Pilſ-ner')
     word = word.replace(u'echs-ler', u'echſ-ler') # Dechsler, Wechsler
     word = word.replace(u'äcks-ler', u'äckſ-ler') # Häcksler
 
     # Insel (Rheininsler), zünseln (Maiszünsler)
-    word = word.replace(u'ins·ler', u'inſ-ler')
+    # word = word.replace(u'ins·ler', u'inſ-ler')
     word = word.replace(u'ins-ler', u'inſ-ler')
-    word = word.replace(u'üns·ler', u'ünſ-ler')
+    # word = word.replace(u'üns·ler', u'ünſ-ler')
     word = word.replace(u'üns-ler', u'ünſ-ler')
 
     # unsre, unsrige, ...
@@ -396,12 +392,6 @@ print len(completed) + len(ungewichtet) + len(offen)
 #   **Aber** rundes s am Wortende und nach Vorsilben, z.B.
 #   dis=putieren, Aus=ſage, aus=tragen, aus=zeichnen.
 # 
-# Wie sollen Trennungen nach Vorsilben (schwache Hautptrennstellen) markiert
-# werden?
-# 
-# Vorschlag: 
-#   ``|`` nach Vorsilben, ``+`` zwischen Teilwörtern, zum Beispiel: 
-#   Ab|fall+ent|sor-gungs+ver-band
 # 
 # Wörter mit identischer Schreibung ohne lang-s
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

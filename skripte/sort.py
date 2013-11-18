@@ -22,8 +22,9 @@ genutzten Regel sortiert. Voreinstellung ist Dudensortierung.
 usage = u'%prog [Optionen]\n' + __doc__
 
 
-import unicodedata, sys, optparse
-sys.path.append('./python')  # path for local Python modules 
+import unicodedata, sys, optparse, os
+# path for local Python modules
+sys.path.append(os.path.join(os.path.dirname(__file__), 'python'))
 from werkzeug import WordFile, udiff
 
 # Sortierschlüssel
@@ -186,7 +187,7 @@ if __name__ == '__main__':
     # Sortieren::
 
     sortiert = sorted(wortliste, key=sortkey)
-    
+
     if options.dump:
         for line in sortiert:
             print unicode(line).encode('utf8')

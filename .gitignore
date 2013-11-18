@@ -1,14 +1,6 @@
 auto/
 *~
-/skripte/python/*.todo
-/skripte/python/teilwort-*
-/skripte/python/analyse.txt
+/skripte/*.pyc
 ????-??-??+??-??-??-[0-9a-f]*/
-/skripte/python/analyse.py.html
-/skripte/python/vorsilben_in_teilwoertern.html
-/skripte/python/wortteile/vorsilben.pdf
-/skripte/python/sort.py.html
-/skripte/python/abgleich_teilwoerter.py.html
 /wortliste-lang-s
 /german.dic
-/skripte/python/arbeitsstand.txt

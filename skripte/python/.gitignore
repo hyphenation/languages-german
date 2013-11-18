@@ -1,9 +1,12 @@
+*~
 *.diff
+*.patch
 *.pyc
 *.py.txt
-*.py.xhtml
-*~
+*.html
+*.todo
 vorsilbe-*
 teilwoerter-*
-wortliste.patch
 wortliste-*
+analyse.txt
+arbeitsstand.txt
