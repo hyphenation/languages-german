@@ -67,7 +67,7 @@ def s_ersetzen(word):
 # ſ steht im Silbenanlaut::
 
     word = re.sub(ur'^s', ur'ſ', word)
-    word = re.sub(ur'([·\-=.])s', ur'\1ſ', word)
+    word = re.sub(ur'([-|=·.])s', ur'\1ſ', word)
 
 # ſ steht im Inlaut als stimmhaftes s zwischen Vokalen
 # (gilt auch für ungetrenntes ss zwischen Selbstlauten, z.B. Hausse, Baisse)::
@@ -93,7 +93,7 @@ def s_ersetzen(word):
 # Wortbestandteiles) getrennt sind.
 # 
 # s bleibt rund vor einer Haupttrennstelle (Trennung an der Grenze zweier
-# Wortbestandteile (Vorsilbe=Stamm, Bestimmungswort=Grundwort), im Auslaut und
+# Wortbestandteile (Vorsilb<=Stamm, Bestimmungswort=Grundwort), im Auslaut und
 # nach Vorsilben wie (r)aus-, dis-, konfis-, ple-bis- (mit ``|`` markiert)::
 
     word = word.replace(u's-ſ', u'ſ-ſ')
@@ -111,9 +111,9 @@ def s_ersetzen(word):
 # 
 # ſz trotz Trennzeichen::
 
-    word = re.sub(ur'es[-·]zen', ur'eſ-zen', word) # Adoleszenz, ...
-    word = re.sub(ur's[-·]zil', ur'ſ-zil', word) # Os-zil-la-ti-on
-    word = re.sub(ur's[-·]zi-n', ur'ſ-zi-n', word) # faszinieren, ...
+    word = word.replace(u'es-zen', ur'eſ-zen') # Adoleszenz, ...
+    word = word.replace(u's-zil', ur'ſ-zil') # Os-zil-la-ti-on
+    word = word.replace(u's-zi-n', ur'ſ-zi-n') # faszinieren, ...
 
 # ſ wird geschrieben, wenn der S-Laut nur scheinbar im Auslaut steht weil ein
 # folgendes unbetontes e ausfällt::
@@ -123,6 +123,8 @@ def s_ersetzen(word):
     word = word.replace(u'Pils-ner', u'Pilſ-ner')
     word = word.replace(u'echs-ler', u'echſ-ler') # Dechsler, Wechsler
     word = word.replace(u'äcks-ler', u'äckſ-ler') # Häcksler
+    word = word.replace(u'Rössl', u'Röſſl')
+    
 
     # Insel (Rheininsler), zünseln (Maiszünsler)
     # word = word.replace(u'ins·ler', u'inſ-ler')
@@ -161,11 +163,15 @@ def s_ersetzen(word):
 # ::
 
     word = word.replace(u'sh', u'ſh')  # (englisch)
-    word = word.replace(u'sc', u'ſc')  # (englisch)
+    # word = word.replace(u'sc', u'ſc')  # (englisch) Di|c oder Disc?
     word = word.replace(u'Csar', u'Cſar') # Cs -> Tsch (ungarisch)
-    word = word.replace(u'sz', u'ſz')  # polnisch, ungarisch
+    # word = word.replace(u'sz', u'ſz')  # polnisch, ungarisch
     word = re.sub(ur'([Tt])s([aeiouy])', ur'\1ſ\2', word) # ts (chinesisch)
-
+    word = re.sub(ur'ness$', 'neſſ') # Buſineſſ, Fairneſſ
+    word = re.sub(ur'ness=', 'neſſ=')
+    word = re.sub(ur'dress$', 'dreſſ') # Dreſſ
+    word = re.sub(ur'Dress=', 'Dreſſ=')
+    word = word.replace(u'Miss', u'Miſſ')
 
     return word
 
@@ -175,7 +181,29 @@ def s_ersetzen(word):
 # Test auf verbliebene Unklarheiten
 # 
 # Wenn ein Wort "s" nur an Stellen enthält wo die Regeln rundes S vorsehen,
-# ist die automatische Konversion abgeschlossen. ::
+# ist die automatische Konversion abgeschlossen.
+#
+# Einzelfälle mit speziellen Regeln::
+
+spezialfaelle_rund_s = [
+
+# ausgelassenes flüchtiges e::
+   
+    (u'Dresd-ne'), # Dresd·ner/Dresd·ner·in
+    
+# s steht auch in einigen Fremdwörtern vor z::
+
+    (u'on-fis-zie'), # konfiszieren
+    (u'le-bis-z'),
+    (u'is-zi-pl'), # Disziplin
+# ss im Auslaut
+    (u'Gauss'),  # vgl. "Briefwechsel zwischen C.F. Gauss und H.C. Schumacher, herausg. von C.A.F. Peters"
+                 # aber Boſſ, Busineſſ, Dreſſ
+                       
+                       ]
+    
+spezialfaelle_rund_s = [(fall, fall.replace('s', '~')) 
+                        for fall in spezialfaelle_rund_s]
 
 def is_complete(word):
 
@@ -184,11 +212,9 @@ def is_complete(word):
 # 
 # Einzelfälle mit rundem S (substrings)::
 
-    spezialfaelle = [u'Dresd·ner', # Dresd·ner/Dresd·ner·in
-                    ]
 
-    for fall in spezialfaelle:
-        word = word.replace(fall, u'~')
+    for fall, ersatz in spezialfaelle_rund_s:
+        word = word.replace(fall, ersatz)
 
 # s steht am Wortende, auch in Zusammensetzungen (vor Haupttrennstellen).
 # Dasselbe gilt für Doppel-s (aus Fremdwörtern) in der traditionellen
@@ -203,13 +229,9 @@ def is_complete(word):
     # word = re.sub(ur'ss?([·.\-][^ptzſ])', ur'~\1', word) # konservativ
     word = re.sub(ur'ss?([·.\-][^pzſ])', ur'~\1', word)   # traditionell
 
-# s steht nach den Vorsilben (r)aus-, dis-, konfis-,
-# ple-bis-, (ergänzen)::
+# s steht nach Vorsilben (wie aus|, dis|) auch wenn s, p, t, oder z folgt::
 
-    word = re.sub(ur'(^|[·.\-=])[Rr]?[Aa]us([·.\-=])', ur'\1~\2', word)
-    word = re.sub(ur'(^|[·.\-=])[Dd]is([·.\-=])', ur'\1~\2', word)
-    word = word.replace(u'on-fis-zie', u'on-fi~-zie')
-    word = word.replace(u'le-bis-z', u'le-bi~-z')
+    word = word.replace(u's|', u'|~')
 
 # s steht im Inlaut vor k, n, w::
 

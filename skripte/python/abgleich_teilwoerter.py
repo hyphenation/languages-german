@@ -210,10 +210,10 @@ if __name__ == '__main__':
 
 # Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
 
-        # wort2 = teilwortabgleich(wort, grossklein=None, strict=True)
-        #
-        wort2 = grundwortabgleich(wort, endung=u'·se·res',
-                                  vergleichsendung=u's')
+        wort2 = teilwortabgleich(wort, grossklein=None, strict=True)
+        
+        # wort2 = grundwortabgleich(wort, endung=u'·se·res',
+        #                           vergleichsendung=u's')
         #
         # wort2 = vorsilbentest(wort, (u'all', u'All'))
 

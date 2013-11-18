@@ -21,6 +21,7 @@ AKTION ist eine von:
   grossabgleich:  Großschreibung der Trennmuster wie erstes Feld,
   korrektur:      Einträge durch alternative Version ersetzen.
   neu:            Einträge hinzufügen,
+  reformschreibung: Eintrag in "nur Reformschreibung" ändern.
 """
 
 # Die ``<AKTION>.todo`` Dateien in diesem Verzeichnis beschreiben das
@@ -171,7 +172,9 @@ def grossklein(wordfile, datei):
 
     # Dekodieren, Feldtrenner zu Leerzeichen
     korrekturen = [line.decode('utf8').replace(';',' ')
-                   for line in open(datei, 'r')]
+                   for line in open(datei, 'r')
+                   if not line.startswith('#')]
+
     # erstes Feld, Trennzeichen entfernen
     korrekturen = [join_word(line.split()[0]) for line in korrekturen
                    if line.strip() and not line.startswith('#')]
@@ -232,29 +235,29 @@ def reformschreibung(wordfile, datei):
     if not datei:
         datei='reformschreibung.todo'
     teste_datei(datei)
-
-    wortliste = list(wordfile)
-
     # Dekodieren, Zeilenende entfernen
     korrekturen = [line.decode('utf8').strip()
-                   for line in open(datei, 'r')]
+                   for line in open(datei, 'r')
+                   if not line.startswith('#')
+                  ]
     # erstes Feld
     korrekturen = [line.split(';')[0] for line in korrekturen]
     korrekturen = set(korrekturen)
 
+    wortliste = list(wordfile)
     wortliste_neu = [] # korrigierte Liste
 
     for entry in wortliste:
         if entry[0] in korrekturen:
             key = entry[0]
             wort = entry.get('de-1996')
-            entry = WordEntry('%s;-2-;-3-;%s' % (key, wort))
+            entry = WordEntry('%s;-2-;-3-;%s;%s' % (key, wort, wort))
             korrekturen.discard(key) # erledigt
         wortliste_neu.append(entry)
 
     if korrekturen:
         print korrekturen # übrige Einträge
-    return wortliste_neu
+    return wortliste, wortliste_neu
 
 
 # Getrennte Einträge für Sprachvarianten
@@ -411,6 +414,8 @@ if __name__ == '__main__':
         (wortliste, wortliste_neu) = grossabgleich(wordfile)
     elif aktion == 'korrektur':
         (wortliste, wortliste_neu) = korrektur(wordfile, options.todo)
+    elif aktion == 'reformschreibung':
+        (wortliste, wortliste_neu) = reformschreibung(wordfile, options.todo)
     else:
         print 'Unbekannte AKTION', '\n'
         parser.print_help()
@@ -418,7 +423,6 @@ if __name__ == '__main__':
 
     # (wortliste, wortliste_neu) = sprachvariante_split(wordfile,
     #                                                   u'knien', u'kni-en')
-    # (wortliste, wortliste_neu) = reformschreibung(wordfile)
 
 # Patch erstellen::
 
