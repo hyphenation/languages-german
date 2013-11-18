@@ -92,6 +92,9 @@ validate.lua
   Benötigt ``texlua`` als Interpreter.
 
   Aufruf:  ``texlua validate.lua < ../wortliste``
+  Optionen:
+  -h, --help                print help
+  -s, --statistics          output record statistics
 
 parse_wortliste.lua
   Funktionen zur Zerlegung der Wortliste in einzelne Felder.
