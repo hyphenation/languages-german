@@ -32,8 +32,9 @@ local pwl = require("parse_wortliste")
 -- Erkläre zulässige Optionen.
 local long_opts = {
    help = "h",
+   statistics = "s",
 }
-local opt = alt_getopt.get_opts(arg, "h", long_opts)
+local opt = alt_getopt.get_opts(arg, "hs", long_opts)
 
 
 -- Option --help
@@ -43,6 +44,7 @@ Aufruf: texlua validate.lua [OPTIONEN]
 Dieses Skript prüft eine Wortliste auf Wohlgeformtheit.  Die Wortliste
 wird von der Standardeingabe gelesen.
   -h, --help                print help
+  -s, --statistics          output record statistics
 ]]
    )
    os.exit()
@@ -88,19 +90,21 @@ for line in io.lines() do
 end
 
 -- Ausgabe.
-print("ua        ", count.ua)
-print("uxt_      ", count.uxt_)
-print("ux_r      ", count.ux_r)
-print("uxtr      ", count.uxtr)
-print("ux__c     ", count.ux__c)
-print("ux__xt__  ", count.ux__xt__)
-print("ux__x_r_  ", count.ux__x_r_)
-print("ux__x__s  ", count.ux__x__s)
-print("ux__xt_s  ", count.ux__xt_s)
-print("ux__xtr_  ", count.ux__xtr_)
-print("ux__xtrs  ", count.ux__xtrs)
-print("ux_rc     ", count.ux_rc)
-print("ux_rxtr_  ", count.ux_rxtr_)
-print("ux_rxtrs  ", count.ux_rxtrs)
+if opt.s then
+   print("ua        ", count.ua)
+   print("uxt_      ", count.uxt_)
+   print("ux_r      ", count.ux_r)
+   print("uxtr      ", count.uxtr)
+   print("ux__c     ", count.ux__c)
+   print("ux__xt__  ", count.ux__xt__)
+   print("ux__x_r_  ", count.ux__x_r_)
+   print("ux__x__s  ", count.ux__x__s)
+   print("ux__xt_s  ", count.ux__xt_s)
+   print("ux__xtr_  ", count.ux__xtr_)
+   print("ux__xtrs  ", count.ux__xtrs)
+   print("ux_rc     ", count.ux_rc)
+   print("ux_rxtr_  ", count.ux_rxtr_)
+   print("ux_rxtrs  ", count.ux_rxtrs)
+end
 print("gesamt    ", total)
 print("ungültig  ", invalid)
