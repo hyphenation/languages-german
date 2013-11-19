@@ -125,10 +125,8 @@ s2long-s.py
   Automatische Bestimmung der S-Schreibung auf Basis der Silbentrennung
   in der `Wortliste der deutschsprachigen Trennmustermannschaft`.
   
-  Unvollständig:
-  
-  Gesamtwortzahl (traditionelle Rechtschreibung): 422395
-  Automatisch konvertiert: 417968
-  Kategorisierung der Trennstellen fehlt: 4243
-  noch offen: 184
+  Gesamtwortzahl (traditionelle Rechtschreibung): 422398
+  Automatisch konvertiert: 418440
+  Kategorisierung der Trennstellen fehlt: 3903
+  noch offen: 55
 

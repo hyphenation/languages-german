@@ -84,6 +84,7 @@ def s_ersetzen(word):
     word = word.replace(u'ps', u'pſ')  # ψ
     word = word.replace(u'Ps', u'Pſ')  # Ψ
 
+    word = word.replace(u'ſsſt', u'ſſſt') # Pssst!
 
 # ſ vor Trennstellen
 # ~~~~~~~~~~~~~~~~~~
@@ -93,8 +94,8 @@ def s_ersetzen(word):
 # Wortbestandteiles) getrennt sind.
 # 
 # s bleibt rund vor einer Haupttrennstelle (Trennung an der Grenze zweier
-# Wortbestandteile (Vorsilb<=Stamm, Bestimmungswort=Grundwort), im Auslaut und
-# nach Vorsilben wie (r)aus-, dis-, konfis-, ple-bis- (mit ``|`` markiert)::
+# Wortbestandteile (Vorsilb<=Stamm, Bestimmungswort=Grundwort), im Auslaut
+# und nach Vorsilben wie aus-, dis-,  (mit ``|`` markiert)::
 
     word = word.replace(u's-ſ', u'ſ-ſ')
     word = word.replace(u's.ſ', u'ſ.ſ')
@@ -112,8 +113,9 @@ def s_ersetzen(word):
 # ſz trotz Trennzeichen::
 
     word = word.replace(u'es-zen', ur'eſ-zen') # Adoleszenz, ...
-    word = word.replace(u's-zil', ur'ſ-zil') # Os-zil-la-ti-on
     word = word.replace(u's-zi-n', ur'ſ-zi-n') # faszinieren, ...
+    word = word.replace(u'as-zi', u'aſ-zi')    # [Ll]asziv, ...
+    word = word.replace(u's-zil', ur'ſ-zil')   # Os-zil-la-ti-on
 
 # ſ wird geschrieben, wenn der S-Laut nur scheinbar im Auslaut steht weil ein
 # folgendes unbetontes e ausfällt::
@@ -124,12 +126,9 @@ def s_ersetzen(word):
     word = word.replace(u'echs-ler', u'echſ-ler') # Dechsler, Wechsler
     word = word.replace(u'äcks-ler', u'äckſ-ler') # Häcksler
     word = word.replace(u'Rössl', u'Röſſl')
-    
 
     # Insel (Rheininsler), zünseln (Maiszünsler)
-    # word = word.replace(u'ins·ler', u'inſ-ler')
     word = word.replace(u'ins-ler', u'inſ-ler')
-    # word = word.replace(u'üns·ler', u'ünſ-ler')
     word = word.replace(u'üns-ler', u'ünſ-ler')
 
     # unsre, unsrige, ...
@@ -138,8 +137,15 @@ def s_ersetzen(word):
     # Häusl, Lisl, bissl, Glasl, Rössl
     word = word.replace(u'sl', u'ſl')
     word = word.replace(u'ssl', u'ſſl')
-    # word = re.sub(ur'sl$', ur'ſl', word)
-    # word = re.sub(ur'ssl$', ur'ſſl', word)
+
+# ſ steht auch am Ende von Abkürzungen, wenn es im abgekürzten Wort steht
+# (Abſ. - Abſatz/Abſender, (de)creſc. - (de)creſcendo, das. - daselbst ...)
+
+    word = word.replace(u'cresc', u'creſc')
+
+# Alternativtrennung wo beide Fälle ſ verlangen:
+
+    word = word.replace(u'er.]sa', u'er.]sa') # Kind=er|satz/Kin-der=satz
 
 
 # Fremdwörter
@@ -157,21 +163,30 @@ def s_ersetzen(word):
 #   The long, medial, or descending ess, as distinct from the short or
 #   terminal ess. In Roman script, the long ess was used everywhere except at
 #   the end of words, where the short ess was used, and frequently in what is
-#   now the digraph <ss>, which was often written <ſs> rather than <ſſ>
+#   now the digraph «ss», which was often written «ſs» rather than «ſſ»
 #   [en.wiktionary.org]_. See also [Typefounder08]_ and [West06]_.
 # 
 # ::
 
-    word = word.replace(u'sh', u'ſh')  # (englisch)
-    # word = word.replace(u'sc', u'ſc')  # (englisch) Di|c oder Disc?
-    word = word.replace(u'Csar', u'Cſar') # Cs -> Tsch (ungarisch)
-    # word = word.replace(u'sz', u'ſz')  # polnisch, ungarisch
+    word = word.replace(u'sh', u'ſh')       # (englisch)
+    # word = word.replace(u'sc', u'ſc')     # (englisch) Diſc oder Disc?
+    word = word.replace(u'Csar', u'Cſar')   # Cs -> Tsch (ungarisch)
+    # word = word.replace(u'sz', u'ſz')     # polnisch, ungarisch
+    word = word.replace(u'Liszt', u'Liſzt') # ungarisch
+    word = word.replace(u'Pusz', u'Puſz')   # Pusz-ta ungarisch
     word = re.sub(ur'([Tt])s([aeiouy])', ur'\1ſ\2', word) # ts (chinesisch)
-    word = re.sub(ur'ness$', 'neſſ') # Buſineſſ, Fairneſſ
-    word = re.sub(ur'ness=', 'neſſ=')
-    word = re.sub(ur'dress$', 'dreſſ') # Dreſſ
-    word = re.sub(ur'Dress=', 'Dreſſ=')
-    word = word.replace(u'Miss', u'Miſſ')
+    
+#   Der 1971er [Duden]_ führt zu englischen Fremdwörtern mit Schluß-ß die
+#   österreichische Schreibung mit "ss" auf (Miß, engl. und österr. Schreibung
+#   Miss) wobei das Schluß-s nicht unterstrichen (also lang) ist.
+#   So auch Boss, Business, Stewardess,
+#   TODO so machen, oder ſs? ::
+    
+    # word = re.sub(ur'ness$', 'neſſ') # Buſineſſ, Fairneſſ
+    # word = re.sub(ur'ness=', 'neſſ=')
+    # word = re.sub(ur'dress$', 'dreſſ') # Dreſſ
+    # word = re.sub(ur'Dress=', 'Dreſſ=')
+    # word = word.replace(u'Miss', u'Miſſ')
 
     return word
 
@@ -182,20 +197,26 @@ def s_ersetzen(word):
 # 
 # Wenn ein Wort "s" nur an Stellen enthält wo die Regeln rundes S vorsehen,
 # ist die automatische Konversion abgeschlossen.
+# 
+# Ausnahmen und spezielle Regeln
 #
-# Einzelfälle mit speziellen Regeln::
+# Liste von Teilstrings, welche stets rund-s behalten ::
 
 spezialfaelle_rund_s = [
 
+# Abkürzungen::
+                        
+    u'Ausg', u'ausſchl', u'insb', u'desgl', u'hrsg', u'insb',
+                        
 # ausgelassenes flüchtiges e::
    
-    (u'Dresd-ne'), # Dresd·ner/Dresd·ner·in
+    u'Dresd-ne', # Dresd·ner/Dresd·ner·in
     
 # s steht auch in einigen Fremdwörtern vor z::
 
-    (u'on-fis-zie'), # konfiszieren
-    (u'le-bis-z'),
-    (u'is-zi-pl'), # Disziplin
+    u'on-fis-zie', # konfiszieren
+    u'le-bis-z',
+    u'is-zi-pl', # Disziplin
 # ss im Auslaut
     (u'Gauss'),  # vgl. "Briefwechsel zwischen C.F. Gauss und H.C. Schumacher, herausg. von C.A.F. Peters"
                  # aber Boſſ, Busineſſ, Dreſſ

@@ -194,27 +194,52 @@ if __name__ == '__main__':
 
     wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
     wortliste = list(wordfile)
-    wortliste_alt = deepcopy(wortliste)
+    wortliste_neu = deepcopy(wortliste)
 
-# Bearbeiten der wortliste "in-place"::
+# Bearbeiten der neuen wortliste "in-place"::
 
-    for entry in wortliste:
+    for entry in wortliste_neu:
 
         # Wort mit Trennungen in Sprachvariante
         wort = entry.get(sprachvariante)
         if wort is None: # Wort existiert nicht in der Sprachvariante
             continue
 
-        # if u'·' not in wort: # Alle Trennstellen kategorisiert
-        #     continue
+        if u'·' not in wort: # Alle Trennstellen kategorisiert
+            continue
 
 # Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
 
         wort2 = teilwortabgleich(wort, grossklein=None, strict=True)
+
+        # for alt, neu in (# (u'e',  u'en' ),
+        #                  # (u'·ne',u'n'),
+        #                  # (u'·te',u't'),
+        #                  # (u'end',u'en' ),
+        #                  (u'en', u'end'),
+        #                  (u'en', u'e'),
+        #                  (u'en', u't'),
+        #                  (u't', u'·te'),
+        #                  (u't', u'·tem'),
+        #                  (u't', u'·ten'),
+        #                  (u't', u'·ter'),
+        #                  (u't', u'·tes'),
+        #                  (u'd', u'·de'),
+        #                  (u'd', u'·dem'),
+        #                  (u'd', u'·den'),
+        #                  (u'd', u'·der'),
+        #                  (u'd', u'·des'),
+        #                  (u'n', u'·ne'),
+        #                  (u'n', u'·nem'),
+        #                  (u'n', u'·nen'),
+        #                  (u'n', u'·ner'),
+        #                  (u'n', u'·nes'),
+        #                  # (u's',  u'·se·res')
+        #                 ):
+        #     wort2 = grundwortabgleich(wort, endung=neu, vergleichsendung=alt)
+        #     if wort != wort2:
+        #         break
         
-        # wort2 = grundwortabgleich(wort, endung=u'·se·res',
-        #                           vergleichsendung=u's')
-        #
         # wort2 = vorsilbentest(wort, (u'all', u'All'))
 
         if wort != wort2:
@@ -225,7 +250,7 @@ if __name__ == '__main__':
 
 # Patch erstellen::
 
-    patch = udiff(wortliste_alt, wortliste, 'wortliste', 'wortliste-neu',
+    patch = udiff(wortliste, wortliste_neu, 'wortliste', 'wortliste-neu',
                  encoding=wordfile.encoding)
     if patch:
         # print patch
