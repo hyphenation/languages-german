@@ -656,8 +656,13 @@ local function normalize_word(rawword)
 
    -- Ersetze Spezialtrennungen.
    rawword = Ugsub(rawword, "{(.-)/.-}", "%1")
-   -- Ersetze Alternativen.
-   rawword = Ugsub(rawword, "%[[-|=%.·]?(.-)[-|=%.·]?/.-%]", "%1")
+   -- Ersetze Alternativen durch erste Alternative (ohne Trennzeichen).
+   rawword = Ugsub(rawword, "%[(.-)/.-%]",
+                   -- Entferne Trennzeichen im Fluge.
+                   function (capture)
+                      return Ugsub(capture, "[-|=%.·]+", "")
+                   end
+   )
    -- Ersetze Trennzeichen durch "-".
    rawword = Ugsub(rawword, "[|=%.·]+", "-")
    return rawword, props
