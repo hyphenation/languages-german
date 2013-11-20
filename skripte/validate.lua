@@ -20,13 +20,17 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 --]]
 
 
+-- Lies Konfigurationdaten aus.
+local path_dirsep, path_sep, path_subst = string.match(package.config, "(.)\n(.)\n(.)\n")
+-- Erweitere Modulsuchpfad.
+package.path = package.path .. path_sep .. "skripte" .. path_dirsep .. path_subst .. ".lua"
 
--- Suche im TEXMF-Baum nach Modulen (benötigt texlua-Interpreter).
-kpse.set_program_name('luatex')
-
--- Lade verwendete Module.
-local alt_getopt = require("alt_getopt")
+-- Lade Module aus Lua-Pfad.
 local pwl = require("parse_wortliste")
+
+-- Lade Module aus TEXMF-Baum.
+kpse.set_program_name('luatex')
+local alt_getopt = require("alt_getopt")
 
 
 -- Erkläre zulässige Optionen.
