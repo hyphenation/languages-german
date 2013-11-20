@@ -115,6 +115,9 @@
 #
 #   an-dert=halb-=fach     ((an+dert) + halb) + fach
 #
+# Das erste Zeichen eines gemischten Trennzeichens kennzeichnet die
+# Kategorie der Trennstelle.
+#
 # Ebenso wie die Charakterisierung ist die Markierung der Bindungstärke
 # unvollständig.
 #
