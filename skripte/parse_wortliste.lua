@@ -49,6 +49,9 @@ local M = {}
 local lpeg = require("lpeg")
 local unicode = require("unicode")
 
+-- Kürzel für Funktionen der Standardbibliotheken.
+local Tconcat = table.concat
+
 -- Kürzel für Selene-Unicode-Funktionen.
 local Ugsub = unicode.utf8.gsub
 local Ulen = unicode.utf8.len
@@ -60,7 +63,6 @@ local R = lpeg.R
 local S = lpeg.S
 local C = lpeg.C
 local Cc = lpeg.Cc
-local Cf = lpeg.Cf
 local Ct = lpeg.Ct
 local V = lpeg.V
 -- Muster für ein beliebiges Zeichen.
@@ -406,32 +408,29 @@ local function _word_prop_has_eszett(c)
    return c
 end
 --
---- <strong>nicht-öffentlich</strong> Füge Strings zusammen.  Diese
---- Funktion akkumuliert Zeichen in einer Faltungscapture
---- (<code>lpeg.Cf</code>).
+--- <strong>nicht-öffentlich</strong> Diese Funktion wird in einer
+--- Funktionscapture genutzt, um Captures zusammenzufügen.
 --
--- @param acc bisheriger Akkumulator
+-- @param ... eine beliebige Zahl von Captures
 --
--- @param newvalue nächster Capturewert
---
--- @return neuer Akkumulatorzustand
-local function _conc_cluster(acc, newvalue)
---   io.stderr:write("'",acc,"'..'",newvalue,"'\n")-- For debugging purposes.
-   return acc..newvalue
+-- @return Ergebniscapture (String)
+local function _concatenate_captures(...)
+--   io.stderr:write("conc: ",Tconcat({...}, ","),"\n")-- For debugging purposes.
+   return Tconcat({...})
 end
 --
---- <strong>nicht-öffentlich</strong> Vergleiche Strings.  Diese
---- Funktion wird in einer Faltungscapture (<code>lpeg.Cf</code>)
---- verwendet, um die Gleichheit zweier Captures festzustellen.  Falls
---- zwei Strings ungleich sind, so wird dies in Tabelle
---- <code>word_property</code> vermerkt.
+--- <strong>nicht-öffentlich</strong> Diese Funktion wird in einer
+--- Funktionscapture verwendet, um die Gleichheit zweier Captures
+--- festzustellen.  Falls zwei Captures ungleich sind, so wird dies in
+--- Tabelle <code>word_property</code> vermerkt.  Die zweite Capture
+--- wird immer verworfen.
 --
--- @param a String 1
+-- @param a Capture 1
 --
--- @param b String 2
+-- @param b Capture 2
 --
--- @return String 1
-local function _is_equal_part_word(a, b)
+-- @return Capture 1
+local function _is_equal_two_alternatives(a, b)
    word_property.has_invalid_alt = word_property.has_invalid_alt or (a ~= b)
    return a
 end
@@ -462,7 +461,7 @@ local word = P{
    -- sind.  Ein Teilwort kann ein optionales führendes und schließendes
    -- Trennzeichen enthalten.  Die Capture enthält das Wort ohne
    -- jegliche Trennzeichen.
-   part_word = V"ophyphen" * Cf(V"cluster" * (V"hyphen" * V"cluster")^0, _conc_cluster) * V"ophyphen",
+   part_word = V"ophyphen" * (V"cluster" * (V"hyphen" * V"cluster")^0) / _concatenate_captures * V"ophyphen",
    -- Ein Kluster besteht aus mehreren aneinandergereihten fundamentalen
    -- Klustern ohne Unterbrechung durch Trennzeichen.  Es gibt drei
    -- Arten von fundamentalen Klustern: Buchstabenkluster,
@@ -472,9 +471,7 @@ local word = P{
    -- fund. Kluster   11-2222   1222222223   11122222222233-444   1111222222233-44
    -- Kluster         11-2222   1111111111   11111111111111-222   1111111111111-22
    --
-   -- Die Capture enthält sämltliche Zeichen der aufeinanderfolgenden
-   -- Kluster.
-   cluster = Cf((V"cl_letter" + V"cl_nonstd" + V"cl_alt")^1, _conc_cluster),
+   cluster = (V"cl_letter" + V"cl_nonstd" + V"cl_alt")^1,
    --
    -- Buchstabenkluster
    --
@@ -554,7 +551,7 @@ local word = P{
    -- voneinander getrennt.  Beide Alternativen werden auf
    -- Buchstabengleichheit geprüft.  Die Capture enthält abschließend
    -- die Buchstaben der ersten Alternative.
-   alt_rule = Cf(V"alt_1st" * V"alt_sep" * V"alt_2nd", _is_equal_part_word),
+   alt_rule = (V"alt_1st" * V"alt_sep" * V"alt_2nd") / _is_equal_two_alternatives,
    -- Die erste Alternative ist ein Teilwort (mit Capture).
    alt_1st = V"part_word",
    -- Die zweite Alternative ist ebenfalls ein Teilwort.  Diese Capture
