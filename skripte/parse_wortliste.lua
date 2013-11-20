@@ -44,6 +44,11 @@ module "parse_wortliste"
 local M = {}
 
 
+
+-- Lade Module.
+local lpeg = require("lpeg")
+local unicode = require("unicode")
+
 -- Kürzel für Selene-Unicode-Funktionen.
 local Ugsub = unicode.utf8.gsub
 local Ulen = unicode.utf8.len
