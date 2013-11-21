@@ -38,9 +38,9 @@ Feldnummer haben Priorität.
 Sortierung
 ==========
 
-Die Sortierung erfolgt nach Dudensortierung.  Die genauen Regeln sind
-in der Datei `skripte/python/sort.py' beschrieben, welche auch zur
-maschinellen Sortierung der Liste verwendet werden kann.
+Die Sortierung erfolgt nach Dudensortierung.  Die genauen Regeln sind in der
+Datei `skripte/ort.py' beschrieben, welche auch zur maschinellen Sortierung
+der Liste verwendet werden kann.
 
 
 Kennzeichnung der Trennstellen
