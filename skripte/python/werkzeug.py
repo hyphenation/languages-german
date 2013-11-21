@@ -405,7 +405,7 @@ def join_word(word, assert_complete=False):
     key = word.translate(table)
 
 # Spezielle Trennungen für die traditionelle Rechtschreibung
-# (siehe ../../dokumente/dateikopf)::
+# (siehe ../../dokumente/README.wortliste)::
 
     if '{' in key or '}' in key:
         key = key.replace(u'{ck/kk}',  u'ck')

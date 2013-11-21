@@ -35,7 +35,8 @@
 # Nutzung für die Zwecke der Trennmuster-Gruppe ist jedenfalls
 # problemlos möglich.)
 #
-# Bedeutung der Semikolon-getrennten Felder: (aus Werners "dateikopf"):
+# Bedeutung der Semikolon-getrennten Felder: (aus Werners
+# "README.wortliste"):
 #
 #   1 Wort ungetrennt
 #   2 Wort mit Trennungen, falls für alle Varianten identisch,

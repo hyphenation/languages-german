@@ -1,0 +1,169 @@
+Wortliste deutscher Wörter mit gewichteten Trennungen
+
+
+Bedeutung der Felder
+====================
+
+  1 Wort ungetrennt
+  2 Wort mit Trennungen, falls für alle Varianten identisch,
+    anderenfalls leer
+  3 falls Feld 2 leer, Trennung nach traditioneller Rechtschreibung
+  4 falls Feld 2 leer, Trennung nach reformierter Rechtschreibung (2006)
+  5 falls Feld 2 leer, Trennung für Wortform, die entweder in
+    der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird
+    und für traditionelle und reformierte Rechtschreibung identisch ist
+  6 falls Feld 5 leer, Trennung für Wortform, die entweder in
+    der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
+    traditionelle Rechtschreibung
+  7 falls Feld 5 leer, Trennung für Wortform, die entweder in
+    der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
+    reformierte Rechtschreibung (2006)
+  8 falls Feld 5 leer, Trennung nach (deutsch)schweizerischer
+    Rechtschreibung; insbesondere Wörter mit `sss' gefolgt von
+    einem Vokal, die wie andere Dreifachkonsonanten gehandhabt wurden
+    (also anders, als der Duden früher vorgeschrieben hat), z.B.
+    `süssauer'
+
+Leere Felder sind mit `-x-' markiert (`x' ist die Feldnummer); Felder 3
+und 4 als auch Felder 6, 7 und 8 treten immer simultan auf, um die
+Lesbarkeit zu erhöhen.
+
+Zur Erstellung von Trennmustern für die traditionelle Rechtschreibung
+benötigt man Felder 2, 3, 5, und 6; für die reformierte Rechtschreibung
+die Felder 2, 4, 5 und 7, und für die traditionelle
+(deutsch)schweizerische die Felder 2, 3, 5, 6 und 8.  Felder mit höherer
+Feldnummer haben Priorität.
+
+
+Sortierung
+==========
+
+Die Sortierung erfolgt nach Dudensortierung.  Die genauen Regeln sind
+in der Datei `skripte/python/sort.py' beschrieben, welche auch zur
+maschinellen Sortierung der Liste verwendet werden kann.
+
+
+Kennzeichnung der Trennstellen
+==============================
+
+Die Charakterisierung und Wichtung der Trennstellen ist nicht vollständig.
+Sie soll künftig die Nutzung der Wortliste für die Bestimmung der Güte
+einer Trennstelle und für die regelbasierte Entscheidung über den Aufbruch
+typographischer Ligaturen und die Schreibung des S-Lautes (rund-s vs.
+lang-s) ermöglichen.
+
+Folgende Zeichen kennzeichnen Trennstellen:
+
+  ·  nicht kategorisiert
+
+  =  an Wortfugen (zwischen Grundmorphemen): Wort=fu-ge
+  |  nach Präfix oder Verbalpartikel: Vor|sil-be, auf|zäh-len
+  -  innerhalb eines Morphems oder vor einem Suffix: in-nen, frag-lich
+
+* Die Unterscheidung, ob ein Wortbestandteil ein Präfix oder ein Grundmorphem
+  ist, ist oft nicht eindeutig:
+
+    drauf=los oder drauf|los?
+
+* `Etymologische' Präfixe, die im heutigen Sprachverständnis nicht mehr als
+  Präfixe wahrgenommen werden, sind nicht speziell markiert:
+
+    En-er-gie, Ant-wort
+
+  Kriterien sind neben der `Güte' der Trennstelle (Nicht-Störung des
+  Leseflusses bei Zeilenumbruch an dieser Stelle) die Lang-s-Schreibung
+  (Schluss-s auch bei s-s, s-t, oder s-p) und der Aufbruch von Ligaturen
+  an dieser Stelle.
+
+* Die Kategorisierung der Trennstellen ist nicht abgeschlossen.
+  Zur Zeit sind einige Trennstellen nach Präfix oder Verbalpartikel noch
+  mit `-' oder `=' bezeichnet.
+
+Für die Bindungsstärke B von Trennstellen verschiedener Kategorien gilt
+B(-) > B(|) > B(=):
+
+  Aus|wahl=lis-te        (Aus + wahl) + (lis-te)
+  fern=ab|ge|le-gen      fern + (ab + (ge + (le-gen)))
+
+Präfixe sind `rechtsbindend':
+
+  un|voll|stän-dig       un + (voll + ständig)
+  un|aus|ge|go-ren       un + (aus + (ge + (go-ren)))
+
+Die unterschiedliche Bindungsstärke von Trennungen der Kategorien
+`-' und `=' kann durch Doppellung des Trennzeichens markiert werden:
+
+  drei--fa-che                Wortbildungssuffix -fa-che
+  Alp=horn==trio              (Alp + horn) + trio
+  Berg===fünf=fin-ger==kraut  Berg + ((fünf + (fin-ger)) + kraut)
+
+Verschiedene Trennstellen dieser Kategorien ohne Doppelung bezeichnen
+entweder gleichwertige Wortbestandteile, Zerlegungsalternativen oder sind
+(noch) nicht gewichtet:
+
+  Abend=brot=zeit        (Abend + brot) + zeit oder Abend + (brot + zeit)
+
+Das gemischte Trennzeichen »|=« kennzeichnet die Bindungverhältnisse,
+wenn sich ein echter Präfix auf das gesamte folgende Kompositum bezieht:
+
+  un|=wahr=schein-lich  un + (wahr + scheinlich)
+
+Das gemischte Trennzeichen »-=« kennzeichnet die Bindungsverhältnisse,
+wenn sich beispielsweise ein Suffix auf das gesamte vorhergehende
+Kompositum bezieht
+
+  an-dert=halb-=fach     ((an+dert) + halb) + fach
+
+Das erste Zeichen eines gemischten Trennzeichens kennzeichnet die
+Kategorie der Trennstelle.
+
+Ebenso wie die Charakterisierung ist die Markierung der Bindungstärke
+unvollständig.
+
+
+Ungünstige (irreführende oder sinnentstellende) Trennstellen sind mit einem
+Punkt markiert.  Der Punkt ersetzt das Trennzeichen für nicht kategorisierte
+Trennstellen oder folgt auf Trennzeichen zur Kategorisierung:
+
+  An·den.ken, Ost=en-.de
+
+Besonders ungünstige Trennstellen können mit mehreren Punkten
+gekennzeichnet sein.
+
+  .    ungünstig: An·den.ken, Ost=en.de, Re|im|.port
+  ..   sehr ungünstig: Ge·winn·er..war·tung
+  ...  äußerst ungünstig: An|al-...pha-bet
+
+Auch die Markierung ungünstiger Trennstellen ist weder eindeutig noch
+vollständig.  Bei der Generation der Trennmustern für TeX werden alle als
+ungünstige markierten Trennstellen als nicht vorhanden gewertet.
+
+
+Spezielle Trennungen
+====================
+
+Folgende Notation wird verwendet, um spezielle Trennungen (für die
+traditionelle Rechtschreibung) zu kennzeichnen:
+
+  Ab-fa{ll/ll-l}a-ger
+
+Die gleiche Konstruktion wird verwendet, um Trennungen von `ck'
+darzustellen:
+
+  Dru{ck/k·k}er
+
+Um z.B. eine Wortliste für TeX zu konstruieren (traditionelle
+Rechtschreibung), das solche speziellen Trennungen nicht benutzen kann,
+ist folgender regulärer Ausdruck in `perl' anzuwenden:
+
+  s| { ( [^/]* ) / [^}]* } | \1 |gx
+
+
+Doppeldeutige Trennstellen werden folgendermaßen deklariert:
+
+  er[b-/-b]recht
+
+Für TeX-Trennmuster ist es vielleicht am besten, solche Einträge zu
+entfernen und die häufigeren Fälle in einem \hyphenation-Block zu
+behandeln.  Sowohl in `[...]' als auch in `{...}' können alle Arten von
+gewichteten und ungewichteten Trennstellen auftreten.
