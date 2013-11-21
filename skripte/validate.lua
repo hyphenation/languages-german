@@ -77,6 +77,11 @@ local count = {
    ux_rxtrs = 0,
 }
 
+-- Lese Ausnahmeliste.
+local fname = "wortliste.ausnahmen"
+fname = pwl.read_exception_records(fname)
+print("Verwende Ausnahmeliste " .. fname)
+
 -- Iteriere über stdin.
 for line in io.lines() do
    total = total + 1

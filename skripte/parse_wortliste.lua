@@ -53,6 +53,7 @@ local unicode = require("unicode")
 local Tconcat = table.concat
 
 -- Kürzel für Selene-Unicode-Funktionen.
+local Ugmatch = unicode.utf8.gmatch
 local Ugsub = unicode.utf8.gsub
 local Ulen = unicode.utf8.len
 local Usub = unicode.utf8.sub
@@ -707,6 +708,44 @@ M.validate_word = validate_word
 
 
 
+-- Diese Liste enthält Datensätze mit bekannten "Fehlern".  Die
+-- Datensätze in dieser Liste werden nicht auf Wohlgeformtheit der
+-- einzelnen Wörter geprüft.  Schlüssel ist ein Datensatz.  Der Wert
+-- darf nicht zu logisch `falsch` auswerten.
+local whitelist = {}
+
+
+
+--- Lese Ausnahmeliste von Datensätzen aus Datei.
+-- Die Datei wird im aktuellen Verzeichnis gesucht.  Wird sie nicht
+-- gefunden, so wird sie im Verzeichnis `skripte` gesucht.
+--
+-- @param fname Dateiname (optional mit Pfad)
+--
+-- @return Dateiname der erfolgreich gelesenen Datei.
+local function read_exception_records(fname)
+   -- Öffne Datei.
+   local f, err = io.open(fname, 'r')
+   if not f then
+      -- Suche Datei im Verzeichnis "skripte".
+      fname = "skripte" .. string.sub(package.config, 1, 1) .. fname
+      f = io.open(fname, 'r')
+      -- Gebe ursprüngliche Fehlermeldung aus.
+      if not f then error(err) end
+   end
+   -- Lese Datei in einem Rutsch.
+   local s = f:read('*all')
+   f:close()
+   -- Füge Datensätze der Ausnahmeliste hinzu.
+   for record in Ugmatch(s, "(.+)\n") do
+      whitelist[record] = true
+   end
+   return fname
+end
+M.read_exception_records = read_exception_records
+
+
+
 --- Prüfe einen Datensatz auf Wohlgeformtheit.  Geprüft wird das Format
 --- des Datensatzes und die Zulässigkeit sämtlicher Wörter.
 --
@@ -722,6 +761,10 @@ local function validate_record(record)
    -- Prüfe Gültigkeit des Datensatzes.
    local type = identify_record(record)
    if not type then return nil end
+   -- Verzichte auf Prüfung der Wortstruktur bei bestimmten Datensätzen.
+   if whitelist[record] then
+      return type
+   end
    -- Zerlege Datensatz.
    local trec = split(record)
    -- Merke Inhalt von Feld 1 für Gleichheitsprüfung der belegten
