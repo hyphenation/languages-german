@@ -737,7 +737,7 @@ local function read_exception_records(fname)
    local s = f:read('*all')
    f:close()
    -- Füge Datensätze der Ausnahmeliste hinzu.
-   for record in Ugmatch(s, "(.+)\n") do
+   for record in Ugmatch(s, "(.-)\n") do
       whitelist[record] = true
    end
    return fname
