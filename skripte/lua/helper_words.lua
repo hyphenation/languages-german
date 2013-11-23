@@ -93,6 +93,7 @@ end
 --
 -- @return Tabelle mit Worteigenschaften
 local function _at_word_end(...)
+   word_property.norm_word = Tconcat({...})
    return word_property
 end
 --
@@ -128,14 +129,15 @@ end
 --- <strong>nicht-öffentlich</strong> Füge eine beliebige Zahl von
 --- Strings zusammen.
 -- Diese Funktion wird in einer Funktionscapture genutzt, um Cluster
--- zusammenzufügen.
+-- zusammenzufügen.  Vorhandene normalisierte Trennzeichen werden aus
+-- der Ergebniscapture entfernt.
 --
 -- @param ... Variable Anzahl an Strings
 --
 -- @return zusammengesetzter String
-local function _concatenate_captures(...)
+local function _concatenate_alt_part_word(...)
 --   io.stderr:write("conc: ",Tconcat({...}, ","),"\n")-- For debugging purposes.
-   return Tconcat({...})
+   return ( Ugsub(Tconcat({...}), "-", "") )
 end
 --
 --- <strong>nicht-öffentlich</strong> Prüfe zwei Alternativen auf
@@ -174,6 +176,7 @@ end
 --    has_eszett           Wort enthält Buchstaben 'ß'
 --    has_nonstd           Wort enthält Spezialtrennung
 --    has_nonstd_sss       Wort enthält Spezialtrennung für das 's'
+--    norm_word            normalisiertes Wort
 --
 -- Die Grammatik beschreibt die Zulässigkeit von Wörtern nicht
 -- erschöpfend.  So wird beispielsweise nicht darauf eingegangen, ob
@@ -199,9 +202,10 @@ local word = P{
    word = V"word_head" * V"word_tail",
    -- Ein Wortanfang besteht aus einem Kluster.
    word_head = V"cluster",
-   -- Ein Wortrest besteht aus einer Trennstellenmarkierung gefolgt von
-   -- einem Kluster.  Der gesamte Ausdruck ist optional.
-   word_tail = (V"hyphen" * V"cluster")^0,
+   -- Ein Wortrest besteht aus einer normalisierten
+   -- Trennstellenmarkierung gefolgt von einem Kluster.  Der gesamte
+   -- Ausdruck ist optional.
+   word_tail = (V"norm_hyphen" * V"cluster")^0,
    --
    -- Trennstellen
    --
@@ -249,6 +253,11 @@ local word = P{
       + V"hyphen_morph" * V"hyphen_opt_quality"
       + V"hyphen_quality"
 ,
+   --
+   -- Eine normalisierte Trennstellenmarkierung ist eine
+   -- Trennstellenmarkierung, deren Capture ein für Patgen geeignetes
+   -- Trennzeichen ist.
+   norm_hyphen = V"hyphen" / "-",
    --
    -- Die folgenden Zeichen werden zur Trennstellenmarkierung verwendet:
    hyphen_ch_inner = P"-",
@@ -320,11 +329,12 @@ local word = P{
    --
    -- * Alternativteilwörter können eine führende oder abschließende
    --   Trennstellenmarkierung haben.
+   -- * Die Capture von Alternativteilwörter enthält keine Trennzeichen.
    alt_1st = V"alt_part_word",
    alt_2nd = V"alt_part_word",
    -- Ein Alternativteilwort ist ein Wort, welches eine führende und
    -- abschließende Trennstellenmarkierung enthalten kann.
-   alt_part_word = V"ophyphen" * V"word" / _concatenate_captures * V"ophyphen",
+   alt_part_word = V"ophyphen" * V"word" / _concatenate_alt_part_word * V"ophyphen",
    -- Eine optionale Trennstellenmarkierung.
    ophyphen = V"hyphen"^-1,
    -- Zeichen, welches einen Ausdruck für Alternativen einführt.
@@ -403,9 +413,8 @@ M.parse_word = parse_word
 -- @param rawword unbehandeltes Wort
 --
 -- @return <code>nil</code>, falls das Wort eine unzulässige Struktur
--- hat;<br /> <code>word, props</code>, sonst.<br /> <code>word</code>
--- ist das normalisierte Wort, <code>props</code> ist eine Tabelle mit
--- Eigenschaften des betrachteten Wortes.
+-- hat;<br /> eine Tabelle mit Eigenschaften des betrachteten Wortes,
+-- sonst.
 local function normalize_word(rawword)
    -- Prüfung der Wortstruktur und Ermittlung der Worteigenschaften.
    local props = parse_word(rawword)
@@ -413,19 +422,7 @@ local function normalize_word(rawword)
    if not props then return nil end
    -- Prüfe auf unzulässige Alternativen.
    if props.has_invalid_alt then return nil end
-
-   -- Ersetze Spezialtrennungen.
-   rawword = Ugsub(rawword, "{(.-)/.-}", "%1")
-   -- Ersetze Alternativen durch erste Alternative (ohne Trennzeichen).
-   rawword = Ugsub(rawword, "%[(.-)/.-%]",
-                   -- Entferne Trennzeichen im Fluge.
-                   function (capture)
-                      return Ugsub(capture, "[-|=%.·]+", "")
-                   end
-   )
-   -- Ersetze Trennzeichen durch "-".
-   rawword = Ugsub(rawword, "[|=%.·]+", "-")
-   return rawword, props
+   return props
 end
 M.normalize_word = normalize_word
 
@@ -436,16 +433,16 @@ M.normalize_word = normalize_word
 -- @param rawword Wort (normiert oder unbehandelt)
 --
 -- @return <code>nil, msg</code>, falls das Wort eine unzulässige
--- Struktur hat;<br /> <code>word, props</code>, sonst.<br />
--- <code>msg</code> ist ein String, der die Unzulässigkeit näher
--- beschreibt.  <code>word</code> ist das normalisierte Wort.
--- <code>props</code> ist eine Tabelle mit Eigenschaften des
--- betrachteten Wortes.
+-- Struktur hat;<br /> eine Tabelle mit Eigenschaften des betrachteten
+-- Wortes, sonst.<br /> <code>msg</code> ist ein String, der die
+-- Unzulässigkeit näher beschreibt.
 local function validate_word(rawword)
    -- Normalisiere Wort.
-   local word, props = normalize_word(rawword)
+   local props = normalize_word(rawword)
    -- Zulässiges Wort?
-   if not word then return nil, "ungültiges Wort" end
+   if not props then return nil, "ungültiges Wort" end
+   -- Ermittle normalisiertes Wort.
+   local word = props.norm_word
    -- Prüfe minimale Wortlänge.
    local len = Ulen(Ugsub(word, "-", ""))
    if len < 4 then return nil, "weniger als vier Buchstaben" end
@@ -459,7 +456,7 @@ local function validate_word(rawword)
       local ch = Usub(word, i, i)
       if ch == "-" then return nil, "Trennzeichen am Wortende" end
    end
-   return word, props
+   return props
 end
 M.validate_word = validate_word
 

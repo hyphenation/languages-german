@@ -446,13 +446,13 @@ local function validate_record(record)
    local field1 = trec[1]
    if not field1 then return false, 1, "leer" end
    for i = 1,#trec do
-      local word, props = trec[i]
+      local word = trec[i]
       if word then
          -- Hat das Wort eine zulässige Struktur?
-         word, props = validate_word(word)
-         if not word then return false, i, props end
+         local props = validate_word(word)
+         if not props then return false, i, props end
          -- Stimmt Wort mit Feld 1 überein?
-         word = Ugsub(word, "-", "")
+         word = Ugsub(props.norm_word, "-", "")
          if word ~= field1 then return false, i, "ungleich Feld 1" end
          -- Tritt eine Spezialtrennung an unzulässiger Feldnummer auf?
          if props.has_nonstd and (i==2 or i==4 or i==5 or i==7) then return false, i, "unzulässige Spezialtrennung" end
