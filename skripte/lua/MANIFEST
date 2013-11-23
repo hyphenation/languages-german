@@ -32,6 +32,7 @@ zulässigen Wörtern und Datensätzen in der Wortliste entnommen werden.
 Dieses Modul stellt die folgende Funktionalität zur Manipulation der
 Wortliste bereit:
 
+* Prüfen einer Datei auf Wohlgeformtheit,
 * Prüfen von Datensätzen auf Wohlgeformtheit,
 * Zerlegen von Datensätzen,
 

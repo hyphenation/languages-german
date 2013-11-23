@@ -23,6 +23,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 --- Wortliste bereit:
 --
 -- <ul>
+-- <li>Prüfen einer Datei auf Wohlgeformtheit,</li>
 -- <li>Prüfen von Datensätzen auf Wohlgeformtheit,</li>
 -- <li>Zerlegen von Datensätzen,</li>
 -- </ul>
@@ -464,6 +465,84 @@ local function validate_record(record)
    return type
 end
 M.validate_record = validate_record
+
+
+
+--- Prüfe einen Korpus auf Wohlgeformtheit.  Geprüft werden das Format
+--- der Datensätze und die Zulässigkeit sämtlicher Wörter.
+-- Während der Prüfung werden die Häufigkeiten der verschiedenen
+-- Datensatztypen erhoben.
+--
+-- @param f Dateihandle
+--
+-- @return Tabelle mit Häufigkeiten der Datensatztypen.
+local function validate_file(f)
+   -- Gesamtzahl der Datensätze.
+   local total = 0
+   -- Anzahl der ungültigen Datensätze.
+   local invalid = 0
+   -- Anzahl der identifizierten Datensatztypen.
+   local count = {
+      ua = 0,
+      uxt_ = 0,
+      ux_r = 0,
+      uxtr = 0,
+      ux__c = 0,
+      ux__xt__ = 0,
+      ux__x_r_ = 0,
+      ux__x__s = 0,
+      ux__xt_s = 0,
+      ux__xtr_ = 0,
+      ux__xtrs = 0,
+      ux_rc = 0,
+      ux_rxtr_ = 0,
+      ux_rxtrs = 0,
+   }
+   -- Iteriere über Zeilen der Eingabe.
+   for record in f:lines() do
+      total = total + 1
+      local type, field, msg = validate_record(record)
+      -- Datensatz zulässig?
+      if type then
+         -- Zähle Vorkommen des Typs.
+         count[type] = count[type] + 1
+      else
+         invalid = invalid + 1
+         if type == false then io.stderr:write("Feld ", tostring(field), ": ", msg, ": ", record, "\n")
+         else io.stderr:write("ungültiger Datensatz: ", record, "\n")
+         end
+      end
+   end
+   f.close()
+   count.total = total
+   count.invalid = invalid
+   return count
+end
+M.validate_file = validate_file
+
+
+
+--- Output record statistics.
+-- This function prints all valid record types' frequency.
+--
+-- @param count Table containing record statistics.
+local function output_record_statistics(count)
+   print("ua        ", count.ua)
+   print("uxt_      ", count.uxt_)
+   print("ux_r      ", count.ux_r)
+   print("uxtr      ", count.uxtr)
+   print("ux__c     ", count.ux__c)
+   print("ux__xt__  ", count.ux__xt__)
+   print("ux__x_r_  ", count.ux__x_r_)
+   print("ux__x__s  ", count.ux__x__s)
+   print("ux__xt_s  ", count.ux__xt_s)
+   print("ux__xtr_  ", count.ux__xtr_)
+   print("ux__xtrs  ", count.ux__xtrs)
+   print("ux_rc     ", count.ux_rc)
+   print("ux_rxtr_  ", count.ux_rxtr_)
+   print("ux_rxtrs  ", count.ux_rxtrs)
+end
+M.output_record_statistics = output_record_statistics
 
 
 
