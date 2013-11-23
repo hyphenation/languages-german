@@ -1,7 +1,6 @@
 -- -*- coding: utf-8 -*-
 
 --[[
-
 Copyright 2012, 2013 Stephan Hennig
 
 This program is free software: you can redistribute it and/or modify it
@@ -16,30 +15,37 @@ General Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 --]]
 
 
 
---- Dieses Modul stellt Funktionen zum Zerlegen der Wortliste, zur
---- Prüfung des Aufbaus der Wortliste und zur Prüfung des Aufbaus von
---- Wörtern bereit.  Die API-Dokumentation kann mit <pre>
----
----   luadoc -d manual parse_wortliste.lua
----
---- </pre> erstellt werden.
+--- Dieses Modul stellt die folgende Funktionalität zur Manipulation der
+--- Wortliste bereit:
+--
+-- <ul>
+-- <li>Prüfen von Datensätzen auf Wohlgeformtheit,</li>
+-- <li>Zerlegen von Datensätzen,</li>
+-- <li>Prüfen von Wörtern auf Wohlgeformtheit,</li>
+-- <li>Normalisieren von Wörtern (Übertragen in ein für <a href="http://tug.org/docs/liang/">Patgen</a> geeignetes Format):<br />
+-- <code>Lei-nen==be[t=tu-/{tt/tt=t}u.]ches</code> &emsp;&rarr;&emsp; <code>Lei-nen-bettuches</code>,</li>
+-- </ul>
 --
 -- @class module
 -- @name parse_wortliste
 -- @author Stephan Hennig
--- @copyright 2012, Stephan Hennig
+-- @copyright 2012, 2013, Stephan Hennig
+
+-- Die API-Dokumentation kann mit <pre>
 --
+--   luadoc -d API *.lua
+--
+-- </pre> erstellt werden.
+
+
 
 --[[ just for luadoc 3.0 compatibility
 module "parse_wortliste"
 --]]
-
-
 -- lokale Modul-Tabelle
 local M = {}
 
@@ -728,7 +734,8 @@ local function _open_exception_file(fname)
    -- Tabelle möglicher Suchpfade.
    local search_path = {
       "",
-      "skripte/",
+      "lua/",
+      "skripte/lua/",
    }
    -- Ermittle plattformspezifischen Verzeichnistrenner.
    local dirsep = string.match(package.config, "(.-)\n")

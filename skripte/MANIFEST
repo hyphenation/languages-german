@@ -95,17 +95,12 @@ patgen-list-diff.sh
 # verwendet.
 
 validate.lua
-  Syntax-Test der Wortliste. Testskript für `parse_wortliste.lua`.
-  Benötigt ``texlua`` als Interpreter.
+  Syntax-Test der Wortliste.  Benötigt ``texlua`` als Interpreter.
 
   Aufruf:  ``texlua validate.lua < ../wortliste``
   Optionen:
   -h, --help                print help
   -s, --statistics          output record statistics
-
-parse_wortliste.lua
-  Funktionen zur Zerlegung der Wortliste in einzelne Felder.
-  Anwendungsbeispiel: validate.lua
 
 sort.py
   Sortiere die Wortliste und erstelle einen Patch im "unified diff" Format.
@@ -119,3 +114,8 @@ sort.py
 python/
   Python-Module, Hilfsdateien und experimentelle Skripte zur Arbeit mit der
   Wortliste. Siehe python/MANIFEST
+
+lua/
+  Lua-Module und Hilfsdateien zur Arbeit mit der Wortliste.  Enthält
+  u.a. eine formale Beschreibung zulässiger Wörter und Datensätze in der
+  Wortliste.  Siehe lua/MANIFEST.

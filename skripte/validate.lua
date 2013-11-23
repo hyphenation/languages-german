@@ -23,7 +23,9 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 -- Lese Konfigurationdaten aus.
 local path_dirsep, path_sep, path_subst = string.match(package.config, "(.-)\n(.-)\n(.-)\n")
 -- Erweitere Modulsuchpfad.
-package.path = package.path .. path_sep .. "skripte" .. path_dirsep .. path_subst .. ".lua"
+package.path = package.path
+   .. path_sep .. "lua" .. path_dirsep .. path_subst .. ".lua"
+   .. path_sep .. "skripte" .. path_dirsep .. "lua" .. path_dirsep .. path_subst .. ".lua"
 
 -- Lade Module aus Lua-Pfad.
 local pwl = require("parse_wortliste")

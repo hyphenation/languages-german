@@ -1,0 +1,63 @@
+# Verzeichnis `skripte/lua`
+
+## Vorwort
+
+Selbstdokumentierende Lua-Module und Hilfsdateien zur Arbeit mit der
+Wortliste.
+
+Die Module in diesem Verzeichnis sind im [LuaDoc][luadoc]-Format
+dokumentiert.  Die API-Dokumentation kann mit
+
+    luadoc -d API *.lua
+
+erstellt werden.
+
+Die Module in diesem Verzeichnis ermöglichen u. a. das Prüfen bestimmter
+Ausdrücke (Wörter, Datensätze) auf Wohlgeformtheit.  Die Prüfung erfolgt
+mit Hilfe des Lua-Moduls [LPEG][lpeg], welches
+[Parsing Expression Grammars][peg] (PEG) implementiert, eine Alternative
+zu kontextfreien Grammatiken.  Dem Quellkode der entsprechenden Module
+in diesem Verzeichnis kann daher eine formale Beschreibung von
+zulässigen Wörtern und Datensätzen in der Wortliste entnommen werden.
+
+[luadoc]: http://keplerproject.github.com/luadoc/
+[lpeg]: http://www.inf.puc-rio.br/~roberto/lpeg/
+[peg]: http://bford.info/packrat/
+
+
+## Module
+
+### `parse_wortliste.lua`
+
+Dieses Modul stellt die folgende Funktionalität zur Manipulation der
+Wortliste bereit:
+
+* Prüfen von Datensätzen auf Wohlgeformtheit,
+* Zerlegen von Datensätzen,
+* Prüfen von Wörtern auf Wohlgeformtheit,
+* Normalisieren von Wörtern (Übertragen in ein für [Patgen][patgen] geeignetes Format):  
+  `Lei-nen==be[t=tu-/{tt/tt=t}u.]ches` &emsp;&rarr;&emsp; `Lei-nen-bettuches`,
+
+Wird von anderen Lua-Skripten eingebunden.
+
+[patgen]: http://tug.org/docs/liang/
+
+
+
+## Sonstige Dateien
+
+### `wortliste.ausnahmen`
+
+Diese Datei enthält Datensätze der Datei `wortliste` mit bekannten
+„Fehlern“.  Die Datensätze dieser Datei werden von der Prüfung aller
+Wörter auf Wohlgeformtheit ausgenommen.  Es wird lediglich die
+Wohlgeformtheit des entsprechenden Datensatzes geprüft.
+
+
+
+<!--
+%%% Local Variables: 
+%%% coding: utf-8
+%%% mode: markdown
+%%% End: 
+-->
