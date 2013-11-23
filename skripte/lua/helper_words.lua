@@ -195,20 +195,13 @@ local word = P{
    -- zurückgesetzt.  Am Ende werden alle ausstehenden Captures
    -- verworfen.
    property_table = P(true) / _at_word_start * V"word" * -1 / _at_word_end,
-   -- Ein Wort ist ein Teilwort, kann also führende und abschließende
-   -- Trennstellenmarkierungen enthalten.  Diese Generalisierung
-   -- vereinfacht die Grammatik im Zusammenhang mit Alternativen etwas.
-   word = V"part_word",
-   --
-   -- Teilwort
-   --
-   -- Ein Teilwort besteht aus zusammenhängenden Zeichenketten,
-   -- sogenannten Klustern, die durch Trennstellenmarkierungen
-   -- voneinander getrennt sind.  Ein Teilwort kann eine führende und
-   -- abschließende Trennstellenmarkierung enthalten.  Die Capture
-   -- enthält die Zeichen aller Kluster (die Buchstaben des Teilwortes
-   -- ohne jegliche Trennzeichen).
-   part_word = V"ophyphen" * (V"cluster" * (V"hyphen" * V"cluster")^0) / _concatenate_captures * V"ophyphen",
+   -- Ein Wort beginnt mit einem Wortanfang.  Darauf folgt ein Wortrest.
+   word = V"word_head" * V"word_tail",
+   -- Ein Wortanfang besteht aus einem Kluster.
+   word_head = V"cluster",
+   -- Ein Wortrest besteht aus einer Trennstellenmarkierung gefolgt von
+   -- einem Kluster.  Der gesamte Ausdruck ist optional.
+   word_tail = (V"hyphen" * V"cluster")^0,
    --
    -- Trennstellen
    --
@@ -256,9 +249,6 @@ local word = P{
       + V"hyphen_morph" * V"hyphen_opt_quality"
       + V"hyphen_quality"
 ,
-   --
-   -- Eine optionale Trennstellenmarkierung.
-   ophyphen = V"hyphen"^-1,
    --
    -- Die folgenden Zeichen werden zur Trennstellenmarkierung verwendet:
    hyphen_ch_inner = P"-",
@@ -325,11 +315,18 @@ local word = P{
    -- Buchstabengleichheit geprüft.  Die Capture enthält abschließend
    -- die Buchstaben der ersten Alternative.
    alt_rule = (V"alt_1st" * V"alt_sep" * V"alt_2nd") / _is_equal_two_alternatives,
-   -- Die erste Alternative ist ein Teilwort.
-   alt_1st = V"part_word",
-   -- Die zweite Alternative ist ebenfalls ein Teilwort.  Diese Capture
-   -- wird später verworfen.
-   alt_2nd = V"part_word",
+   -- Alternativen enthalten Alternativteilwörter.  Die Unterschiede
+   -- zwischen Wörtern und Alternativteilwörtern sind:
+   --
+   -- * Alternativteilwörter können eine führende oder abschließende
+   --   Trennstellenmarkierung haben.
+   alt_1st = V"alt_part_word",
+   alt_2nd = V"alt_part_word",
+   -- Ein Alternativteilwort ist ein Wort, welches eine führende und
+   -- abschließende Trennstellenmarkierung enthalten kann.
+   alt_part_word = V"ophyphen" * V"word" / _concatenate_captures * V"ophyphen",
+   -- Eine optionale Trennstellenmarkierung.
+   ophyphen = V"hyphen"^-1,
    -- Zeichen, welches einen Ausdruck für Alternativen einführt.
    alt_open = P"[",
    -- Zeichen, welches einen Ausdruck für Alternativen abschließt.
@@ -454,11 +451,11 @@ local function validate_word(rawword)
    if len < 4 then return nil, "weniger als vier Buchstaben" end
    -- Prüfe Wortenden auf unzulässige Trennzeichen.
    local len = Ulen(word)
-   for i = 1,2 do
+   for i = 2,2 do
       local ch = Usub(word, i, i)
       if ch == "-" then return nil, "Trennzeichen am Wortanfang" end
    end
-   for i = len-1,len do
+   for i = len-1,len-1 do
       local ch = Usub(word, i, i)
       if ch == "-" then return nil, "Trennzeichen am Wortende" end
    end
