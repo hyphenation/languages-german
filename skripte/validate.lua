@@ -20,8 +20,8 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 --]]
 
 
--- Lies Konfigurationdaten aus.
-local path_dirsep, path_sep, path_subst = string.match(package.config, "(.)\n(.)\n(.)\n")
+-- Lese Konfigurationdaten aus.
+local path_dirsep, path_sep, path_subst = string.match(package.config, "(.-)\n(.-)\n(.-)\n")
 -- Erweitere Modulsuchpfad.
 package.path = package.path .. path_sep .. "skripte" .. path_dirsep .. path_subst .. ".lua"
 
@@ -79,7 +79,7 @@ local count = {
 
 -- Lese Ausnahmeliste.
 local fname = "wortliste.ausnahmen"
-fname = pwl.read_exception_records(fname)
+fname = pwl.read_exception_file(fname)
 print("Verwende Ausnahmeliste " .. fname)
 
 -- Iteriere über stdin.

@@ -716,23 +716,43 @@ local whitelist = {}
 
 
 
+--- <strong>nicht-öffentlich</strong> Öffne Ausnahmedatei.
+-- Die Datei wird im aktuellen Verzeichnis gesucht, im Verzeichnis `lua`
+-- und im Verzeichnis `skripte/lua`, in der angegebenen Reihenfolge.
+--
+-- @param fname Dateiname
+--
+-- @return Dateihandle und Pfad der erfolgreich geöffneten
+-- Ausnahmedatei.
+local function _open_exception_file(fname)
+   -- Tabelle möglicher Suchpfade.
+   local search_path = {
+      "",
+      "skripte/",
+   }
+   -- Ermittle plattformspezifischen Verzeichnistrenner.
+   local dirsep = string.match(package.config, "(.-)\n")
+   -- Suche Ausnahmedatei.
+   local err = {}
+   local f
+   for i, path in ipairs(search_path) do
+      -- Ersetzte `/` durch geeigneten Verzeichnistrenner.
+      path = Ugsub(path, "/", dirsep)
+      f, err[i] = io.open(path .. fname, 'r')
+      if f then return f, path end
+   end
+   error(err[1])
+end
+
+
+
 --- Lese Ausnahmeliste von Datensätzen aus Datei.
--- Die Datei wird im aktuellen Verzeichnis gesucht.  Wird sie nicht
--- gefunden, so wird sie im Verzeichnis `skripte` gesucht.
 --
 -- @param fname Dateiname (optional mit Pfad)
 --
 -- @return Dateiname der erfolgreich gelesenen Datei.
-local function read_exception_records(fname)
-   -- Öffne Datei.
-   local f, err = io.open(fname, 'r')
-   if not f then
-      -- Suche Datei im Verzeichnis "skripte".
-      fname = "skripte" .. string.sub(package.config, 1, 1) .. fname
-      f = io.open(fname, 'r')
-      -- Gebe ursprüngliche Fehlermeldung aus.
-      if not f then error(err) end
-   end
+local function read_exception_file(fname)
+   local f, path = _open_exception_file(fname)
    -- Lese Datei in einem Rutsch.
    local s = f:read('*all')
    f:close()
@@ -740,9 +760,9 @@ local function read_exception_records(fname)
    for record in Ugmatch(s, "(.-)\n") do
       whitelist[record] = true
    end
-   return fname
+   return path .. fname
 end
-M.read_exception_records = read_exception_records
+M.read_exception_file = read_exception_file
 
 
 
