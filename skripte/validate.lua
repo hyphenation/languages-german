@@ -28,7 +28,7 @@ package.path = package.path
    .. path_sep .. "skripte" .. path_dirsep .. "lua" .. path_dirsep .. path_subst .. ".lua"
 
 -- Lade Module aus Lua-Pfad.
-local pwl = require("parse_wortliste")
+local hrecords = require("helper_records")
 
 -- Lade Module aus TEXMF-Baum.
 kpse.set_program_name('luatex')
@@ -81,13 +81,13 @@ local count = {
 
 -- Lese Ausnahmeliste.
 local fname = "wortliste.ausnahmen"
-fname = pwl.read_exception_file(fname)
+fname = hrecords.read_exception_file(fname)
 print("Verwende Ausnahmeliste " .. fname)
 
 -- Iteriere über stdin.
 for line in io.lines() do
    total = total + 1
-   local type, field, msg = pwl.validate_record(line)
+   local type, field, msg = hrecords.validate_record(line)
    -- Datensatz zulässig?
    if type then
       -- Zähle Vorkommen des Typs.

@@ -27,13 +27,22 @@ zulässigen Wörtern und Datensätzen in der Wortliste entnommen werden.
 
 ## Module
 
-### `parse_wortliste.lua`
+### `helper_records.lua`
 
 Dieses Modul stellt die folgende Funktionalität zur Manipulation der
 Wortliste bereit:
 
 * Prüfen von Datensätzen auf Wohlgeformtheit,
 * Zerlegen von Datensätzen,
+
+Wird von anderen Lua-Skripten eingebunden.
+
+
+### `helper_words.lua`
+
+Dieses Modul stellt die folgende Funktionalität zur Manipulation der
+Wortliste bereit:
+
 * Prüfen von Wörtern auf Wohlgeformtheit,
 * Normalisieren von Wörtern (Übertragen in ein für [Patgen][patgen] geeignetes Format):  
   `Lei-nen==be[t=tu-/{tt/tt=t}u.]ches` &emsp;&rarr;&emsp; `Lei-nen-bettuches`,
