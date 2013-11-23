@@ -1,12 +1,18 @@
 # Repositorium *wortliste* – Übersicht
 
+<!-- Diese Datei kann mit 
+
+       $ pandoc -t html5 -so index.html index.md
+
+ nach HTML konvertiert werden.-->
+
 Das Repositorium enthält:  
 
 1. Eine Wortliste als Grundlage für die Generierung von Trennmustern nebst 
    einiger Neben- und Sonderlisten.  
 2. Einen Mechanismus zur Generierung von Trennmustern aus den Wortlisten.  
 3. Einige Skripte zur Arbeit mit den Wortlisten.  
-4. Das LaTeX-Paket *de-hyph-exptl*.  
+4. Das LaTeX-Paket *dehyph-exptl*.  
 
 Allgemeine Informationen zu diesem Projekte finden sich im [TWiki] und in
 der [Trennmusterliste]. 
@@ -28,7 +34,7 @@ die Erstellung und Einrichtung neuer Trennmuster findet sich in
 seiner Installation eine eigene Dokumentation, die über
 
 <pre>
-    $ texdoc dehyph-exptl  
+    $ texdoc dehyph-exptl
 </pre>
 
 zugänglich ist.

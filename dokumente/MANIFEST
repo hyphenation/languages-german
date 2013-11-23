@@ -3,7 +3,7 @@ index.md
 # Verzeichnisstruktur und die wichtigen Dokumentationsquellen.
 # Sie kann mit 
 # 
-#   $ pandocc -o index.html index.md
+#   $ pandocc -t html5 -so index.html index.md
 #
 # nach HTML konvertiert werden.
 
