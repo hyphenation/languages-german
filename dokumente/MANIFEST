@@ -1,6 +1,11 @@
-README.index
+index.md
 # Ein kurzer Überblick über den Inhalt dieses Repositoriums, seine
 # Verzeichnisstruktur und die wichtigen Dokumentationsquellen.
+# Sie kann mit 
+# 
+#   $ pandocc -o index.html index.md
+#
+# nach HTML konvertiert werden.
 
 README.wortliste
 # -*- coding: utf-8 -*-
