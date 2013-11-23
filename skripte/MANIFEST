@@ -55,6 +55,13 @@ make-full-pattern.sh
 #
 #   sh make-full-pattern.sh words.hyphenated german.tr
 
+merge-wordlists.sh
+# Fügt mehrere Wortlisten zu einer sortierten Gesamtliste der einfachen
+# (ungetrennten) Wörter)zusammen.
+#
+# Eingabe: ein oder mehrere Dateinamen.
+# Ausgabe ist nach stdout.
+
 patgen-list-diff.awk
 # Dieses Skript liest eine DIFF-Datei der Patgen-Eingabelisten (siehe
 # Skript patgen-list-diff.sh) und zerlegt sie in Wörter,
