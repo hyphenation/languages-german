@@ -14,7 +14,7 @@ Das Repositorium enthält:
 3. Einige Skripte zur Arbeit mit den Wortlisten.  
 4. Das LaTeX-Paket *dehyph-exptl*.  
 
-Allgemeine Informationen zu diesem Projekte finden sich im [TWiki] und in
+Allgemeine Informationen zu diesem Projekt finden sich im [TWiki] und in
 der [Trennmusterliste]. 
 
 ## Verzeichnisstruktur und Dokumentation
@@ -24,6 +24,7 @@ der [Trennmusterliste].
   + [dehyph-exptl]  
   + [dokumente]  
   + [skripte]  
+  &nbsp;&nbsp;+ [lua]  
   &nbsp;&nbsp;+ [python]  
 
 Die meisten Verzeichnisse enthalten eine MANIFEST-Datei, in der die einzelnen
@@ -39,6 +40,7 @@ seiner Installation eine eigene Dokumentation, die über
 
 zugänglich ist.
 
+
 [twiki]: http://projekte.dante.de/Trennmuster
 [trennmusterliste]: https://lists.dante.de/mailman/listinfo/trennmuster
 [wortliste]: ../
@@ -47,6 +49,7 @@ zugänglich ist.
 [dokumente]: ../dokumente
 [skripte]: ../skripte
 [python]: ../skripte/python
+[lua]: ../skripte/lua
 [README.wortliste]: README.wortliste
 [new-patterns]: new-patterns
 [dehyph-exptl]: ../dehyph-exptl/
