@@ -14,7 +14,7 @@ Das Repositorium enthält:
 3. Einige Skripte zur Arbeit mit den Wortlisten.  
 4. Das LaTeX-Paket *dehyph-exptl*.  
 
-Allgemeine Informationen zu diesem Projekt finden sich im [TWiki] und in
+Allgemeine Informationen zu diesem Projekt finden sich im [Projekt-Wiki] und in
 der [Trennmusterliste]. 
 
 ## Verzeichnisstruktur und Dokumentation
@@ -41,7 +41,7 @@ seiner Installation eine eigene Dokumentation, die über
 zugänglich ist.
 
 
-[twiki]: http://projekte.dante.de/Trennmuster
+[projekt-wiki]: http://projekte.dante.de/Trennmuster
 [trennmusterliste]: https://lists.dante.de/mailman/listinfo/trennmuster
 [wortliste]: ../
 [daten]: ../daten
