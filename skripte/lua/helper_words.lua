@@ -209,9 +209,32 @@ local word = P{
    --
    -- Trennstellen
    --
-   -- Die Markierung von Trennstellen erfolgt zunächst nach deren
-   -- morphologischer Struktur.  Wahlweise kann auch eine (zusätzliche)
-   -- qualitative Bewertung erfolgen.
+   -- Die Markierung von Trennstellen erfolgt entweder ausschließlich
+   -- nach deren morphologischer Struktur.  Alternativ kann eine
+   -- Trennstelle auch qualitativ bewertet werden, optional mit
+   -- vorangestellter, morphologischer Markierung.
+   --
+   -- Normalisierte Trennstelle
+   --
+   -- Während des Normalisierens werden die Zeichen einer
+   -- Trennstellenmarkierung in ein für Patgen geeignetes Zeichen
+   -- gewandelt.
+   --
+   -- Es gibt zwei Arten von normalisierten Trennstellenmarkierungen mit
+   -- unterschiedlichen Captures.
+   norm_hyphen = V"hyphen_norm_without_quality" + V"hyphen_norm_with_quality",
+   -- Trennstellenmarkierungen ohne Bewertung werden in ein einfaches
+   -- Trennzeichen umgewandelt.
+   hyphen_norm_without_quality = V"hyphen_without_quality" / "-",
+   -- Trennstellmarkierungen mit Bewertung werden in einen Leerstring
+   -- gewandelt; solche Trennungen werden also unterdrückt.
+   hyphen_norm_with_quality = V"hyphen_with_quality" / "",
+   -- Eine Trennstelle mit Bewertung kann eine optionale, vorstehende,
+   -- morphologische Markierung enthalten.
+   hyphen_with_quality = V"hyphen_morph"^0 * V"hyphen_quality",
+   -- Eine Trennstelle ohne Bewertung ist ausschließlich morphologisch
+   -- markiert.
+   hyphen_without_quality = V"hyphen_morph" * -V"hyphen_quality",
    --
    -- morphologische Markierungen
    --
@@ -225,6 +248,8 @@ local word = P{
    hyphen_compound_prefix = V"hyphen_ch_prefix" * V"hyphen_compound",
    -- vor Suffix eines zusammengesetzten Wortes
    hyphen_compound_suffix = V"hyphen_ch_inner" * V"hyphen_compound",
+   -- unkategorisiert
+   hyphen_uncategorized = V"hyphen_ch_uncategorized",
    -- eine morphologische Markierung (Achtung: In der folgenden Regel
    -- ist die Reihenfolge der Prüfung relevant.  Gemischte Trennzeichen
    -- müssen vor reinen Trennzeichen geprüft werden.)
@@ -233,32 +258,16 @@ local word = P{
       + V"hyphen_compound_suffix"
       + V"hyphen_inner"
       + V"hyphen_prefix"
-      + V"hyphen_compound",
+      + V"hyphen_compound"
+      + V"hyphen_uncategorized"
+   ,
    --
    -- qualitative Markierungen (Bewertung)
    --
-   -- eine Bewertung
+   -- Eine Bewertung besteht aus ein bis drei Bewertungszeichen.
    hyphen_quality = V"hyphen_ch_quality" * V"hyphen_ch_quality"^-2,
-   -- eine optionale Bewertung
-   hyphen_opt_quality = V"hyphen_quality"^-1,
-   --
-   -- unkategorisierte Markierungen
-   --
-   hyphen_uncategorized = V"hyphen_ch_uncategorized",
-   --
-   -- Eine beliebige Trennstellenmarkierung ist entweder unkategorisiert
-   -- oder morphologisch markiert mit optional folgender Bewertung.  Die
-   -- Bewertung kann auch alleinstehen.
-   hyphen = V"hyphen_uncategorized"
-      + V"hyphen_morph" * V"hyphen_opt_quality"
-      + V"hyphen_quality"
-,
-   --
-   -- Eine normalisierte Trennstellenmarkierung ist eine
-   -- Trennstellenmarkierung, deren Capture ein für Patgen geeignetes
-   -- Trennzeichen ist.
-   norm_hyphen = V"hyphen" / "-",
-   --
+   -- Eine beliebige Trennstellenmarkierung.
+   hyphen = V"hyphen_without_quality" + V"hyphen_with_quality",
    -- Die folgenden Zeichen werden zur Trennstellenmarkierung verwendet:
    hyphen_ch_inner = P"-",
    hyphen_ch_prefix = P"|",
