@@ -159,8 +159,8 @@ if __name__ == '__main__':
 
     parser = optparse.OptionParser(usage=usage)
     parser.add_option('-i', '--file', dest='wortliste',
-                      help='Eingangsdatei, Vorgabe "../../wortliste"',
-                      default='../../wortliste')
+                      help='Eingangsdatei, Vorgabe "../wortliste"',
+                      default='../wortliste')
     parser.add_option('-o', '--outfile', dest='patchfile',
                       help='Ausgangsdatei (Patch), Vorgabe "wortliste-sortiert.patch"',
                       default='wortliste-sortiert.patch')
