@@ -449,8 +449,8 @@ local function validate_record(record)
       local word = trec[i]
       if word then
          -- Hat das Wort eine zulässige Struktur?
-         local props = validate_word(word)
-         if not props then return false, i, props end
+         local props, msg = validate_word(word)
+         if not props then return false, i, msg end
          -- Stimmt Wort mit Feld 1 überein?
          word = Ugsub(props.norm_word, "-", "")
          if word ~= field1 then return false, i, "ungleich Feld 1" end

@@ -390,24 +390,10 @@ local word = P{
 
 --- Prüfe String gegen Wortgrammatik.
 -- Falls der String ein zulässiges Wort darstellt, wird eine Tabelle mit
--- Eigenschaften des Wortes zurückgegeben.
---
--- @param rawword unbehandeltes Wort
---
--- @return <code>nil</code>, falls das Wort eine unzulässige Struktur
--- hat;<br /> eine Tabelle mit Eigenschaften des betrachteten Wortes,
--- sonst.
-local function parse_word(rawword)
-   return word:match(rawword)
-end
-M.parse_word = parse_word
-
-
-
---- Normalisiere ein Wort.
---  Resultat ist ein Wort in einem für Patgen geeigneten Format, falls
--- das Wort zulässig ist.  Sämtliche Trennzeichen werden durch
--- '<code>-</code>' ersetzt.  Spezialtrennungen und Alternativen werden
+-- Eigenschaften des Wortes zurückgegeben.  Die Tabelle enthält im Feld
+-- `norm_word` das Wort in einem für Patgen geeigneten Format.
+-- Sämtliche Trennzeichen werden durch '<code>-</code>' ersetzt.
+-- Spezialtrennungen und Alternativen werden zur ersten Altenative
 -- aufgelöst.
 --
 -- @param rawword unbehandeltes Wort
@@ -417,12 +403,7 @@ M.parse_word = parse_word
 -- sonst.
 local function normalize_word(rawword)
    -- Prüfung der Wortstruktur und Ermittlung der Worteigenschaften.
-   local props = parse_word(rawword)
-   -- Hat das Wort eine zulässige Struktur?
-   if not props then return nil end
-   -- Prüfe auf unzulässige Alternativen.
-   if props.has_invalid_alt then return nil end
-   return props
+   return word:match(rawword)
 end
 M.normalize_word = normalize_word
 
@@ -441,6 +422,8 @@ local function validate_word(rawword)
    local props = normalize_word(rawword)
    -- Zulässiges Wort?
    if not props then return nil, "ungültiges Wort" end
+   -- Prüfe auf unzulässige Alternativen.
+   if props.has_invalid_alt then return nil, "ungleiche Alternativen" end
    -- Ermittle normalisiertes Wort.
    local word = props.norm_word
    -- Prüfe minimale Wortlänge.
