@@ -23,12 +23,12 @@ from analyse import read_teilwoerter
 # ---------------
 # Sprach-Tag nach [BCP47]_::
 
-sprachvariante = 'de-1901'         # "traditionell"
+# sprachvariante = 'de-1901'         # "traditionell"
 # sprachvariante = 'de-1996'         # Reformschreibung
 # sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
 # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
 # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
-# sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
+sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
 
 # Funktionen
 # -----------

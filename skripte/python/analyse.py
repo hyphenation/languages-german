@@ -217,7 +217,7 @@ def analyse(path='../../wortliste', sprachvariante='de-1901',
 
         # Einzelwort
         if len(teile) == 1:
-            if u'·' not in wort: # or halbfertig:
+            if u'·' not in wort or halbfertig:
                 # skip unkategorisiert, könnte Kopositum sein
                 words.add(wort)
                 words.S[join_word(wort)] += 1
@@ -328,7 +328,7 @@ def mehrdeutigkeiten(words):
             continue
         # Bekannte Mehrdeutigkeiten:
         if teil in ('Base',  'Mode', 'Page', 'Pole',
-                    'Planes', 'Radio', 'Rate', 'Real',
+                    'Planes', 'Rate', 'Real',
                     'Spare', 'Wales', 'Ware',
                     'griff' # gri[f-f/{ff/ff=f}]est
                    ):
@@ -352,11 +352,10 @@ if __name__ == '__main__':
 # nicht zusammengesetzer Wörter als Einzelwort oder in erster, mittlerer,
 # oder letzter Position in Wortverbindungen::
 
-    sprachvariante = 'de-1901'         # "traditionell"
+    # sprachvariante = 'de-1901'         # "traditionell"
     # sprachvariante = 'de-1996'         # Reformschreibung
-    # sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
-    # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
-    # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
+    # sprachvariante = 'de-1901-x-GROSS' # ohne ß (Schweiz oder GROSS)
+    sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
 
     words = analyse(sprachvariante=sprachvariante, halbfertig=True)
