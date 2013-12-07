@@ -1,0 +1,28 @@
+Dieses Verzeichnis enthält Schablonen, die bei der Erzeugung der 
+TeX-Trennmusterdateien verwendet werden. 
+
+-rw-r--r-- 1  649 Aug  6 20:19 dehyphn-x.1  
+-rw-r--r-- 1   13 Aug  6 20:19 dehyphn-x.2  
+-rw-r--r-- 1   76 Aug  6 20:19 dehyphn-x.3  
+-rw-r--r-- 1  663 Aug  6 20:19 dehyphn-x-major.1  
+-rw-r--r-- 1   13 Aug  6 20:19 dehyphn-x-major.2  
+-rw-r--r-- 1   76 Aug  6 20:19 dehyphn-x-major.3  
+-rw-r--r-- 1 4627 Aug  6 20:19 dehyphn-x-major.tex.in  
+-rw-r--r-- 1 4566 Aug  6 20:19 dehyphn-x.tex.in  
+-rw-r--r-- 1  653 Aug  6 20:19 dehyphts-x.1  
+-rw-r--r-- 1   13 Aug  6 20:19 dehyphts-x.2  
+-rw-r--r-- 1   76 Aug  6 20:19 dehyphts-x.3  
+-rw-r--r-- 1  677 Aug  6 20:19 dehyphts-x-major.1  
+-rw-r--r-- 1   13 Aug  6 20:19 dehyphts-x-major.2  
+-rw-r--r-- 1   76 Aug  6 20:19 dehyphts-x-major.3  
+-rw-r--r-- 1 4630 Aug  6 20:19 dehyphts-x-major.tex.in  
+-rw-r--r-- 1 4560 Aug  6 20:19 dehyphts-x.tex.in  
+-rw-r--r-- 1  635 Aug  6 20:19 dehypht-x.1  
+-rw-r--r-- 1   13 Aug  6 20:19 dehypht-x.2  
+-rw-r--r-- 1   76 Aug  6 20:19 dehypht-x.3  
+-rw-r--r-- 1  655 Aug  6 20:19 dehypht-x-major.1  
+-rw-r--r-- 1   13 Aug  6 20:19 dehypht-x-major.2  
+-rw-r--r-- 1   76 Aug  6 20:19 dehypht-x-major.3  
+-rw-r--r-- 1 4627 Aug  6 20:19 dehypht-x-major.tex.in  
+-rw-r--r-- 1 4560 Aug  6 20:19 dehypht-x.tex.in  
+-rw-r--r-- 1  417 Aug  6 20:19 german.tr  
