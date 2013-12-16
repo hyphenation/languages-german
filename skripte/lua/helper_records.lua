@@ -468,10 +468,11 @@ M.validate_record = validate_record
 
 
 
---- Prüfe einen Korpus auf Wohlgeformtheit.  Geprüft werden das Format
---- der Datensätze und die Zulässigkeit sämtlicher Wörter.
--- Während der Prüfung werden die Häufigkeiten der verschiedenen
--- Datensatztypen erhoben.
+--- Prüfe eine Datei auf Wohlgeformtheit.
+-- Geprüft werden das Format der Datensätze und die Zulässigkeit
+-- sämtlicher Wörter.  Während der Prüfung werden die Häufigkeiten der
+-- verschiedenen Datensatztypen erhoben.  Die übergebene Datei wird
+-- nicht geschlossen.
 --
 -- @param f Dateihandle
 --
@@ -513,7 +514,6 @@ local function validate_file(f)
          end
       end
    end
-   f.close()
    count.total = total
    count.invalid = invalid
    return count
