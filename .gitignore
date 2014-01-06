@@ -1,6 +1,8 @@
 auto/
 *~
 /skripte/*.pyc
+/skripte/python/histogramm/*.tsv
+/skripte/python/histogramm/*.png
 ????-??-??+??-??-??-[0-9a-f]*/
 /wortliste-lang-s
 /german.dic
