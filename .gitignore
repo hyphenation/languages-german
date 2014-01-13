@@ -8,5 +8,6 @@ auto/
 /german.dic
 /pre-1901.wl
 /dehypht-x/*
-*.html
+dokumente/index.html
+tmp*
 *swp
