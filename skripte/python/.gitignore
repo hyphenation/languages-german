@@ -5,8 +5,9 @@
 *.py.txt
 *.html
 *.todo
-vorsilbe-*
-teilwoerter-*
-wortliste-*
 analyse.txt
 arbeitsstand.txt
+vorsilbe-*
+teilwoerter-de-*
+teilwort-*
+wortliste-*

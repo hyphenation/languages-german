@@ -17,18 +17,18 @@ from copy import deepcopy
 import re, sys, codecs
 from werkzeug import (WordFile, WordEntry, join_word, udiff, 
                       uebertrage, TransferError, toggle_case)
-from analyse import read_teilwoerter
+from analyse import read_teilwoerter, teilwoerter
 
 # Sprachvarianten
 # ---------------
 # Sprach-Tag nach [BCP47]_::
 
-# sprachvariante = 'de-1901'         # "traditionell"
+sprachvariante = 'de-1901'         # "traditionell"
 # sprachvariante = 'de-1996'         # Reformschreibung
 # sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
 # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
 # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
-sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
+# sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
 
 # Funktionen
 # -----------
@@ -87,6 +87,8 @@ def grundwortabgleich(wort, endung, vergleichsendung=u''):
     if key in words.trennvarianten:
         # print u'fundum', key
         for altstamm in words.trennvarianten[key]:
+            if u'·' in altstamm:
+                continue
             try:
                 neustamm = uebertrage(altstamm, stamm)
                 # print u'alt/neu', wort, altstamm, neustamm
@@ -170,9 +172,25 @@ if __name__ == '__main__':
     # sys.stdout mit UTF8 encoding.
     sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
+# `Wortliste` einlesen::
+
+    wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
+    wortliste = list(wordfile)
+    wortliste_neu = deepcopy(wortliste)
+
 # Teilwörter einlesen::
 
     words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
+
+    # Alternative - Gesamtwörter als "Teilwörter" um "halbkategorisierte" Wörter 
+    # (z.b. "Nicht=wei·ter·ver·brei·tung") abzugleichen
+    # words = teilwoerter()
+    # for entry in wortliste:
+    #     wort = entry.get(sprachvariante)
+    #     if wort is None: # Wort existiert nicht in der Sprachvariante
+    #         continue
+    #     if u'·' not in wort:
+    #         words.add(wort)
 
 # Tests::
 
@@ -190,12 +208,6 @@ if __name__ == '__main__':
                     for line in open('wortteile/praefixe')
                     if not line.startswith('#'))
 
-# `Wortliste` einlesen::
-
-    wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
-    wortliste = list(wordfile)
-    wortliste_neu = deepcopy(wortliste)
-
 # Bearbeiten der neuen wortliste "in-place"::
 
     for entry in wortliste_neu:
@@ -208,41 +220,119 @@ if __name__ == '__main__':
         if u'·' not in wort: # Alle Trennstellen kategorisiert
             continue
 
-# Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
+# Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren
 
-        wort2 = teilwortabgleich(wort, grossklein=None, strict=True)
-
-        # for alt, neu in (# (u'e',  u'en' ),
-        #                  # (u'·ne',u'n'),
-        #                  # (u'·te',u't'),
-        #                  # (u'end',u'en' ),
-        #                  (u'en', u'end'),
-        #                  (u'en', u'e'),
-        #                  (u'en', u't'),
-        #                  (u't', u'·te'),
-        #                  (u't', u'·tem'),
-        #                  (u't', u'·ten'),
-        #                  (u't', u'·ter'),
-        #                  (u't', u'·tes'),
-        #                  (u'd', u'·de'),
-        #                  (u'd', u'·dem'),
-        #                  (u'd', u'·den'),
-        #                  (u'd', u'·der'),
-        #                  (u'd', u'·des'),
-        #                  (u'n', u'·ne'),
-        #                  (u'n', u'·nem'),
-        #                  (u'n', u'·nen'),
-        #                  (u'n', u'·ner'),
-        #                  (u'n', u'·nes'),
-        #                  # (u's',  u'·se·res')
-        #                 ):
-        #     wort2 = grundwortabgleich(wort, endung=neu, vergleichsendung=alt)
-        #     if wort != wort2:
-        #         break
+        # Teilwortabgleich:
+        # wort2 = teilwortabgleich(wort, grossklein=None, strict=True)
+ 
+        # Grundwortabgleich:
+        for alt, neu in (
+                         # (u'', u'm'),
+                         # (u'', u'n'),
+                         # (u'', u'r'),
+                         # (u'', u's'),
+                         # (u'', u't'),
+                         # (u'-de', u'd'),
+                         # (u'bar', u'ba-re'),
+                         # (u'bar', u't'),
+                         # (u'de', u'd'),
+                         # (u'te', u't'),
+                         # (u've', u'v'),
+                         # (u'ne',u'n'),
+                         # (u'te',u't'),
+                         # (u'end',u'en' ),
+                         (u'en', u'e'),
+                         # (u'en', u'end'),
+                         # (u'en', u'en-de'),
+                         # (u'en', u'em'),
+                         # (u'en', u'er'),
+                         # (u'en', u'es'),
+                         # (u'en', u'est'),
+                         # (u'es', u'est'),
+                         # (u'en', u't'),
+                         # (u'er', u'e·rin'),
+                         # (u're', u'ste'),
+                         # (u'ren', u'rst'),
+                         # (u'ren', u'rt'),
+                         # (u'ren', u'r·te'),
+                         # (u'ten', u'ren'),
+                         # (u'ter', u'te·re'),
+                         # (u'ter', u'te·ren'),
+                         # (u'd', u'·de'),
+                         # (u'd', u'·dem'),
+                         # (u'd', u'·den'),
+                         # (u'd', u'·der'),
+                         # (u'd', u'·des'),
+                         # (u'e', u'·em'),
+                         # (u'e', u'·en'),
+                         # (u'e', u'·er'),
+                         # (u'e', u'·es'),
+                         # (u'e', u'·et'),
+                         # (u'e', u'em'),
+                         # (u'e', u'en'),
+                         # (u'e', u'er'),
+                         # (u'e', u'es'),
+                         # (u'e', u'et'),
+                         # (u'es', u's·te'),
+                         # (u'm', u'·me'),
+                         # (u'm', u'·mem'),
+                         # (u'm', u'·men'),
+                         # (u'm', u'·mer'),
+                         # (u'm', u'·mes'),
+                         # (u'n', u'·ne'),
+                         # (u'n', u'·nem'),
+                         # (u'n', u'·nen'),
+                         # (u'n', u'·ner'),
+                         # (u'n', u'·nes'),
+                         # (u'r', u'·re'),
+                         # (u'r', u'·rem'),
+                         # (u'r', u'·ren'),
+                         # (u'r', u'·rer'),
+                         # (u'r', u'·res'),
+                         # (u's', u'·se·res')
+                         # (u'ß', u's·se'),
+                         # (u'ß', u's·sem'),
+                         # (u'ß', u's·sen'),
+                         # (u'ß', u's·ser'),
+                         # (u'ß', u's·ses'),
+                         # (u'ß', u's·sest'),
+                         # (u's', u's·se'),
+                         # (u's', u's·sem'),
+                         # (u's', u's·sen'),
+                         # (u's', u's·ser'),
+                         # (u's', u's·ses'),
+                         # (u's', u's·sest'),
+                         # (u'sch', u'·sche'),
+                         # (u'sch', u'·schem'),
+                         # (u'sch', u'·schen'),
+                         # (u'sch', u'·scher'),
+                         # (u'sch', u'·sches'),
+                         # (u'sch', u'·schest'),
+                         # (u'st', u'n'),
+                         # (u't', u'·te'),
+                         # (u't', u'·tem'),
+                         # (u't', u'·ten'),
+                         # (u't', u'·ter'),
+                         # (u't', u'·tes'),
+                         # (u't', u'·tet'),
+                         # (u't', u'·test'),
+                         # (u't', u'e'),
+                         # (u't', u'st'),
+                         # (u'te', u'le'),
+                         # (u'v', u'·ve'),
+                         # (u'v', u'·vem'),
+                         # (u'v', u'·ven'),
+                         # (u'v', u'·ver'),
+                         # (u'v', u'·ves'),
+                         # (u'v', u'·vest'),
+                        ):
+            wort2 = grundwortabgleich(wort, endung=neu, vergleichsendung=alt)
+            if wort != wort2:
+                break
         
         # wort2 = vorsilbentest(wort, (u'all', u'All'))
 
-        if wort != wort2:
+        if (wort != wort2): #and (u'·' not in wort2):
             entry.set(wort2, sprachvariante)
             print u'%s -> %s' % (wort, wort2)
             if len(entry) > 2:
