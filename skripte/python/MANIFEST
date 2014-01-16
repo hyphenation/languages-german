@@ -31,8 +31,9 @@ werkzeug.py
   Python-Module für die Arbeit mit der `Wortliste` 
   Wird von den anderen Python-Skripten importiert.
   
-  Aufruf mit ``python werkzeug.py`` startet einen Selbsttest.
-
+  Aufruf mit ``python werkzeug.py`` startet einen 
+  Test der Werkzeuge und der inneren Konsistenz der Wortliste
+  (Doppeleinträge, Übereinstimmung Schlüssel-Trennmuster).
 
 Skripte zur Trennstellenkategorisierung
 =======================================
@@ -97,10 +98,10 @@ abgleich_teilwoerter.py
   kann.
 
 prepare_patch.py
-  Helfer für kleine Editieraufgaben
+  Helfer für kleine Editieraufgaben, u.a. entfernen von Doppeleinträgen.
+  Erstellt eine Patch-Datei.
   
   Aufruf: siehe ``./prepare_patch.py -h``
-
 
 wortfugen.py
   Suche nach "Teilwortkandidaten" in der Wortliste.

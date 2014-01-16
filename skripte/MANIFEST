@@ -111,6 +111,11 @@ sort.py
 
   Details mit ``./sort.py -h``
 
+  Für einen Test der inneren Konsistenz der Wortliste
+  (Doppeleinträge, Übereinstimmung Schlüssel-Trennmuster) siehe
+  skripte/python/werkzeug.py.
+
+
 python/
   Python-Module, Hilfsdateien und experimentelle Skripte zur Arbeit mit der
   Wortliste. Siehe python/MANIFEST
