@@ -18,11 +18,11 @@ Bedeutung der Felder
   7 falls Feld 5 leer, Trennung für Wortform, die entweder in
     der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
     reformierte Rechtschreibung (2006)
-  8 falls Feld 5 leer, Trennung nach (deutsch)schweizerischer
-    Rechtschreibung; insbesondere Wörter mit `sss' gefolgt von
-    einem Vokal, die wie andere Dreifachkonsonanten gehandhabt wurden
-    (also anders, als der Duden früher vorgeschrieben hat), z.B.
-    `süssauer'
+  8 falls Feld 5 leer und nicht identisch mit Feld 6, Trennung nach
+    (deutsch)schweizerischer, traditioneller Rechtschreibung; insbesondere
+    Wörter mit `sss' gefolgt von einem Vokal, die wie andere
+    Dreifachkonsonanten gehandhabt wurden (also anders, als der Duden früher
+    vorgeschrieben hat), z.B. `süssauer'
 
 Leere Felder sind mit `-x-' markiert (`x' ist die Feldnummer); Felder 3
 und 4 als auch Felder 6, 7 und 8 treten immer simultan auf, um die
