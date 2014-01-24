@@ -23,8 +23,8 @@ from analyse import read_teilwoerter, teilwoerter
 # ---------------
 # Sprach-Tag nach [BCP47]_::
 
-sprachvariante = 'de-1901'         # "traditionell"
-# sprachvariante = 'de-1996'         # Reformschreibung
+# sprachvariante = 'de-1901'         # "traditionell"
+sprachvariante = 'de-1996'         # Reformschreibung
 # sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
 # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
 # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
@@ -311,9 +311,9 @@ endungen = (
             # (u't', u'·bar'),
             # (u't', u'·ba·re'),
             (u't', u'·te'),
-            # (u't', u'·ten'),
-            # (u't', u'·tes'),
-            # (u't', u'·tin'),
+            (u't', u'·ten'),
+            (u't', u'·tes'),
+            (u't', u'·tin'),
             # (u'te', u't'),
             # (u'te', u'·le'),
             # (u'te', u'·ten'),
@@ -377,16 +377,16 @@ if __name__ == '__main__':
 # Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
 
         # Teilwortabgleich:
-        wort2 = teilwortabgleich(wort, grossklein=None, strict=True)
+        # wort2 = teilwortabgleich(wort, grossklein=None, strict=True)
 
         # Grundwortabgleich:
-        # for alt, neu in endungen:
-        #     wort2 = grundwortabgleich(wort, endung=neu, vergleichsendung=alt,
-        #                               ganzwort=True,
-        #                               # grossklein=True
-        #                              )
-        #     if wort != wort2:
-        #         break
+        for alt, neu in endungen:
+            wort2 = grundwortabgleich(wort, endung=neu, vergleichsendung=alt,
+                                      ganzwort=True,
+                                      # grossklein=True
+                                     )
+            if wort != wort2:
+                break
 
         # wort2 = vorsilbentest(wort, (u'all', u'All'))
 
