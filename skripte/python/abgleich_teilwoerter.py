@@ -16,7 +16,8 @@
 from copy import deepcopy
 import re, sys, codecs
 from werkzeug import (WordFile, WordEntry, join_word, udiff,
-                      uebertrage, TransferError, toggle_case)
+                      uebertrage, TransferError, 
+                      sprachabgleich, toggle_case)
 from analyse import read_teilwoerter, teilwoerter
 
 # Sprachvarianten
@@ -25,7 +26,6 @@ from analyse import read_teilwoerter, teilwoerter
 
 # sprachvariante = 'de-1901'         # "traditionell"
 sprachvariante = 'de-1996'         # Reformschreibung
-# sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
 # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
 # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
 # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
@@ -108,68 +108,6 @@ def grundwortabgleich(wort, endung, vergleichsendung=u'',
     return u'='.join(teile)
 
 
-# Übertrag kategorisierter Trennstellen zwischen den Feldern aller Einträge
-# in `wortliste`::
-
-def sprachabgleich(entry):
-
-    if len(entry) <= 2:
-        return # allgemeine Schreibung
-
-    # if u'{' in unicode(entry):
-    #     continue # Spezialtrennung
-    mit_vorsilbe = None
-    gewichtet = None
-    ungewichtet = None
-    for field in entry[1:]:
-        if field.startswith('-'): # -2-, -3-, ...
-            continue
-        if u'|' in field:
-            mit_vorsilbe = field
-        elif u'·' not in field:
-            gewichtet = field
-        else:
-            ungewichtet = field
-    if mit_vorsilbe and (gewichtet or ungewichtet):
-        for i in range(1,len(entry)):
-            if entry[i].startswith('-'): # -2-, -3-, ...
-                continue
-            if u'|' not in entry[i]:
-                try:
-                    entry[i] = uebertrage(mit_vorsilbe, entry[i], strict=False)
-                except TransferError, e:
-                    print u'Sprachabgleich:', unicode(e)
-        print mit_vorsilbe+u':', unicode(entry)
-    elif gewichtet and ungewichtet:
-        for i in range(1,len(entry)):
-            if u'·' in entry[i]:
-                try:
-                    entry[i] = uebertrage(gewichtet, entry[i], strict=False)
-                except TransferError, e:
-                    print u'Sprachabgleich:', unicode(e)
-        print gewichtet, unicode(entry)
-
-
-# Teste, ob ein Teilwort eine Vorsilbe (oder auch mehrsilbiger Präfix) ist
-# und korrigiere die Trennstellenmarkierung.
-# `vorsilben` ist eine Sequenz (Tupel, Liste, Set, ...) mit zu testenden
-# Vorsilben::
-
-def vorsilbentest(wort, vorsilben):
-
-    # Gleichlautende Vorsilben und Bestimmungswörter:
-    doppeldeutig = [u'Drum=com-pu-ter', u'Miss=wahl', u'Miß=wahl']
-
-    teile = wort.split('=')
-    # erstes Teilwort
-    if teile[0] in vorsilben and (wort not in doppeldeutig):
-        return re.sub(r'^%s=' % teile[0], u'%s|' % teile[0], wort)
-    # mittlere Teilwörter
-    for teil in teile[1:-1]:
-        if teil in vorsilben:
-            return re.sub(r'=%s=' % teil, u'=%s|' % teil, wort)
-    return wort
-
 # "Umgießen" der Wortliste in eine "Teilwörter" Instanz für den
 # "Grundwortabgleich" von Wortverbindungen::
 
@@ -182,6 +120,7 @@ def wortliste_to_teilwoerter(wortliste):
         if u'·' not in wort:
             words.add(wort)
     return words
+
 
 endungen = (
             (u'', u'd'),
@@ -210,7 +149,6 @@ endungen = (
             # (u'-che', u'ch'),
             # (u'-de', u'd'),
             # (u'-de', u'd'),
-            # (u'-en', u'--bar--keit'),
             # (u'-en', u'e'),
             # (u'-er', u'e·rin'),
             # (u'-ge', u'g'),
@@ -330,12 +268,13 @@ endungen = (
             # (u'z', u'·zen'),
             # (u'z', u'·zer'),
             # (u'ß', u's·se'),
-            # mit "Grossklein":
-            # (u'', u's--los'),
-            # (u'', u'·keit'),
-            # (u'', u'·heit'),
-            # (u'd', u'·heit'),
-            # (u'e-ren', u'·ti·on'),
+       # mit "Grossklein":
+            (u'', u's·los'),
+            (u'', u'·keit'),
+            (u'', u'·heit'),
+            (u'd', u'·heit'),
+            (u'e-ren', u'·ti·on'),
+            (u'-en', u'·bar·keit'),
            )
 
 
@@ -346,9 +285,9 @@ if __name__ == '__main__':
 
 # Vorsilben (auch mehrsilbige Präfixe)::
 
-    vorsilben = set(line.rstrip().decode('utf8')
-                    for line in open('wortteile/praefixe')
-                    if not line.startswith('#'))
+    # vorsilben = set(line.rstrip().decode('utf8')
+    #                 for line in open('wortteile/praefixe')
+    #                 if not line.startswith('#'))
 
 # `Wortliste` einlesen::
 
@@ -359,9 +298,9 @@ if __name__ == '__main__':
 # Vergleichswörter einlesen::
 
     # Teilwoerter:
-    # words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
+    words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
     # Gesamtwörter als "Teilwörter":
-    words = wortliste_to_teilwoerter(wortliste)
+    # words = wortliste_to_teilwoerter(wortliste)
 
 # Bearbeiten der neuen wortliste "in-place"::
 
@@ -377,18 +316,21 @@ if __name__ == '__main__':
 # Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
 
         # Teilwortabgleich:
-        # wort2 = teilwortabgleich(wort, grossklein=None, strict=True)
+        wort2 = teilwortabgleich(wort, grossklein=None, strict=False)
 
         # Grundwortabgleich:
-        for alt, neu in endungen:
-            wort2 = grundwortabgleich(wort, endung=neu, vergleichsendung=alt,
-                                      ganzwort=True,
-                                      # grossklein=True
-                                     )
-            if wort != wort2:
-                break
-
+        # for alt, neu in endungen:
+        #     wort2 = grundwortabgleich(wort, endung=neu, vergleichsendung=alt,
+        #                               ganzwort=True,
+        #                               grossklein=True
+        #                              )
+        #     if wort != wort2:
+        #         break
+        
+        # Vorsilbentest:
         # wort2 = vorsilbentest(wort, (u'all', u'All'))
+
+# Eintrag ändern::
 
         if (wort != wort2): #and (u'·' not in wort2):
             entry.set(wort2, sprachvariante)
@@ -398,8 +340,7 @@ if __name__ == '__main__':
 
 # Patch erstellen::
 
-    patch = udiff(wortliste, wortliste_neu, 'wortliste', 'wortliste-neu',
-                 encoding=wordfile.encoding)
+    patch = udiff(wortliste, wortliste_neu, 'wortliste', 'wortliste-neu')
     if patch:
         # print patch
         patchfile = open('wortliste.patch', 'w')

@@ -604,6 +604,49 @@ def uebertrage(wort1, wort2, strict=True, upgrade=True):
         wort3 += silben2.pop(0)
     return wort3
 
+
+# Übertrag kategorisierter Trennstellen zwischen den Feldern aller Einträge
+# in `wortliste`::
+
+def sprachabgleich(entry):
+
+    if len(entry) <= 2:
+        return # allgemeine Schreibung
+
+    # if u'{' in unicode(entry):
+    #     continue # Spezialtrennung
+    mit_vorsilbe = None
+    gewichtet = None
+    ungewichtet = None
+    for field in entry[1:]:
+        if field.startswith('-'): # -2-, -3-, ...
+            continue
+        if u'|' in field:
+            mit_vorsilbe = field
+        elif u'·' not in field:
+            gewichtet = field
+        else:
+            ungewichtet = field
+    if mit_vorsilbe and (gewichtet or ungewichtet):
+        for i in range(1,len(entry)):
+            if entry[i].startswith('-'): # -2-, -3-, ...
+                continue
+            if u'|' not in entry[i]:
+                try:
+                    entry[i] = uebertrage(mit_vorsilbe, entry[i], strict=False)
+                except TransferError, e:
+                    print u'Sprachabgleich:', unicode(e)
+        print mit_vorsilbe+u':', unicode(entry)
+    elif gewichtet and ungewichtet:
+        for i in range(1,len(entry)):
+            if u'·' in entry[i]:
+                try:
+                    entry[i] = uebertrage(gewichtet, entry[i], strict=False)
+                except TransferError, e:
+                    print u'Sprachabgleich:', unicode(e)
+        print gewichtet, unicode(entry)
+
+
 # Großschreibung in Kleinschreibung wandeln und umgekehrt
 #
 # Diese Version funktioniert auch für Wörter mit Trennzeichen (während

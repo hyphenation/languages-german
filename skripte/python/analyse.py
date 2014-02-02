@@ -327,7 +327,7 @@ def mehrdeutigkeiten(words):
         if len(words.trennvarianten[teil]) == 1:
             continue
         # Bekannte Mehrdeutigkeiten:
-        if teil in ('Base',  'George', 'Mode', 'Page', 'Pole',
+        if teil in ('Anhalts', 'Base',  'George', 'Mode', 'Page', 'Pole',
                     'Planes', 'Rate', 'Real',
                     'Spare', 'Wales', 'Ware',
                     'griff' # gri[f-f/{ff/ff=f}]est
@@ -352,8 +352,8 @@ if __name__ == '__main__':
 # nicht zusammengesetzer Wörter als Einzelwort oder in erster, mittlerer,
 # oder letzter Position in Wortverbindungen::
 
-    sprachvariante = 'de-1901'         # "traditionell"
-    # sprachvariante = 'de-1996'         # Reformschreibung
+    # sprachvariante = 'de-1901'         # "traditionell"
+    sprachvariante = 'de-1996'         # Reformschreibung
     # sprachvariante = 'de-1901-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
