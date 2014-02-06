@@ -18,8 +18,7 @@
 
 from copy import deepcopy
 import re, sys, codecs
-from werkzeug import WordFile, WordEntry, join_word, udiff
-from abgleich_teilwoerter import sprachabgleich
+from werkzeug import WordFile, WordEntry, join_word, udiff, sprachabgleich
 
 
 # Zusammenfassen von Feldern mit gleichem Inhalt z.B.

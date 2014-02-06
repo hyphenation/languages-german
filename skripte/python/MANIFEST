@@ -7,6 +7,8 @@ Vorwort
 Selbstdokumentierende Python-Module, Hilfsdateien und experimentelle Skripte
 zur Arbeit mit der Wortliste.
 
+Siehe Abschnitt `Arbeitsfluss`_ für einen Vorschlag zur Anwendung.
+
 Das Program PyLit_ kann die ausführbaren Dateien ``*.py`` reversibel in
 Textdokumente ``*.py.txt`` konvertieren. Mit Docutils_ lassen sich aus den
 in reStructuredText_ geschriebenen Texten Dokumentationen im HTML- oder
@@ -38,6 +40,8 @@ werkzeug.py
 Skripte zur Trennstellenkategorisierung
 =======================================
 
+Siehe auch den Abschnitt `Arbeitsfluss`_ am Ende dieses Dokumentes.
+
 Achtung experimentell:
 
 * Die Skripte wurden für die eigene Arbeit mit der Wortliste entwickelt und
@@ -54,7 +58,6 @@ Achtung experimentell:
     patch ../../wortliste < wortliste.patch
     
   auf die Wortliste angewendet werden.
-
 
 analyse.py
   Sammeln und Sortieren von Teilwörtern
@@ -94,6 +97,9 @@ abgleich_teilwoerter.py
           Vorher in Zeile 26 ff. die gewünschte Sprachvariante
           durch ein/auskommentieren wählen.
 
+abgleich_praefixe.py
+  Abgleich der Trennstellen zwischen Woertern mit unterschiedlichem Präfix
+
   Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
   kann.
 
@@ -131,3 +137,34 @@ s2long-s.py
   Kategorisierung der Trennstellen fehlt: 3903
   noch offen: 55
 
+Arbeitsfluss
+============
+
+Trennstellenkategorisierung mit Hilfe der Python-Skripte, 
+2-stufiges Vorgehen:
+
+* Erstellen einer Liste mit Teilwörtern (Zerlegung ausgezeichneter Komposita
+  an den Wortfugen "="):
+  
+  - in `analyse.py` die gewünschte Sprachvariante ein-/auskommentieren.
+  
+  - ``python analyse.py``
+  
+  Die erstellte Wortliste ist ``teilwoerter-<Sprachtag>.txt``.
+  
+* Bearbeiten der generierten Datei 
+
+  - im Texteditor (suchen/ersetzen, regexp-replace, ...)
+  
+  - mit Skripten (``abgleich_praefixe.py``, ``vorsilben_in_teilwoertern.py``)
+  
+* Rückübertragen der Korrekturen auf die Wortliste
+
+  - in `abgleich_teilwoerter.py` die gewünschte Sprachvariante und
+    Bearbeitungsfunktion ein-/aukommentieren.
+  
+  - ``python abgleich_teilwoerter.py``
+
+  - Prüfen der Kontrollausgabe, ggf. Korrektur von ``wortliste.patch``.
+  
+  - ``patch ../../wortliste < wortliste.patch``

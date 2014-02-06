@@ -143,7 +143,7 @@ def fehleintraege(wordfile, datei):
         else:
             wortliste_neu.append(entry)
 
-    if korrkekturen:
+    if korrekturen:
         print 'nicht gefunden:'
         for w in korrekturen:
             print w.encode('utf8')
