@@ -132,7 +132,8 @@ def fehleintraege(wordfile, datei):
     teste_datei(datei)
 
     # Dekodieren, Zeilenende entfernen, Trennzeichen entfernen
-    korrekturen = set(join_word(line.decode('utf8').strip().split(u';')[0])
+    korrekturen = set(join_word(
+                line.decode('utf8').strip().replace(u';', u' ').split()[0])
                       for line in open(datei, 'r')
                       if not line.startswith('#'))
     wortliste = list(wordfile)

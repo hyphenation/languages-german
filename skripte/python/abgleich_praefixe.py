@@ -133,7 +133,8 @@ if __name__ == '__main__':
 # Präfixabgleich::
 
         wort2 = praefixabgleich(wort)
-
+        if wort2 == wort:
+            wort2 = praefixabgleich(wort, grossklein=True)
         fields[0] = wort2
         words2.append(' '.join(fields))
 
