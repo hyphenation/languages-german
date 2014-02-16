@@ -94,6 +94,16 @@ patgen-list-diff.sh
 # entsprechenden abgekürzten alphanumerischen Commit-Hashes
 # verwendet.
 
+prepare-wordlist.sh
+#     $ sh prepare-wordlist.sh < Textdatei
+#
+# listet alle Wörter mit mindestens vier Buchstaben, die keine römischen 
+# Zahlen sind, aus einer gegebenen Textdatei auf und …
+#
+#     $ sh prepare-wordlist.sh < Textdatei | grep -Fixvf Prüfliste
+# 
+# … prüft sie gegen eine ebenfalls gegebene Prüfliste:
+
 validate.lua
   Syntax-Test der Wortliste.  Benötigt ``texlua`` als Interpreter.
 
