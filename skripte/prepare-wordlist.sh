@@ -9,7 +9,7 @@ LC_COLLATE=de_DE.UTF8
 # 
 # … prüft sie gegen eine ebenfalls gegebene Prüfliste:
 
-sed -f ~/git/tl-script/strippunct.sed \
+sed -f strippunct.sed \
 | sed '/..../!d' \
 | sort -i \
 | uniq -i
