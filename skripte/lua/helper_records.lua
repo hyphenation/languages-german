@@ -509,9 +509,16 @@ local function validate_file(f)
          count[type] = count[type] + 1
       else
          invalid = invalid + 1
-         if type == false then io.stderr:write("Feld ", tostring(field), ": ", msg, ": ", record, "\n")
-         else io.stderr:write("ungültiger Datensatz: ", record, "\n")
+         -- Zeile ausgeben.
+         io.stderr:write("Zeile ", tostring(total))
+         -- Fehlermeldung ausgeben.
+         if type == false then
+            io.stderr:write(" Feld ", tostring(field), ": ", msg)
+         else
+            io.stderr:write(" ungültiger Datensatz")
          end
+         -- Datensatz ausgeben.
+         io.stderr:write(": ", record, "\n")
       end
    end
    count.total = total
