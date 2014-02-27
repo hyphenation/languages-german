@@ -268,8 +268,9 @@ def statistik_praefixe(teilwoerter):
                    for line in open('wortteile/praefixe')
                    if not line.startswith('#'))
     # Sammelboxen:
-    markiert = defaultdict(list)    # mit | markierte Präfixe
-    kandidaten = defaultdict(list)   # nicht mit | markierte Präfixe
+    markiert = defaultdict(list)        # mit | markierte Präfixe
+    kandidaten = defaultdict(list)      # (noch) mit - markierte Präfixe
+    unkategorisiert = defaultdict(list) # mit · markierte Präfixe
     # grundwoerter = defaultdict(int)   # Wörter nach Abtrennen markierter Präfixe
     ausnahmefaelle = defaultdict(int)
 
@@ -285,18 +286,21 @@ def statistik_praefixe(teilwoerter):
             restwort = teile[-1]
         # grundwoerter[restwort] += 1
         # Silben des Grundworts
-        # silben = re.split(u'[-·.]+', restwort)
-        silben = restwort.split('-')
+        silben = re.split(u'[-·.]+', restwort)
+        # silben = restwort.split('-')
         silben[0] = silben[0].lower()
         if join_word(restwort) in ausnahmen:
             ausnahmefaelle[silben[0]] += 1
             continue
         for i in range(len(silben)-1, 0, -1):
-            kandidat = ''.join(silben[:i])
+            kandidat = u''.join(silben[:i])
             if kandidat.lower() in praefixe:
                 # print kandidat, wort, silben[i]
                 if silben[i-1]: # kein '--' nach dem Kandidaten
-                    kandidaten[kandidat].append(wort)
+                    if u'·' in kandidat:
+                        unkategorisiert[kandidat].append(wort)
+                    else:
+                        kandidaten[kandidat].append(wort)
                 break
 
 # Ausgabe
@@ -305,8 +309,9 @@ def statistik_praefixe(teilwoerter):
     for vs in sorted(praefixe):
         einzel = (teilwoerter.E[vs] + teilwoerter.M[vs]
                   + teilwoerter.E[vs.title()] + teilwoerter.M[vs.title()])
-        print u'%-10s %5d = %5d | %5d - %5d offen' % (vs, einzel,
-            len(markiert[vs]), ausnahmefaelle[vs], len(kandidaten[vs])),
+        print u'%-10s %5d = %5d | %5d - %5d · %5d offen' % (vs, einzel,
+            len(markiert[vs]), ausnahmefaelle[vs], 
+            len(unkategorisiert[vs]), len(kandidaten[vs])),
         if kandidaten[vs]:
             print u':', u' '.join(kandidaten[vs][:30]),
             if len(kandidaten[vs]) > 30:
@@ -352,8 +357,8 @@ if __name__ == '__main__':
 # nicht zusammengesetzer Wörter als Einzelwort oder in erster, mittlerer,
 # oder letzter Position in Wortverbindungen::
 
-    # sprachvariante = 'de-1901'         # "traditionell"
-    sprachvariante = 'de-1996'         # Reformschreibung
+    sprachvariante = 'de-1901'         # "traditionell"
+    # sprachvariante = 'de-1996'         # Reformschreibung
     # sprachvariante = 'de-1901-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")

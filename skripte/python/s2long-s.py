@@ -81,17 +81,20 @@ def s_ersetzen(word):
     word = word.replace(u'sp', u'ſp')
     word = word.replace(u'sch', u'ſch')
 
-    word = word.replace(u'ps', u'pſ')  # ψ
+    # word = word.replace(u'ps', u'pſ')  
     word = word.replace(u'Ps', u'Pſ')  # Ψ
+    word = re.sub(ur'^ps', ur'pſ', word) # ψ (ps am Wortanfang)
+    word = re.sub(ur'([-|=·.])ps', ur'\1pſ', word) # ψ (ps am Silbenanfang)
 
     word = word.replace(u'ſsſt', u'ſſſt') # Pssst!
 
 # ſ vor Trennstellen
 # ~~~~~~~~~~~~~~~~~~
 # 
-# Die Verbindungen ss, sp, st und sz werden zu ſſ, ſp, ſt und ſz auch
-# wenn sie durch eine Nebentrennstelle (Trennung innerhalb eines
-# Wortbestandteiles) getrennt sind.
+# Die Verbindungen ss, sp, st (und manchmal sz) werden zu ſſ, ſp, ſt und
+# ſz auch wenn sie durch eine Nebentrennstelle (Trennung innerhalb eines
+# Wortbestandteiles) getrennt sind (für sz/ſz wurden Spezialregeln erstellt,
+# die Vorkommnisse in der Wortliste erfassen).
 # 
 # s bleibt rund vor einer Haupttrennstelle (Trennung an der Grenze zweier
 # Wortbestandteile (Vorsilb<=Stamm, Bestimmungswort=Grundwort), im Auslaut
@@ -104,18 +107,23 @@ def s_ersetzen(word):
     word = word.replace(u's-t', u'ſ-t') # Reformschreibung
     word = word.replace(u's.t', u'ſ.t')
 
-    # für sz/ſz wurden Spezialregeln erstellt, die Vorkommnisse
-    # in der Wortliste erfassen
+
+# s bleibt aber rund vor Nebentrennstelle wenn ph folgt (Phos-phor)::
+
+    word = word.replace(u'ſ-ph', u's-ph')
+
 
 # Spezialfälle
 # ~~~~~~~~~~~~
 # 
 # ſz trotz Trennzeichen::
 
-    word = word.replace(u's-zen', ur'ſ-zen') # Adoleszenz, Aszendent, ...
+    word = word.replace(u's-zen', ur'ſ-zen')   # Adoleszenz, Aszendent, ...
     word = word.replace(u's-zi-n', ur'ſ-zi-n') # faszinieren, ...
     word = word.replace(u'as-zi', u'aſ-zi')    # [Ll]asziv, ...
+    word = word.replace(u'vis-zi', u'iſ-zi')   # Mukoviszidose
     word = word.replace(u's-zil', ur'ſ-zil')   # Os-zil-la-ti-on
+    word = word.replace(u's-zie', ur'reſ-zie') # fluo-res-zie-ren, ...
 
 # ſ wird geschrieben, wenn der S-Laut nur scheinbar im Auslaut steht weil ein
 # folgendes unbetontes e ausfällt::
@@ -145,8 +153,13 @@ def s_ersetzen(word):
 
 # Alternativtrennung wo beide Fälle ſ verlangen:
 
-    word = word.replace(u'er.]sa', u'er.]sa') # Kind=er|satz/Kin-der=satz
+    word = word.replace(u'er.]sa', u'er.]ſa') # Kind=er|satz/Kin-der=satz
 
+# ſſ steht am Wortende der österreichischen Schreibung von Fremdwörtern
+# auf ß und bei Eigennamen::
+
+    word = re.sub(ur'ss$', ur'ſſ', word)
+    word = word.replace(u'ss=', u'ſſ=')
 
 # Fremdwörter
 # ~~~~~~~~~~~
@@ -215,12 +228,11 @@ spezialfaelle_rund_s = [
 # s steht auch in einigen Fremdwörtern vor z::
 
     u'on-fis-zie', # konfiszieren
-    u'le-bis-z',
-    u'is-zi-pl', # Disziplin
+    u'le-bis-z',   # plebiszit
+    u'is-zi-pl',   # Disziplin (nach Duden (1934) auch Diſziplin).
 # ss im Auslaut
-    (u'Gauss'),  # vgl. "Briefwechsel zwischen C.F. Gauss und H.C. Schumacher, herausg. von C.A.F. Peters"
-                 # aber Boſſ, Busineſſ, Dreſſ
-                       
+    u'Gauss',      # vgl. "Briefwechsel zwischen C.F. Gauss und H.C. Schumacher, herausg. von C.A.F. Peters"
+                   # aber Boſſ, Busineſſ, Dreſſ
                        ]
     
 spezialfaelle_rund_s = [(fall, fall.replace('s', '~')) 
@@ -233,7 +245,6 @@ def is_complete(word):
 # 
 # Einzelfälle mit rundem S (substrings)::
 
-
     for fall, ersatz in spezialfaelle_rund_s:
         word = word.replace(fall, ersatz)
 
@@ -242,17 +253,21 @@ def is_complete(word):
 # Rechtschreibung::
 
     word = re.sub(ur's(=|$)', ur'~\1', word)
-    word = re.sub(ur'ss(=|$)', ur'~~\1', word)
+    # word = re.sub(ur'ss(=|$)', ur'~~\1', word)
 
-# s steht am Silbenende (nach Nebentrennstellen), wenn kein p, t, z oder ſ
+# s steht am Silbenende (vor Nebentrennstellen), wenn kein p, t, z oder ſ
 # folgt (in der traditionellen Schreibung, wird st nicht getrennt)::
 
     # word = re.sub(ur'ss?([·.\-][^ptzſ])', ur'~\1', word) # konservativ
     word = re.sub(ur'ss?([·.\-][^pzſ])', ur'~\1', word)   # traditionell
 
+# s steht auch vor Nebentrennstellen, wenn ph folgt::
+
+    word = word.replace(u's-ph', u'~-ph')
+
 # s steht nach Vorsilben (wie aus|, dis|) auch wenn s, p, t, oder z folgt::
 
-    word = word.replace(u's|', u'|~')
+    word = word.replace(u's|', u'~|')
 
 # s steht im Inlaut vor k, n, w::
 
@@ -328,10 +343,6 @@ for entry in wordfile:
         completed.append(entry[0])
         continue
 
-    # # nur vorsortieren:
-    # offen.append(entry)
-    # continue
-
 # Regelbasierte s-ſ-Schreibung::
 
     word = s_ersetzen(word)
@@ -339,15 +350,7 @@ for entry in wordfile:
 # Einsortieren nach Vollständigkeit der Ersetzungen::
 
     if is_complete(word):
-        try:
-            completed.append(join_word(word))
-        except AssertionError:
-            # Aufgelöste Mehrdeutigkeit:
-            if u'[·ſ/s·]' in word: # z.B. Wach[·ſ/s·]tu·be
-                completed.append(join_word(word.replace(u'[·ſ/s·]', u'ſ')))
-                completed.append(join_word(word.replace(u'[·ſ/s·]', u's')))
-            else:
-                raise                
+        completed.append(join_word(word))
         continue
 
     entry.set(word, sprachvariante) # Rückschreiben von teilweisen Ersetzungen
