@@ -242,6 +242,8 @@ local word = P{
    hyphen_inner = V"hyphen_ch_inner"^1,
    -- nach Präfixen oder Verbalpartikeln
    hyphen_prefix = V"hyphen_ch_prefix"^1,
+   -- vor Suffixen
+   hyphen_suffix = V"hyphen_ch_suffix"^1,
    -- an Wortfugen
    hyphen_compound = V"hyphen_ch_compound"^1,
    -- nach Präfix eines zusammengesetzten Wortes
@@ -258,6 +260,7 @@ local word = P{
       + V"hyphen_compound_suffix"
       + V"hyphen_inner"
       + V"hyphen_prefix"
+      + V"hyphen_suffix"
       + V"hyphen_compound"
       + V"hyphen_uncategorized"
    ,
@@ -270,7 +273,8 @@ local word = P{
    hyphen = V"hyphen_without_quality" + V"hyphen_with_quality",
    -- Die folgenden Zeichen werden zur Trennstellenmarkierung verwendet:
    hyphen_ch_inner = P"-",
-   hyphen_ch_prefix = P"|",
+   hyphen_ch_prefix = P"<" + P"|",
+   hyphen_ch_suffix = P">",
    hyphen_ch_compound = P"=",
    hyphen_ch_quality = P".",
    hyphen_ch_uncategorized = P"·",
