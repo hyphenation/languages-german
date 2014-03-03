@@ -120,9 +120,9 @@ class WordFile(file):
 #
 # >>> from werkzeug import WordEntry
 #
-# >>> aalbestand = WordEntry(u'Aalbestand;Aal=be-stand # Test')
+# >>> aalbestand = WordEntry(u'Aalbestand;Aal=be<stand # Test')
 # >>> print aalbestand
-# Aalbestand;Aal=be-stand # Test
+# Aalbestand;Aal=be<stand # Test
 #
 # ::
 
@@ -195,7 +195,7 @@ class WordEntry(list):
 # dem Kommentar
 #
 # >>> unicode(aalbestand)
-# u'Aalbestand;Aal=be-stand # Test'
+# u'Aalbestand;Aal=be<stand # Test'
 #
 # ::
 
@@ -221,7 +221,7 @@ class WordEntry(list):
 # >>> aalbestand.lang_index('de-1996')
 # 1
 # >>> abbeissen = WordEntry(
-# ...     u'abbeissen;-2-;-3-;-4-;-5-;ab|bei-ssen;ab|beis-sen;ab|beis-sen')
+# ...     u'abbeissen;-2-;-3-;-4-;-5-;ab<bei-ssen;ab<beis-sen;ab<beis-sen')
 # >>> print abbeissen.lang_index('de')
 # None
 # >>> print abbeissen.lang_index('de-x-GROSS')
@@ -259,28 +259,28 @@ class WordEntry(list):
 # Trennmuster für Sprachvariante ausgeben
 #
 # >>> aalbestand.get('de')
-# u'Aal=be-stand'
+# u'Aal=be<stand'
 # >>> aalbestand.get('de-1901')
-# u'Aal=be-stand'
+# u'Aal=be<stand'
 # >>> aalbestand.get('de-1996')
-# u'Aal=be-stand'
+# u'Aal=be<stand'
 # >>> aalbestand.get('de-x-GROSS')
-# u'Aal=be-stand'
+# u'Aal=be<stand'
 # >>> aalbestand.get('de-1901-x-GROSS')
-# u'Aal=be-stand'
+# u'Aal=be<stand'
 # >>> aalbestand.get('de-1996-x-GROSS')
-# u'Aal=be-stand'
+# u'Aal=be<stand'
 # >>> aalbestand.get('de-CH-1901')
-# u'Aal=be-stand'
+# u'Aal=be<stand'
 #
 # >>> print abbeissen.get('de')
 # None
 # >>> print abbeissen.get('de-x-GROSS')
 # None
 # >>> abbeissen.get('de-1901-x-GROSS')
-# u'ab|bei-ssen'
+# u'ab<bei-ssen'
 # >>> abbeissen.get('de-CH-1901')
-# u'ab|beis-sen'
+# u'ab<beis-sen'
 #
 # ::
 
@@ -294,7 +294,7 @@ class WordEntry(list):
 #
 # >>> abbeissen.set('test', 'de-1901-x-GROSS')
 # >>> print abbeissen
-# abbeissen;-2-;-3-;-4-;-5-;test;ab|beis-sen;ab|beis-sen
+# abbeissen;-2-;-3-;-4-;-5-;test;ab<beis-sen;ab<beis-sen
 #
 # >>> abbeissen.set('test', 'de-1901')
 # Traceback (most recent call last):
@@ -312,7 +312,7 @@ class WordEntry(list):
 # Felder für alle Sprachvarianten ausfüllen
 #
 # >>> print str(aalbestand), len(aalbestand)
-# Aalbestand;Aal=be-stand # Test 2
+# Aalbestand;Aal=be<stand # Test 2
 # >>> aalbestand.expand_fields()
 # >>> print len(aalbestand)
 # 8
@@ -339,7 +339,7 @@ class WordEntry(list):
 #
 # >>> aalbestand.conflate_fields()
 # >>> print aalbestand
-# Aalbestand;Aal=be-stand # Test
+# Aalbestand;Aal=be<stand # Test
 # >>> auffrass.conflate_fields()
 # >>> print auffrass
 # auffrass;-2-;-3-;-4-;auf-frass
@@ -387,20 +387,21 @@ def join_word(word, assert_complete=False):
 # Einfache Trennzeichen:
 #
 # ==  ================================================================
-# \·  ungewichtete Trennstelle (solche, wo noch niemand sich um die
+# \·  ungewichtete Trennstelle (solche, wo sich noch niemand um die
 #     Gewichtung gekümmert hat)
 # \.  unerwünschte Trennstelle (sinnentstellend), z.B. Ur·in.stinkt
 #     oder ungünstige Trennstelle (verwirrend), z.B. Atom·en.er·gie
 #     in ungewichteten Wörtern
-# \=  Haupttrennstelle an Wortfugen (Wort=fu-ge)
-# \|  Haupttrennstelle nach Vorsilbe (Vor|sil-be)
-# \-  Nebentrennstelle
+# \=  Trennstelle an Wortfugen (Wort=fu-ge)
+# \<  Trennstelle nach Präfix  (Vor<sil-be)
+# \>  Trennstelle vor Suffix   (Freund>schaf-ten)
+# \-  Nebentrennstelle         (ge-hen)
 # ==  ================================================================
 #
 # ::
 
     table = {}
-    for char in u'·.=|-_':
+    for char in u'·.=|-_<>':
         table[ord(char)] = None
     key = word.translate(table)
 
@@ -430,7 +431,8 @@ def join_word(word, assert_complete=False):
     if assert_complete:
         for spez in u'[{/}]':
             if  spez in key:
-                raise AssertionError('Spezialtrennung %s' % key.encode('utf8'))
+                raise AssertionError('Spezialtrennung %s, %s' %
+                                     (word.encode('utf8'), key.encode('utf8')))
 
     return key
 
@@ -444,16 +446,16 @@ def join_word(word, assert_complete=False):
 #
 # >>> zerlege(u'Haupt=stel-le')
 # ([u'Haupt', u'stel', u'le'], [u'=', u'-'])
-# >>> zerlege(u'Ge|samt||be|triebs=rats==chef')
-# ([u'Ge', u'samt', u'be', u'triebs', u'rats', u'chef'], [u'|', u'||', u'|', u'=', u'=='])
-# >>> zerlege(u'an|stands--los')
-# ([u'an', u'stands', u'los'], [u'|', u'--'])
+# >>> zerlege(u'Ge<samt=be<triebs=rats==chef')
+# ([u'Ge', u'samt', u'be', u'triebs', u'rats', u'chef'], [u'<', u'=', u'<', u'=', u'=='])
+# >>> zerlege(u'an<stands>los')
+# ([u'an', u'stands', u'los'], [u'<', u'>'])
 #
 # ::
 
 def zerlege(wort):
-    silben = re.split(u'[-·._|=]+', wort)
-    trennzeichen = re.split(u'[^-·._|=]+', wort)
+    silben = re.split(u'[-·._|<>=]+', wort)
+    trennzeichen = re.split(u'[^-·._|<>=]+', wort)
     return silben, [tz for tz in trennzeichen if tz]
 
 # TransferError
@@ -488,17 +490,23 @@ class TransferError(ValueError):
 # >>> print uebertrage(u'Haupt·stel-le', u'Haupt=stel·le')
 # Haupt=stel-le
 #
-# >>> print uebertrage(u'Aus|stel-ler', u'Aus-stel-ler')
-# Aus|stel-ler
+# >>> print uebertrage(u'Aus<stel-ler', u'Aus-stel-ler')
+# Aus<stel-ler
+#
+# >>> print uebertrage(u'Freund>schaf·ten', u'Freund-schaf-ten')
+# Freund>schaf-ten
 #
 # Übertragung doppelter Marker:
 #
-# >>> print uebertrage(u'ver||aus|ga-be',  u'ver|aus|ga-be')
-# ver||aus|ga-be
+# >>> print uebertrage(u'ver<<aus<ga-be',  u'ver<aus<ga-be')
+# ver<<aus<ga-be
+#
+# >>> print uebertrage(u'freund>lich>>keit',  u'freund>lich>keit')
+# freund>lich>>keit
 #
 # Kein Überschreiben doppelter Marker:
-# >>> print uebertrage(u'ver|aus|ga-be',  u'ver||aus|ga-be')
-# ver||aus|ga-be
+# >>> print uebertrage(u'ver<aus<ga-be',  u'ver<<aus<ga-be')
+# ver<<aus<ga-be
 #
 # Keine Übertragung, wenn die Zahl oder Position der Trennstellen
 # unterschiedlich ist oder bei unterschiedlichen Wörtern:
@@ -517,8 +525,8 @@ class TransferError(ValueError):
 # u'ers-ter'
 # >>> uebertrage(u'Fluß=bett', u'Fluss·bett', strict=False)
 # u'Fluss=bett'
-# >>> print uebertrage(u'Aus|tausch=dien-stes', u'Aus-tausch=diens-tes', False)
-# Aus|tausch=diens-tes
+# >>> print uebertrage(u'Aus<tausch=dien-stes', u'Aus-tausch=diens-tes', False)
+# Aus<tausch=diens-tes
 #
 # Auch mit `strict=False` muß die Zahl der Trennstellen übereinstimmen
 # (Ausnahmen siehe unten):
@@ -542,17 +550,17 @@ class TransferError(ValueError):
 #
 # Mit ``upgrade=False`` werden nur unspezifische Trennstellen überschrieben:
 #
-# >>> print uebertrage(u'an=stel-le', u'an|stel·le', upgrade=False)
-# an|stel-le
+# >>> print uebertrage(u'an=stel-le', u'an<stel·le', upgrade=False)
+# an<stel-le
 #
-# >>> print uebertrage(u'Aus|stel-ler', u'Aus-stel-ler', upgrade=False)
+# >>> print uebertrage(u'Aus<stel-ler', u'Aus-stel-ler', upgrade=False)
 # Aus-stel-ler
 #
-# >>> print uebertrage(u'Aus-stel-ler', u'Aus|stel-ler', upgrade=False)
-# Aus|stel-ler
+# >>> print uebertrage(u'Aus-stel-ler', u'Aus<stel-ler', upgrade=False)
+# Aus<stel-ler
 #
-# >>> print uebertrage(u'vor|an||stel-le', u'vor-an|stel·le', upgrade=False)
-# vor-an|stel-le
+# >>> print uebertrage(u'vor<an<<stel-le', u'vor-an<stel·le', upgrade=False)
+# vor-an<stel-le
 #
 # ::
 
@@ -564,7 +572,7 @@ def uebertrage(wort1, wort2, strict=True, upgrade=True):
     silben2, trennzeichen2 = zerlege(wort2)
     # Prüfe strikte Übereinstimmung:
     if silben1 != silben2 and strict:
-        if u'|' in trennzeichen1 or u'·' in trennzeichen2:
+        if u'<' in trennzeichen1 or u'·' in trennzeichen2:
             raise TransferError(wort1, wort2)
         else:
             return wort2
@@ -592,10 +600,10 @@ def uebertrage(wort1, wort2, strict=True, upgrade=True):
     for t1,t2 in zip(trennzeichen1, trennzeichen2):
         if ((t2 == u'·' and t1 != u'.') # unspezifisch
             or upgrade and
-            ((t2 in (u'-', u'|') and t1 in (u'|', u'||', u'|=')) # Praefixe
-             or (t2 in (u'-', u'|', u'||') and t1 == u'|||') # Praefixe
-             or (t2 == u'-' and t1 == u'--')                 # Suffixe
-             or t1 in (u'=', u'==', u'===')                  # Wortfugen
+            ((t2 in (u'-', u'<') and t1 in (u'<', u'<<', u'<=')) # Praefixe
+             or (t2 in (u'-', u'<', u'<<') and t1 == u'<<<')     # Praefixe
+             or (t2 in (u'-', u'>') and t1 in (u'>', u'>>', u'>=')) # Suffixe
+             or t1 in (u'=', u'==', u'===')                      # Wortfugen
             )
            ):
             wort3 += t1
@@ -621,7 +629,7 @@ def sprachabgleich(entry):
     for field in entry[1:]:
         if field.startswith('-'): # -2-, -3-, ...
             continue
-        if u'|' in field:
+        if u'<' in field:
             mit_vorsilbe = field
         elif u'·' not in field:
             gewichtet = field
@@ -631,7 +639,7 @@ def sprachabgleich(entry):
         for i in range(1,len(entry)):
             if entry[i].startswith('-'): # -2-, -3-, ...
                 continue
-            if u'|' not in entry[i]:
+            if u'<' not in entry[i]:
                 try:
                     entry[i] = uebertrage(mit_vorsilbe, entry[i], strict=False)
                 except TransferError, e:
@@ -700,8 +708,8 @@ def toggle_case(wort):
 # --- alt
 # +++ neu
 # @@ -1,2 +1 @@
-#  abbeissen;-2-;-3-;-4-;-5-;test;ab|beis-sen;ab|beis-sen
-# -Aalbestand;Aal=be-stand # Test
+#  abbeissen;-2-;-3-;-4-;-5-;test;ab<beis-sen;ab<beis-sen
+# -Aalbestand;Aal=be<stand # Test
 #
 # ::
 
@@ -768,7 +776,7 @@ if __name__ == '__main__':
     print len(wortliste), u"Einträge\n"
 
 # Sprachauswahl::
-   
+
     # Sprachtags:
     #
     # sprache = 'de-1901' # traditionell
@@ -780,7 +788,7 @@ if __name__ == '__main__':
     #
     # worte = [entry.get(sprache) for entry in wortliste if wort is not None]
     # print len(worte), u"Einträge für Sprachvariante", sprache
-            
+
 
 # Test keys::
 
@@ -822,17 +830,17 @@ if __name__ == '__main__':
     # assert original == line, "Rejoined %s != %s" % (line, original)
 
     # komplett:
-    # wordfile.seek(0)            # Pointer zurücksetzen
-    # OK = 0
-    # for line in wordfile.readlines():
-    #     entry = WordEntry(line)
-    #     if line == unicode(entry):
-    #         OK +=1
-    #     else:
-    #         print u'-', line,
-    #         print u'+', unicode(entry)
-    # print OK, u"Einträge rekonstruiert"
-    
+    wordfile.seek(0)            # Pointer zurücksetzen
+    OK = 0
+    for line in wordfile.readlines():
+        entry = WordEntry(line)
+        if line == unicode(entry):
+            OK +=1
+        else:
+            print u'-', line,
+            print u'+', unicode(entry)
+    print OK, u"Einträge rekonstruiert"
+
 
 
 # Quellen

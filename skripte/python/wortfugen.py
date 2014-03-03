@@ -246,7 +246,7 @@ for entry in wortliste:
         # if (erstkey in vorsilben
         #     # and zweitkey in words
         #    ):
-        #     print str(entry), (u'%s|%s'% (erstkey,zweitwort)).encode('utf8')
+        #     print str(entry), (u'%s<%s'% (erstkey,zweitwort)).encode('utf8')
         #     entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
 
 # Endsilben::

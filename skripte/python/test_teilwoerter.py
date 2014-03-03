@@ -116,10 +116,10 @@ for entry in wortliste:
             continue
 
 
-# Vorsilben die sich auf mehrere Teilwörter beziehen (z.b. un|=regel=mäßig)
-# enden auf "|"::
+# Vorsilben die sich auf mehrere Teilwörter beziehen (z.b. un<=regel=mäßig)
+# enden auf "<"::
 
-        if teil.endswith(u'|'):
+        if teil.endswith(u'<'):
             continue
 
 # Teilwort ohne Trennung, Groß/Kleinschreibung übertragen::
