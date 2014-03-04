@@ -91,12 +91,13 @@ Anmerkungen:
   (Schluss-s auch bei s-s, s-t, oder s-p) und der Aufbruch von Ligaturen
   an dieser Stelle.
 
-* Morphemgrenzen an denen keine Trennung erfolgt werden nicht gekennzeichnet.
+* Morphemgrenzen, an denen keine Trennung erfolgt, werden nicht
+  gekennzeichnet.
 
   Im Gegensatz zu Präfixen, werden im Deutschen Wörter mit Suffix nicht nach
   Ethymologie, sondern nach der `Sprechsilbenregel' getrennt:
 
-    An>ord-nung          An + ordn + ung
+    An<ord-nung          An + ordn + ung
 
 
 Wichtung
@@ -196,7 +197,7 @@ ist folgender regulärer Ausdruck in `perl' anzuwenden:
 
 Doppeldeutige Trennstellen werden folgendermaßen deklariert:
 
-  [«Variante A»/«Variante B»]
+  [»Variante A«/»Variante B«]
 
 z.B.
 
