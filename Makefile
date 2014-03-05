@@ -55,12 +55,12 @@ WORDLIST = wortliste
 
 ifneq ($(findstring major,$(MAKECMDGOALS)),)
   MAJOR = -major
-  # A single `-' gets removed; all other combinations of `-', `=', and `|'
-  # are converted to a hyphen.
-  SEDMAJOR = $(SED) -e '/[=|-]/!n' \
+  # A single `-' gets removed; all other combinations of `-', `<', `>',
+  # `=', and `|' are converted to a hyphen.
+  SEDMAJOR = $(SED) -e '/[=|<>-]/!n' \
                     -e 's/---*/=/g' \
                     -e 's/-//g' \
-                    -e 's/[=|][=|]*/-/g' \
+                    -e 's/[=|<>][=|<>]*/-/g' \
                     -e '/-/!d'
   PERLMAJOR = -g
 

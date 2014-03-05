@@ -9,7 +9,7 @@
 # Folgende Zeichen werden vor der Weiterverarbeitung aus der Eingabe
 # herausgefiltert:
 #
-#   · - = |
+#   · - = | < >
 #
 # Ist Option `-1' nicht gegeben, werden Trennungen direkt nach dem ersten
 # und vor dem letzten Buchstaben in der Ausgabe entfernt, wie z.B. bei
@@ -34,10 +34,13 @@ my $prog = $0;
 $prog =~ s@.*/@@;
 
 if ($#ARGV != 1) {
-  die "Aufruf:  $prog trennmuster german.tr < eingabe > ausgabe\n" .
+  die "Aufruf:  $prog [-1] trennmuster german.tr < eingabe > ausgabe\n" .
       "\n" .
       "  `eingabe', `ausgabe' in UTF-8-Kodierung,\n" .
-      "  `trennmuster', `german.tr' in Latin-1-Kodierung\n";
+      "  `trennmuster', `german.tr' in Latin-1-Kodierung\n" .
+      "\n" .
+      "  Mit Option `-1' bleiben Trennungen nach dem ersten und\n" .
+      "  vor dem letzten Buchstaben in der Ausgabe.\n";
 }
 
 sub before_exit {
@@ -65,7 +68,7 @@ binmode(STDIN, ":encoding(utf8)");  # Eingabe (wortliste) in UTF-8
 binmode(TEMP, ":encoding(latin1)"); # patgen erwartet Latin-1
 
 while (<STDIN>) {
-  s/[·=|-]//g;
+  s/[·=|<>-]//g;
   push(@eingabe, $_);
   print TEMP $_;
 }

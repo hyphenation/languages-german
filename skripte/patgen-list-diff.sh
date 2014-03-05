@@ -29,6 +29,7 @@
 if test $# -eq 0
 then
   echo 'usage: patgen-list-diff <start commit> [<target commit>]'
+  echo ''
   echo 'Create diffs for patgen input lists between <start commit> and'
   echo '<target commit> (by default "master") and save them as files'
   echo 'dehyph*-x/<start commit hash>-<target commit hash>.diff in'

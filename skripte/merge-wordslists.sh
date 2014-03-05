@@ -1,9 +1,9 @@
 #!/bin/sh
 #
-# merge-wordlists.sh
+# merge-wordlists.sh datei ...
 #
-# Fügt mehrere Wortlisten zu einer sortierten Gesamtliste der einfachen
-# (ungetrennten) Wörter)zusammen.
+# Fügt mehrere Wortlisten (in UTF8-Kodierung) zu einer sortierten
+# Gesamtliste der einfachen (ungetrennten) Wörter zusammen.
 # 
 # Eingabe: ein oder mehrere Dateinamen.
 # Ausgabe ist nach stdout.
@@ -16,7 +16,7 @@ cat $@ \
       -e 's/     /\
 /' \
 | sed -e 's/;.*//' \
-      -e 's/[-=·.|]//g' \
+      -e 's/[-=·.|<>]//g' \
 | sort \
 | uniq -i
 

@@ -67,7 +67,7 @@ def s_ersetzen(word):
 # ſ steht im Silbenanlaut::
 
     word = re.sub(ur'^s', ur'ſ', word)
-    word = re.sub(ur'([-|=·.])s', ur'\1ſ', word)
+    word = re.sub(ur'([-|<>=·.])s', ur'\1ſ', word)
 
 # ſ steht im Inlaut als stimmhaftes s zwischen Vokalen
 # (gilt auch für ungetrenntes ss zwischen Selbstlauten, z.B. Hausse, Baisse)::
@@ -84,7 +84,7 @@ def s_ersetzen(word):
     # word = word.replace(u'ps', u'pſ')  
     word = word.replace(u'Ps', u'Pſ')  # Ψ
     word = re.sub(ur'^ps', ur'pſ', word) # ψ (ps am Wortanfang)
-    word = re.sub(ur'([-|=·.])ps', ur'\1pſ', word) # ψ (ps am Silbenanfang)
+    word = re.sub(ur'([-|<>=·.])ps', ur'\1pſ', word) # ψ (ps am Silbenanfang)
 
     word = word.replace(u'ſsſt', u'ſſſt') # Pssst!
 
