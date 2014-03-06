@@ -206,8 +206,8 @@ def analyse(path='../../wortliste', sprachvariante='de-1901',
 
 # Teilwörter suchen::
 
-        # Suffixe für Wortverbindung (z.B.an-dert=halb-=fach): verwerfen:
-        if wort.find(u'-=') != -1:
+        # Suffixe für Wortverbindung (z.B.an-dert=halb>=fach): verwerfen:
+        if wort.find(u'>=') != -1:
             continue
 
         # Zerlegen, leere Teile (wegen Mehrfachtrennzeichen '==') weglassen,
@@ -276,31 +276,31 @@ def statistik_praefixe(teilwoerter):
 
     # Analyse
     for wort in teilwoerter.woerter():
-        # abtrennen markierter Präfixe:
+        # Abtrennen markierter Präfixe:
         restwort = wort
-        for trenner in (u'<<<<', u'<<<', u'<<', u'<'):
-            teile = restwort.split(trenner)
-            for teil in teile[:-1]:
-                # if teil: # (leere Strings (wegen <<<<) weglassen)
-                    markiert[join_word(teil.lower())] .append(wort)
+        teile = restwort.split(u'<')
+        for teil in teile[:-1]:
+            if teil: # (leere Strings (wegen <<<<) weglassen)
+                markiert[join_word(teil.lower())].append(wort)
             restwort = teile[-1]
-        # grundwoerter[restwort] += 1
         # Silben des Grundworts
-        silben = re.split(u'[-·.]+', restwort)
-        # silben = restwort.split('-')
+        silben = re.split(u'[-·.>]+', restwort)
         silben[0] = silben[0].lower()
-        if join_word(restwort) in ausnahmen:
+        
+        if (join_word(restwort) in ausnahmen
+            or join_word(restwort.split(u'>')[0]) in ausnahmen):
             ausnahmefaelle[silben[0]] += 1
             continue
         for i in range(len(silben)-1, 0, -1):
             kandidat = u''.join(silben[:i])
             if kandidat.lower() in praefixe:
-                # print kandidat, wort, silben[i]
-                if silben[i-1]: # kein '--' nach dem Kandidaten
-                    if u'·' in restwort:
-                        unkategorisiert[kandidat].append(wort)
-                    else:
-                        kandidaten[kandidat].append(wort)
+                # print i, kandidat, restwort, restwort[len(kandidat)+i-1]
+                if u'>' == restwort[len(kandidat)+i-1]:
+                    ausnahmefaelle[kandidat] += 1
+                elif u'·' in restwort:
+                    unkategorisiert[kandidat].append(wort)
+                else:
+                    kandidaten[kandidat].append(wort)
                 break
 
 # Ausgabe
