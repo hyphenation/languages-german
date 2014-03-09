@@ -1,18 +1,18 @@
             ------------ ENTURF ---------------
 
 Copyright (c) 2013-2014 Stephan Hennig, Werner Lemberg, Guenter Milde,
-Pander, Georg Pfeiffer, Gisbert W. Selke, Tobias Wendorf
+Sander van Geloven, Georg Pfeiffer, Gisbert W. Selke, Tobias Wendorf
 
 Hiermit wird unentgeltlich jeder Person, die eine Kopie der Software
 und der zugehörigen Dokumentationen (die "Software") erhält, die
 Erlaubnis erteilt, sie uneingeschränkt zu benutzen, inklusive und ohne
 Ausnahme des Rechts, sie zu verwenden, zu kopieren, zu ändern, zu
-fusionieren, zu verlegen, zu verbreiten, zu unterlizenzieren und/oder
+fusionieren, zu verlegen, zu verbreiten, zu unterlizensieren und/oder
 zu verkaufen, und Personen, die diese Software erhalten, dieselben
 Rechte zu erteilen, unter den folgenden Bedingungen:
 
-Der obige Urheberrechtsvermerk und dieser Erlaubnisvermerk sind in
-allen Kopien oder Teilkopien der Software beizulegen.
+Der obige Urheberrechtsvermerk und dieser Erlaubnisvermerk sind allen
+Kopien oder Teilkopien der Software beizulegen.
 
 DIE SOFTWARE WIRD OHNE JEDE AUSDRÜCKLICHE ODER IMPLIZIERTE GARANTIE
 BEREITGESTELLT, EINSCHLIESSLICH DER GARANTIE ZUR BENUTZUNG FÜR DEN
@@ -23,11 +23,12 @@ ANSPRÜCHE HAFTBAR ZU MACHEN, OB INFOLGE DER ERFÜLLUNG EINES VERTRAGES,
 EINES DELIKTES ODER ANDERS IM ZUSAMMENHANG MIT DER SOFTWARE ODER
 SONSTIGER VERWENDUNG DER SOFTWARE ENTSTANDEN.
 
-English:
+
+English
 -------
 
 Copyright (c) 2013-2014 Stephan Hennig, Werner Lemberg, Guenter Milde,
-Pander, Georg Pfeiffer, Gisbert W. Selke, Tobias Wendorf
+Sander van Geloven, Georg Pfeiffer, Gisbert W. Selke, Tobias Wendorf
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -50,13 +51,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --
 
-Anmerkungen: 
------------ 
+Anmerkungen
+-----------
 
-Diese Lizenz folgt der MIT-Lizenz nach [1]. Ich habe sie nicht so
-überschrieben, um mögliche semantische Diskussionen um die Identität
-der deutschen und der englischen Fassung zu vermeiden. Im Zweifel soll
-die deutsche Fassung gelten
+Diese Lizenz folgt der MIT-Lizenz (siehe [1]). Ich habe sie nicht so
+benannt, um mögliche semantische Diskussionen um die Identität der
+deutschen und der englischen Fassung zu vermeiden.  Im Zweifel soll
+die deutsche Fassung gelten.
 
 Die deutsche Fassung folgt der Übersetzung der englischen in der
 Wikipedia [2] mit marginalen Änderungen.
@@ -80,5 +81,3 @@ gp
 
 [1] http://opensource.org/licenses/mit-license.php
 [2] http://de.wikipedia.org/wiki/MIT-Lizenz
-
-
