@@ -283,8 +283,10 @@ def statistik_praefixe(teilwoerter):
             if teil: # (leere Strings (wegen <<<<) weglassen)
                 markiert[join_word(teil.lower())].append(wort)
             restwort = teile[-1]
+        # Abtrennen markierter Suffixe:
+        restwort = restwort.split(u'>')[0]
         # Silben des Grundworts
-        silben = re.split(u'[-·.>]+', restwort)
+        silben = re.split(u'[-·.]+', restwort)
         silben[0] = silben[0].lower()
         
         if (join_word(restwort) in ausnahmen
