@@ -525,6 +525,8 @@ class TransferError(ValueError):
 # u'ers-ter'
 # >>> uebertrage(u'Fluß=bett', u'Fluss·bett', strict=False)
 # u'Fluss=bett'
+# >>> uebertrage(u'ab>bei-ßen', u'ab>beis·sen', strict=False)
+# u'ab>beis-sen'
 # >>> print uebertrage(u'Aus<tausch=dien-stes', u'Aus-tausch=diens-tes', False)
 # Aus<tausch=diens-tes
 #
@@ -621,38 +623,37 @@ def sprachabgleich(entry, vorbildentry=None):
     if len(entry) <= 2:
         return # allgemeine Schreibung
 
-    # if u'{' in unicode(entry):
-    #     continue # Spezialtrennung
     mit_vorsilbe = None
     gewichtet = None
     ungewichtet = None
     for field in entry[1:]:
         if field.startswith('-'): # -2-, -3-, ...
             continue
-        if u'<' in field:
-            mit_vorsilbe = field
-        elif u'·' not in field:
-            gewichtet = field
-        else:
+        if u'·' in field:
             ungewichtet = field
+        elif u'<' in field:
+            mit_vorsilbe = field
+        else:
+            gewichtet = field
     if vorbildentry:
         for field in vorbildentry[1:]:
             if field.startswith('-'): # -2-, -3-, ...
                 continue
-            if u'<' in field and (not mit_vorsilbe or u'·' in mit_vorsilbe):
+            if u'<' in field and not mit_vorsilbe:
                 mit_vorsilbe = field
-            elif u'·' not in field and not gewichtet and ungewichtet:
+            elif u'·' not in field and (not gewichtet) and ungewichtet:
                 gewichtet = field
+        # print 've:', mit_vorsilbe, gewichtet, ungewichtet
     if mit_vorsilbe and (gewichtet or ungewichtet):
         for i in range(1,len(entry)):
             if entry[i].startswith('-'): # -2-, -3-, ...
                 continue
-            if u'<' not in entry[i]:
+            if u'<' not in entry[i] or u'·' in entry[i]:
                 try:
                     entry[i] = uebertrage(mit_vorsilbe, entry[i], strict=False)
                 except TransferError, e:
                     print u'Sprachabgleich:', unicode(e)
-        # print mit_vorsilbe+u':', unicode(entry)
+        print mit_vorsilbe+u':', unicode(entry)
     elif gewichtet and ungewichtet:
         for i in range(1,len(entry)):
             if u'·' in entry[i]:
@@ -660,7 +661,7 @@ def sprachabgleich(entry, vorbildentry=None):
                     entry[i] = uebertrage(gewichtet, entry[i], strict=False)
                 except TransferError, e:
                     print u'Sprachabgleich:', unicode(e)
-        # print gewichtet, unicode(entry)
+        print gewichtet, unicode(entry)
 
 
 # Großschreibung in Kleinschreibung wandeln und umgekehrt
