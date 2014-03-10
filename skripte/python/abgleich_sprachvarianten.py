@@ -58,15 +58,24 @@ if __name__ == '__main__':
 
     wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
     wortliste = list(wordfile)
-
     wortliste_alt = deepcopy(wortliste)
+    
+    wordfile.seek(0)            # Pointer zurücksetzen
+    words = wordfile.asdict()
 
     # Bearbeiten der wortliste "in-place"
     # conflate(wortliste)
 
     for entry in wortliste:
+        oldentry = entry
         sprachabgleich(entry)
-
+        if len(entry) > 2 and oldentry == entry and u'ss' in entry[0]:
+            try:
+                sprachabgleich(entry, words[entry[0].replace(u'ss', u'ß')])
+            except KeyError:
+                # print entry[0].replace(u'ss', u'ß'), "fehlt"
+                pass  # e.g. ["Abfahrtßpezialisten"]
+            
     # Patch erstellen::
 
     patch = udiff(wortliste_alt, wortliste, 'wortliste', 'wortliste-neu',

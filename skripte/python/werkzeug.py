@@ -616,7 +616,7 @@ def uebertrage(wort1, wort2, strict=True, upgrade=True):
 # Übertrag kategorisierter Trennstellen zwischen den Feldern aller Einträge
 # in `wortliste`::
 
-def sprachabgleich(entry):
+def sprachabgleich(entry, vorbildentry=None):
 
     if len(entry) <= 2:
         return # allgemeine Schreibung
@@ -635,6 +635,14 @@ def sprachabgleich(entry):
             gewichtet = field
         else:
             ungewichtet = field
+    if vorbildentry:
+        for field in vorbildentry[1:]:
+            if field.startswith('-'): # -2-, -3-, ...
+                continue
+            if u'<' in field and (not mit_vorsilbe or u'·' in mit_vorsilbe):
+                mit_vorsilbe = field
+            elif u'·' not in field and not gewichtet and ungewichtet:
+                gewichtet = field
     if mit_vorsilbe and (gewichtet or ungewichtet):
         for i in range(1,len(entry)):
             if entry[i].startswith('-'): # -2-, -3-, ...
@@ -644,7 +652,7 @@ def sprachabgleich(entry):
                     entry[i] = uebertrage(mit_vorsilbe, entry[i], strict=False)
                 except TransferError, e:
                     print u'Sprachabgleich:', unicode(e)
-        print mit_vorsilbe+u':', unicode(entry)
+        # print mit_vorsilbe+u':', unicode(entry)
     elif gewichtet and ungewichtet:
         for i in range(1,len(entry)):
             if u'·' in entry[i]:
@@ -652,7 +660,7 @@ def sprachabgleich(entry):
                     entry[i] = uebertrage(gewichtet, entry[i], strict=False)
                 except TransferError, e:
                     print u'Sprachabgleich:', unicode(e)
-        print gewichtet, unicode(entry)
+        # print gewichtet, unicode(entry)
 
 
 # Großschreibung in Kleinschreibung wandeln und umgekehrt
