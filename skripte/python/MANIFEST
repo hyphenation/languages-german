@@ -121,10 +121,6 @@ vorsilben_in_teilwoertern.py
   Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
   kann.
 
-vorsilben.py
-  Spezialwerkzeug zur Präfixmarkierung. Obsolet?
-
-
 Lang-s Schreibung
 =================
 

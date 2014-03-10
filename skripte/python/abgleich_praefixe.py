@@ -40,21 +40,21 @@ def find_stems(words):
             continue
         word = line.split()[0]
         capitalized = word[0].istitle()
-        # un|an|ge|nehm -> [un|an|ge|nehm, an|ge|nehm, ge|nehm]
+        # un<an<ge<nehm -> [un<an<ge<nehm, an<ge<nehm, ge<nehm]
         parts = []
-        for part in word.split(u'|').__reversed__():
+        for part in word.split(u'<').__reversed__():
             parts.insert(0, part)
-            teil = u'|'.join(parts)
+            teil = u'<'.join(parts)
             if capitalized: # Großschreibung übertragen
                 teil = teil[0].title() + teil[1:]
             stems.add(teil)
     return stems
 
-# Vergleich des Wortteiles nach dem letzten '|' mit ``stems``::
+# Vergleich des Wortteiles nach dem letzten '<' mit ``stems``::
 
 def praefixabgleich(wort, grossklein=False):
 
-    teile = wort.split('|')
+    teile = wort.split('<')
     stamm = teile[-1]
     key = join_word(stamm)
     # print u' '.join([wort, key])
@@ -76,7 +76,7 @@ def praefixabgleich(wort, grossklein=False):
             except TransferError, e:
                 print unicode(e)
 
-    return u'|'.join(teile)
+    return u'<'.join(teile)
 
 # Vergleiche zwei Sequenzen von Strings, gib einen "unified diff" als
 # Byte-String zurück (weil difflib nicht mit Unicode-Strings arbeiten kann).
@@ -121,7 +121,7 @@ if __name__ == '__main__':
 
 # Alle Trennstellen kategorisiert oder kein (markierter) Präfix::
 
-        if (u'·' not in line) or (u'|' not in line):
+        if (u'·' not in line) or (u'<' not in line):
             words2.append(line)
             continue
 

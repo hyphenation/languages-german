@@ -12,12 +12,12 @@
 #
 # Suche nach Wörtern beginnend mit::
 
-term = u'su'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
+term = u'su-per'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
 
 # in der Datei ``teilwoerter-<sprachvariante>.txt`` und analysiere das
 # folgende (Teil)wort. Schreibe die Datei ``teilwoerter-neu`` wobei alle
 # Vorkommnisse des gesuchten Präfix am Anfang eines Wort oder nach anderen
-# Präfixen mit ``|`` markiert sind, es sei den das Wort (ohne bereits
+# Präfixen mit ``<`` markiert sind, es sei den das Wort (ohne bereits
 # markierte Präfixe) ist in der Datei ``wortteile/vorsilbenausnahmen``
 # gelistet. Die Ausgabe der Analyse hilft bei der Vervollständigung der
 # Ausnahmeliste.
@@ -66,25 +66,25 @@ sprachvariante = 'de-1996'  # Reformschreibung
 # | un==voll=stän-dig
 # | Vor=sor-ge==voll=macht
 #
-# ``|`` nur für Präfixe, die keine eigenständigen Wörter sind:
+# ``<`` nur für Präfixe, die keine eigenständigen Wörter sind:
 #
-# | An=fangs==ver|dacht
+# | An=fangs==ver<dacht
 # | Ein=gangs==lied
-# | Ge|samt==be|triebs=rats===chef
-# | Her|aus=ge-ber
+# | Ge<samt==be<triebs=rats===chef
+# | Her<aus=ge-ber
 # | Straf==voll=zugs===an-stalt
-# | un||voll=stän-dig
+# | un<voll=stän-dig
 # | Vor=sor-ge==voll=macht
 #
-# ``|`` für "eng gebundene" Präfixe:
+# ``<`` für "eng gebundene" Präfixe:
 #
-# | An|fangs=ver|dacht
-# | Ein|gangs=lied
-# | Ge|samt||be|triebs=rats==chef
-# | Her|aus=ge-ber
-# | Straf=voll|zugs==an-stalt
-# | un||voll|stän-dig
-# | Vor|sor-ge=voll|macht
+# | An<fangs=ver<dacht
+# | Ein<gangs=lied
+# | Ge<samt<<be<triebs=rats==chef
+# | Her<aus=ge-ber
+# | Straf=voll<zugs==an-stalt
+# | un<<voll<stän-dig
+# | Vor<sor-ge=voll<macht
 #
 # ::
 
@@ -131,7 +131,7 @@ words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
 
 grundwoerter = set()
 for wort in words.woerter():
-    match = re.search(ur'\|([^|]+)$', wort)
+    match = re.search(ur'\<([^<]+)$', wort)
     if match:
         grundwoerter.add(match.group(1))
 
@@ -178,7 +178,7 @@ for line in teilwoerter:
 #
 # Suche nach der Silbe am Anfang eines Teilwortes::
 
-    match = re.match(ur'(.+\|)?(%s)[-·]([^|]+)$'%pattern, wort)
+    match = re.match(ur'(.+\<)?(%s)[-·]([^<]+)$'%pattern, wort)
     if not match:
         neuteile.append(line)
         continue
@@ -190,13 +190,9 @@ for line in teilwoerter:
     rest = match.group(3)
 
     if praefix:
-        # Automatische Wichtung
-        # (auskommentieren wenn unerwünscht, z.B. bei "zu" -> "ab|zu|geben")
-        # if not praefix.endswith(u'||'):
-        #     praefix = praefix.replace(u'||', u'|||') + u'|'
-        ersetzung = u'%s%s|%s' % (praefix, kandidat, rest)
+        ersetzung = u'%s%s<%s' % (praefix, kandidat, rest)
     else:
-        ersetzung = u'%s|%s' % (kandidat, rest)
+        ersetzung = u'%s<%s' % (kandidat, rest)
     key = join_word(rest)
     if wort[0].isupper():
         key = key.title()
@@ -218,9 +214,9 @@ for line in teilwoerter:
     if join_word(kandidat+rest) in ausnahmen:
         ist_ausnahme.append(wort)
 
-# Ausnahme Praefixkandidat + Suffix (z.B. ein--fach)::
+# Ausnahme Praefixkandidat + Suffix (z.B. ein>fach)::
 
-    elif rest.startswith('-'):
+    elif rest.startswith('>'):
         pass
 
 # ::

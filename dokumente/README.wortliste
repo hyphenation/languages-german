@@ -47,26 +47,42 @@ Kennzeichnung der Trennstellen
 ==============================
 
 Die Charakterisierung und Wichtung der Trennstellen ist nicht vollständig.
-Sie soll künftig die Nutzung der Wortliste für die Bestimmung der Güte
-einer Trennstelle und für die regelbasierte Entscheidung über den Aufbruch
-typographischer Ligaturen und die Schreibung des S-Lautes (rund-s vs.
-lang-s) ermöglichen.
 
-Folgende Zeichen kennzeichnen Trennstellen:
+Kategorisierung
+---------------
 
-  ·  nicht kategorisiert
+Trennstellen an der Grenze sinnbildender Einheiten (Morpheme) werden
+speziell gekennzeichnet:
 
   =  an Wortfugen (zwischen Grundmorphemen): Wort=fu-ge
-  |  nach Präfix oder Verbalpartikel: Vor|sil-be, auf|zäh-len
-  -  innerhalb eines Morphems oder vor einem Suffix: in-nen, frag-lich
+  <  nach Präfix oder Verbalpartikel: Vor<sil-be, auf<zäh-len
+  >  vor Wortbildungssuffix: Gleich>heit, Freund>schaf-ten
 
-* Die Unterscheidung, ob ein Wortbestandteil ein Präfix oder ein Grundmorphem
-  ist, ist oft nicht eindeutig:
+  -  innerhalb eines Morphems: ge-hen
+  ·  nicht kategorisiert: acker·bau·trei·ben·de
 
-    drauf=los oder drauf|los?
+Motivation:
 
-* `Etymologische' Präfixe, die im heutigen Sprachverständnis nicht mehr als
-  Präfixe wahrgenommen werden, sind nicht speziell markiert:
+* Die Trennung an sinnbildenden Einheiten fördert den Lesefluss und ist
+  daher zu bevorzugen
+
+* Die Markierung von Morphemgrenzen hilft bei der regelbasierten
+  Entscheidung über den Aufbruch typographischer Ligaturen und die
+  Schreibung des S-Lautes in Frakturschrift (Rund-S `s' vs. Lang-S `ſ').
+
+Anmerkungen:
+
+* Die Kategorisierung der Trennstellen ist nicht abgeschlossen.
+  Zur Zeit sind einige Trennstellen nach Präfix oder Verbalpartikel und
+  viele Trennstellen vor Suffixen noch mit `-' bezeichnet.
+
+* Die Unterscheidung, ob ein Wortbestandteil ein Präfix, Suffix oder ein
+  Grundmorphem ist, ist oft nicht eindeutig:
+
+    em-por<ar-bei-ten oder em-por=ar-bei-ten
+
+* Viele `etymologische' Präfixe, die im heutigen Sprachverständnis nicht
+  mehr als Präfixe wahrgenommen werden, sind nicht speziell markiert:
 
     En-er-gie, Ant-wort
 
@@ -75,25 +91,40 @@ Folgende Zeichen kennzeichnen Trennstellen:
   (Schluss-s auch bei s-s, s-t, oder s-p) und der Aufbruch von Ligaturen
   an dieser Stelle.
 
-* Die Kategorisierung der Trennstellen ist nicht abgeschlossen.
-  Zur Zeit sind einige Trennstellen nach Präfix oder Verbalpartikel noch
-  mit `-' oder `=' bezeichnet.
+* Morphemgrenzen, an denen keine Trennung erfolgt, werden nicht
+  gekennzeichnet.
+
+  Im Gegensatz zu Präfixen, werden im Deutschen Wörter mit Suffix nicht nach
+  Ethymologie, sondern nach der `Sprechsilbenregel' getrennt:
+
+    An<ord-nung          An + ordn + ung
+
+
+Wichtung
+--------
 
 Für die Bindungsstärke B von Trennstellen verschiedener Kategorien gilt
-B(-) > B(|) > B(=):
 
-  Aus|wahl=lis-te        (Aus + wahl) + (lis-te)
-  fern=ab|ge|le-gen      fern + (ab + (ge + (le-gen)))
+  B(`-') > B(`<') = B(`>') > B(`=')
+
+das heißt:
+
+  Aus<wahl=lis-te        (Aus + wahl) + (lis-te)
+  fern=ab<ge<le-gen      fern + (ab + (ge + (le-gen)))
+  Abend=lüft>chen        Abend + (lüft + chen)
 
 Präfixe sind `rechtsbindend':
 
-  un|voll|stän-dig       un + (voll + ständig)
-  un|aus|ge|go-ren       un + (aus + (ge + (go-ren)))
+  un<voll<stän-dig       un + (voll + ständig)
+  un<aus<ge<go-ren       un + (aus + (ge + (go-ren)))
 
-Die unterschiedliche Bindungsstärke von Trennungen der Kategorien
+Suffixe sind `linksbindend':
+
+  Acht>lo-sig>keit     (Acht + losig) + keit
+
+Die unterschiedliche Bindungsstärke von Trennungen der Kategorie
 `-' und `=' kann durch Doppellung des Trennzeichens markiert werden:
 
-  drei--fa-che                Wortbildungssuffix -fa-che
   Alp=horn==trio              (Alp + horn) + trio
   Berg===fünf=fin-ger==kraut  Berg + ((fünf + (fin-ger)) + kraut)
 
@@ -103,16 +134,15 @@ entweder gleichwertige Wortbestandteile, Zerlegungsalternativen oder sind
 
   Abend=brot=zeit        (Abend + brot) + zeit oder Abend + (brot + zeit)
 
-Das gemischte Trennzeichen »|=« kennzeichnet die Bindungverhältnisse,
+Das gemischte Trennzeichen `<=' kennzeichnet die Bindungverhältnisse,
 wenn sich ein echter Präfix auf das gesamte folgende Kompositum bezieht:
 
-  un|=wahr=schein-lich  un + (wahr + scheinlich)
+  un<=wahr=schein-lich  un + (wahr + scheinlich)
 
-Das gemischte Trennzeichen »-=« kennzeichnet die Bindungsverhältnisse,
-wenn sich beispielsweise ein Suffix auf das gesamte vorhergehende
-Kompositum bezieht
+Das gemischte Trennzeichen `>=' kennzeichnet die Bindungsverhältnisse, wenn
+sich ein Suffix auf das gesamte vorhergehende Kompositum bezieht
 
-  an-dert=halb-=fach     ((an+dert) + halb) + fach
+  an-dert=halb>=fach     ((an+dert) + halb) + fach
 
 Das erste Zeichen eines gemischten Trennzeichens kennzeichnet die
 Kategorie der Trennstelle.
@@ -120,6 +150,9 @@ Kategorie der Trennstelle.
 Ebenso wie die Charakterisierung ist die Markierung der Bindungstärke
 unvollständig.
 
+
+Ungünstige Trennungen
+---------------------
 
 Ungünstige (irreführende oder sinnentstellende) Trennstellen sind mit einem
 Punkt markiert.  Der Punkt ersetzt das Trennzeichen für nicht kategorisierte
@@ -130,9 +163,9 @@ Trennstellen oder folgt auf Trennzeichen zur Kategorisierung:
 Besonders ungünstige Trennstellen können mit mehreren Punkten
 gekennzeichnet sein.
 
-  .    ungünstig: An·den.ken, Ost=en.de, Re|im|.port
+  .    ungünstig: An·den.ken, Ost=en.de, Re<im<.port
   ..   sehr ungünstig: Ge·winn·er..war·tung
-  ...  äußerst ungünstig: An|al-...pha-bet
+  ...  äußerst ungünstig: An<al-...pha-bet
 
 Auch die Markierung ungünstiger Trennstellen ist weder eindeutig noch
 vollständig.  Bei der Generation der Trennmustern für TeX werden alle als
@@ -140,15 +173,18 @@ ungünstige markierten Trennstellen als nicht vorhanden gewertet.
 
 
 Spezielle Trennungen
-====================
+--------------------
 
 Folgende Notation wird verwendet, um spezielle Trennungen (für die
 traditionelle Rechtschreibung) zu kennzeichnen:
 
+  {«ungetrennt»/«getrennt»}
+
+Dreikonsonantenregel:
+
   Ab-fa{ll/ll-l}a-ger
 
-Die gleiche Konstruktion wird verwendet, um Trennungen von `ck'
-darzustellen:
+Trennung von `ck':
 
   Dru{ck/k·k}er
 
@@ -161,9 +197,15 @@ ist folgender regulärer Ausdruck in `perl' anzuwenden:
 
 Doppeldeutige Trennstellen werden folgendermaßen deklariert:
 
+  [»Variante A«/»Variante B«]
+
+z.B.
+
   er[b-/-b]recht
 
 Für TeX-Trennmuster ist es vielleicht am besten, solche Einträge zu
 entfernen und die häufigeren Fälle in einem \hyphenation-Block zu
-behandeln.  Sowohl in `[...]' als auch in `{...}' können alle Arten von
+behandeln.
+
+Sowohl in `[…/…]' als auch in `{…/…}' können alle Arten von
 gewichteten und ungewichteten Trennstellen auftreten.

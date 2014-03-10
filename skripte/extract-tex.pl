@@ -52,7 +52,7 @@ else {
 
 sub entferne_marker {
   my $arg = shift;
-  $arg =~ s/[-=|·]//g;
+  $arg =~ s/[-=|<>·]//g;
   return $arg;
 }
 
@@ -95,14 +95,14 @@ while (<>) {
     $zeile =~ s|\[ (.*?) / .*? \]|entferne_marker($1)|egx;
 
     # Ausgabe von Wörtern mit unerwünschten Trennungen?
-    next if $zeile =~ /[._]/ and $opt_u;
+    next if $zeile =~ /\./ and $opt_u;
     # entferne Markierungen für unerwünschte Trennungen
-    $zeile =~ s/[·|=-]*[._]+[·|=-]*//g;
+    $zeile =~ s/[·|<>=-]*\.+[·|<>=-]*//g;
 
     # Ausgabe von Wörtern mit ungewichteten Trennstellen?
     next if $zeile =~ /·/ and $opt_g;
     # reduziere Trennstellenmarker zu »-«, falls gewollt
-    $zeile =~ s/[·|=-]+/-/g if not $opt_g;
+    $zeile =~ s/[·|<>=-]+/-/g if not $opt_g;
   }
 
   print "$zeile\n";
