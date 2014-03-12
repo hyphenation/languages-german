@@ -21,10 +21,14 @@
 
 import re       # Funktionen und Klassen für reguläre Ausdrücke
 import sys      # sys.exit() zum Abbruch vor Ende (für Testzwecke)
+import codecs
 from collections import defaultdict  # Wörterbuch mit Default
 from copy import deepcopy
 
 from werkzeug import WordFile, join_word, udiff
+
+# sys.stdout mit UTF8 encoding.
+sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
 # Globale Variablen
 # -----------------
@@ -42,8 +46,8 @@ wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
 #
 # Sprach-Tag nach [BCP47]_::
 
-sprachvariante = 'de-1901'         # "traditionell"
-# sprachvariante = 'de-1996'         # Reformschreibung
+# sprachvariante = 'de-1901'         # "traditionell"
+sprachvariante = 'de-1996'         # Reformschreibung
 # sprachvariante = 'de-x-GROSS'      # ohne ß (Großbuchstaben und Kapitälchen)
 # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
 # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
@@ -61,13 +65,13 @@ sprachvariante = 'de-1901'         # "traditionell"
 # (in Debian in den Paketen "wngerman" und "wogerman").
 # Unterscheiden Groß-/Kleinschreibung und beinhalten auch kurze Wörter. ::
 
-def wortdatei(wortfile):
+def wortdatei(wortfile, encoding='utf8'):
     for line in open(wortfile):
-        yield line.rstrip().decode('utf8')
+        yield line.rstrip().decode(encoding)
 
 if sprachvariante == 'de-1901':
-    wgerman = set(line.rstrip().decode('latin-1') 
-                  for line in open('/usr/share/dict/ogerman'))
+    wgerman = set(w for w in wortdatei('/usr/share/dict/ogerman',
+                                       encoding='latin-1'))
 else:
     wgerman = set(w for w in wortdatei('/usr/share/dict/ngerman'))
 
@@ -93,7 +97,7 @@ vorsilben = set(w for w in wortdatei('wortteile/vorsilben'))
 #     if (vs not in words 
 #         and vs.lower() not in words and vs.title() not in words
 #         and vs.lower() not in wgerman and vs.title() not in wgerman):
-#         print vs.encode('utf8')
+#         print vs
 #     
 # sys.exit()
 
@@ -133,10 +137,13 @@ wortliste = []
 # Wörterbuch zum Aufsuchen der Teilwörter
 # ---------------------------------------
 #
+
+words = {}
+
 # initialisiert mit Ausnahmen und Wörtern der Rechtschreiblisten::
 
-words = dict([(w, '')
-              for w in wgerman.union(teilwoerter, kurzwoerter, neu_todo)])
+# words = dict([(w, '')
+#               for w in wgerman.union(teilwoerter, kurzwoerter, neu_todo)])
 
 # Sammeln unbekannter Wortteile::
 
@@ -169,17 +176,17 @@ for entry in wortliste:
     wort = entry.get(sprachvariante)
     if wort is None: # Wort existiert nicht in der Sprachvariante
         continue
-
+    
 # Spezielle Teilwörter suchen::
 
     # teile = wort.split(u'=')
     # if ('Stopp' in teile or 'stopp' in teile
-    #     print entry[0].encode('utf8')
+    #     print entry[0]
     # continue
 
     # teile = wort.split(u'-')
     # if teile[-1] == 'burg':
-    #     print ('-'.join(teile[:-1]) + '=' + teile[-1]).encode('utf8')
+    #     print ('-'.join(teile[:-1]) + '=' + teile[-1])
     # continue
 
     if u'·' not in wort:  # keine unkategorisierte Trennstelle
@@ -189,24 +196,11 @@ for entry in wortliste:
 
     teile = wort.split(u'·')
 
-# Zunächst nur 2-silbige Wörter::
-
-    # if len(teile) != 2:
-    #     continue
-    
-    # print '-'.join(teile).encode('utf8')
-    
-
 # Wortteile analysieren::
 
-    for i in range(len(teile)-1):
-        erstwort = u'·'.join(teile[:i+1])
-        zweitwort =  u'·'.join(teile[i+1:])
-
-# Suche (zunächst) nur nach Wörtern mit Fugen-s::
-
-        # if not erstwort.endswith('s'):
-        #     continue
+    for i in range(1,len(teile)-1):
+        erstwort = u'·'.join(teile[:i])
+        zweitwort =  u'·'.join(teile[i:])
 
 # Key: Teilwort ohne Trennung, Groß/Kleinschreibung übertragen::
 
@@ -215,10 +209,6 @@ for entry in wortliste:
             zweitkey = join_word(zweitwort)
         except AssertionError, e:  # Spezialtrennung
             print e
-            if erstwort.endswith('{ck/k'):
-                entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
-            else:
-                print e
             continue
         if wort[0].istitle():
             zweitkey = zweitkey.title()
@@ -231,22 +221,24 @@ for entry in wortliste:
 
 # Komposita::
 
-        # if (erstkey in words and
-        #     erstkey not in erstsilben
-        #     and erstkey not in vorsilben
-        #     and zweitkey in words
-        #     and zweitkey.lower() not in endsilben
-        #     and zweitkey not in kurzwoerter
-        #    ):
-        #     entry.set('='.join((erstwort, zweitwort.lower())), sprachvariante)
-        #     print str(entry), (u'%s %s'% (erstkey,zweitkey)).encode('utf8')
+        if (erstkey in words and
+            erstkey not in erstsilben
+            and erstkey not in vorsilben
+            and erstkey not in praefixe
+            and zweitkey in words
+            and zweitkey.lower() not in endsilben
+            and zweitkey not in kurzwoerter
+           ):
+            compound = '='.join((erstwort, zweitwort.lower()))
+            entry.set(compound, sprachvariante)
+            print compound, (u'%s %s'% (erstkey,zweitkey))
 
 # Vorsilben::
 
         # if (erstkey in vorsilben
         #     # and zweitkey in words
         #    ):
-        #     print str(entry), (u'%s<%s'% (erstkey,zweitwort)).encode('utf8')
+        #     print str(entry), (u'%s<%s'% (erstkey,zweitwort))
         #     entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
 
 # Endsilben::
@@ -254,14 +246,14 @@ for entry in wortliste:
         # if (erstkey in words
         #     and zweitkey.lower() in endsilben
         #    ):
-        #     print str(entry), (u'%s-%s'% (erstkey,zweitwort)).encode('utf8')
+        #     print str(entry), (u'%s-%s'% (erstkey,zweitwort))
         #     entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
         
 
 # # Erstsilben::
 
         # if (erstkey in erstsilben or erstkey in vorsilben):
-        #     print str(entry), (u'%s-%s'% (erstkey,zweitwort)).encode('utf8')
+        #     print str(entry), (u'%s-%s'% (erstkey,zweitwort))
         #     entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
 
 # # Neueintragskandidaten::
@@ -277,7 +269,7 @@ for entry in wortliste:
 #            ):
 #             unbekannt2[zweitwort].append(wort)
 #         else:
-#             print ("%s-%s %s" % (erstwort, zweitwort, entry)).encode('utf8')
+#             print ("%s-%s %s" % (erstwort, zweitwort, entry))
 
 
 # Ausgabe
@@ -290,7 +282,7 @@ def testausgabe(unbekannt):
                                  ','.join(unbekannt[key]))
                   for key in sorted(unbekannt.keys())]
     checkliste.sort()
-    return u'\n'.join(checkliste).encode('utf8') + '\n'
+    return u'\n'.join(checkliste) + '\n'
 
 
 if unbekannt1:
