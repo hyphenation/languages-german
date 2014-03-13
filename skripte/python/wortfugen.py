@@ -221,17 +221,21 @@ for entry in wortliste:
 
 # Komposita::
 
-        if (erstkey in words and
-            erstkey not in erstsilben
-            and erstkey not in vorsilben
-            and erstkey not in praefixe
-            and zweitkey in words
+        if ((erstkey in words 
+             or erstkey.lower() in words
+             or erstkey.upper() in words)
+            and erstkey not in erstsilben
+            # and erstkey not in vorsilben
+            and erstkey.lower() not in praefixe
+            and (zweitkey in words
+                 or zweitkey.lower() in words
+                 or zweitkey.upper() in words)
             and zweitkey.lower() not in endsilben
             and zweitkey not in kurzwoerter
            ):
             compound = '='.join((erstwort, zweitwort.lower()))
+            print u'%-30s %-15s %s'% (compound, erstkey,zweitkey)
             entry.set(compound, sprachvariante)
-            print compound, (u'%s %s'% (erstkey,zweitkey))
 
 # Vorsilben::
 

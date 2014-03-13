@@ -334,8 +334,8 @@ def mehrdeutigkeiten(words):
         if len(words.trennvarianten[teil]) == 1:
             continue
         # Bekannte Mehrdeutigkeiten:
-        if teil in ('Anhalts', 'Base',  'George', 'Mode', 'Page', 'Pole',
-                    'Planes', 'Rate', 'Real',
+        if teil in ('Anhalts', 'Base',  'George', 'Mode', 'Name',
+                    'Page', 'Pole', 'Planes', 'Rate', 'Real',
                     'Spare', 'Wales', 'Ware',
                     'griff' # gri[f-f/{ff/ff=f}]est
                    ):
