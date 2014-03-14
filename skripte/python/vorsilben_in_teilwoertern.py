@@ -12,12 +12,12 @@
 #
 # Suche nach Wörtern beginnend mit::
 
-term = u'su-per'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
+term = u'an'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
 
-# in der Datei ``teilwoerter-<sprachvariante>.txt`` und analysiere das
-# folgende (Teil)wort. Schreibe die Datei ``teilwoerter-neu`` wobei alle
-# Vorkommnisse des gesuchten Präfix am Anfang eines Wort oder nach anderen
-# Präfixen mit ``<`` markiert sind, es sei den das Wort (ohne bereits
+# in der Datei ``teilwoerter-<sprachtag>.txt`` und analysiere das
+# folgende (Teil)wort. Schreibe Änderungen in die Datei ``teilwoerter.patch``
+# wobei alle Vorkommnisse des gesuchten Präfix am Anfang eines Wort oder nach
+# anderen Präfixen mit ``<`` markiert sind, es sei den das Wort (ohne bereits
 # markierte Präfixe) ist in der Datei ``wortteile/vorsilbenausnahmen``
 # gelistet. Die Ausgabe der Analyse hilft bei der Vervollständigung der
 # Ausnahmeliste.
@@ -100,12 +100,11 @@ sprachvariante = 'de-1996'  # Reformschreibung
 import io       # (De-) Kodierung beim Schreiben/Lesen von Dateien
 import re       # Funktionen und Klassen für reguläre Ausdrücke
 import sys      # sys.exit() zum Abbruch vor Ende (für Testzwecke)
-import difflib  # unified diff aus Vergleich zweier Listen
 import codecs
-from copy import deepcopy
 
 from werkzeug import WordFile, join_word
 from analyse import read_teilwoerter
+from abgleich_praefixe import udiff  # unified diff aus Vergleich zweier Listen
 
 # sys.stdout mit UTF8 encoding.
 sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
@@ -136,12 +135,13 @@ for wort in words.woerter():
         grundwoerter.add(match.group(1))
 
 # print grundwoerter
-# print len(trennvarianten), len(grundwoerter)
+# print len(words.trennvarianten), len(grundwoerter)
 # sys.exit()
-#
+
 # Teilwörterdatei für die zeilenweise Modifikation::
 
-teilwoerter = io.open('teilwoerter-%s.txt'%sprachvariante, encoding='utf8')
+teilwoerter = list(io.open('teilwoerter-%s.txt'%sprachvariante, 
+                           encoding='utf8'))
 neuteile = [] # Übertrag
 
 # Analyse
@@ -149,18 +149,20 @@ neuteile = [] # Übertrag
 #
 # Muster für die gesuchte Silbe unabhängig von der Großschreibung::
 
-pattern = '[%s%s]%s' % (term[0].upper(), term[0], term[1:]) # [Aa]us
+pattern = '[%s%s]%s' % (term[0].upper(), term[0], term[1:]) # aus -> [Aa]us
 
 # Sortierung in::
 
-ist_ausnahme = []       # erkannte Ausnahmen
+ist_ausnahme = []         # erkannte Ausnahmen
 # teil_und_grundwort = [] # Restwort existiert als Teil- und Grundwort
-mit_teilwort = []       # Restwort existiert als Teilwort
-mit_stamm = []          # Restwort existiert mit anderer Vorsilbe
+mit_teilwort = []         # Restwort existiert als Teilwort
+mit_stamm = []            # Restwort existiert mit anderer Vorsilbe
 mit_Teilwort = []         # Restwort mit anderer Groß-/Kleinschreibung
-ohne_teilwort = []           # Restwort nicht in der Wortliste
+ohne_teilwort = []        # Restwort nicht in der Wortliste
 
-# Iteration über bekannte Einzelwörter::
+# Iteration über bekannte Einzelwörter
+# ------------------------------------
+# ::
 
 for line in teilwoerter:
     try:
@@ -193,7 +195,7 @@ for line in teilwoerter:
         ersetzung = u'%s%s<%s' % (praefix, kandidat, rest)
     else:
         ersetzung = u'%s<%s' % (kandidat, rest)
-    key = join_word(rest)
+    key = join_word(rest.split(u'=')[0])
     if wort[0].isupper():
         key = key.title()
 
@@ -220,11 +222,6 @@ for line in teilwoerter:
         pass
 
 # ::
-
-    # elif key in words.trennvarianten and key in grundwoerter:
-    #     teil_und_grundwort.append(ersetzung)
-    #     # Zeile ändern:
-    #     line = u'%s %s\n' % (ersetzung, tags)
 
     elif key in words.trennvarianten:
         mit_teilwort.append(ersetzung)
@@ -269,13 +266,6 @@ for wort in ist_ausnahme:
     print wort
 print
 
-# print u'* Grundwort existiert als Teil- und Grundwort:', len(teil_und_grundwort)
-# for wort in teil_und_grundwort:
-#     print wort
-# print
-#
-# ::
-
 print u'* Restwort existiert als Teilwort:', len(mit_teilwort)
 for wort in mit_teilwort:
     print wort
@@ -297,17 +287,20 @@ for wort in ohne_teilwort:
 
 # Ausgabe
 # =======
-#
-# Die Ausgabedatei entspricht der Eingangsdatei ``teilwoerter-<sprachvariante>``
-# zuzüglich der neu ausgezeichneten Präfix-Trennstellen.
-#
-# Sie sollte (nach Korrigieren von Fehleinträgen, ggf. über Kontrolle mit
-# ``diff``) die Eingangsdatei ersetzen.
-#
+
+# Patch erstellen::
+
+patch = udiff(teilwoerter, neuteile, 'teilwoerter', 'teilwoerter-neu')
+if patch:
+    # print patch
+    patchfile = open('teilwoerter.patch', 'w')
+    patchfile.write(patch + '\n')
+else:
+    print u'empty patch'
+
+# Nach Durchsicht können die Änderungen mit ``patch
+# teilwoerter-<sprachtag>.txt < teilwoerter.patch`` in die Teilwortdatei
+# übernommen werden.
+
 # Mit dem Skript ``abgleich_teilwoerter.py`` können dann die Kategorisierungen
 # in alle Vorkommen der Teilwörter in der ``wortliste`` übertragen werden.
-#
-# ::
-
-ausgabedatei = io.open('teilwoerter-neu', mode='w', encoding='utf8')
-ausgabedatei.writelines(neuteile)

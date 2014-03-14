@@ -202,8 +202,8 @@ print 'Einträge in der Wortliste:', len(wortliste)
 print 'Gesamtwortzahl (w*german+Wortliste, %s):' % sprachvariante, len(words)
 
 print 'Teilwort mit anderer Groß-/Kleinschreibung:', len(grossklein),
-print '-> siehe Datei "teilwort-grossklein"'
-grossklein_file = file('teilwort-grossklein', 'w')
+print '-> siehe Datei "wortteile/-grossklein"'
+grossklein_file = file('wortteile/-grossklein', 'w')
 grossklein_file.write(testausgabe(grossklein))
 
 # print 'Teilwort mit zusätzlicher Vorsilbe:', len(vorsilben)
@@ -211,13 +211,13 @@ grossklein_file.write(testausgabe(grossklein))
 # vorsilben_file.write(testausgabe(vorsilben))
 
 print 'fremdsprachige Teilwörter:', len(fremd),
-print '-> siehe Datei "teilwort-fremd"'
-fremd_file = file('teilwort-fremd', 'w')
+print '-> siehe Datei "wortteile/-fremd"'
+fremd_file = file('wortteile/-fremd', 'w')
 fremd_file.write(testausgabe(fremd))
 
 print 'Teilwort nicht gefunden:', len(unbekannt),
-print '-> siehe Datei "teilwort-unbekannt"'
-unbekannt_file = file('teilwort-unbekannt', 'w')
+print '-> siehe Datei "wortteile/-unbekannt"'
+unbekannt_file = file('wortteile/-unbekannt', 'w')
 unbekannt_file.write(testausgabe(unbekannt))
 
 

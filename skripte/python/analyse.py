@@ -336,7 +336,7 @@ def mehrdeutigkeiten(words):
         # Bekannte Mehrdeutigkeiten:
         if teil in ('Anhalts', 'Base',  'George', 'Mode', 'Name',
                     'Page', 'Pole', 'Planes', 'Rate', 'Real',
-                    'Spare', 'Wales', 'Ware',
+                    'Spare', 'Station', 'Wales', 'Ware',
                     'griff' # gri[f-f/{ff/ff=f}]est
                    ):
             continue

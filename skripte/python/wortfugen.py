@@ -26,6 +26,7 @@ from collections import defaultdict  # Wörterbuch mit Default
 from copy import deepcopy
 
 from werkzeug import WordFile, join_word, udiff
+from analyse import read_teilwoerter, teilwoerter
 
 # sys.stdout mit UTF8 encoding.
 sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
@@ -52,6 +53,14 @@ sprachvariante = 'de-1996'         # Reformschreibung
 # sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
 # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
 # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
+
+# Vergleichsbasis
+# ~~~~~~~~~~~~~~~
+# Verwende die Wortliste oder die mit ``analyse.py`` generierte Teilwortliste 
+# als Quelle der kategorisierten Trennungen::
+
+# use_teilwoerter = False
+use_teilwoerter = True
 
 
 # Textdateien mit Wortbestandteilen
@@ -89,19 +98,6 @@ praefixe = set(w for w in wortdatei('wortteile/praefixe'))
 
 vorsilben = set(w for w in wortdatei('wortteile/vorsilben'))
 
-# Erstellen der Liste durch Aussortieren selbständiger Wörter
-# (Auskommentieren und Ausgabe unter wortteile/vorsilben abspeichern)::
-
-# words = wordfile.asdict()
-# for vs in sorted(praefixe - wgerman, key=unicode.lower):
-#     if (vs not in words 
-#         and vs.lower() not in words and vs.title() not in words
-#         and vs.lower() not in wgerman and vs.title() not in wgerman):
-#         print vs
-#     
-# sys.exit()
-
-
 # Erstsilben: Wörter, die häufig als erste
 # Silbe eines Wortes (aber nicht oder nur selten als Teilwörter) auftreten
 # aber keine Vorsilben sind ::
@@ -113,37 +109,15 @@ erstsilben = set(w for w in wortdatei('wortteile/erstsilben'))
 
 endsilben = set(w for w in wortdatei('wortteile/endsilben'))
 
-# Teilwörter: Wörter die in der Wortliste nur in Wortverbindungen vorkommen
-# (zu kurz, keine eigenständigen Wörter, andere Großschreibung)
-# und auch im Rechtschreibwörterbuch (wgerman) fehlen ::
-
-teilwoerter = set(w for w in wortdatei('wortteile/teilwoerter'))
-
-# Wörter, die in Zusammensetzungen verkürzt vorkommen (und daher nicht an
-# letzter Stelle), z.b. "Farb"::
-
-kurzwoerter = set(w for w in wortdatei('wortteile/kurzwoerter'))
-
-# Bereits gesammelte Neueinträge::
-
-neu_todo = set(join_word(w) for w in wortdatei('neu.todo'))
 
 # Einträge der "Wortliste"
 # ------------------------
 # ::
 
-wortliste = []
+wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
+wortliste = list(wordfile)
 
-# Wörterbuch zum Aufsuchen der Teilwörter
-# ---------------------------------------
-#
-
-words = {}
-
-# initialisiert mit Ausnahmen und Wörtern der Rechtschreiblisten::
-
-# words = dict([(w, '')
-#               for w in wgerman.union(teilwoerter, kurzwoerter, neu_todo)])
+wortliste_neu = deepcopy(wortliste)
 
 # Sammeln unbekannter Wortteile::
 
@@ -151,15 +125,14 @@ unbekannt1 = defaultdict(list)
 unbekannt2 = defaultdict(list)
 
 
-# Erstellen der Ausgangslisten
-# ==========================================
-#
-# ::
+# Wörterbuch zum Aufsuchen der Teilwörter
+# ---------------------------------------
 
-for entry in wordfile:
-    if entry.lang_index(sprachvariante) is not None:
-        words[entry[0]] = entry # Eintrag in Wörterbuch mit Wort als key
-    wortliste.append(entry)
+if use_teilwoerter:
+    words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
+else: # Gesamtwörter als "Teilwörter":
+    words = wortliste_to_teilwoerter(wortliste, sprachvariante)
+words = words.trennvarianten
 
 
 # 2. Durchlauf: Analyse
@@ -167,9 +140,9 @@ for entry in wordfile:
 #
 # Durchlaufe alle Einträge::
 
-wortliste_alt = deepcopy(wortliste)
+wortliste_neu = deepcopy(wortliste)
 
-for entry in wortliste:
+for entry in wortliste_neu:
 
 # Wort mit Trennungen in Sprachvariante::
 
@@ -219,19 +192,22 @@ for entry in wortliste:
 # Blöcke zur regelbasierten Kategorisierung.
 # Zum Auskommentieren und Anpassen.
 
+# Fugen-s o.ä. weglassen::
+
+        # erstkey = erstkey[:-1]
+
 # Komposita::
 
         if ((erstkey in words 
              or erstkey.lower() in words
              or erstkey.upper() in words)
             and erstkey not in erstsilben
-            # and erstkey not in vorsilben
-            and erstkey.lower() not in praefixe
+            and erstkey.lower() not in vorsilben
+            # and erstkey.lower() not in praefixe
             and (zweitkey in words
                  or zweitkey.lower() in words
                  or zweitkey.upper() in words)
             and zweitkey.lower() not in endsilben
-            and zweitkey not in kurzwoerter
            ):
             compound = '='.join((erstwort, zweitwort.lower()))
             print u'%-30s %-15s %s'% (compound, erstkey,zweitkey)
@@ -295,10 +271,9 @@ if unbekannt2:
     print testausgabe(unbekannt2)
 
 
-
 # Ein Patch für die wortliste::
 
-patch = udiff(wortliste_alt, wortliste,
+patch = udiff(wortliste, wortliste_neu,
               wordfile.name, wordfile.name+'-neu',
               encoding=wordfile.encoding)
 
