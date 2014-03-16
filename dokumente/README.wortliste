@@ -86,7 +86,7 @@ Anmerkungen:
 
     En-er-gie, Ant-wort
 
-  Kriterien sind neben der `Güte' der Trennstelle (Nicht-Störung des
+  Kriterien sind neben der `Güte' der Trennstelle (geringe Störung des
   Leseflusses bei Zeilenumbruch an dieser Stelle) die Lang-s-Schreibung
   (Schluss-s auch bei s-s, s-t, oder s-p) und der Aufbruch von Ligaturen
   an dieser Stelle.
@@ -95,59 +95,82 @@ Anmerkungen:
   gekennzeichnet.
 
   Im Gegensatz zu Präfixen, werden im Deutschen Wörter mit Suffix nicht nach
-  Ethymologie, sondern nach der `Sprechsilbenregel' getrennt:
+  Etymologie, sondern nach der `Sprechsilbenregel' getrennt:
 
     An<ord-nung          An + ordn + ung
 
 
-Wichtung
---------
+Bindungsstärke und Wichtung
+---------------------------
 
-Für die Bindungsstärke B von Trennstellen verschiedener Kategorien gilt
+Die `Bindungsstärke' gibt die Zusammengehörigkeit von Wortteilen an. Für die
+oben eingeführten Kategorien gilt
 
-  B(`-') > B(`<') = B(`>') > B(`=')
+  = Wortfugen          schwache Bindung
 
-das heißt:
+  < Präfixgrenze       mittlere Bindung
+  > Suffixgrenze       mittlere Bindung
 
-  Aus<wahl=lis-te        (Aus + wahl) + (lis-te)
-  fern=ab<ge<le-gen      fern + (ab + (ge + (le-gen)))
-  Abend=lüft>chen        Abend + (lüft + chen)
+  - Sprechsilben       starke Bindung
+
+Beispiele:
+
+  Aus<wahl=lis-te      (Aus + wahl) + (lis-te)
+  fern=ab<ge<le-gen    fern + (ab + (ge + (le-gen)))
+  Abend=lüft>chen      Abend + (lüft + chen)
 
 Präfixe sind `rechtsbindend':
 
-  un<voll<stän-dig       un + (voll + ständig)
-  un<aus<ge<go-ren       un + (aus + (ge + (go-ren)))
+  un<voll<stän-dig            un + (voll + ständig)
+  un<aus<ge<go-ren            un + (aus + (ge + (go-ren)))
 
 Suffixe sind `linksbindend':
 
-  Acht>lo-sig>keit     (Acht + losig) + keit
+  Acht>lo-sig>keit            (Acht + losig) + keit
 
-Die unterschiedliche Bindungsstärke von Trennungen der Kategorie
-`-' und `=' kann durch Doppellung des Trennzeichens markiert werden:
+Eine schwächere Bindung an Trennstellen kann durch Doppelung des
+Trennzeichens markiert werden:
 
   Alp=horn==trio              (Alp + horn) + trio
   Berg===fünf=fin-ger==kraut  Berg + ((fünf + (fin-ger)) + kraut)
 
-Verschiedene Trennstellen dieser Kategorien ohne Doppelung bezeichnen
-entweder gleichwertige Wortbestandteile, Zerlegungsalternativen oder sind
-(noch) nicht gewichtet:
+Trennstellen gleicher Kategorie ohne Doppelung bezeichnen entweder
+gleichwertige Wortbestandteile, Zerlegungsalternativen oder sind (noch)
+nicht gewichtet:
 
   Abend=brot=zeit        (Abend + brot) + zeit oder Abend + (brot + zeit)
 
-Das gemischte Trennzeichen `<=' kennzeichnet die Bindungverhältnisse,
-wenn sich ein echter Präfix auf das gesamte folgende Kompositum bezieht:
+Das gemischte Trennzeichen `<=' kennzeichnet die Bindungsverhältnisse,
+wenn sich ein Präfix auf mehrere Teile eines Kompositums bezieht:
 
-  un<=wahr=schein-lich  un + (wahr + scheinlich)
+  un<=wahr=schein-lich        un + (wahr+scheinlich)
+  Ober<=be<fehls=ha-ber       Ober + ((be+fehls) + haber)
+  Be<=gut=ach-tungs==frist    (Be + (gut+achtungs)) + frist
 
-Das gemischte Trennzeichen `>=' kennzeichnet die Bindungsverhältnisse, wenn
-sich ein Suffix auf das gesamte vorhergehende Kompositum bezieht
+Das gemischte Trennzeichen `=>' kennzeichnet die Bindungsverhältnisse, wenn
+sich ein Suffix auf das vorhergehende Kompositum bezieht
 
-  an-dert=halb>=fach     ((an+dert) + halb) + fach
+  an-dert=halb=>fach          ((an+dert) + halb) + fach
+  zwei==ein=halb==>fa-che     (zwei + (ein+halb)) + fache
+  Vor<her=sag=>bar>keit       (((Vor+her) + sag) + bar) + keit
 
-Das erste Zeichen eines gemischten Trennzeichens kennzeichnet die
-Kategorie der Trennstelle.
+Die Bindungsstärke ist umgekehrt zur `Güte' (oder dem `Gewicht') einer
+Trennstelle:¹
 
-Ebenso wie die Charakterisierung ist die Markierung der Bindungstärke
+  schwache Bindung -> Vorzugstrennungen
+  mittlere Bindung -> mittlere Trenngüte
+  starke Bindung   -> Trennung beeinträchtigt den Lesefluss
+
+Beispiel:
+
+  Aus-              Auswahl-          Auswahllis-
+  wahlliste	    liste	      te
+
+¹ In eine genauere `Gütebestimmung' geht auch der Abstand zu anderen
+  Trennstellen und die Position im Wort ein.)
+
+
+Ebenso wie die Kategorisierung ist die Markierung der Bindungsstärke
 unvollständig.
 
 
@@ -169,7 +192,7 @@ gekennzeichnet sein.
 
 Auch die Markierung ungünstiger Trennstellen ist weder eindeutig noch
 vollständig.  Bei der Generation der Trennmustern für TeX werden alle als
-ungünstige markierten Trennstellen als nicht vorhanden gewertet.
+ungünstig markierten Trennstellen als nicht vorhanden gewertet.
 
 
 Spezielle Trennungen
@@ -182,11 +205,11 @@ traditionelle Rechtschreibung) zu kennzeichnen:
 
 Dreikonsonantenregel:
 
-  Ab-fa{ll/ll-l}a-ger
+  Ab-fa{ll/ll=l}a-ger
 
 Trennung von `ck':
 
-  Dru{ck/k·k}er
+  Dru{ck/k-k}er
 
 Um z.B. eine Wortliste für TeX zu konstruieren (traditionelle
 Rechtschreibung), das solche speziellen Trennungen nicht benutzen kann,
@@ -201,11 +224,12 @@ Doppeldeutige Trennstellen werden folgendermaßen deklariert:
 
 z.B.
 
-  er[b-/-b]recht
+  er[<b/b=]recht
+  Kin[-der=/d=er<.]satz
 
 Für TeX-Trennmuster ist es vielleicht am besten, solche Einträge zu
 entfernen und die häufigeren Fälle in einem \hyphenation-Block zu
 behandeln.
 
 Sowohl in `[…/…]' als auch in `{…/…}' können alle Arten von
-gewichteten und ungewichteten Trennstellen auftreten.
+Trennstellen auftreten.
