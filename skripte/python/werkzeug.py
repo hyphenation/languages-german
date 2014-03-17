@@ -45,7 +45,7 @@ class WordFile(file):
 # readlines
 # ---------
 #
-# Iterator über reLies die Datei in eine Liste von Zeilen
+# Lies die Datei in eine Liste von Zeilen
 # (`unicode` Strings ohne Zeilenendezeichen)::
 
     def readlines(self, keepends=False):
@@ -57,10 +57,12 @@ class WordFile(file):
 # Splitten in eine Liste der Zeilen und zurückgeben::
 
         inhalt = inhalt.splitlines(keepends)
-        if inhalt and not inhalt[-1]:
-            # letzte Zeile leer wegen abschließendem \n
-            del inhalt[-1]
-
+        try:
+            if not inhalt[-1]:
+                # letzte Zeile leer wegen abschließendem \n
+                del inhalt[-1]
+        except KeyError:
+            pass
         return inhalt
 
 # Iteration

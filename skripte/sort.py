@@ -13,19 +13,22 @@
 # ::
 
 u"""
-Sortiere die Wortliste und erstelle einen Patch im "unified diff" Format.
+Sortiere eine Wortliste und erstelle einen Patch im "unified diff" Format.
+Ohne Angabe einer Eingangsdatei wird von der Standardeingabe gelesen.
+
+Die Kodierung ist UTF8.
 
 Es wird wahlweise nach Duden oder nach der bis März 2012 für die Wortliste
 genutzten Regel sortiert. Voreinstellung ist Dudensortierung.
 """
 
-usage = u'%prog [Optionen]\n' + __doc__
+usage = u'%prog [Optionen] [Eingangsdatei]\n' + __doc__
 
 
 import unicodedata, sys, optparse, os
 # path for local Python modules
 sys.path.append(os.path.join(os.path.dirname(__file__), 'python'))
-from werkzeug import WordFile, udiff
+from werkzeug import WordFile, WordEntry, join_word, udiff
 
 # Sortierschlüssel
 # ================
@@ -60,6 +63,9 @@ def sortkey_duden(entry):
 # Sortieren nach erstem Feld (ungetrenntes Wort)::
 
     key = entry[0]
+    
+    if len(entry) == 1:  # ein Muster pro Zeile, siehe z.B. pre-1901
+        key = join_word(key)
 
 # Großschreibung ignorieren:
 #
@@ -158,14 +164,11 @@ if __name__ == '__main__':
     # Optionen:
 
     parser = optparse.OptionParser(usage=usage)
-    parser.add_option('-i', '--file', dest='wortliste',
-                      help='Eingangsdatei, Vorgabe "../wortliste"',
-                      default='../wortliste')
     parser.add_option('-o', '--outfile', dest='patchfile',
                       help='Ausgangsdatei (Patch), Vorgabe "wortliste-sortiert.patch"',
                       default='wortliste-sortiert.patch')
     parser.add_option('-a', '--legacy-sort', action="store_true",
-                      help='alternative (historische) Sortierordnung',
+                      help='alternative (obsolete) Sortierordnung',
                       default=False)
     parser.add_option('-d', '--dump', action="store_true", default=False,
                       help='Schreibe sortierte Liste auf die Standardausgabe.')
@@ -180,9 +183,15 @@ if __name__ == '__main__':
         sortkey = sortkey_duden
 
     # Einlesen in eine Liste::
-
-    wordfile = WordFile(options.wortliste)
-    wortliste = list(wordfile)
+    
+    if args:
+        eingangsdateiname = args[0]
+        wordfile = WordFile(eingangsdateiname)
+        wortliste = list(wordfile)
+    else:
+        eingangsdateiname = 'stdin'
+        wortliste = [WordEntry(line.rstrip().decode('utf-8'))
+                     for line in sys.stdin]
 
     # Sortieren::
 
@@ -194,8 +203,8 @@ if __name__ == '__main__':
         sys.exit()
 
     patch = udiff(wortliste, sortiert,
-                  options.wortliste, options.wortliste+'-sortiert',
-                  encoding=wordfile.encoding)
+                  eingangsdateiname, eingangsdateiname+'-sortiert',
+                  encoding='utf-8')
     if patch:
         print patch
         if options.patchfile:
