@@ -238,7 +238,7 @@ local word = P{
    --
    -- morphologische Markierungen
    --
-   -- innerhalb von Wortstämmen oder vor Suffixen
+   -- innerhalb von Wortstämmen, Präfixen oder Suffixen
    hyphen_inner = V"hyphen_ch_inner"^1,
    -- nach Präfixen oder Verbalpartikeln
    hyphen_prefix = V"hyphen_ch_prefix"^1,
@@ -249,7 +249,7 @@ local word = P{
    -- nach Präfix eines zusammengesetzten Wortes
    hyphen_compound_prefix = V"hyphen_ch_prefix" * V"hyphen_compound",
    -- vor Suffix eines zusammengesetzten Wortes
-   hyphen_compound_suffix = V"hyphen_ch_inner" * V"hyphen_compound",
+   hyphen_compound_suffix = V"hyphen_compound" * V"hyphen_ch_suffix",
    -- unkategorisiert
    hyphen_uncategorized = V"hyphen_ch_uncategorized",
    -- eine morphologische Markierung (Achtung: In der folgenden Regel
