@@ -273,7 +273,7 @@ local word = P{
    hyphen = V"hyphen_without_quality" + V"hyphen_with_quality",
    -- Die folgenden Zeichen werden zur Trennstellenmarkierung verwendet:
    hyphen_ch_inner = P"-",
-   hyphen_ch_prefix = P"<" + P"|",
+   hyphen_ch_prefix = P"<",
    hyphen_ch_suffix = P">",
    hyphen_ch_compound = P"=",
    hyphen_ch_quality = P".",
