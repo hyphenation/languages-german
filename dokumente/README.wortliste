@@ -60,6 +60,7 @@ speziell gekennzeichnet:
   >  vor Wortbildungssuffix: Gleich>heit, Freund>schaf-ten
 
   -  innerhalb eines Morphems: ge-hen
+
   ·  nicht kategorisiert: acker·bau·trei·ben·de
 
 Motivation:
@@ -82,8 +83,8 @@ Anmerkungen:
 
     em-por<ar-bei-ten   oder   em-por=ar-bei-ten
 
-* Viele „etymologische“ Präfixe, die im heutigen Sprachverständnis nicht
-  mehr als Präfixe wahrgenommen werden, sind nicht speziell markiert:
+* Viele Präfixe, die im heutigen Sprachverständnis nicht als eigenständig
+  wahrgenommen werden, sind nicht speziell markiert:
 
     En-er-gie, Ant-wort
 
@@ -93,11 +94,11 @@ Anmerkungen:
   an dieser Stelle.
 
 * Morphemgrenzen, an denen keine Trennung erfolgt, werden nicht
-  gekennzeichnet.
+  gekennzeichnet. Das betrifft einsilbige Präfixe und viele Suffixe.
+  (Im Gegensatz zu Präfixen werden im Deutschen Wörter mit Suffix nicht
+  nach Etymologie, sondern nach der „Sprechsilbenregel“ getrennt.)
 
-  Im Gegensatz zu Präfixen werden im Deutschen Wörter mit Suffix nicht
-  nach Etymologie, sondern nach der „Sprechsilbenregel“ getrennt:
-
+    asozi-al              a + sozial
     An<ord-nung           An + ordn + ung
 
 
@@ -107,12 +108,12 @@ Bindungsstärke und Wichtung
 Die „Bindungsstärke“ gibt die Zusammengehörigkeit von Wortteilen an.
 Für die oben eingeführten Kategorien gilt
 
-  =  Wortfugen          schwache Bindung
+  -  Sprechsilben       starke Bindung
 
   <  Präfixgrenze       mittlere Bindung
   >  Suffixgrenze       mittlere Bindung
 
-  -  Sprechsilben       starke Bindung
+  =  Wortfugen          schwache Bindung
 
 Beispiele:
 
@@ -127,10 +128,10 @@ Präfixe sind „rechtsbindend“:
 
 Suffixe sind „linksbindend“:
 
-  Acht>lo-sig>keit              (Acht + losig) + keit
+  Acht>lo-sig>keit              (Acht + lo-sig) + keit
 
-Eine schwächere Bindung an Trennstellen kann durch Doppelung des
-Trennzeichens markiert werden:
+Bei mehrteiligen Komposita kann die Bindungshierarchie durch Doppelung
+des Trennzeichens genauer beschrieben werden:
 
   Alp=horn==trio                (Alp + horn) + trio
   Berg===fünf=fin-ger==kraut    Berg + ((fünf + (fin-ger)) + kraut)
@@ -139,9 +140,7 @@ Trennstellen gleicher Kategorie ohne Doppelung bezeichnen entweder
 gleichwertige Wortbestandteile, Zerlegungsalternativen oder sind (noch)
 nicht gewichtet:
 
-  Abend=brot=zeit               (Abend + brot) + zeit
-                          oder
-                                Abend + (brot + zeit)
+  Abend=brot=zeit               Abendbrot-Zeit / Abend-Brotzeit
 
 Das gemischte Trennzeichen „<=“ kennzeichnet die Bindungsverhältnisse,
 wenn sich ein Präfix auf mehrere Teile eines Kompositums bezieht:
@@ -157,36 +156,41 @@ wenn sich ein Suffix auf das vorhergehende Kompositum bezieht:
   zwei==ein=halb==>fa-che       (zwei + (ein + halb)) + fache
   Vor<her=sag=>bar>keit         (((Vor + her) + sag) + bar) + keit
 
-Sortiert man die Trennzeichen nach der Bindungsstärke, ergeben sich
-folgende Relationsketten:
+Die Bindungsstärke nimmt dabei mit der Länge des Trennzeichens ab:
 
-  -  >  =  =>  ==  ==>  ===  ...
-  -  <  =  <=  ==  <==  ===  ...
+  =================   ===============
+  Bindungsstärke      Zeichen
+  =================   ===============
+  stark               -
+  .                   <, >
+  .                   =
+  .                   ==, <=, =>
+  schwach             ===, <==, ==>
+  =================   ===============
 
-Im weiteren ist die Bindungsstärke umgekehrt proportional zur „Güte“
+
+Im Allgemeinen ist die Bindungsstärke umgekehrt proportional zur „Güte“
 (oder dem „Gewicht“) einer Trennstelle:¹
 
-  schwache Bindung -> Vorzugstrennungen
-  mittlere Bindung -> mittlere Trenngüte
-  starke Bindung   -> Trennung beeinträchtigt den Lesefluss
+  ================    ==================      ===========
+  Bindungsstärke      Güte/Gewicht            Beispiel
+  ================    ==================      ===========
 
-Beispiel:
+  schwach             Vorzugstrennungen       Auswahl-
+                                              liste
 
-  schwach:     Auswahl-
-               liste
+  mittel              mittel                  Aus-
+                                              wahlliste
 
-  mittel:      Aus-
-               wahlliste
-
-  stark:       Auswahllis-
-               te
-
-Ebenso wie die Kategorisierung ist die Markierung der Bindungsstärke
-unvollständig.
-
+  stark               weniger gut             Auswahllis-
+                                              te
+  ================    ==================      ===========
 
 ¹ In eine genauere „Gütebestimmung“ geht auch der Abstand zu anderen
   Trennstellen und die Position im Wort ein.
+
+Ebenso wie die Kategorisierung ist die Markierung der Bindungsstärke
+unvollständig.
 
 
 Ungünstige Trennungen
@@ -243,8 +247,8 @@ Doppeldeutige Trennstellen werden folgendermaßen deklariert:
 
 z.B.
 
-  er[<b/b=]recht
-  Kin[-der=/d=er<.]satz
+  er[<b/b=]recht                Erb=recht   / er<brecht
+  Kin[-der=/d=er<.]satz         Kinder=satz / Kind=ersatz
 
 Für TeX-Trennmuster ist es vielleicht am besten, solche Einträge zu
 entfernen und die häufigeren Fälle in einem \hyphenation-Block zu
