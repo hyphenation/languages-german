@@ -9,22 +9,22 @@ Bedeutung der Felder
     anderenfalls leer
   3 falls Feld 2 leer, Trennung nach traditioneller Rechtschreibung
   4 falls Feld 2 leer, Trennung nach reformierter Rechtschreibung (2006)
-  5 falls Feld 2 leer, Trennung für Wortform, die entweder in
-    der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird
-    und für traditionelle und reformierte Rechtschreibung identisch ist
-  6 falls Feld 5 leer, Trennung für Wortform, die entweder in
-    der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
+  5 falls Feld 2 leer, Trennung für Wortform, die entweder in der
+    Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird und
+    für traditionelle und reformierte Rechtschreibung identisch ist
+  6 falls Feld 5 leer, Trennung für Wortform, die entweder in der
+    Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
     traditionelle Rechtschreibung
-  7 falls Feld 5 leer, Trennung für Wortform, die entweder in
-    der Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
+  7 falls Feld 5 leer, Trennung für Wortform, die entweder in der
+    Schweiz oder mit Großbuchstaben oder Kapitälchen benutzt wird,
     reformierte Rechtschreibung (2006)
   8 falls Feld 5 leer und nicht identisch mit Feld 6, Trennung nach
-    (deutsch)schweizerischer, traditioneller Rechtschreibung; insbesondere
-    Wörter mit `sss' gefolgt von einem Vokal, die wie andere
-    Dreifachkonsonanten gehandhabt wurden (also anders, als der Duden früher
-    vorgeschrieben hat), z.B. `süssauer'
+    (deutsch)schweizerischer, traditioneller Rechtschreibung;
+    insbesondere Wörter mit „sss“ gefolgt von einem Vokal, die wie
+    andere Dreifachkonsonanten gehandhabt wurden (also anders, als der
+    Duden früher vorgeschrieben hat), z.B. „süssauer“
 
-Leere Felder sind mit `-x-' markiert (`x' ist die Feldnummer); Felder 3
+Leere Felder sind mit „-x-“ markiert („x“ ist die Feldnummer); Felder 3
 und 4 als auch Felder 6, 7 und 8 treten immer simultan auf, um die
 Lesbarkeit zu erhöhen.
 
@@ -38,15 +38,16 @@ Feldnummer haben Priorität.
 Sortierung
 ==========
 
-Die Sortierung erfolgt nach Dudensortierung.  Die genauen Regeln sind in der
-Datei `skripte/sort.py' beschrieben, welche auch zur maschinellen Sortierung
-der Liste verwendet werden kann.
+Die Sortierung erfolgt nach Dudensortierung.  Die genauen Regeln sind in
+der Datei „skripte/sort.py“ beschrieben, welche auch zur maschinellen
+Sortierung der Liste verwendet werden kann.
 
 
 Kennzeichnung der Trennstellen
 ==============================
 
-Die Charakterisierung und Wichtung der Trennstellen ist nicht vollständig.
+Die Charakterisierung und Wichtung der Trennstellen ist nicht
+vollständig.
 
 Kategorisierung
 ---------------
@@ -64,29 +65,29 @@ speziell gekennzeichnet:
 Motivation:
 
 * Die Trennung an sinnbildenden Einheiten fördert den Lesefluss und ist
-  daher zu bevorzugen
+  daher zu bevorzugen.
 
 * Die Markierung von Morphemgrenzen hilft bei der regelbasierten
   Entscheidung über den Aufbruch typographischer Ligaturen und die
-  Schreibung des S-Lautes in Frakturschrift (Rund-S `s' vs. Lang-S `ſ').
+  Schreibung des S-Lautes in Frakturschrift (Rund-S „s“ vs. Lang-S „ſ“).
 
 Anmerkungen:
 
-* Die Kategorisierung der Trennstellen ist nicht abgeschlossen.
-  Zur Zeit sind einige Trennstellen nach Präfix oder Verbalpartikel und
-  viele Trennstellen vor Suffixen noch mit `-' bezeichnet.
+* Die Kategorisierung der Trennstellen ist nicht abgeschlossen.  Zur
+  Zeit sind einige Trennstellen nach Präfix oder Verbalpartikel und
+  viele Trennstellen vor Suffixen noch mit „-“ bezeichnet.
 
 * Die Unterscheidung, ob ein Wortbestandteil ein Präfix, Suffix oder ein
   Grundmorphem ist, ist oft nicht eindeutig:
 
-    em-por<ar-bei-ten oder em-por=ar-bei-ten
+    em-por<ar-bei-ten   oder   em-por=ar-bei-ten
 
-* Viele `etymologische' Präfixe, die im heutigen Sprachverständnis nicht
+* Viele „etymologische“ Präfixe, die im heutigen Sprachverständnis nicht
   mehr als Präfixe wahrgenommen werden, sind nicht speziell markiert:
 
     En-er-gie, Ant-wort
 
-  Kriterien sind neben der `Güte' der Trennstelle (geringe Störung des
+  Kriterien sind neben der „Güte“ der Trennstelle (geringe Störung des
   Leseflusses bei Zeilenumbruch an dieser Stelle) die Lang-s-Schreibung
   (Schluss-s auch bei s-s, s-t, oder s-p) und der Aufbruch von Ligaturen
   an dieser Stelle.
@@ -94,68 +95,76 @@ Anmerkungen:
 * Morphemgrenzen, an denen keine Trennung erfolgt, werden nicht
   gekennzeichnet.
 
-  Im Gegensatz zu Präfixen, werden im Deutschen Wörter mit Suffix nicht nach
-  Etymologie, sondern nach der `Sprechsilbenregel' getrennt:
+  Im Gegensatz zu Präfixen werden im Deutschen Wörter mit Suffix nicht
+  nach Etymologie, sondern nach der „Sprechsilbenregel“ getrennt:
 
-    An<ord-nung          An + ordn + ung
+    An<ord-nung           An + ordn + ung
 
 
 Bindungsstärke und Wichtung
 ---------------------------
 
-Die `Bindungsstärke' gibt die Zusammengehörigkeit von Wortteilen an. Für die
-oben eingeführten Kategorien gilt
+Die „Bindungsstärke“ gibt die Zusammengehörigkeit von Wortteilen an.
+Für die oben eingeführten Kategorien gilt
 
-  = Wortfugen          schwache Bindung
+  =  Wortfugen          schwache Bindung
 
-  < Präfixgrenze       mittlere Bindung
-  > Suffixgrenze       mittlere Bindung
+  <  Präfixgrenze       mittlere Bindung
+  >  Suffixgrenze       mittlere Bindung
 
-  - Sprechsilben       starke Bindung
+  -  Sprechsilben       starke Bindung
 
 Beispiele:
 
-  Aus<wahl=lis-te      (Aus + wahl) + (lis-te)
-  fern=ab<ge<le-gen    fern + (ab + (ge + (le-gen)))
-  Abend=lüft>chen      Abend + (lüft + chen)
+  Aus<wahl=lis-te               (Aus + wahl) + (lis-te)
+  fern=ab<ge<le-gen             fern + (ab + (ge + (le-gen)))
+  Abend=lüft>chen               Abend + (lüft + chen)
 
-Präfixe sind `rechtsbindend':
+Präfixe sind „rechtsbindend“:
 
-  un<voll<stän-dig            un + (voll + ständig)
-  un<aus<ge<go-ren            un + (aus + (ge + (go-ren)))
+  un<voll<stän-dig              un + (voll + ständig)
+  un<aus<ge<go-ren              un + (aus + (ge + (go-ren)))
 
-Suffixe sind `linksbindend':
+Suffixe sind „linksbindend“:
 
-  Acht>lo-sig>keit            (Acht + losig) + keit
+  Acht>lo-sig>keit              (Acht + losig) + keit
 
 Eine schwächere Bindung an Trennstellen kann durch Doppelung des
 Trennzeichens markiert werden:
 
-  Alp=horn==trio              (Alp + horn) + trio
-  Berg===fünf=fin-ger==kraut  Berg + ((fünf + (fin-ger)) + kraut)
+  Alp=horn==trio                (Alp + horn) + trio
+  Berg===fünf=fin-ger==kraut    Berg + ((fünf + (fin-ger)) + kraut)
 
 Trennstellen gleicher Kategorie ohne Doppelung bezeichnen entweder
 gleichwertige Wortbestandteile, Zerlegungsalternativen oder sind (noch)
 nicht gewichtet:
 
-  Abend=brot=zeit        (Abend + brot) + zeit oder Abend + (brot + zeit)
+  Abend=brot=zeit               (Abend + brot) + zeit
+                          oder
+                                Abend + (brot + zeit)
 
-Das gemischte Trennzeichen `<=' kennzeichnet die Bindungsverhältnisse,
+Das gemischte Trennzeichen „<=“ kennzeichnet die Bindungsverhältnisse,
 wenn sich ein Präfix auf mehrere Teile eines Kompositums bezieht:
 
-  un<=wahr=schein-lich        un + (wahr+scheinlich)
-  Ober<=be<fehls=ha-ber       Ober + ((be+fehls) + haber)
-  Be<=gut=ach-tungs==frist    (Be + (gut+achtungs)) + frist
+  un<=wahr=schein-lich          un + (wahr + scheinlich)
+  Ober<=be<fehls=ha-ber         Ober + ((be + fehls) + haber)
+  Be<=gut=ach-tungs==frist      (Be + (gut + achtungs)) + frist
 
-Das gemischte Trennzeichen `=>' kennzeichnet die Bindungsverhältnisse, wenn
-sich ein Suffix auf das vorhergehende Kompositum bezieht
+Das gemischte Trennzeichen „=>“ kennzeichnet die Bindungsverhältnisse,
+wenn sich ein Suffix auf das vorhergehende Kompositum bezieht:
 
-  an-dert=halb=>fach          ((an+dert) + halb) + fach
-  zwei==ein=halb==>fa-che     (zwei + (ein+halb)) + fache
-  Vor<her=sag=>bar>keit       (((Vor+her) + sag) + bar) + keit
+  an-dert=halb=>fach            (andert + halb) + fach
+  zwei==ein=halb==>fa-che       (zwei + (ein + halb)) + fache
+  Vor<her=sag=>bar>keit         (((Vor + her) + sag) + bar) + keit
 
-Die Bindungsstärke ist umgekehrt zur `Güte' (oder dem `Gewicht') einer
-Trennstelle:¹
+Sortiert man die Trennzeichen nach der Bindungsstärke, ergeben sich
+folgende Relationsketten:
+
+  -  >  =  =>  ==  ==>  ===  ...
+  -  <  =  <=  ==  <==  ===  ...
+
+Im weiteren ist die Bindungsstärke umgekehrt proportional zur „Güte“
+(oder dem „Gewicht“) einer Trennstelle:¹
 
   schwache Bindung -> Vorzugstrennungen
   mittlere Bindung -> mittlere Trenngüte
@@ -163,23 +172,30 @@ Trennstelle:¹
 
 Beispiel:
 
-  Aus-              Auswahl-          Auswahllis-
-  wahlliste	    liste	      te
+  schwach:     Auswahl-
+               liste
 
-¹ In eine genauere `Gütebestimmung' geht auch der Abstand zu anderen
-  Trennstellen und die Position im Wort ein.)
+  mittel:      Aus-
+               wahlliste
 
+  stark:       Auswahllis-
+               te
 
 Ebenso wie die Kategorisierung ist die Markierung der Bindungsstärke
 unvollständig.
 
 
+¹ In eine genauere „Gütebestimmung“ geht auch der Abstand zu anderen
+  Trennstellen und die Position im Wort ein.
+
+
 Ungünstige Trennungen
 ---------------------
 
-Ungünstige (irreführende oder sinnentstellende) Trennstellen sind mit einem
-Punkt markiert.  Der Punkt ersetzt das Trennzeichen für nicht kategorisierte
-Trennstellen oder folgt auf Trennzeichen zur Kategorisierung:
+Ungünstige (irreführende oder sinnentstellende) Trennstellen sind mit
+einem Punkt markiert.  Der Punkt ersetzt das Trennzeichen für nicht
+kategorisierte Trennstellen oder folgt auf Trennzeichen zur
+Kategorisierung:
 
   An·den.ken, Ost=en-.de
 
@@ -191,8 +207,8 @@ gekennzeichnet sein.
   ...  äußerst ungünstig: An<al-...pha-bet
 
 Auch die Markierung ungünstiger Trennstellen ist weder eindeutig noch
-vollständig.  Bei der Generation der Trennmustern für TeX werden alle als
-ungünstig markierten Trennstellen als nicht vorhanden gewertet.
+vollständig.  Bei der Generation der Trennmustern für TeX werden alle
+als ungünstig markierten Trennstellen als nicht vorhanden gewertet.
 
 
 Spezielle Trennungen
@@ -207,16 +223,19 @@ Dreikonsonantenregel:
 
   Ab-fa{ll/ll=l}a-ger
 
-Trennung von `ck':
+Trennung von „ck“:
 
   Dru{ck/k-k}er
 
 Um z.B. eine Wortliste für TeX zu konstruieren (traditionelle
 Rechtschreibung), das solche speziellen Trennungen nicht benutzen kann,
-ist folgender regulärer Ausdruck in `perl' anzuwenden:
+ist folgender regulärer Ausdruck in „perl“ anzuwenden:
 
   s| { ( [^/]* ) / [^}]* } | \1 |gx
 
+
+Doppeldeutige Trennungen
+------------------------
 
 Doppeldeutige Trennstellen werden folgendermaßen deklariert:
 
@@ -231,5 +250,5 @@ Für TeX-Trennmuster ist es vielleicht am besten, solche Einträge zu
 entfernen und die häufigeren Fälle in einem \hyphenation-Block zu
 behandeln.
 
-Sowohl in `[…/…]' als auch in `{…/…}' können alle Arten von
-Trennstellen auftreten.
+Sowohl in „[…/…]“ als auch in „{…/…}“ können alle Arten von Trennstellen
+auftreten.
