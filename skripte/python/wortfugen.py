@@ -27,6 +27,7 @@ from copy import deepcopy
 
 from werkzeug import WordFile, join_word, udiff
 from analyse import read_teilwoerter, teilwoerter
+from abgleich_teilwoerter import wortliste_to_teilwoerter
 
 # sys.stdout mit UTF8 encoding.
 sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
@@ -59,8 +60,8 @@ sprachvariante = 'de-1996'         # Reformschreibung
 # Verwende die Wortliste oder die mit ``analyse.py`` generierte Teilwortliste 
 # als Quelle der kategorisierten Trennungen::
 
-# use_teilwoerter = False
-use_teilwoerter = True
+use_teilwoerter = False
+# use_teilwoerter = True
 
 
 # Textdateien mit Wortbestandteilen
@@ -84,10 +85,10 @@ if sprachvariante == 'de-1901':
 else:
     wgerman = set(w for w in wortdatei('/usr/share/dict/ngerman'))
 
-# Entferne Silben, die nie in Wortverbindungen vorkommen
+# Entferne Silben, die (fast) nie in Wortverbindungen vorkommen
 # TODO: Solitäre aus einer Datei lesen. ::
 
-for solitaer in ('Ra', 'He', 'As', 'Co', 'Fa'):
+for solitaer in ('Ra', 'He', 'As', 'Co', 'Fa', 'Em', 'Os', 'baren', 'RAF'):
     wgerman.discard(solitaer)
 
 # Präfixe (auch als Präfix verwendete Partikel, Adjektive, ...)::
@@ -132,7 +133,9 @@ if use_teilwoerter:
     words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
 else: # Gesamtwörter als "Teilwörter":
     words = wortliste_to_teilwoerter(wortliste, sprachvariante)
-words = words.trennvarianten
+words = set(words.trennvarianten.keys())
+
+words.update(wgerman)
 
 
 # 2. Durchlauf: Analyse
@@ -198,13 +201,14 @@ for entry in wortliste_neu:
 
 # Komposita::
 
-        if ((erstkey in words 
-             or erstkey.lower() in words
-             or erstkey.upper() in words)
-            and erstkey not in erstsilben
-            and erstkey.lower() not in vorsilben
+        if (#(erstkey in words 
+             # or erstkey.lower() in words
+             # or erstkey.upper() in words)
+            # and erstkey not in erstsilben
+            # and erstkey.lower() not in vorsilben
             # and erstkey.lower() not in praefixe
-            and (zweitkey in words
+            # and 
+            (zweitkey in words
                  or zweitkey.lower() in words
                  or zweitkey.upper() in words)
             and zweitkey.lower() not in endsilben
@@ -282,4 +286,4 @@ if patch:
     patchfile = open('wortliste.patch', 'w')
     patchfile.write(patch + '\n')
 else:
-    print 'keine Änderungen'
+    print u'keine Änderungen'

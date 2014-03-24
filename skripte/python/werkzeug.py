@@ -605,9 +605,8 @@ def uebertrage(wort1, wort2, strict=True, upgrade=True):
         if ((t2 == u'·' and t1 != u'.') # unspezifisch
             or upgrade and
             ((t2 in (u'-', u'<') and t1 in (u'<', u'<<', u'<=')) # Praefixe
-             or (t2 in (u'-', u'<', u'<<') and t1 == u'<<<')     # Praefixe
-             or (t2 in (u'-', u'>') and t1 in (u'>', u'>>', u'>=')) # Suffixe
-             or t1 in (u'=', u'==', u'===')                      # Wortfugen
+             or (t2 in (u'-', u'>') and t1 in (u'>', u'>>', u'=>')) # Suffixe
+             or (t2 in (u'-', u'=') and t1 in (u'=', u'==', u'===')) # W-fugen
             )
            ):
             wort3 += t1

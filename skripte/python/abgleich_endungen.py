@@ -168,6 +168,7 @@ endungen = [
             # (u'bar', u't'),
             # (u'ce', u'-cen'),
             (u'ch', u'·che'),
+            # (u'ch', u'-che'), # Test "if u'·' not in wort" auskommentieren!
             (u'ch', u'·cher'),
             (u'ck', u'·cke'),
             (u'ck', u'·cker'),
@@ -349,6 +350,7 @@ if __name__ == '__main__':
 
         # Endungsabgleich:
         for alt, neu in endungen:
+
             wort2 = endungsabgleich(wort, endung=neu, vergleichsendung=alt,
                                     use_grundwort=use_grundwort,
                                     grossklein=grossklein

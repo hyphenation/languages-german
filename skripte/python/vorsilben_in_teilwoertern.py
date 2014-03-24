@@ -12,7 +12,7 @@
 #
 # Suche nach Wörtern beginnend mit::
 
-term = u'an'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
+term = u'neo'  # Angabe mit Trennzeichen, z.B. 'pa-ra'
 
 # in der Datei ``teilwoerter-<sprachtag>.txt`` und analysiere das
 # folgende (Teil)wort. Schreibe Änderungen in die Datei ``teilwoerter.patch``
@@ -213,13 +213,13 @@ for line in teilwoerter:
 #
 # Ausnahmen aus der Ausnahmeliste::
 
-    if join_word(kandidat+rest) in ausnahmen:
+    if join_word(kandidat+rest.split(u'>')[0]) in ausnahmen:
         ist_ausnahme.append(wort)
 
 # Ausnahme Praefixkandidat + Suffix (z.B. ein>fach)::
 
     elif rest.startswith('>'):
-        pass
+        ist_ausnahme.append(wort)
 
 # ::
 

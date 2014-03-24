@@ -78,6 +78,7 @@ class teilwoerter(object):
 # >>> words.add(u'ein<tra·gen')
 # >>> words.add(u'ein·tra-gen')
 # >>> words.add(u'un<klar')
+# >>> words.add(u'un<.klar')
 # >>> words.add(u'un-klar')
 # >>> print words.trennvarianten
 # {u'unklar': [u'un<klar', u'un-klar'], u'eintragen': [u'ein<tra-gen']}
@@ -173,10 +174,16 @@ def read_teilwoerter(path):
 # Hilfsfunktion: Erkenne (Nicht-)Teile wie ``/{ll/ll``  aus
 # ``Fuß=ba[ll=/{ll/ll=l}]eh-re``::
 
+# >>> from analyse import spezialbehandlung
+# >>> print spezialbehandlung(u']er.be')
+# er.be
+# >>> print spezialbehandlung(u'er[<b/b')
+# erb
+
 def spezialbehandlung(teil):
     if re.search(ur'[\[{/\]}]', teil):
         # print teil,
-        teil = teil.replace(u'er[<st/st', 'erst')
+        teil = re.sub(ur'\[<(.+)/[^\]]+', ur'\1', teil) # [<b/b
         teil = re.sub(ur'\{([^/]*)[^}]*$', ur'\1', teil)
         teil = re.sub(ur'\[([^/]*)[^\]]*$', ur'\1', teil)
         teil = re.sub(ur'^(.)}', ur'\1', teil)
@@ -206,10 +213,6 @@ def analyse(path='../../wortliste', sprachvariante='de-1901',
 
 # Teilwörter suchen::
 
-        # Suffixe für Wortverbindung (z.B.an-dert=halb>=fach): verwerfen:
-        if wort.find(u'>=') != -1:
-            continue
-
         # Zerlegen, leere Teile (wegen Mehrfachtrennzeichen '==') weglassen,
         # "halbe" Spezialtrennungen entfernen:
         teile = [spezialbehandlung(teil) for teil in wort.split(u'=')
@@ -234,7 +237,7 @@ def analyse(path='../../wortliste', sprachvariante='de-1901',
         # letztes Teilwort:
         teil = teile[-1]
         if (halbfertig or u'·' not in teil
-           ) and not teil.endswith(u'<'): # Präfix wie un<=wahr=schein-lich
+           ) and not teil.startswith(u'>'): # Suffixe wie an-dert=halb=>fach)
             if gross: # Großschreibung übertragen
                 teil = teil[0].title() + teil[1:]
             words.add(teil)
@@ -333,10 +336,12 @@ def mehrdeutigkeiten(words):
     for teil in sorted(words.trennvarianten):
         if len(words.trennvarianten[teil]) == 1:
             continue
-        # Bekannte Mehrdeutigkeiten:
-        if teil in ('Anhalts', 'Base',  'George', 'Mode', 'Name',
+        # Bekannte Mehrdeutigkeiten (meist engl./dt.):
+        if teil in ('Anhalts', 'Base',  'George',
+                    'herzog', # Her-zog/her>zog
+                    'Mode', 'Name',
                     'Page', 'Pole', 'Planes', 'Rate', 'Real',
-                    'Spare', 'Station', 'Wales', 'Ware',
+                    'Spare', 'Station', 'Stations', 'Wales', 'Ware',
                     'griff' # gri[f-f/{ff/ff=f}]est
                    ):
             continue
