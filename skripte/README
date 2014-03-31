@@ -1,0 +1,14 @@
+1. Vorbereiten der temporären Wortliste
+   $ sh merge-wordlist.sh ../wortliste [../pre-1901 …] > tmp.wl  <-- brauchen wir ab Pt. 3.
+
+2. Listen aller Worte einer Textdatei (sortiert, uniq, case indipendent)
+   $ sh ./prepare-wordlist.sh < Textdatei
+
+3. ~ ohne die (in tmp.wl) bereits gelisteten Worte
+   $ sh ./prepare-wordlist.sh < Textdatei | grep -Fixvf tmp.wl
+
+4. ~ als getrennte Worte
+   $  sh ./prepare-wordlist.sh < Textdatei | grep -Fixvf tmp.wl | sh make-hyphenlist.sh
+
+5. ~ im wortlisten-Format (<ungetrennt>;<ge·trennt>)
+   $  sh ./prepare-wordlist.sh < Textdatei | grep -Fixvf tmp.wl | sh make-hyphenlist.sh | sh hyph2wl.sh
