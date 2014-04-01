@@ -10,35 +10,65 @@
 #
 # Die »wortliste«-Datei muss in UTF-8 kodiert sein.
 #
-# Option »-t« wählt die traditionelle deutsche Rechtschreibung aus, Option
-# »-s« die traditionelle (deutsch)schweizerische Rechtschreibung.  Wenn
-# weder »-s« noch »-t« gesetzt ist, wird die reformierte deutsche
-# Rechtschreibung ausgewählt.
+# Optionen
+# --------
 #
-# Ist Option »-x« gesetzt, werden Optionen »-g« und »-u« ignoriert und die
-# die sprachspezifischen Felder unbearbeitet ausgegeben.
+# -t
+# -s  Option »-t« wählt die traditionelle deutsche Rechtschreibung aus,
+#     Option »-s« die traditionelle (deutsch)schweizerische Rechtschreibung.
+#     Wenn weder »-s« noch »-t« gesetzt ist, wird die reformierte deutsche
+#     Rechtschreibung ausgewählt.
 #
-# Option »-g« bewirkt die Ausgabe von Wörtern mit gewichteten Trennstellen;
-# Wörter mit »·« werden ignoriert.
+# -x  Ignoriere Optionen »-g« und »-u« und gebe die sprachspezifischen
+#     Felder unbearbeitet aus.
 #
-# Option »-u« verhindert die Ausgabe von Wörtern mit Markern für
-# unerwünschte Trennungen (z.B. »An-al.pha-bet«).
+# -g  Gib Wörter mit gewichteten Trennstellen aus; Wörter mit »·« werden
+#     ignoriert.  Optional kann ein ganzzahliges Argument angegeben werden:
+#     Wert 0 gibt alle gewichtete Trennstellen aus inklusive »-« (das ist
+#     der Standardwert), Wert 1 nur die Trennstellen mit der höchsten
+#     Wichtung (ohne »-«), Wert 2 die Trennstellen mit der höchsten und
+#     zweithöchsten Wichtung (ohne »-«), usw.
 #
-# Option »-v« verhindert die Ausgabe von Versalformen, wo »ß« durch »ss«
-# ersetzt ist.
+#     Beachte, dass bei nahe beieinanderstehenden Trennstellen derzeit keine
+#     zusätzliche Wichtung vorgenommen wird.  Beispielsweise ist in dem Wort
 #
-# Option »-l« konvertiert die Ausgabe nach latin-1 (wie von »patgen«
-# benötigt).
+#       ab<be<ru-fen
+#
+#     die Trennung »abbe-rufen« schlecht, weil ganz nahe der optimalen
+#     Trennstelle (nach »ab«).  Das Skript gibt trotzdem diese Trennstelle
+#     als zweitbeste aus.
+#
+# -u  Verhindere die Ausgabe von Wörtern mit Markern für unerwünschte
+#     Trennungen (z.B. »An-al.pha-bet«).
+#
+# -v  Verhindere die Ausgabe von Versalformen, wo »ß« durch »ss« ersetzt
+#     ist.
+#
+# -l  Konvertiere die Ausgabe von UTF-8 nach latin-1 (wie von »patgen«
+#     benötigt).
 
 use strict;
-use utf8;         # String-Literals direkt als UTF-8
-use Getopt::Std;
-getopts('glstuvx');
+use warnings;
+use English '-no_match_vars';
+use utf8;                              # String-Literals direkt als UTF-8.
+use Getopt::Long qw(:config bundling);
 
-our ($opt_g, $opt_l, $opt_s, $opt_t, $opt_u, $opt_v, $opt_x);
+
+my ($opt_g, $opt_l, $opt_s, $opt_t, $opt_u, $opt_v, $opt_x);
+$opt_g = -1;
+
+GetOptions("g:i" => \$opt_g,
+           "l"   => \$opt_l,
+           "s"   => \$opt_s,
+           "t"   => \$opt_t,
+           "u"   => \$opt_u,
+           "v"   => \$opt_v,
+           "x"   => \$opt_x);
+
 
 my $prog = $0;
 $prog =~ s@.*/@@;
+
 
 # Kodierung:
 binmode(STDIN, ":encoding(utf8)");
@@ -50,20 +80,22 @@ else {
   binmode(STDOUT, ":encoding(utf8)");
 }
 
+
 sub entferne_marker {
   my $arg = shift;
-  $arg =~ s/[-=|<>·]//g;
+  $arg =~ s/[-=<>·]//g;
   return $arg;
 }
+
 
 while (<>) {
   chop;
   next if /^#/;
 
-  # entferne Kommentare
+  # Entferne Kommentare.
   s/#.*$//;
 
-  # entferne Leerzeichen aller Art
+  # Entferne Leerzeichen aller Art.
   s/\s+//g;
 
   my @feld = split(';');
@@ -72,6 +104,8 @@ while (<>) {
   # reformiert:           Felder 2, 4, 5, 7
   # traditionell:         Felder 2, 3, 5, 6
   # traditionell Schweiz: Felder 2, 3, 5, 6, 8
+  #
+  # Beachte: Feld n hat Index n-1.
   my $zeile = $feld[1];
   $zeile = $feld[2] if defined $feld[2]
                        && $feld[2] ne "-3-" && ($opt_t || $opt_s);
@@ -89,20 +123,161 @@ while (<>) {
   next if $zeile eq "-2-";
 
   if (!$opt_x) {
-    # entferne spezielle Trennungen
+    # Entferne spezielle Trennungen.
     $zeile =~ s|\{ (.*?) / .*? \}|$1|gx;
-    # entferne Doppeldeutigkeiten
+
+    # Entferne Doppeldeutigkeiten.
     $zeile =~ s|\[ (.*?) / .*? \]|entferne_marker($1)|egx;
 
     # Ausgabe von Wörtern mit unerwünschten Trennungen?
     next if $zeile =~ /\./ and $opt_u;
-    # entferne Markierungen für unerwünschte Trennungen
-    $zeile =~ s/[·|<>=-]*\.+[·|<>=-]*//g;
+
+    # Entferne Markierungen für unerwünschte Trennungen.
+    $zeile =~ s/[·<>=-]* \.+ [·<>=-]*//gx;
 
     # Ausgabe von Wörtern mit ungewichteten Trennstellen?
-    next if $zeile =~ /·/ and $opt_g;
-    # reduziere Trennstellenmarker zu »-«, falls gewollt
-    $zeile =~ s/[·|<>=-]+/-/g if not $opt_g;
+    next if $zeile =~ /·/ and $opt_g >= 0;
+
+    if ($opt_g > 0) {
+      # Berechne Wichtungen.  Wir verwenden folgende Werte:
+      #
+      #   -2   Wortteil
+      #   -1   -
+      #    0   <, >
+      #    1   =
+      #    2   ==, <=, =>
+      #    3   ===, <==, ==>
+      #    ...
+      #
+      # Bei mehrfachem Auftreten von »<« hat das am meisten links stehende
+      # den höchsten Rang.  Bei mehrfachem Auftreten von »>« hat das am
+      # meisten rechts stehende den höchsten Rang.  Beispiel:
+      #
+      #   Mit<ver<ant-wort>lich>keit
+      #      ^                 ^
+
+      # Wir zerlegen mit `split' unter Beibehaltung der Begrenzer.
+      my @zerlegung = split /([<>=-]+)/, $zeile;
+
+      # Wir speichern Wichtung und Rang als Felder.
+      my @wichtung = (-2) x ($#zerlegung + 1);
+      my @rang = (0) x ($#zerlegung + 1);
+      my $r;
+
+      # Erster Durchgang: Ermittle Wichtungswerte.
+
+      # Wir starten bei erstem Marker (mit Index 1).
+      foreach my $i (1 .. ($#zerlegung - 1)) {
+        # Ignoriere Nicht-Marker.
+        next if not $i % 2;
+
+        my $m = $zerlegung[$i];
+        my $w;
+
+        if ($m =~ /^-$/) {
+          $w = -1;
+        }
+        elsif ($m =~ /^[<>]$/) {
+          $w = 0;
+        }
+        elsif ($m =~ /^=$/) {
+          $w = 1;
+        }
+        elsif ($m =~ /( ==*>? | <?=*= )/x) {
+          $w = length($1);
+        }
+        else {
+          warn "Zeile $INPUT_LINE_NUMBER:"
+               . " unbekannter Marker »$m« behandelt als »-«\n";
+          $w = -1;
+        }
+
+        $wichtung[$i] = $w;
+      }
+
+      # Zweiter Durchgang: Ermittle Rang von »<« und »>«.
+
+      # Behandle »<« von rechts nach links gehend.
+      $r = 0;
+      foreach my $i (reverse(1 .. ($#zerlegung - 1))) {
+        # Ignoriere Nicht-Marker.
+        next if not $i % 2;
+
+        if ($zerlegung[$i] eq "<") {
+          $r++;
+          $rang[$i] = $r;
+        }
+        else {
+          $r = 0;
+        }
+      }
+
+      # Behandle »>« von links nach rechts gehend.
+      $r = 0;
+      foreach my $i (1 .. ($#zerlegung - 1)) {
+        # Ignoriere Nicht-Marker.
+        next if not $i % 2;
+
+        if ($zerlegung[$i] eq ">") {
+          $r++;
+          $rang[$i] = $r;
+        }
+        else {
+          $r = 0;
+        }
+      }
+
+      # Sortiere Indexfeld für Marker mit absteigender Wichtung.
+      my @wichtungsindices =
+        sort {
+          # Benutze Rang für »<« und »>«.
+          if ($wichtung[$a] == 0 && $wichtung[$b] == 0) {
+            -($rang[$a] <=> $rang[$b]);
+          }
+          else {
+            -($wichtung[$a] <=> $wichtung[$b]);
+          }
+        } (0 .. $#zerlegung);
+
+      # Entferne Trennstellen unter Berücksichtigung des Arguments von »-g«.
+      my $g = 0;
+      my $last_w = -2;
+      my $last_r = 0;
+
+      foreach my $i (@wichtungsindices) {
+        my $w;
+
+        # Alle Wortteile haben einen geraden Index und sind stets am Schluß
+        # von @wichtungsindices.
+        last if not $i % 2;
+
+        $w = $wichtung[$i];
+        $r = $rang[$i];
+
+        if ($last_w == $w)
+        {
+          if ($w == 0)
+          {
+            $g++ if $last_r != $r;
+          }
+        }
+        else {
+          $g++;
+        }
+
+        $last_w = $w;
+        $last_r = $r;
+
+        # Entferne Trennung mit zu geringer Wichtung.
+        $zerlegung[$i] = "" if $g > $opt_g || $w < 0;
+      }
+
+      $zeile = join '', @zerlegung;
+    }
+    elsif ($opt_g < 0) {
+      # Reduziere Trennstellenmarker zu »-«.
+      $zeile =~ s/[·<>=-]+/-/g;
+    }
   }
 
   print "$zeile\n";
