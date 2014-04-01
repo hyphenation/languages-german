@@ -20,6 +20,11 @@
 # The used directories names are the same as above but with `-major'
 # appended to the names.
 #
+# To control the used weights in the major hyphenation patterns, add
+# variable `W=N', where `N' gives the quality: value 1 specifies the best
+# hyphenation points only, value 2 both the best and second-best points,
+# etc.  The default is value 0, using all major hyphenation points.
+#
 #
 #
 # Dieses Makefile erzeugt deutsche Trennmuster in den
@@ -44,11 +49,19 @@
 #
 #   make major pattern-refo
 #
-# Die verwendeten Verzeichnisnamen sind die gleichen wie oben,
-# allerdings mit einem angehängten `-major'.
+# Die verwendeten Verzeichnisnamen sind die gleichen wie oben, allerdings
+# mit einem angehängten `-major'.
+#
+# Die Wichtung der verwendeten Haupttrennstellen kann mittels der Variable
+# `W=N' kontrolliert werden, wo `N' die Qualität angibt: Wert 1 selektiert
+# nur die besten Haupttrennstellen, Wert 2 die besten und zweitbesten
+# Haupttrennstellen usw.  Der Standardwert für `W' ist 0; er gibt an, dass
+# alle Haupttrennstellen verwendet werden sollen.
 
 
 SRCDIR = .
+W = 0
+
 DATADIR = $(SRCDIR)/daten
 SCRIPTDIR = $(SRCDIR)/skripte
 WORDLIST = wortliste
@@ -62,7 +75,7 @@ ifneq ($(findstring major,$(MAKECMDGOALS)),)
                     -e 's/-//g' \
                     -e 's/[=|<>][=|<>]*/-/g' \
                     -e '/-/!d'
-  PERLMAJOR = -g
+  PERLMAJOR = -g $(W)
 
   ifeq ($(words $(MAKECMDGOALS)),1)
     major: all
