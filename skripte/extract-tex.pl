@@ -207,7 +207,8 @@ while (<>) {
           $r++;
           $rang[$i] = $r;
         }
-        else {
+        # »-«-Marker zwischen zwei »<« ändert nicht den Rang.
+        elsif ($zerlegung[$i] ne "-") {
           $r = 0;
         }
       }
@@ -222,7 +223,8 @@ while (<>) {
           $r++;
           $rang[$i] = $r;
         }
-        else {
+        # »-«-Marker zwischen zwei »>« ändert nicht den Rang.
+        elsif ($zerlegung[$i] ne "-") {
           $r = 0;
         }
       }
