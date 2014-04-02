@@ -155,6 +155,16 @@ while (<>) {
       #
       #   Mit<ver<ant-wort>lich>keit
       #      ^                 ^
+      #
+      # Das bezieht sich auch auf Ketten mit »=>« u.ä:
+      #
+      #   Ei-gen=wirt>schaft=>lich>keit
+      #                           ^
+
+      my $g;
+      my $m;
+      my ($r, $r_vorher);
+      my ($w, $w_vorher);
 
       # Wir zerlegen mit `split' unter Beibehaltung der Begrenzer.
       my @zerlegung = split /([<>=-]+)/, $zeile;
@@ -162,7 +172,6 @@ while (<>) {
       # Wir speichern Wichtung und Rang als Felder.
       my @wichtung = (-2) x ($#zerlegung + 1);
       my @rang = (0) x ($#zerlegung + 1);
-      my $r;
 
       # Erster Durchgang: Ermittle Wichtungswerte.
 
@@ -171,8 +180,7 @@ while (<>) {
         # Ignoriere Nicht-Marker.
         next if not $i % 2;
 
-        my $m = $zerlegung[$i];
-        my $w;
+        $m = $zerlegung[$i];
 
         if ($m =~ /^-$/) {
           $w = -1;
@@ -199,41 +207,69 @@ while (<>) {
 
       # Behandle »<« von rechts nach links gehend.
       $r = 0;
+      $w_vorher = -2;
       foreach my $i (reverse(1 .. ($#zerlegung - 1))) {
         # Ignoriere Nicht-Marker.
         next if not $i % 2;
 
-        if ($zerlegung[$i] eq "<") {
+        if (index ($zerlegung[$i], "<") >= 0) {
+          # Hat der rechte Marker in einer Kette von »<« eine höhere
+          # Wichtung, wird diese übernommen.
+          $w = $wichtung[$i];
+
+          if ($w_vorher >= $w) {
+            $wichtung[$i] = $w_vorher;
+          }
+          else {
+            $r = 0;
+            $w_vorher = $w;
+          }
+
           $r++;
           $rang[$i] = $r;
         }
         # »-«-Marker zwischen zwei »<« ändert nicht den Rang.
         elsif ($zerlegung[$i] ne "-") {
           $r = 0;
+          $w_vorher = -2;
         }
       }
 
       # Behandle »>« von links nach rechts gehend.
       $r = 0;
+      $w_vorher = -2;
       foreach my $i (1 .. ($#zerlegung - 1)) {
         # Ignoriere Nicht-Marker.
         next if not $i % 2;
 
-        if ($zerlegung[$i] eq ">") {
+        if (index ($zerlegung[$i], ">") >= 0) {
+          # Hat der linke Marker in einer Kette von »>« eine höhere
+          # Wichtung, wird diese übernommen.
+          $w = $wichtung[$i];
+
+          if ($w_vorher >= $w) {
+            $wichtung[$i] = $w_vorher;
+          }
+          else {
+            $r = 0;
+            $w_vorher = $w;
+          }
+
           $r++;
           $rang[$i] = $r;
         }
         # »-«-Marker zwischen zwei »>« ändert nicht den Rang.
         elsif ($zerlegung[$i] ne "-") {
           $r = 0;
+          $w_vorher = -2;
         }
       }
 
       # Sortiere Indexfeld für Marker mit absteigender Wichtung.
       my @wichtungsindices =
         sort {
-          # Benutze Rang für »<« und »>«.
-          if ($wichtung[$a] == 0 && $wichtung[$b] == 0) {
+          # Benutze Rang für Sekundärsortierung.
+          if ($wichtung[$a] == $wichtung[$b]) {
             -($rang[$a] <=> $rang[$b]);
           }
           else {
@@ -242,13 +278,11 @@ while (<>) {
         } (0 .. $#zerlegung);
 
       # Entferne Trennstellen unter Berücksichtigung des Arguments von »-g«.
-      my $g = 0;
-      my $last_w = -2;
-      my $last_r = 0;
+      $g = 0;
+      $w_vorher = -2;
+      $r_vorher = 0;
 
       foreach my $i (@wichtungsindices) {
-        my $w;
-
         # Alle Wortteile haben einen geraden Index und sind stets am Schluß
         # von @wichtungsindices.
         last if not $i % 2;
@@ -256,19 +290,15 @@ while (<>) {
         $w = $wichtung[$i];
         $r = $rang[$i];
 
-        if ($last_w == $w)
-        {
-          if ($w == 0)
-          {
-            $g++ if $last_r != $r;
-          }
+        if ($w_vorher == $w) {
+          $g++ if $r_vorher != $r;
         }
         else {
           $g++;
         }
 
-        $last_w = $w;
-        $last_r = $r;
+        $w_vorher = $w;
+        $r_vorher = $r;
 
         # Entferne Trennung mit zu geringer Wichtung.
         $zerlegung[$i] = "" if $g > $opt_g || $w < 0;
