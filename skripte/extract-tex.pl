@@ -203,10 +203,9 @@ while (<>) {
         $wichtung[$i] = $w;
       }
 
-      # Zweiter Durchgang: Ermittle Rang von »<« und »>«.
+      # Zweiter Durchgang: Adjustiere Wichtung von »<« und »>«.
 
       # Behandle »<« von rechts nach links gehend.
-      $r = 0;
       $w_vorher = -2;
       foreach my $i (reverse(1 .. ($#zerlegung - 1))) {
         # Ignoriere Nicht-Marker.
@@ -221,22 +220,16 @@ while (<>) {
             $wichtung[$i] = $w_vorher;
           }
           else {
-            $r = 0;
             $w_vorher = $w;
           }
-
-          $r++;
-          $rang[$i] = $r;
         }
-        # »-«-Marker zwischen zwei »<« ändert nicht den Rang.
+        # »-«-Marker zwischen zwei »<« ändert nicht deren Wichtung.
         elsif ($zerlegung[$i] ne "-") {
-          $r = 0;
           $w_vorher = -2;
         }
       }
 
       # Behandle »>« von links nach rechts gehend.
-      $r = 0;
       $w_vorher = -2;
       foreach my $i (1 .. ($#zerlegung - 1)) {
         # Ignoriere Nicht-Marker.
@@ -251,17 +244,44 @@ while (<>) {
             $wichtung[$i] = $w_vorher;
           }
           else {
-            $r = 0;
             $w_vorher = $w;
           }
+        }
+        # »-«-Marker zwischen zwei »>« ändert nicht deren Wichtung.
+        elsif ($zerlegung[$i] ne "-") {
+          $w_vorher = -2;
+        }
+      }
 
-          $r++;
-          $rang[$i] = $r;
+      # Dritter Durchgang: Ermittle Rang von »<« und »>«.
+
+      # Behandle »<« von links nach rechts gehend.
+      $r = 0;
+      foreach my $i (1 .. ($#zerlegung - 1)) {
+        # Ignoriere Nicht-Marker.
+        next if not $i % 2;
+
+        if (index ($zerlegung[$i], "<") >= 0) {
+          $rang[$i] = $r--;
+        }
+        # »-«-Marker zwischen zwei »<« ändert nicht den Rang.
+        elsif ($zerlegung[$i] ne "-") {
+          $r = 0;
+        }
+      }
+
+      # Behandle »>« von rechts nach links gehend.
+      $r = 0;
+      foreach my $i (reverse(1 .. ($#zerlegung - 1))) {
+        # Ignoriere Nicht-Marker.
+        next if not $i % 2;
+
+        if (index ($zerlegung[$i], ">") >= 0) {
+          $rang[$i] = $r--;
         }
         # »-«-Marker zwischen zwei »>« ändert nicht den Rang.
         elsif ($zerlegung[$i] ne "-") {
           $r = 0;
-          $w_vorher = -2;
         }
       }
 
