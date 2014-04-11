@@ -247,6 +247,7 @@ endungen = [
             (u'p', u'·pen'),
             (u'p', u'·per'),
             # (u'ph', u'·phen'),
+            (u'ph', u'·phis·mus'),
             (u'r', u'·re'),
             # (u'r', u'·rei'),
             (u'r', u'·ren'),
@@ -295,6 +296,7 @@ endungen = [
             (u'us', u'en'),
             (u'v', u'·ve'),
             (u'v', u'·ver'),
+            (u'v', u'·vis·mus'),
             # (u've', u'v'),
             # (u'z', u'·ten'),
             (u'z', u'·ze'),
@@ -307,11 +309,13 @@ endungen = [
 
 if grossklein:
     endungen.extend([
+                     (u'', u'·ar·tig'),
                      (u'', u's·los'),
                      (u'', u'·keit'),
                      (u'', u'·heit'),
                      (u'', u'·schaft'),
                      (u'd', u'·heit'),
+                     (u'', u'·weise'),
                      (u'e-ren', u'·ti·on'),
                      (u'-en', u'·bar·keit'),
                      (u'rn', u'·rung'),

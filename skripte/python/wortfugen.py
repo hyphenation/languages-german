@@ -72,24 +72,24 @@ use_teilwoerter = False
 # * Kodierung: utf8 (bis auf 'ogerman')
 
 # Wörterbucher für die Rechtschreibprüfprogramme Ispell/Aspell
-# (in Debian in den Paketen "wngerman" und "wogerman").
 # Unterscheiden Groß-/Kleinschreibung und beinhalten auch kurze Wörter. ::
 
 def wortdatei(wortfile, encoding='utf8'):
     for line in open(wortfile):
         yield line.rstrip().decode(encoding)
 
-if sprachvariante == 'de-1901':
-    wgerman = set(w for w in wortdatei('/usr/share/dict/ogerman',
-                                       encoding='latin-1'))
-else:
-    wgerman = set(w for w in wortdatei('/usr/share/dict/ngerman'))
+spelldict = set(w for w in wortdatei('../../spell/hunspell-%s'%sprachvariante)
+             if len(w) > 2)
 
-# Entferne Silben, die (fast) nie in Wortverbindungen vorkommen
+# print "spelldict", len(spelldict)
+# print spelldict
+# sys.exit()
+
+# Entferne Wörter/Silben, die (fast) nie in Wortverbindungen vorkommen
 # TODO: Solitäre aus einer Datei lesen. ::
 
-for solitaer in ('Ra', 'He', 'As', 'Co', 'Fa', 'Em', 'Os', 'baren', 'RAF'):
-    wgerman.discard(solitaer)
+for solitaer in ('baren', 'RAF'):
+    spelldict.discard(solitaer)
 
 # Präfixe (auch als Präfix verwendete Partikel, Adjektive, ...)::
 
@@ -129,14 +129,15 @@ unbekannt2 = defaultdict(list)
 # Wörterbuch zum Aufsuchen der Teilwörter
 # ---------------------------------------
 
-if use_teilwoerter:
-    words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
-else: # Gesamtwörter als "Teilwörter":
-    words = wortliste_to_teilwoerter(wortliste, sprachvariante)
-words = set(words.trennvarianten.keys())
+# if use_teilwoerter:
+#     words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
+# else: # Gesamtwörter als "Teilwörter":
+#     words = wortliste_to_teilwoerter(wortliste, sprachvariante)
+# words = set(words.trennvarianten.keys())
 
-words.update(wgerman)
+# words.update(spelldict)
 
+words = spelldict
 
 # 2. Durchlauf: Analyse
 # =====================
@@ -198,16 +199,17 @@ for entry in wortliste_neu:
 # Fugen-s o.ä. weglassen::
 
         # erstkey = erstkey[:-1]
+        # erstkey = erstkey + 's'
 
 # Komposita::
 
-        if (#(erstkey in words 
-             # or erstkey.lower() in words
-             # or erstkey.upper() in words)
-            # and erstkey not in erstsilben
-            # and erstkey.lower() not in vorsilben
-            # and erstkey.lower() not in praefixe
-            # and 
+        if ((erstkey in words 
+             or erstkey.lower() in words
+             or erstkey.upper() in words)
+            and erstkey not in erstsilben
+            and erstkey.lower() not in vorsilben
+            and erstkey.lower() not in praefixe
+            and 
             (zweitkey in words
                  or zweitkey.lower() in words
                  or zweitkey.upper() in words)
