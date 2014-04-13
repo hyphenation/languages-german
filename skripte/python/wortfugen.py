@@ -175,7 +175,7 @@ for entry in wortliste_neu:
 
 # Wortteile analysieren::
 
-    for i in range(1,len(teile)-1):
+    for i in range(1,len(teile)):
         erstwort = u'·'.join(teile[:i])
         zweitwort =  u'·'.join(teile[i:])
 
