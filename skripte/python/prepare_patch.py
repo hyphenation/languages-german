@@ -135,7 +135,7 @@ def fehleintraege(wordfile, datei):
     korrekturen = set(join_word(
                 line.decode('utf8').strip().replace(u';', u' ').split()[0])
                       for line in open(datei, 'r')
-                      if not line.startswith('#'))
+                      if line.strip() and not line.startswith('#'))
     wortliste = list(wordfile)
     wortliste_neu = [] # korrigierte Liste
     for entry in wortliste:
