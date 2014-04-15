@@ -74,7 +74,13 @@ if __name__ == '__main__':
                 sprachabgleich(entry, words[entry[0].replace(u'ss', u'ß')])
             except KeyError:
                 # print entry[0].replace(u'ss', u'ß'), "fehlt"
-                pass  # e.g. ["Abfahrtßpezialisten"]
+                pass  # e.g. "Abfahrtßpezialisten"
+        if len(entry) > 2 and oldentry == entry and u'ß' in entry[0]:
+            try:
+                sprachabgleich(entry, words[entry[0].replace(u'ß', u'ss')])
+            except KeyError:
+                # print entry[0].replace(u'ss', u'ß'), "fehlt"
+                pass
             
     # Patch erstellen::
 

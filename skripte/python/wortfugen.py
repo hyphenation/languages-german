@@ -57,12 +57,12 @@ sprachvariante = 'de-1996'         # Reformschreibung
 
 # Vergleichsbasis
 # ~~~~~~~~~~~~~~~
-# Verwende die Wortliste oder die mit ``analyse.py`` generierte Teilwortliste 
+# Verwende die Wortliste oder die mit ``analyse.py`` generierte Teilwortliste
 # als Quelle der kategorisierten Trennungen::
 
 use_teilwoerter = False
 # use_teilwoerter = True
-
+# use_teilwoerter = None   # use spelldict
 
 # Textdateien mit Wortbestandteilen
 # ---------------------------------
@@ -78,18 +78,24 @@ def wortdatei(wortfile, encoding='utf8'):
     for line in open(wortfile):
         yield line.rstrip().decode(encoding)
 
-spelldict = set(w for w in wortdatei('../../spell/hunspell-%s'%sprachvariante)
-             if len(w) > 2)
+if use_teilwoerter is None:
+    if sprachvariante == 'de-1996':
+        spellfile = '../../spell/hunspell-%s'%sprachvariante
+    else:
+        spellfile = '../../spell/aspell-%s'%sprachvariante
 
-# print "spelldict", len(spelldict)
-# print spelldict
-# sys.exit()
+        spelldict = set(w for w in wortdatei(spellfile)
+                        if len(w) > 2)
+
+    # print "spelldict", len(spelldict)
+    # print spelldict
+    # sys.exit()
 
 # Entferne Wörter/Silben, die (fast) nie in Wortverbindungen vorkommen
 # TODO: Solitäre aus einer Datei lesen. ::
 
-for solitaer in ('baren', 'RAF'):
-    spelldict.discard(solitaer)
+    for solitaer in ('baren', 'RAF'):
+        spelldict.discard(solitaer)
 
 # Präfixe (auch als Präfix verwendete Partikel, Adjektive, ...)::
 
@@ -118,26 +124,23 @@ endsilben = set(w for w in wortdatei('wortteile/endsilben'))
 wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
 wortliste = list(wordfile)
 
-wortliste_neu = deepcopy(wortliste)
-
 # Sammeln unbekannter Wortteile::
 
 unbekannt1 = defaultdict(list)
 unbekannt2 = defaultdict(list)
 
-
 # Wörterbuch zum Aufsuchen der Teilwörter
 # ---------------------------------------
 
-# if use_teilwoerter:
-#     words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
-# else: # Gesamtwörter als "Teilwörter":
-#     words = wortliste_to_teilwoerter(wortliste, sprachvariante)
-# words = set(words.trennvarianten.keys())
+if use_teilwoerter:
+    words = read_teilwoerter(path='teilwoerter-%s.txt'%sprachvariante)
+    words = set(words.trennvarianten.keys())
+elif use_teilwoerter is False: # Gesamtwörter als "Teilwörter":
+    words = wortliste_to_teilwoerter(wortliste, sprachvariante)
+    words = set(words.trennvarianten.keys())
+else:
+    words = spelldict
 
-# words.update(spelldict)
-
-words = spelldict
 
 # 2. Durchlauf: Analyse
 # =====================
@@ -153,13 +156,8 @@ for entry in wortliste_neu:
     wort = entry.get(sprachvariante)
     if wort is None: # Wort existiert nicht in der Sprachvariante
         continue
-    
-# Spezielle Teilwörter suchen::
 
-    # teile = wort.split(u'=')
-    # if ('Stopp' in teile or 'stopp' in teile
-    #     print entry[0]
-    # continue
+# Spezielle Teilwörter suchen::
 
     # teile = wort.split(u'-')
     # if teile[-1] == 'burg':
@@ -196,20 +194,20 @@ for entry in wortliste_neu:
 # Blöcke zur regelbasierten Kategorisierung.
 # Zum Auskommentieren und Anpassen.
 
-# Fugen-s o.ä. weglassen::
+# Fugen-s o.ä. weglassen oder hinzufügen::
 
         # erstkey = erstkey[:-1]
         # erstkey = erstkey + 's'
 
 # Komposita::
 
-        if ((erstkey in words 
+        if ((erstkey in words
              or erstkey.lower() in words
              or erstkey.upper() in words)
             and erstkey not in erstsilben
             and erstkey.lower() not in vorsilben
             and erstkey.lower() not in praefixe
-            and 
+            and
             (zweitkey in words
                  or zweitkey.lower() in words
                  or zweitkey.upper() in words)
@@ -234,7 +232,7 @@ for entry in wortliste_neu:
         #    ):
         #     print str(entry), (u'%s-%s'% (erstkey,zweitwort))
         #     entry.set('-'.join((erstwort, zweitwort)), sprachvariante)
-        
+
 
 # # Erstsilben::
 
