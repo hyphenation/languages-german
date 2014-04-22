@@ -120,6 +120,7 @@ endungen = [
             (u'', u'·er'),
             (u'', u'is·mus'),
             (u'', u'·is·mus'),
+            (u'', u'·ität'),
             (u'', u'·lein'),
             (u'', u'm'),
             (u'', u'n'),
