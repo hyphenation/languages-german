@@ -13,8 +13,7 @@
 # 
 # ::
 
-from copy import deepcopy
-import re, sys, codecs
+import re, sys, codecs, copy
 from werkzeug import (WordFile, WordEntry, join_word, udiff,
                       uebertrage, TransferError, 
                       sprachabgleich, toggle_case)
@@ -337,7 +336,7 @@ if __name__ == '__main__':
 
     wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
     wortliste = list(wordfile)
-    wortliste_neu = deepcopy(wortliste)
+    wortliste_neu = []
 
 # Vergleichswörter einlesen::
                     
@@ -348,13 +347,13 @@ if __name__ == '__main__':
 
 # Bearbeiten der neuen wortliste "in-place"::
 
-    for entry in wortliste_neu:
+    for entry in wortliste:
 
         # Wort mit Trennungen in Sprachvariante
         wort = entry.get(sprachvariante)
-        if wort is None: # Wort existiert nicht in der Sprachvariante
-            continue
-        if u'·' not in wort: # Alle Trennstellen kategorisiert
+        if (wort is None # Wort existiert nicht in der Sprachvariante
+            or u'·' not in wort): # Alle Trennstellen kategorisiert
+            wortliste_neu.append(entry)
             continue
 
 # Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
@@ -372,10 +371,14 @@ if __name__ == '__main__':
 # Eintrag ändern::
 
         if (wort != wort2): #and (u'·' not in wort2):
+            entry = copy.copy(entry)
             entry.set(wort2, sprachvariante)
             print u'%s -> %s' % (wort, wort2)
             if len(entry) > 2:
                 sprachabgleich(entry)
+                
+        wortliste_neu.append(entry)
+
 
 # Patch erstellen::
 

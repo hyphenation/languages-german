@@ -55,6 +55,7 @@ def find_stems(words):
 def praefixabgleich(wort, grossklein=False):
 
     teile = wort.split('<')
+    teile[0] = teile[0].replace(u'·', u'-')
     stamm = teile[-1]
     key = join_word(stamm)
     # print u' '.join([wort, key])

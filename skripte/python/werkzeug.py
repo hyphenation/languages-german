@@ -42,29 +42,6 @@ class WordFile(file):
 
     encoding = 'utf8'
 
-# readlines
-# ---------
-#
-# Lies die Datei in eine Liste von Zeilen
-# (`unicode` Strings ohne Zeilenendezeichen)::
-
-    def readlines(self, keepends=False):
-
-# Lesen als `bytes` String::
-
-        inhalt = self.read().decode(self.encoding)
-
-# Splitten in eine Liste der Zeilen und zurückgeben::
-
-        inhalt = inhalt.splitlines(keepends)
-        try:
-            if not inhalt[-1]:
-                # letzte Zeile leer wegen abschließendem \n
-                del inhalt[-1]
-        except KeyError:
-            pass
-        return inhalt
-
 # Iteration
 # ---------
 #
@@ -74,8 +51,10 @@ class WordFile(file):
 # Liefer einen Iterator über die "geparsten" Zeilen (Datenfelder)::
 
     def __iter__(self):
-        for line in self.readlines():
+        line = self.readline().rstrip().decode(self.encoding)
+        while line:
             yield WordEntry(line)
+            line = self.readline().rstrip().decode(self.encoding)
 
 # asdict
 # ------
@@ -755,7 +734,7 @@ def test_keys(wortliste):
                 continue
             if key != join_word(wort):
                 is_OK = False
-                print u"\nkey %s != %s" % (key, wort),
+                print u"\nkey '%s' != '%s'" % (key, wort),
                 if key.lower() == join_word(wort).lower():
                     print(u"  Abgleich der Großschreibung mit"
                           u"`prepare-patch.py grossabgleich`."),
@@ -842,13 +821,16 @@ if __name__ == '__main__':
     # komplett:
     wordfile.seek(0)            # Pointer zurücksetzen
     OK = 0
-    for line in wordfile.readlines():
+    line = wordfile.readline().rstrip().decode(wordfile.encoding)
+    while line:
         entry = WordEntry(line)
         if line == unicode(entry):
             OK +=1
         else:
             print u'-', line,
             print u'+', unicode(entry)
+        line = wordfile.readline().rstrip().decode(wordfile.encoding)
+    
     print OK, u"Einträge rekonstruiert"
 
 

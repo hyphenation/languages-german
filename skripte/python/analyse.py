@@ -39,7 +39,6 @@ import re       # Funktionen und Klassen für reguläre Ausdrücke
 import sys      # sys.exit() zum Abbruch vor Ende (für Testzwecke)
 import codecs
 from collections import defaultdict  # Wörterbuch mit Default
-# from copy import deepcopy
 
 from werkzeug import WordFile, join_word, udiff, uebertrage, TransferError
 
