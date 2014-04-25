@@ -65,8 +65,10 @@ local Ct = lpeg.Ct
 -- Muster für ein beliebiges Zeichen.
 local any = P(1)
 -- Kürzel für Unicode-Funktionen.
+local Ufind = unicode.utf8.find
 local Ugmatch = unicode.utf8.gmatch
 local Ugsub = unicode.utf8.gsub
+local Ulower = unicode.utf8.lower
 -- Kürzel für Modul helper_words.
 local validate_word = hwords.validate_word
 
@@ -419,6 +421,11 @@ end
 M.read_exception_file = read_exception_file
 
 
+-- Tabelle von Wörtern mit Eszett.
+local words_eszett = {}
+-- Tabelle von Wörtern ohne Eszett, aber mit Doppel-s.
+local words_ss = {}
+
 
 --- Prüfe einen Datensatz auf Wohlgeformtheit.  Geprüft wird das Format
 --- des Datensatzes und die Zulässigkeit sämtlicher Wörter.
@@ -444,6 +451,8 @@ local function validate_record(record)
    -- Merke Inhalt von Feld 1 für Gleichheitsprüfung der belegten
    -- Felder.
    local field1 = trec[1]
+   -- Merke Eigenschaften von Feld 1 für Eszett-Prüfung (siehe unten).
+   local props1
    if not field1 then return false, 1, "leer" end
    for i = 1,#trec do
       local word = trec[i]
@@ -451,6 +460,7 @@ local function validate_record(record)
          -- Hat das Wort eine zulässige Struktur?
          local props, msg = validate_word(word)
          if not props then return false, i, msg end
+         if i == 1 then props1 = props end
          -- Stimmt Wort mit Feld 1 überein?
          word = Ugsub(props.norm_word, "-", "")
          if word ~= field1 then return false, i, "ungleich Feld 1" end
@@ -461,6 +471,15 @@ local function validate_record(record)
          -- Tritt 'ß' an unzulässiger Feldnummer auf?
          if props.has_eszett and (i > 4) then return false, i, "unzulässiges ß" end
       end
+   end
+   -- Speichere alle Wörter mit Eszett und ohne Eszett, aber mit
+   -- Doppel-s, in Kleinschreibung für spätere Prüfung auf vorhandene
+   -- Eszett-Ersatzschreibung.
+   if props1.has_eszett then
+      local word_ss = Ulower(Ugsub(field1, 'ß', 'ss'))
+      words_eszett[word_ss] = true
+   elseif Ufind(field1, 'ss') then
+      words_ss[Ulower(field1)] = true
    end
    return type
 end
@@ -519,6 +538,14 @@ local function validate_file(f)
          end
          -- Datensatz ausgeben.
          io.stderr:write(": ", record, "\n")
+      end
+   end
+   -- Prüfe, ob zu jeder Eszett-Schreibung eine Doppel-s-Schreibung
+   -- vorhanden ist.
+   for word_ss in pairs(words_eszett) do
+      if not words_ss[word_ss] then
+         invalid = invalid + 1
+         io.stderr:write("fehlende Doppel-s-Schreibung: ", word_ss, "\n")
       end
    end
    count.total = total
