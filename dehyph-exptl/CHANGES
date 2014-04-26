@@ -36,6 +36,18 @@ werden.
 
 # Änderungen
 
+## v0. (--)
+
+#### Wortdatenbank
+
+* Weitere Arbeiten an der Klassifizierung von Trennstellen.
+
+* Es wird eine Liste mit Schreibweisen vor der I. Orthographischen
+  Konferenz gepflegt (Datei `pre-1901`).  Mit Hilfe dieser Datei lassen
+  sich Muster erstellen, die veraltete Wörter und Schreibweisen
+  erwartungsgemäßer trennen.
+
+
 ## v0.3 (2013-05-26)
 
 #### Wortdatenbank
