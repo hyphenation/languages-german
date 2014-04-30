@@ -94,10 +94,10 @@ class teilwoerter(object):
         # ungünstige Trennungen:
         if u'.' in wort:
             # Wort ignorieren
-            return
+            # return
             # Entferne/Ersetze Markierung
-            # wort = re.sub(ur'([-<=])\.+', ur'\1', wort)  # =. <. -.
-            # wort = re.sub(ur'\.+', ur'·', wort)
+            wort = re.sub(ur'([-<=])\.+', ur'\1', wort)  # =. <. -.
+            wort = re.sub(ur'\.+', ur'·', wort)
         # wort schon vorhanden?
         if key in self.trennvarianten:
             # Abgleich der Trennmarker
@@ -338,9 +338,9 @@ def mehrdeutigkeiten(words):
         # Bekannte Mehrdeutigkeiten (meist engl./dt.):
         if teil in ('Anhalts', 'Base',  'George',
                     'herzog', # Her-zog/her>zog
-                    'Mode', 'Name',
+                    'Mode', 'Made', 'Name',
                     'Page', 'Pole', 'Planes', 'Rate', 'Real',
-                    'Spare', 'Station', 'Stations', 'Wales', 'Ware',
+                    'Spare', 'Station', 'Stations', 'Ville', 'Wales', 'Ware',
                     'griff' # gri[f-f/{ff/ff=f}]est
                    ):
             continue

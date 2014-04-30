@@ -16,8 +16,7 @@
 #
 # ::
 
-from copy import deepcopy
-import re, sys, codecs
+import re, sys, codecs, copy
 from werkzeug import WordFile, WordEntry, join_word, udiff, sprachabgleich
 
 
@@ -58,33 +57,42 @@ if __name__ == '__main__':
 
     wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
     wortliste = list(wordfile)
-    wortliste_alt = deepcopy(wortliste)
-    
+    wortliste_neu = []
+
     wordfile.seek(0)            # Pointer zurücksetzen
     words = wordfile.asdict()
 
     # Bearbeiten der wortliste "in-place"
     # conflate(wortliste)
 
-    for entry in wortliste:
-        oldentry = entry
+    for oldentry in wortliste:
+        if len(oldentry) <= 2:
+            wortliste_neu.append(oldentry)
+            continue
+        entry = copy.copy(oldentry)
         sprachabgleich(entry)
-        if len(entry) > 2 and oldentry == entry and u'ss' in entry[0]:
+        if oldentry == entry and u'ss' in entry[0]:
             try:
                 sprachabgleich(entry, words[entry[0].replace(u'ss', u'ß')])
             except KeyError:
                 # print entry[0].replace(u'ss', u'ß'), "fehlt"
                 pass  # e.g. "Abfahrtßpezialisten"
-        if len(entry) > 2 and oldentry == entry and u'ß' in entry[0]:
+        if oldentry == entry and u'ß' in entry[0]:
             try:
                 sprachabgleich(entry, words[entry[0].replace(u'ß', u'ss')])
             except KeyError:
                 # print entry[0].replace(u'ss', u'ß'), "fehlt"
                 pass
+        if oldentry == entry:
+            wortliste_neu.append(oldentry)
+        else:
+            wortliste_neu.append(entry)
+
             
+
     # Patch erstellen::
 
-    patch = udiff(wortliste_alt, wortliste, 'wortliste', 'wortliste-neu',
+    patch = udiff(wortliste, wortliste_neu, 'wortliste', 'wortliste-neu',
                   encoding=wordfile.encoding)
     if patch:
         # print patch

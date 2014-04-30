@@ -3,7 +3,7 @@
 # :Copyright: © 2011 Günter Milde.
 #             Released without warranty under the terms of the
 #             GNU General Public License (v. 2 or later)
-# :Id: $Id:  $
+# :Id:        $Id:  $
 
 # Abgleich der Trennstellen zwischen Woertern mit gleichem Stamm
 # ==============================================================
@@ -75,7 +75,6 @@ def endungsabgleich(wort, endung, vergleichsendung=u'',
     grundwort = teile[-1]
     stamm = grundwort[:-len(endung)] + vergleichsendung
     key = join_word(stamm)
-    # print u' '.join([wort, key])
     if grossklein:
         key = toggle_case(key)
 
@@ -211,6 +210,7 @@ endungen = [
             # (u'g', u'·gung'),
             # (u'g', u'·ger'),
             # (u'in', u'en'),
+            (u'ie', u'e'),
             # (u'-in', u'i·ne'),
             # (u'isch', u'i·sche'),
             (u'k', u'·ke'),
@@ -356,9 +356,8 @@ if __name__ == '__main__':
             wortliste_neu.append(entry)
             continue
 
-# Auswählen der gewünschten Bearbeitungsfunktion durch Ein-/Auskommentieren::
+# Endungsabgleich::
 
-        # Endungsabgleich:
         for alt, neu in endungen:
 
             wort2 = endungsabgleich(wort, endung=neu, vergleichsendung=alt,

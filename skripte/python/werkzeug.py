@@ -431,11 +431,13 @@ def join_word(word, assert_complete=False):
 # ([u'Ge', u'samt', u'be', u'triebs', u'rats', u'chef'], [u'<', u'=', u'<', u'=', u'=='])
 # >>> zerlege(u'an<stands>los')
 # ([u'an', u'stands', u'los'], [u'<', u'>'])
+# >>> zerlege(u'An<al.pha-bet')
+# ([u'An', u'al', u'pha', u'bet'], [u'<', u'.', u'-'])
 #
 # ::
 
 def zerlege(wort):
-    silben = re.split(u'[-·._|<>=]+', wort)
+    silben = re.split(u'[-·._<>=]+', wort)
     trennzeichen = re.split(u'[^-·._|<>=]+', wort)
     return silben, [tz for tz in trennzeichen if tz]
 
@@ -488,6 +490,10 @@ class TransferError(ValueError):
 # Kein Überschreiben doppelter Marker:
 # >>> print uebertrage(u'ver<aus<ga-be',  u'ver<<aus<ga-be')
 # ver<<aus<ga-be
+#
+# Erhalt des Markers für ungünstige Stellen:
+# >>> print uebertrage(u'An·al.pha·bet', u'An<al.pha-bet')
+# An<al.pha-bet
 #
 # Keine Übertragung, wenn die Zahl oder Position der Trennstellen
 # unterschiedlich ist oder bei unterschiedlichen Wörtern:
