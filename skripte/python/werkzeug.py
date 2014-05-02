@@ -595,6 +595,8 @@ def uebertrage(wort1, wort2, strict=True, upgrade=True):
             )
            ):
             wort3 += t1
+        elif t2 == u'.' and t1 != u'·':
+            wort3 += t1 + t2
         else:
             wort3 += t2
         wort3 += silben2.pop(0)

@@ -36,7 +36,7 @@ sprachvariante = 'de-1996'         # Reformschreibung
 # als Quelle der kategorisierten Trennungen::
 
 use_teilwoerter = False
-# use_teilwoerter = True
+use_teilwoerter = True
 
 
 # Funktionen
@@ -116,7 +116,7 @@ if __name__ == '__main__':
         wort = entry.get(sprachvariante)
         if wort is None: # Wort existiert nicht in der Sprachvariante
             continue
-        if u'·' not in wort: # Alle Trennstellen kategorisiert
+        if u'·' not in wort and u'.' not in wort: # Alle Trennstellen kategorisiert
             continue
 
 # Teilwortabgleich::
