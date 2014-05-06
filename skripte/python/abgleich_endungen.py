@@ -87,7 +87,6 @@ def endungsabgleich(wort, endung, vergleichsendung=u'',
                 altstamm = toggle_case(altstamm)
             try:
                 neustamm = uebertrage(altstamm, stamm)
-                # print u'alt/neu', wort, altstamm, neustamm
                 # Vergleichsendung abtrennen
                 if vergleichsendung:
                     neustamm = neustamm[:-len(vergleichsendung)]
@@ -142,9 +141,8 @@ endungen = [
             (u'-an', u'a·ne'),
             (u'-at', u'a·te'),
             (u'-ben', u'b·ne'),
-            # (u'-che', u'ch'),
-            # (u'-de', u'd'),
-            # (u'-de', u'd'),
+            (u'-che', u'ch'),
+            (u'-de', u'd'),
             # (u'-en', u'e'),
             (u'-en', u'e·ne'),
             (u'-er', u'e·rin'),
@@ -154,10 +152,12 @@ endungen = [
             (u'-gen', u'g'),
             (u'-on', u'o·nen'),
             (u'-re', u'r'),
+            (u'-re', u'rt'),
+            (u'-ren', u'rt'),
             (u'-ren', u'r·ne'),
             (u'-sche', u'sch'),
             (u'-sen', u's·ne'),
-            # (u'-sten', u's·mus'),
+            (u'-sten', u's·mus'),
             (u'-te',u't'),
             (u'-tern', u't·re'),
             (u'-ös', u'ö·se'),
@@ -167,8 +167,8 @@ endungen = [
             (u'b', u'·be'),
             (u'b', u'·ber'),
             (u'bt', u'b·te'),
-            # (u'bar', u't'),
-            # (u'ce', u'-cen'),
+            (u'bar', u't'),
+            (u'ce', u'-cen'),
             (u'ch', u'·che'),
             # (u'ch', u'-che'), # Test "if u'·' not in wort" auskommentieren!
             (u'ch', u'·cher'),
@@ -211,8 +211,8 @@ endungen = [
             # (u'g', u'·ger'),
             # (u'in', u'en'),
             (u'ie', u'e'),
-            # (u'-in', u'i·ne'),
-            # (u'isch', u'i·sche'),
+            (u'-in', u'i·ne'),
+            (u'isch', u'i·sche'),
             (u'k', u'·ke'),
             # (u'k', u'·ken'),
             (u'k', u'·ker'),
@@ -229,6 +229,7 @@ endungen = [
             (u'm', u'·mer'),
             (u'mus', u'men'),
             (u'mus', u'tik'),
+            (u'mus', u'ten'),
             # (u'me', u'·men'),
             # (u'n', u'·at'),
             # (u'n', u'·er'),
@@ -260,7 +261,7 @@ endungen = [
             (u're', u'ste'),
             # (u'ren', u'rst'),
             # (u'ren', u'rt'),
-            # (u'ren', u'r·te'),
+            (u'ren', u'r·te'),
             (u'rn', u'·re'),
             (u'rn', u'·rung'),
             (u'rt', u'r·te'),
@@ -270,8 +271,8 @@ endungen = [
             # (u's', u's·se'),
             (u's', u'·se'),
             (u's', u'·ser'),
-            # (u's', u'·se·re'),
-            # (u's', u'·se·res'),
+            (u's', u'·se·re'),
+            (u's', u'·se·res'),
             (u'sch', u'·sche'),
             # (u'sch', u'·schen'),
             (u'sch', u'·scher'),
@@ -282,7 +283,7 @@ endungen = [
             (u't', u'n'),
             (u't', u'st'),
             (u't', u'·bar'),
-            # (u't', u'·ba·re'),
+            (u't', u'·ba·re'),
             (u't', u'·te'),
             # (u't', u'-te'),
             (u't', u'·ten'),
@@ -345,7 +346,7 @@ if __name__ == '__main__':
     else: # Gesamtwörter als "Teilwörter":
         words = wortliste_to_teilwoerter(wortliste, sprachvariante)
 
-# Bearbeiten der neuen wortliste "in-place"::
+# Erstellen der neuen wortliste::
 
     for entry in wortliste:
 
@@ -359,7 +360,6 @@ if __name__ == '__main__':
 # Endungsabgleich::
 
         for alt, neu in endungen:
-
             wort2 = endungsabgleich(wort, endung=neu, vergleichsendung=alt,
                                     use_grundwort=use_grundwort,
                                     grossklein=grossklein

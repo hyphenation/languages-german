@@ -36,7 +36,7 @@ sprachvariante = 'de-1996'         # Reformschreibung
 # als Quelle der kategorisierten Trennungen::
 
 use_teilwoerter = False
-use_teilwoerter = True
+# use_teilwoerter = True
 
 
 # Funktionen
