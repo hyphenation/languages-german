@@ -7,12 +7,12 @@
 
 # Erweitern der Wortliste um Kombinationen von Teilwörtern
 # ========================================================
-#
+# 
 # Zerlegen von Composita an den Wortfugen und Übernahme der Teile als
 # eigenständige Einträge.
-
+# 
 # >>> from expand_teilwoerter import *
-
+# 
 # ::
 
 import os, re, sys, codecs, copy
@@ -25,30 +25,30 @@ from sort import sortkey_duden
 
 # Funktionen
 # -----------
-
+# 
 # Iterator, gibt alle geordneten Teilkombinationen zurück
-
+# 
 # >>> list(multisplitter(u'test', u'='))
 # [u'test']
-
+# 
 # >>> list(multisplitter(u'a=b', u'='))
 # [u'a', u'a=b', u'b']
-
+# 
 # >>> list(multisplitter(u'a=b=c', u'='))
 # [u'a', u'a=b', u'a=b=c', u'b', u'b=c', u'c']
-
+# 
 # >>> list(multisplitter('a=b=c=d', '='))
 # ['a', 'a=b', 'a=b=c', 'a=b=c=d', 'b', 'b=c', 'b=c=d', 'c', 'c=d', 'd']
-
+# 
 # >>> list(multisplitter(u'a=b==c', u'=='))
 # [u'a=b', u'a=b==c', u'c']
-
+# 
 # >>> list(multisplitter('a=b==c=de', '=='))
 # ['a=b', 'a=b==c=de', 'c=de']
-
+# 
 # >>> list(multisplitter('a=b==c=de', '==='))
 # ['a=b==c=de']
-
+# 
 # >>> list(multisplitter('er[<st/st=]ritt', u'='))
 # [u'er[<st/st=]ritt']
 # >>> list(multisplitter('Schiff[=s/s=]tau', u'='))
@@ -57,7 +57,7 @@ from sort import sortkey_duden
 # [u'a{ll/ll=l}ie-bend']
 # >>> list(multisplitter('Be[t=t/{tt/tt=t}]uch', u'='))
 # [u'Be[t=t/{tt/tt=t}]uch']
-
+# 
 # ::
 
 def multisplitter(wort, sep):
@@ -77,22 +77,22 @@ def multisplitter(wort, sep):
 # Gib eine Liste möglicher Zerlegungen eines Kompositums zurück.
 # Berücksichtige dabei die Bindungsstärke bis zum Level 3 
 # ("===", zur Zeit höchste Auszeichnung in der Wortliste).
-
+# 
 # >>> multisplit(u'test')
 # [u'test']
-
+# 
 # >>> multisplit(u'a=b')
 # [u'a', u'a=b', u'b']
-
+# 
 # >>> multisplit(u'a=b=c')
 # [u'a', u'a=b', u'a=b=c', u'b', u'b=c', u'c']
-
+# 
 # >>> multisplit(u'a==b=c')
 # [u'a', u'a==b=c', u'b', u'b=c', u'c']
-
+# 
 # >>> multisplit(u'a==b=c==d')
 # [u'a', u'a==b=c', u'a==b=c==d', u'b', u'b=c', u'c', u'b=c==d', u'd']
-
+# 
 # >>> for w in multisplit(u'Brenn=stoff==zel-len===an<trieb'):
 # ...    print w
 # Brenn
@@ -102,7 +102,7 @@ def multisplitter(wort, sep):
 # Zel-len
 # Brenn=stoff==zel-len===an<trieb
 # An<trieb
-
+# 
 # ::
 
 def multisplit(wort):
@@ -122,15 +122,15 @@ def multisplit(wort):
     return parts
 
 # Gib eine Liste von allen (sinnvollen) Zerlegungen eines WordEntry zurück
-#
+# 
 # >>> from werkzeug import WordEntry
-#
+# 
 # >>> split_entry(WordEntry(u'Aachen;Aa-chen'))
 # [[u'Aachen', u'Aa-chen']]
 # >>> aalbestand = WordEntry(u'Aalbestand;Aal=be<stand')
 # >>> split_entry(aalbestand)
 # [[u'Aal', u'Aal'], [u'Aalbestand', u'Aal=be<stand'], [u'Bestand', u'Be<stand']]
-
+# 
 # >>> godi = WordEntry(u'Abendgottesdienste;-2-;Abend==got-tes=dien-ste;Abend==got-tes=diens-te')
 # >>> for entry in split_entry(godi):
 # ...     print entry
@@ -139,14 +139,14 @@ def multisplit(wort):
 # Gottes;-2-;Got-tes;Got-tes
 # Gottesdienste;-2-;Got-tes=dien-ste;Got-tes=diens-te
 # Dienste;-2-;Dien-ste;Diens-te
-
+# 
 # >>> bb = WordEntry(u'Biberbettuch;-2-;Bi-ber==be[t=t/{tt/tt=t}]uch')
 # >>> for entry in split_entry(bb):
 # ...     print entry
 # Biber;-2-;Bi-ber
 # Biberbettuch;-2-;Bi-ber==be[t=t/{tt/tt=t}]uch
 # Bettuch;-2-;Be[t=t/{tt/tt=t}]uch
-
+# 
 # ::
 
 def split_entry(entry):
@@ -169,11 +169,30 @@ def split_entry(entry):
             entries[i][col] = parts[i]
                        
     if entries:
+        for e in entries:
+            e.conflate_fields() # Sprachabgleich
         return entries
     else:
         return [entry]
 
+# Gib ein Dictionary mit Einträgen der Wortliste und Teilwortkombinationen zurück:
 
+def expand_wordfile(wordfile):
+    words = {}  # Wörter aus der Liste
+    
+    for entry in wordfile:
+        try:
+            entries = split_entry(entry)
+        except IndexError:  # unterschiedliche Zerlegung je nach Sprache
+            print "problematisch", unicode(entry)
+            words[entry[0].lower()] = entry
+            continue
+        
+        for e in entries:
+            if len(entries) == 1 or e[0].lower() not in words:
+                words[e[0].lower()] = e
+    
+    return words
 
 if __name__ == '__main__':
 
@@ -183,19 +202,8 @@ if __name__ == '__main__':
 # `Wortliste` einlesen::
 
     wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
-    words = {}
     
-    for entry in wordfile:
-        try:
-            entries = split_entry(entry)
-        except IndexError:  # unterschiedliche Zerlegung je nach Sprache
-            print "problematisch", unicode(entry)
-            words[entry[0].lower()] = entry
-            continue
-        for e in entries:
-            if len(entries) == 1 or e[0].lower() not in words:
-                words[e[0].lower()] = e
-
+    words = expand_wordfile(wordfile)
 
     print len(words), "expandiert"
     
@@ -203,5 +211,5 @@ if __name__ == '__main__':
 
 
     for entry in sorted(words.values(), key=sortkey_duden):
-        outfile.write(unicode(entry).encode('utf8'))
+        outfile.write(str(entry))
         outfile.write('\n')
