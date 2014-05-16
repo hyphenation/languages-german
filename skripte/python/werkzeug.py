@@ -595,7 +595,7 @@ def uebertrage(wort1, wort2, strict=True, upgrade=True):
             )
            ):
             wort3 += t1
-        elif t2 == u'.' and t1 != u'·':
+        elif t2 == u'.' and t1 not in u'·.':
             wort3 += t1 + t2
         else:
             wort3 += t2
@@ -671,6 +671,8 @@ def sprachabgleich(entry, vorbildentry=None):
 #
 # >>> toggle_case(u'USA')
 # u'USA'
+# >>> toggle_case(u'iRFD')
+# u'iRFD'
 #
 # >>> toggle_case(u'gri[f-f/{ff/ff')
 # u'Gri[f-f/{ff/ff'

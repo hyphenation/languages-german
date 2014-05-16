@@ -7,7 +7,7 @@
 
 # Versuche Trennstellen neuer Wörter aus vorhandenen zu ermitteln
 # ===============================================================
-# 
+#
 # Übertragen von kategorisierten Trennstellen vorhandener Wörter
 # auf neu aufzunehmende, ungetrennte Wörter.
 #
@@ -19,13 +19,10 @@
 
 import re, sys, codecs, copy, os
 from werkzeug import WordFile, WordEntry, join_word, toggle_case
-# sort.py im Überverzeichnis:
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from sort import sortkey_duden
 
 # Konfiguration
 # -------------
-# 
+#
 # Sprachvarianten
 # ~~~~~~~~~~~~~~~
 # Sprach-Tag nach [BCP47]_::
@@ -38,23 +35,373 @@ sprachvariante = 'de-1996'         # Reformschreibung
 
 # Funktionen
 # -----------
-# 
+
+# Übertrag von Praefixen auf Wörter ohne Präfix::
+
+def praefixabgleich(key, praefix, grossklein=False):
+
+    if key.istitle():
+        praefix = praefix.title()
+
+    if not key.startswith(join_word(praefix)):
+        return ''
+
+    altkey = key[len(join_word(praefix)):]
+
+    if grossklein:
+        altkey = toggle_case(altkey)
+
+    try:
+        altentry = words[altkey]
+    except KeyError:
+        return ''
+
+    entry = WordEntry(key)
+    # print "fundum", key, unicode(entry)
+    for wort in altentry[1:]:
+        if not wort.startswith(u'-'):
+            wort = u'<'.join([praefix, wort])
+            if grossklein:
+                wort = toggle_case(wort)
+        entry.append(wort)
+
+    return entry
+
+praefixe = [u'abo',
+            u'ab',
+            u'ab<zu',
+            u'auf<zu',
+            u'aus<zu',
+            u'ein<zu',
+            u'mit<zu',
+            u'um<zu',
+            u'un-ter<zu',
+            u'weg<zu',
+            u'aber',
+            u'ad',
+            u'aero',
+            u'af-ro',
+            u'ag-ro',
+            u'al-lergo',
+            u'all',
+            u'als',
+            u'am-bi',
+            u'ami-no',
+            u'an',
+            u'an-dro',
+            u'an-gio',
+            u'an-thro-po',
+            u'an-ti',
+            u'ang-lo',
+            u'apo',
+            u'ar-chaeo',
+            u'ar-che',
+            u'ar-chäo',
+            u'ar-terio',
+            u'ar-thro',
+            u'asyn',
+            u'at-mo',
+            u'au-ßer',
+            u'auf',
+            u'aus',
+            u'aus<zu',
+            u'aut',
+            u'ba-ro',
+            u'bak-te-rio',
+            u'be',
+            u'bei',
+            u'ben-zo',
+            u'bib-lio',
+            u'bio',
+            u'che-mo',
+            u'chi-ro',
+            u'chlo-ro',
+            u'cho-reo',
+            u'chro-mo',
+            u'chro-no',
+            u'cy-ano',
+            u'dar',
+            u'de-ka',
+            u'de-zi',
+            u'demo',
+            u'der-ma-to',
+            u'des',
+            u'di-cho',
+            u'di-no',
+            u'dia',
+            u'dis',
+            u'dis-ko',
+            u'down',
+            u'drein',
+            u'durch',
+            u'dys',
+            u'e-tho',
+            u'ego',
+            u'ein',
+            u'elek-tro',
+            u'em-por',
+            u'emp',
+            u'en-do',
+            u'en-te-ro',
+            u'ent',
+            u'epi',
+            u'er',
+            u'er-go',
+            u'es-chato',
+            u'eth-no',
+            u'ety-mo',
+            u'ex',
+            u'ext-ro',
+            u'fe-ro',
+            u'fem-to',
+            u'fer-ro',
+            u'fo-no',
+            u'fort',
+            u'fran-ko',
+            u'für',
+            u'ga-so',
+            u'ge',
+            u'ge-gen',
+            u'ge-no',
+            u'ge-ron-to',
+            u'geo',
+            u'gi-ga',
+            u'gi-gan-to',
+            u'go-no',
+            u'gra-fo',
+            u'gra-pho',
+            u'gy-nä-ko',
+            u'he-lio',
+            u'he-te-ro',
+            u'he-xa',
+            u'hek-to',
+            u'hekt',
+            u'hemi',
+            u'her',
+            u'hier',
+            u'hin',
+            u'hin-ter',
+            u'hint',
+            u'ho-lo',
+            u'ho-mo',
+            u'ho-möo',
+            u'hoch',
+            u'hy-dro',
+            u'hy-per',
+            u'hy-po',
+            u'hym-no',
+            u'hyp-no',
+            u'hä-ma-to',
+            u'hä-mo',
+            u'ideo',
+            u'idio',
+            u'iko-no',
+            u'il',
+            u'im',
+            u'im-mu-no',
+            u'in',
+            u'in-fra',
+            u'in-ter',
+            u'in-tra',
+            u'ins',
+            u'int-ro',
+            u'io-no',
+            u'kar-dio',
+            u'kar-to',
+            u'kata',
+            u'klep-to',
+            u'kli-no',
+            u'kon',
+            u'kon-tra',
+            u'kor-re',
+            u'kos-mo',
+            u'kri-mi-no',
+            u'kri-no',
+            u'kryp-to',
+            u'leu-ko',
+            u'leuk',
+            u'lexi-ko',
+            u'li-tho',
+            u'lim-no',
+            u'lo-go',
+            u'los',
+            u'lym-pho',
+            u'ma-gne-to',
+            u'mak-ro',
+            u'mam-mo',
+            u'me-ga',
+            u'me-lo',
+            u'me-so',
+            u'me-ta',
+            u'me-teo-ro',
+            u'me-tho-do',
+            u'mik-ro',
+            u'mil-li',
+            u'miss',
+            u'mit',
+            u'mo-no',
+            u'mor-pho',
+            u'mu-si-ko',
+            u'mul-ti',
+            u'my-co',
+            u'my-tho',
+            u'na-no',
+            u'nach',
+            u'ne-ben',
+            u'neo',
+            u'neu-ro',
+            u'neur',
+            u'nie-der',
+            u'no-wo',
+            u'non',
+            u'nost',
+            u'ob',
+            u'oben',
+            u'ober',
+            u'off',
+            u'ohn',
+            u'oli-go',
+            u'olig',
+            u'om-ni',
+            u'on-ko',
+            u'on-to',
+            u'op-to',
+            u'or-tho',
+            u'oszil-lo',
+            u'out',
+            u'over',
+            u'oxy',
+            u'ozea-no',
+            u'pa-ra',
+            u'pa-tho',
+            u'pa-tri',
+            u'pan-to',
+            u'pe-re',
+            u'pen-ta',
+            u'pet-ro',
+            u'phar-ma',
+            u'phar-ma-ko',
+            u'phi-lo',
+            u'phil',
+            u'pho-no',
+            u'pho-to',
+            u'phra-seo',
+            u'phy-lo',
+            u'phy-sio',
+            u'phy-to',
+            u'phä-no',
+            u'pneu-mo',
+            u'po-eto',
+            u'po-li-to',
+            u'po-ly',
+            u'po-ten-tio',
+            u'pro-to',
+            u'prä',
+            u'pseud',
+            u'psy-cho',
+            u'py-ro',
+            u'pä-do',
+            u'päd',
+            u'raus',
+            u're',
+            u'rein',
+            u'ret-ro',
+            u'ri-bo',
+            u'rä-to',
+            u'rück',
+            u'sa-mo',
+            u'sak-ro',
+            u'se-mi',
+            u'seis-mo',
+            u'selb',
+            u'ser-bo',
+            u'si-no',
+            u'so',
+            u'so-zio',
+            u'sou',
+            u'spek-tro',
+            u'ste-no',
+            u'ste-reo',
+            u'ste-tho',
+            u'stra-to',
+            u'su-per',
+            u'sub',
+            u'sup-ra',
+            u'sus',
+            u'syn',
+            u'ta-xo',
+            u'tau-to',
+            u'te-leo',
+            u'te-ra',
+            u'tech-no',
+            u'tele',
+            u'telo',
+            u'ter-mi-no',
+            u'tet-ra',
+            u'ther-mo',
+            u'throm-bo',
+            u'to-mo',
+            u'to-po',
+            u'to-xi-ko',
+            u'tra-gi',
+            u'trans',
+            u'tro-po',
+            u'tur-bo',
+            u'ty-po',
+            u'ul-tra',
+            u'um',
+            u'un',
+            u'un-der',
+            u'un-ter',
+            u'uni',
+            u'ur',
+            u'uro',
+            u'ver',
+            u'vi-no',
+            u'vi-ro',
+            u'vib-ra',
+            u'voll',
+            u'von',
+            u'vor',
+            u'vorn',
+            u'vul-ka-no',
+            u'weg',
+            u'wi-der',
+            u'xe-no',
+            u'xy-lo',
+            u'zen-ti',
+            u'zen-tri',
+            u'zer',
+            u'zu',
+            u'zwie',
+            u'zy-klo',
+            u'zy-to',
+            u'ägyp-to',
+            u'öko',
+            u'über',
+           ]
+
+# Nach Länge sortieren, damit spezifischere zuerst Probiert werden:
+praefixe.sort(key = len)
+praefixe.reverse()
+
+
 # Übertrag von Einträgen auf Wörter mit anderer Endung::
 
 def endungsabgleich(key, alt, neu, grossklein=False):
 
     if not key.endswith(join_word(neu)):
         return ''
-    
+    OK = True
     altkey = key[:-len(join_word(neu))] + join_word(alt)
     if grossklein:
         altkey = toggle_case(altkey)
-    
+
     try:
         altentry = words[altkey]
     except KeyError:
         return ''
-    
+
     entry = WordEntry(key)
     # print "fundum", key, unicode(entry)
     for wort in altentry[1:]:
@@ -65,10 +412,12 @@ def endungsabgleich(key, alt, neu, grossklein=False):
             if grossklein:
                 wort = toggle_case(wort)
             if join_word(wort) != key:
-                print u"# Übertragungsproblem: %s -> %s (%s,%s) %s" % (
-                                            altkey, key, alt, neu, wort)
-                return ''
+                OK = False
         entry.append(wort)
+    if OK is False:
+        print u"# Übertragungsproblem: %s -> %s (%s,%s) %s" % (
+                                            altkey, key, alt, neu, unicode(entry))
+        return ''
 
     return entry
 
@@ -76,7 +425,7 @@ def endungsabgleich(key, alt, neu, grossklein=False):
 # Endungen
 # --------
 # ``(<alt>, <neu>)`` Paare von Endungen
-# 
+#
 # Achtung: die Auswahl zu testender Wörter erfolgt anhand der "neu"-Endung.
 # Daher darf diese nicht leer sein!
 # ::
@@ -294,6 +643,20 @@ endungen = [
             (u'ös', u'ö-se'),
            ]
 
+
+# Zerlege einen String mit von vorn bis hinten wandernder Bruchstelle::
+#
+# >>> from abgleich_neueintraege import zerlege
+# >>> list(zerlege(u'wolle'))
+# [(u'w', u'olle'), (u'wo', u'lle'), (u'wol', u'le'), (u'woll', u'e')]
+#
+# ::
+
+def zerlege(s):
+    for i in range(1, len(s)):
+        yield s[:i], s[i:]
+
+
 if __name__ == '__main__':
 
     # sys.stdout mit UTF8 encoding.
@@ -301,60 +664,108 @@ if __name__ == '__main__':
 
 # `Wortliste` einlesen::
 
+
     wordfile = WordFile('wortliste-expandiert') # + Teilwort-Entries
     words = wordfile.asdict()
-    
-    neuwortdatei = open("zusatzwörter-de-1996-hunspell-compact")
+
+    neuwortdatei = "zusatzwörter-de-1996-hunspell-compact"
     neueintraege = []
     neueintraege_grossklein = []
+    restwoerter = []
+
 
 # Erstellen der neuen Einträge::
 
-    for line in neuwortdatei:
+    for line in open(neuwortdatei):
+        OK = False
         key = line.decode('utf8').strip()
-        
+
         if len(key) <= 3:
             continue
-        
+
 # Test auf vorhandene (Teil-) Wörter:
 
-        try:
-            entry = words[key]
+        entry = words.get(key)
+        if entry:
             neueintraege.append(entry)
             continue
-        except KeyError:
-            pass
         # kleingeschrieben
-        try:
-            entry = words[key.lower()]
+        entry = words.get(key.lower())
+        if entry:
             neueintraege_grossklein.append(entry)
             continue
-        except KeyError:
-            pass
         # Großgeschrieben
-        try:
-            entry = words[key.title()]
+        entry = words.get(key.title())
+        if entry:
             neueintraege_grossklein.append(entry)
             continue
-        except KeyError:
-            pass
 
-    # Endungsabgleich::
+# Endungsabgleich::
 
         for alt, neu in endungen:
             entry = endungsabgleich(key, alt, neu, grossklein=False)
             if entry:
                 neueintraege.append(entry)
+                OK = True
                 # break
+        if OK:
+            continue
 
         for alt, neu in endungen:
             entry = endungsabgleich(key, alt, neu, grossklein=True)
             if entry:
                 neueintraege_grossklein.append(entry)
+                OK = True
                 # break
+        if OK:
+            continue
+
+# Präfixabgleich::
+
+        for praefix in praefixe:
+            entry = praefixabgleich(key, praefix, grossklein=False)
+            if entry:
+                neueintraege.append(entry)
+                OK = True
+                break
+        if OK:
+            continue
+
+# Zerlegen und test auf Fugen::
+
+        for k1, k2 in zerlege(key):
+            if k1.istitle():
+                k2 = k2.title()
+            # k1 = k1.title()
+            k1 = k1.lower()
+            e1 = words.get(k1)
+            e2 = words.get(k2)
+            if e1 and e2:
+                if len(e1) != len(e2):
+                       continue
+                entry = WordEntry(key)
+                for w1, w2 in zip(e1,e2)[1:]:
+                    if not w1.startswith(u'-'):
+                        w1 = toggle_case(w1)
+                        w2 = w2.lower()
+                        wort = u'='.join([w1, w2])
+                    else:
+                        wort = w1
+                    entry.append(wort)
+                neueintraege.append(entry)
+                OK = True
+        if OK:
+            continue
+
+# Nicht gefundene Wörter::
+
+        restwoerter.append(key)
 
 
-# Patch erstellen::
+    
+
+
+# Ausgabe::
 
     print u'# als Teilwörter'
     for entry in neueintraege:
@@ -364,3 +775,8 @@ if __name__ == '__main__':
     for entry in neueintraege_grossklein:
         print unicode(entry)
 
+    outfile = open(neuwortdatei+'-rest', 'w')
+
+    for wort in restwoerter:
+        outfile.write(wort.encode('utf8')+'\n')
+    outfile.close()

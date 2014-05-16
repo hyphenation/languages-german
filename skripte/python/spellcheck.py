@@ -37,6 +37,7 @@ sprachvariante = 'de-1996'         # Reformschreibung
 
 spelldatei = '../../spell/aspell-de-1996-compact'
 
+korrekturdatei = '../../spell/korrekturen'
 
 # Funktionen
 # -----------
@@ -52,6 +53,16 @@ if __name__ == '__main__':
     wordfile = WordFile('../../wortliste')
     words = wordfile.asdict()
 
+# Korrekturen einlesen::
+
+    korrekturen = []
+    for line in open(korrekturdatei, 'r'):
+        if not line.startswith('-'):
+            continue
+        # Dekodieren, Zeilenende entfernen
+        line = line.decode('utf8')
+        korrekturen.append(line[1:].strip())
+
 # Vergleichswörter einlesen::
 
     for line in open(spelldatei, 'r'):
@@ -65,11 +76,14 @@ if __name__ == '__main__':
         # kurze Wörter haben wir nicht:
         if len(key) < 4:
             continue
-        
+
+# Ausgabe "neuer" Wörter::
+
         if (key not in words 
             and key.lower() not in words 
-            and key.title() not in words):
-            
+            and key.title() not in words
+            and key not in korrekturen
+           ):
             print key
         
 

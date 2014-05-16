@@ -323,6 +323,8 @@ def neu(wordfile, datei):
             continue
         # Dekodieren, Zeilenende entfernen
         line = line.decode('utf8').strip()
+        if not line:
+            continue
         # Eintrag ggf. komplettieren
         if u';' in line:
             key = u';'.split(line)[0]
