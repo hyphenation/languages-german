@@ -40,12 +40,21 @@ werden.
 
 #### Wortdatenbank
 
-* Weitere Arbeiten an der Klassifizierung von Trennstellen.
+* Die Arbeiten an der Klassifizierung von Trennstellen sind nahezu
+  abgeschlossen.
 
 * Es wird eine Liste mit Schreibweisen vor der I. Orthographischen
   Konferenz gepflegt (Datei `pre-1901`).  Mit Hilfe dieser Datei lassen
   sich Muster erstellen, die veraltete Wörter und Schreibweisen
   erwartungsgemäßer trennen.
+
+* Die Lizenz der Dateien im [Entwickler-Repositorium][repo-wl] wurde
+  klargestellt ([MIT][liz-mit]).  (Das Paket `dehyph-exptl` steht jedoch
+  unter der [LPPL][liz-lppl].)
+
+[repo-wl]: http://repo.or.cz/w/wortliste.git
+[liz-mit]: http://opensource.org/licenses/mit-license.php
+[liz-lppl]: http://www.latex-project.org/lppl.txt
 
 
 ## v0.3 (2013-05-26)
