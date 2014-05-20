@@ -76,6 +76,14 @@ analyse.py
   Präfixauszeichnung.
 
 
+abgleich_endungen.py
+  Abgleich der Trennstellen für Ableitungen/Varianten mit unterschiedlicher
+  Endung.
+  
+  Die zu vergleichenden Endungen sind im Skript in der Liste ``endungen``
+  definiert.  
+
+
 abgleich_sprachvarianten.py
   Abgleich der Trennstellen zwischen Sprachvarianten
   
@@ -101,7 +109,13 @@ abgleich_praefixe.py
   Abgleich der Trennstellen zwischen Woertern mit unterschiedlichem Präfix
 
   Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
-  kann.
+  kann (siehe Arbeitsfluss_).
+
+abgleich_sufffixe.py
+  Abgleich der Trennstellen zwischen Woertern mit unterschiedlichem Suffix.
+
+  Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
+  kann (siehe Arbeitsfluss_).
 
 prepare_patch.py
   Helfer für kleine Editieraufgaben, u.a. entfernen von Doppeleinträgen.
@@ -152,7 +166,9 @@ Trennstellenkategorisierung mit Hilfe der Python-Skripte,
 
   - im Texteditor (suchen/ersetzen, regexp-replace, ...)
   
-  - mit Skripten (``abgleich_praefixe.py``, ``vorsilben_in_teilwoertern.py``)
+  - mit Skripten (``abgleich_praefixe.py``, 
+    		  ``abgleich_suffixe.py``, 
+    		  ``vorsilben_in_teilwoertern.py``)
   
 * Rückübertragen der Korrekturen auf die Wortliste
 

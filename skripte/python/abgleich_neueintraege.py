@@ -60,9 +60,9 @@ def praefixabgleich(key, praefix, grossklein=False):
     # print "fundum", key, unicode(entry)
     for wort in altentry[1:]:
         if not wort.startswith(u'-'):
-            wort = u'<'.join([praefix, wort])
             if grossklein:
                 wort = toggle_case(wort)
+            wort = u'<'.join([praefix, wort])
         entry.append(wort)
 
     return entry
@@ -111,7 +111,7 @@ praefixe = [u'abo',
             u'be',
             u'bei',
             u'ben-zo',
-            u'bib-lio',
+            u'bi-blio',
             u'bio',
             u'che-mo',
             u'chi-ro',
@@ -220,7 +220,7 @@ praefixe = [u'abo',
             u'kryp-to',
             u'leu-ko',
             u'leuk',
-            u'lexi-ko',
+            u'le-xi-ko',
             u'li-tho',
             u'lim-no',
             u'lo-go',
@@ -419,16 +419,13 @@ def endungsabgleich(key, alt, neu, grossklein=False):
                                             altkey, key, alt, neu, unicode(entry))
         return ''
 
+    entry.conflate_fields()
     return entry
 
 
 # Endungen
 # --------
-# ``(<alt>, <neu>)`` Paare von Endungen
-#
-# Achtung: die Auswahl zu testender Wörter erfolgt anhand der "neu"-Endung.
-# Daher darf diese nicht leer sein!
-# ::
+# ``(<alt>, <neu>)`` Paare von Endungen::
 
 endungen = [
             (u'', u'-de'),
@@ -449,7 +446,7 @@ endungen = [
             (u'', u'>keit'),
             (u'', u'>schaft'),
             (u'', u'>schaft'),
-            (u'', u'>weise'),
+            (u'', u'>wei-se'),
             # (u'', u'd'),
             # (u'', u'e'),
             # (u'', u'e-rin'),
@@ -610,7 +607,7 @@ endungen = [
             (u'st', u'-sten'),
             (u'st', u'n'),
             (u't', u'-ba-re'),
-            (u't', u'-bar'),
+            (u't', u'>bar'),
             (u't', u'-te'),
             (u't', u'-te'),
             (u't', u'-ten'),
@@ -655,6 +652,51 @@ endungen = [
 def zerlege(s):
     for i in range(1, len(s)):
         yield s[:i], s[i:]
+
+
+# Zerlege String, wenn die Teile in der Wortliste vorhanden sind, setze
+# sie neu zusammen und übernehme die Trennmarkierer:
+
+        
+def trenne_key(key, grossklein = False):
+    entries = []
+    for k1, k2 in zerlege(key):
+        if grossklein:
+            k1 = toggle_case(k1)
+        if k1.istitle():
+            k2 = k2.title()
+        e1 = words.get(k1)
+        e2 = words.get(k2)
+        if not e2:
+            e2 = words.get(toggle_case(k2))
+        if e1 and e2:
+            if len(e1) != len(e2):
+                if len(e1) == 2:
+                    e1 = [e1[1]] * len(e2)
+                elif len(e2) == 2:
+                    e2 = [e2[1]] * len(e1)
+                else:           
+                    continue
+            entry = WordEntry(key)
+            for w1, w2 in zip(e1,e2)[1:]:
+                if w1.startswith(u'-'):
+                    wort = w1
+                elif w2.startswith(u'-'):
+                    wort = w2
+                else:
+                    if grossklein:
+                        w1 = toggle_case(w1)
+                    w2 = w2.lower()
+                    if (u'==' in w1) or (u'==' in w2):
+                        sep = u'==='
+                    elif (u'=' in w1) or (u'=' in w2):
+                        sep = u'=='
+                    else:
+                        sep = u'='
+                    wort = sep.join([w1, w2])
+                entry.append(wort)
+            entries.append(entry)
+    return entries
 
 
 if __name__ == '__main__':
@@ -728,41 +770,28 @@ if __name__ == '__main__':
                 neueintraege.append(entry)
                 OK = True
                 break
+            entry = praefixabgleich(key, praefix, grossklein=True)
+            if entry:
+                neueintraege_grossklein.append(entry)
+                OK = True
+                break
         if OK:
             continue
 
 # Zerlegen und test auf Fugen::
 
-        for k1, k2 in zerlege(key):
-            if k1.istitle():
-                k2 = k2.title()
-            # k1 = k1.title()
-            k1 = k1.lower()
-            e1 = words.get(k1)
-            e2 = words.get(k2)
-            if e1 and e2:
-                if len(e1) != len(e2):
-                       continue
-                entry = WordEntry(key)
-                for w1, w2 in zip(e1,e2)[1:]:
-                    if not w1.startswith(u'-'):
-                        w1 = toggle_case(w1)
-                        w2 = w2.lower()
-                        wort = u'='.join([w1, w2])
-                    else:
-                        wort = w1
-                    entry.append(wort)
-                neueintraege.append(entry)
-                OK = True
-        if OK:
+        entries = trenne_key(key, grossklein=False)
+        if entries:
+            neueintraege.extend(entries)
+            continue
+        entries = trenne_key(key, grossklein=True)
+        if entries:
+            neueintraege_grossklein.extend(entries)
             continue
 
 # Nicht gefundene Wörter::
 
         restwoerter.append(key)
-
-
-    
 
 
 # Ausgabe::

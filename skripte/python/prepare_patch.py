@@ -298,11 +298,15 @@ def sprachvariante_split(wordfile, alt, neu,
 # auf Neuwert testen (vorhandene Wörter werden ignoriert, unabhängig von der
 # Groß-/Kleinschreibung) und einsortieren.
 # 
-# Format:
-#  * ein Wort mit Trennstellen (für allgemeingültige Trennstellen):
-#    Das ungetrennte Wort wird vorangestellt (durch Semikolon getrennt),
-#    oder
-#  * vollständiger Eintrag (für Wörter mit Sprachvarianten).
+# Akzeptierte Formate:
+#
+#  * vollständiger Eintrag (für Wörter mit Sprachvarianten oder Kommentaren).
+#
+#  * ein Wort mit Trennstellen:
+#
+#    - Schlüssel wird generiert und vorangestellt (durch Semikolon getrennt).
+#    - Test auf einfache/häufige Reformänderungen 1996: 
+#      s-t/-st, {ck/k-k}/c-k
 # 
 # ::
 
@@ -318,6 +322,10 @@ def neu(wordfile, datei):
     wortliste_neu = deepcopy(wortliste)
     words = set(entry[0] for entry in wortliste)     # vorhandene Wörter
 
+    # Regeländerungen:
+    r1901 = (u'-st', u'{ck/k-k}')
+    r1996 = (u's-t', u'-ck')
+    
     for line in korrekturen:
         if line.startswith('#'):
             continue
@@ -325,12 +333,21 @@ def neu(wordfile, datei):
         line = line.decode('utf8').strip()
         if not line:
             continue
-        # Eintrag ggf. komplettieren
+        # Eintrag ggf. komplettieren:
         if u';' in line:
             key = u';'.split(line)[0]
         else:
             key = join_word(line)
-            line = u'%s;%s' % (key, line)
+            for r1, r2 in zip(r1901, r1996):
+                if r1 in line:
+                    line = u'%s;-2-;%s;%s' % (key, line, line.replace(r1,r2))
+                if r2 in line:
+                    line = u'%s;-2-;%s;%s' % (key, line.replace(r2,r1), line)
+            # 'ßt' und Schluß-ß auch in de-1996 möglich (langer Vokal)
+            if u'sst' in line or line.endswith(u'ss'):
+                line = u'%s;-2-;%s;' % (key, line)
+            if u';' not in line: # keine Regeländerung im Wort
+                line = u'%s;%s' % (key, line)
         # Test auf "Neuwert":
         if key in words:
             print key.encode('utf8'), 'schon vorhanden'
@@ -342,7 +359,6 @@ def neu(wordfile, datei):
         wortliste_neu.append(WordEntry(line))
 
     # Sortieren
-    # wortliste_neu.sort(key=sortkey_wl)
     wortliste_neu.sort(key=sortkey_duden)
 
     return (wortliste, wortliste_neu)
