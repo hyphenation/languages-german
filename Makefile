@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # This Makefile creates German hyphenation patterns in subdirectories
 # $(TRAD) and $(REFO) for traditional and new orthography, respectively.
 # Hyphenation patterns for traditional Swiss German are generated in
