@@ -94,7 +94,7 @@ diff_patgen_list() {
     create_patgen_list $tocommit $tocommitdate $patgenlist
     if test ! -d $dehyph; then mkdir $dehyph; fi
     diff $fromcommitdir/$patgenlist $tocommitdir/$patgenlist > $dehyph/$difffile
-    gawk -f patgen-list-diff.awk -v ftr=daten/german.tr $dehyph/$difffile
+    gawk -f skripte/patgen-list-diff.awk -v ftr=daten/german.tr $dehyph/$difffile
 }
 
 

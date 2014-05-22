@@ -67,6 +67,9 @@ W = 0
 DATADIR = $(SRCDIR)/daten
 SCRIPTDIR = $(SRCDIR)/skripte
 WORDLIST = wortliste
+# Variables FROM and TO are used by goal `pidiff'.  FROM must be a
+# commit set from shell, like `make pidiff FROM=abcdef', TO is optional
+# and evaluates to `HEAD' if not given.
 
 ifneq ($(findstring major,$(MAKECMDGOALS)),)
   MAJOR = -major
@@ -240,5 +243,8 @@ $(REFO)/$(REFO)-$(DATE).tex: $(DATADIR)/$(REFO).tex.in
 $(SWISS)/$(SWISS)-$(DATE).tex: $(DATADIR)/$(SWISS).tex.in
 	$(CAT) $< \
           | $(SED) -e "s/@DATE@/$(DATE)/" > $@
+
+pidiff:
+	$(SH) skripte/patgen-list-diff.sh $(FROM) $(TO)
 
 # EOF
