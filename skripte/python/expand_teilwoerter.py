@@ -184,7 +184,7 @@ def expand_wordfile(wordfile):
         try:
             entries = split_entry(entry)
         except IndexError:  # unterschiedliche Zerlegung je nach Sprache
-            print "problematisch", unicode(entry)
+            # print "problematisch", unicode(entry)
             words[entry[0].lower()] = entry
             continue
         
@@ -208,7 +208,6 @@ if __name__ == '__main__':
     print len(words), "expandiert"
     
     outfile = open('wortliste-expandiert', 'w')
-
 
     for entry in sorted(words.values(), key=sortkey_duden):
         outfile.write(str(entry))

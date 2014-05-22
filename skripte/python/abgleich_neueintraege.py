@@ -19,6 +19,7 @@
 
 import re, sys, codecs, copy, os
 from werkzeug import WordFile, WordEntry, join_word, toggle_case
+from expand_teilwoerter import expand_wordfile
 
 # Konfiguration
 # -------------
@@ -706,15 +707,18 @@ if __name__ == '__main__':
 
 # `Wortliste` einlesen::
 
-
-    wordfile = WordFile('wortliste-expandiert') # + Teilwort-Entries
-    words = wordfile.asdict()
+    wordfile = WordFile('../../wortliste')
+    words = expand_wordfile(wordfile)
+    
+    # # schon expandierte Liste:
+    # wordfile = WordFile('wortliste-expandiert') # + Teilwort-Entries
+    # words = wordfile.asdict()
+    
 
     neuwortdatei = "zusatzwörter-de-1996-hunspell-compact"
     neueintraege = []
     neueintraege_grossklein = []
     restwoerter = []
-
 
 # Erstellen der neuen Einträge::
 

@@ -72,10 +72,21 @@ if __name__ == '__main__':
         entry = copy.copy(oldentry)
         sprachabgleich(entry)
         if oldentry == entry and u'ss' in entry[0]:
+            for w in entry[1:]:
+                if not w.startswith(u'-'):
+                    break
             try:
-                sprachabgleich(entry, words[entry[0].replace(u'ss', u'ß')])
+                sprachabgleich(entry, words[join_word(w.replace(u'ss', u'ß'))])
             except KeyError:
                 # print entry[0].replace(u'ss', u'ß'), "fehlt"
+                if entry.get('de-1901-x-GROSS'):
+                    wort1901 = entry.get('de-1901-x-GROSS')
+                    wort1901 = wort1901.replace(u'sst', u'ßt')
+                    wort1901 = wort1901.replace(u'ss=', u'ß=')
+                    wort1901 = wort1901.replace(u'-ss', u'-ß')
+                    wort1901 = re.sub(u'ss$', u'ß', wort1901)
+                    if not u'/' in wort1901 and len(wort1901)>3:
+                        print u'%s;-2-;%s;-4-' % (join_word(wort1901), wort1901)
                 pass  # e.g. "Abfahrtßpezialisten"
         if oldentry == entry and u'ß' in entry[0]:
             try:
