@@ -27,6 +27,7 @@
 import difflib
 import re
 import codecs
+import unicodedata
 
 # WordFile
 # ========
@@ -486,10 +487,16 @@ class TransferError(ValueError):
 #
 # >>> print uebertrage(u'freund>lich>>keit',  u'freund>lich>keit')
 # freund>lich>>keit
-#
+
+# >>> print uebertrage(u'Amts==haupt=stel-le', u'Amts=haupt=stel-le')
+# Amts==haupt=stel-le
+
 # Kein Überschreiben doppelter Marker:
 # >>> print uebertrage(u'ver<aus<ga-be',  u'ver<<aus<ga-be')
 # ver<<aus<ga-be
+#
+# >>> print uebertrage(u'Amts=haupt=stel-le', u'Amts==haupt=stel·le')
+# Amts==haupt=stel-le
 #
 # Erhalt des Markers für ungünstige Stellen:
 # >>> print uebertrage(u'An·al.pha·bet', u'An<al.pha-bet')
@@ -611,45 +618,58 @@ def sprachabgleich(entry, vorbildentry=None):
     if len(entry) <= 2:
         return # allgemeine Schreibung
 
-    mit_vorsilbe = None
-    gewichtet = None
-    ungewichtet = None
+    mit_affix = None       # < oder >
+    kategorisiert = None   # kein ·
+    unkategorisiert = None # mindestens ein ·
+    gewichtet = None       # == oder <= oder =>
     for field in entry[1:]:
         if field.startswith('-'): # -2-, -3-, ...
             continue
         if u'·' in field:
-            ungewichtet = field
-        elif u'<' in field:
-            mit_vorsilbe = field
+            unkategorisiert = field
+        elif u'<' in field or u'>' in field:
+            mit_affix = field
         else:
+            kategorisiert = field
+        if u'==' in field or u'<=' in field or u'=>' in field:
             gewichtet = field
     if vorbildentry:
         for field in vorbildentry[1:]:
             if field.startswith('-'): # -2-, -3-, ...
                 continue
-            if u'<' in field and not mit_vorsilbe:
-                mit_vorsilbe = field
-            elif u'·' not in field and (not gewichtet) and ungewichtet:
+            if not mit_affix and u'<' in field or u'>' in field :
+                mit_affix = field
+            elif not kategorisiert and unkategorisiert and u'·' not in field:
+                kategorisiert = field
+            if not gewichtet and u'==' in field or u'<=' in field or u'=>' in field:
                 gewichtet = field
-        # print 've:', mit_vorsilbe, gewichtet, ungewichtet
-    if mit_vorsilbe and (gewichtet or ungewichtet):
+        # print 've:', mit_affix, kategorisiert, unkategorisiert
+    if mit_affix and (kategorisiert or unkategorisiert or gewichtet):
         for i in range(1,len(entry)):
             if entry[i].startswith('-'): # -2-, -3-, ...
                 continue
             if u'<' not in entry[i] or u'·' in entry[i]:
                 try:
-                    entry[i] = uebertrage(mit_vorsilbe, entry[i], strict=False)
+                    entry[i] = uebertrage(mit_affix, entry[i], strict=False)
                 except TransferError, e:
                     print u'Sprachabgleich:', unicode(e)
-        print mit_vorsilbe+u':', unicode(entry)
-    elif gewichtet and ungewichtet:
+        print mit_affix+u':', unicode(entry)
+    elif kategorisiert and unkategorisiert:
         for i in range(1,len(entry)):
             if u'·' in entry[i]:
+                try:
+                    entry[i] = uebertrage(kategorisiert, entry[i], strict=False)
+                except TransferError, e:
+                    print u'Sprachabgleich:', unicode(e)
+        # print kategorisiert, unicode(entry)
+    elif gewichtet:
+        for i in range(1,len(entry)):
+            if u'=' in entry[i]:
                 try:
                     entry[i] = uebertrage(gewichtet, entry[i], strict=False)
                 except TransferError, e:
                     print u'Sprachabgleich:', unicode(e)
-        print gewichtet, unicode(entry)
+
 
 
 # Großschreibung in Kleinschreibung wandeln und umgekehrt
@@ -692,6 +712,98 @@ def toggle_case(wort):
         return wort[0].upper() + wort[1:]
     else:
         return wort
+
+# Sortierschlüssel
+# ================
+#
+# Duden-Sortierung für die Wortliste
+#
+# >>> from werkzeug import sortkey_duden
+# >>> sortkey_duden([u"Abflußröhren"])
+# u'abflussrohren a*bflu*szroehren'
+# >>> sortkey_duden([u"Abflußrohren"])
+# u'abflussrohren a*bflu*szro*hren'
+# >>> sortkey_duden([u"Abflussrohren"])
+# u'abflussrohren'
+#
+# >>> s = sorted([[u"Abflußröhren"], [u"Abflußrohren"], [u"Abflussrohren"]],
+# ...            key=sortkey_duden)
+# >>> print ', '.join(e[0] for e in s)
+# Abflussrohren, Abflußrohren, Abflußröhren
+#
+# Umlautumschreibung:
+#
+# ::
+
+umschrift = {
+             ord(u'A'): u'A*',
+             ord(u'Ä'): u'Ae',
+             ord(u'O'): u'O*',
+             ord(u'Ö'): u'Oe',
+             ord(u'U'): u'U*',
+             ord(u'Ü'): u'Ue',
+             ord(u'a'): u'a*',
+             ord(u'ä'): u'ae',
+             ord(u'o'): u'o*',
+             ord(u'ö'): u'oe',
+             ord(u'u'): u'u*',
+             ord(u'ü'): u'ue',
+             ord(u'ß'): u'sz',
+          }
+
+# sortkey_duden
+# -------------
+#
+# Sortiere nach erstem Feld, alphabetisch gemäß Duden-Regeln::
+
+def sortkey_duden(entry):
+
+# Sortieren nach erstem Feld (ungetrenntes Wort)::
+
+    key = entry[0]
+    
+    if len(entry) == 1:  # ein Muster pro Zeile, siehe z.B. pre-1901
+        key = join_word(key)
+
+# Großschreibung ignorieren:
+#
+# Der Duden sortiert Wörter, die sich nur in der Großschreibung unterscheiden
+# "klein vor groß" (ASCII sortiert "groß vor klein"). In der
+# `Trennmuster-Wortliste` kommen Wörter nur mit der häufiger anzutreffenden
+# Großschreibung vor, denn der TeX-Trennalgorithmus ignoriert Großschreibung.
+# ::
+
+    key = key.lower()
+
+# Ersetzungen:
+#
+# ß -> ss ::
+
+    skey = key.replace(u'ß', u'ss')
+
+# Restliche Akzente weglassen: Wandeln in Darstellung von Buchstaben mit
+# Akzent als "Grundzeichen + kombinierender Akzent". Anschließend alle
+# nicht-ASCII-Zeichen ignorieren::
+
+    skey = unicodedata.normalize('NFKD', skey)
+    skey = unicode(skey.encode('ascii', 'ignore'))
+
+# "Zweitschlüssel" für das eindeutige Einsortieren von Wörtern mit
+# gleichem Schlüssel (Masse/Maße, waren/wären, ...):
+#
+# * "*" nach aou für die Unterscheidung Grund-/Umlaut
+# * ß->sz
+#
+# ::
+
+    if key != skey:
+        subkey = key.translate(umschrift)
+        skey = u' '.join([skey,subkey])
+
+# Gib den Sortierschlüssel zurück::
+
+    return skey
+
 
 
 # udiff

@@ -33,10 +33,7 @@ import optparse, sys, os
 from copy import copy, deepcopy
 
 
-from werkzeug import WordFile, WordEntry, join_word, udiff
-# sort.py im Überverzeichnis:
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from sort import sortkey_wl, sortkey_duden
+from werkzeug import WordFile, WordEntry, join_word, udiff, sortkey_duden
 
 
 def teste_datei(datei):
@@ -319,7 +316,7 @@ def neu(wordfile, datei):
     korrekturen = open(datei, 'r')
 
     wortliste = list(wordfile)
-    wortliste_neu = deepcopy(wortliste)
+    wortliste_neu = copy(wortliste)
     words = set(entry[0] for entry in wortliste)     # vorhandene Wörter
 
     # Regeländerungen:
@@ -381,7 +378,6 @@ def doppelte(wordfile, use_first=False):
         worddict[key] = entry
 
     wortliste_neu = worddict.values() # korrigierte Liste
-    # wortliste_neu.sort(key=sortkey_wl)
     wortliste_neu.sort(key=sortkey_duden)
 
     print len(wortliste) - len(wortliste_neu), u"Einträge entfernt"

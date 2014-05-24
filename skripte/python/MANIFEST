@@ -59,6 +59,14 @@ Achtung experimentell:
     
   auf die Wortliste angewendet werden.
 
+prepare_patch.py
+  Helfer für kleine Editieraufgaben, u.a. entfernen von Doppeleinträgen,
+  Einsortieren neuer Einträge, Überschreiben mit korrigierten Einträgen, ...
+  Erstellt eine Patch-Datei.
+  
+  Aufruf: siehe ``./prepare_patch.py -h``
+
+
 analyse.py
   Sammeln und Sortieren von Teilwörtern
   
@@ -105,23 +113,35 @@ abgleich_teilwoerter.py
           Vorher in Zeile 26 ff. die gewünschte Sprachvariante
           durch ein/auskommentieren wählen.
 
+
 abgleich_praefixe.py
   Abgleich der Trennstellen zwischen Woertern mit unterschiedlichem Präfix
 
   Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
   kann (siehe Arbeitsfluss_).
 
-abgleich_sufffixe.py
+abgleich_suffixe.py
   Abgleich der Trennstellen zwischen Woertern mit unterschiedlichem Suffix.
 
   Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
   kann (siehe Arbeitsfluss_).
 
-prepare_patch.py
-  Helfer für kleine Editieraufgaben, u.a. entfernen von Doppeleinträgen.
-  Erstellt eine Patch-Datei.
+
+abgleich_neueintraege.py
+  Versuche Trennstellen neuer Wörter aus vorhandenen zu ermitteln
+
+  Übertragen von kategorisierten Trennstellen vorhandener Wörter
+  auf neu aufzunehmende, ungetrennte Wörter.
   
-  Aufruf: siehe ``./prepare_patch.py -h``
+  Erwartet eine Datei mit 1 Wort/Zeile. 
+  Pfad/Dateiname im Abschnitt Konfiguration anpassen!
+  
+  Schreibt eine Liste von Einträgen für die Wörter, welche durch Abgleich
+  mit der Datenbasis getrennt werden konnten auf stdout.
+  
+  Die Liste kann nach ``neu.todo`` gespeichert und (nach Durchsicht) mit
+  ``prepare_patch.py neu`` in die Wortliste eingepflegt werden.
+
 
 wortfugen.py
   Suche nach "Teilwortkandidaten" in der Wortliste.
@@ -134,6 +154,7 @@ vorsilben_in_teilwoertern.py
 
   Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
   kann.
+
 
 Lang-s Schreibung
 =================
@@ -167,8 +188,8 @@ Trennstellenkategorisierung mit Hilfe der Python-Skripte,
   - im Texteditor (suchen/ersetzen, regexp-replace, ...)
   
   - mit Skripten (``abgleich_praefixe.py``, 
-    		  ``abgleich_suffixe.py``, 
-    		  ``vorsilben_in_teilwoertern.py``)
+                  ``abgleich_suffixe.py``, 
+                  ``vorsilben_in_teilwoertern.py``)
   
 * Rückübertragen der Korrekturen auf die Wortliste
 

@@ -12,9 +12,14 @@
 # auf neu aufzunehmende, ungetrennte Wörter.
 #
 # Erwartet eine Datei mit 1 Wort/Zeile.
-
-# Erstellt einen Patch mit den Wörtern, welche durch Abgleich mit der
-# Datenbasis getrennt werden konnten.
+# Pfad/Dateiname im Abschnitt Konfiguration anpassen!
+# 
+# Schreibt eine Liste von Einträgen für die Wörter, welche durch Abgleich
+# mit der Datenbasis getrennt werden konnten auf stdout.
+# 
+# Die Liste kann nach ``neu.todo`` gespeichert und (nach Durchsicht) mit
+# ``prepare_patch.py neu`` in die Wortliste eingepflegt werden.
+#
 # ::
 
 import re, sys, codecs, copy, os
@@ -23,16 +28,11 @@ from expand_teilwoerter import expand_wordfile
 
 # Konfiguration
 # -------------
-#
-# Sprachvarianten
-# ~~~~~~~~~~~~~~~
-# Sprach-Tag nach [BCP47]_::
 
-# sprachvariante = 'de-1901'         # "traditionell"
-sprachvariante = 'de-1996'         # Reformschreibung
-# sprachvariante = 'de-1901-x-GROSS'   # ohne ß (Schweiz oder GROSS)
-# sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
-# sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
+# Pfad zur Datei mit den neu einzutragenden Wörtern::
+
+neuwortdatei = "zusatz-de-1996-aspell-compact"
+
 
 # Funktionen
 # -----------
@@ -714,8 +714,6 @@ if __name__ == '__main__':
     # wordfile = WordFile('wortliste-expandiert') # + Teilwort-Entries
     # words = wordfile.asdict()
     
-
-    neuwortdatei = "zusatzwörter-de-1996-hunspell-compact"
     neueintraege = []
     neueintraege_grossklein = []
     restwoerter = []

@@ -28,105 +28,14 @@ usage = u'%prog [Optionen] [Eingangsdatei]\n' + __doc__
 import unicodedata, sys, optparse, os
 # path for local Python modules
 sys.path.append(os.path.join(os.path.dirname(__file__), 'python'))
-from werkzeug import WordFile, WordEntry, join_word, udiff
+from werkzeug import WordFile, WordEntry, join_word, udiff, sortkey_duden
 
-# Sortierschlüssel
-# ================
-#
-# Umlautumschreibung:
-#
-# ::
 
-umschrift = {
-             ord(u'A'): u'A*',
-             ord(u'Ä'): u'Ae',
-             ord(u'O'): u'O*',
-             ord(u'Ö'): u'Oe',
-             ord(u'U'): u'U*',
-             ord(u'Ü'): u'Ue',
-             ord(u'a'): u'a*',
-             ord(u'ä'): u'ae',
-             ord(u'o'): u'o*',
-             ord(u'ö'): u'oe',
-             ord(u'u'): u'u*',
-             ord(u'ü'): u'ue',
-             ord(u'ß'): u'sz',
-          }
-
-# sortkey_duden
-# -------------
-#
-# Sortiere nach erstem Feld, alphabetisch gemäß Duden-Regeln::
-
-def sortkey_duden(entry):
-
-# Sortieren nach erstem Feld (ungetrenntes Wort)::
-
-    key = entry[0]
-    
-    if len(entry) == 1:  # ein Muster pro Zeile, siehe z.B. pre-1901
-        key = join_word(key)
-
-# Großschreibung ignorieren:
-#
-# Der Duden sortiert Wörter, die sich nur in der Großschreibung unterscheiden
-# "klein vor groß" (ASCII sortiert "groß vor klein"). In der
-# `Trennmuster-Wortliste` kommen Wörter nur mit der häufiger anzutreffenden
-# Großschreibung vor, denn der TeX-Trennalgorithmus ignoriert Großschreibung.
-# ::
-
-    key = key.lower()
-
-# Ersetzungen:
-#
-# ß -> ss ::
-
-    skey = key.replace(u'ß', u'ss')
-
-# Restliche Akzente weglassen: Wandeln in Darstellung von Buchstaben mit
-# Akzent als "Grundzeichen + kombinierender Akzent". Anschließend alle
-# nicht-ASCII-Zeichen ignorieren::
-
-    skey = unicodedata.normalize('NFKD', skey)
-    skey = unicode(skey.encode('ascii', 'ignore'))
-
-# "Zweitschlüssel" für das eindeutige Einsortieren von Wörtern mit
-# gleichem Schlüssel (Masse/Maße, waren/wären, ...):
-#
-# * "*" nach aou für die Unterscheidung Grund-/Umlaut
-# * ß->sz
-#
-# ::
-
-    if key != skey:
-        subkey = key.translate(umschrift)
-        skey = u' '.join([skey,subkey])
-
-# Gib den Sortierschlüssel zurück::
-
-    return skey
-
-# Test:
-#
-# >>> from sort import sortkey_duden
-# >>> sortkey_duden([u"Abflußröhren"])
-# u'abflussrohren a*bflu*szroehren'
-# >>> sortkey_duden([u"Abflußrohren"])
-# u'abflussrohren a*bflu*szro*hren'
-# >>> sortkey_duden([u"Abflussrohren"])
-# u'abflussrohren'
-#
-# >>> s = sorted([[u"Abflußröhren"], [u"Abflußrohren"], [u"Abflussrohren"]],
-# ...            key=sortkey_duden)
-# >>> print ', '.join(e[0] for e in s)
-# Abflussrohren, Abflußrohren, Abflußröhren
-#
-#
 # sortkey_wl
 # ----------
 #
-# Sortierschlüssel für den bisher genutzten ("W.-Lemberg-") Algorithmus,
-# d.h # Emulation von:
+# Sortierschlüssel für den früher genutzten ("W.-Lemberg-") Algorithmus,
+# d.h Emulation von:
 #
 # * Sortieren nach gesamter Zeile
 # * mit dem Unix-Aufruf `sort -d`

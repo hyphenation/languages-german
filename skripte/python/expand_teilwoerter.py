@@ -17,10 +17,7 @@
 
 import os, re, sys, codecs, copy
 from werkzeug import (WordFile, WordEntry, join_word,
-                      sprachabgleich, toggle_case)
-# sort.py im Überverzeichnis:
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from sort import sortkey_duden
+                      sprachabgleich, toggle_case, sortkey_duden)
 
 
 # Funktionen
@@ -194,6 +191,10 @@ def expand_wordfile(wordfile):
     
     return words
 
+def exists(wort):
+    key = join_word(wort)
+    return (key.title() in words) or (key.lower() in words) or (len(wort)<4)
+
 if __name__ == '__main__':
 
     # sys.stdout mit UTF8 encoding.
@@ -202,7 +203,37 @@ if __name__ == '__main__':
 # `Wortliste` einlesen::
 
     wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
+
+    # Wichtung:
+    sprachvariante = 'de-1996'
+    sprachvariante = 'de-1901'
+    words = wordfile.asdict()
+    for entry in words.itervalues():
+        wort = entry.get(sprachvariante)
+        if not wort:
+            continue
+        if (u'<=' in wort or u'=>' in wort or u'==' in wort):
+            continue
+        parts = [part for part in multisplit(wort)
+                 if u'=' not in part]
+        if len(parts) == 3:
+            if parts[1] == u'zu':
+                continue
+            if (exists(parts[0]) and exists(''.join(parts[1:]))
+                and not(exists(parts[-1]) 
+                        and (exists(''.join(parts[:-1])) or exists(''.join(parts[:-1])+u's')))
+               ):
+                for i in range(1,len(parts)):
+                    parts[i] = parts[i].lower()
+                wort = u'=='.join([parts[0], u'='.join(parts[1:])])
+                entry.set(wort, sprachvariante)
+                sprachabgleich(entry)
+                print unicode(entry)
+            
+    sys.exit()
+        
     
+
     words = expand_wordfile(wordfile)
 
     print len(words), "expandiert"
