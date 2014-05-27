@@ -29,7 +29,7 @@ AKTION ist eine von:
 # 
 # ::
 
-import optparse, sys, os
+import optparse, sys, os, codecs
 from copy import copy, deepcopy
 
 
@@ -332,7 +332,7 @@ def neu(wordfile, datei):
             continue
         # Eintrag ggf. komplettieren:
         if u';' in line:
-            key = u';'.split(line)[0]
+            key = line.split(u';')[0]
         else:
             key = join_word(line)
             for r1, r2 in zip(r1901, r1996):
@@ -347,13 +347,13 @@ def neu(wordfile, datei):
                 line = u'%s;%s' % (key, line)
         # Test auf "Neuwert":
         if key in words:
-            print key.encode('utf8'), 'schon vorhanden'
+            print key, 'schon vorhanden'
             continue
         if key.lower() in words or key.title() in words:
-            print (key.encode('utf8'),
-                   'mit anderer Groß-/Kleinschreibung vorhanden')
+            print key, 'mit anderer Groß-/Kleinschreibung vorhanden'
             continue
         wortliste_neu.append(WordEntry(line))
+        words.add(key)
 
     # Sortieren
     wortliste_neu.sort(key=sortkey_duden)
@@ -386,6 +386,9 @@ def doppelte(wordfile, use_first=False):
 # Default-Aktion::
 
 if __name__ == '__main__':
+
+    # sys.stdout mit UTF8 encoding.
+    sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
 # Optionen::
 

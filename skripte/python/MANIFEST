@@ -30,10 +30,10 @@ Module
 ======
 
 werkzeug.py
-  Python-Module für die Arbeit mit der `Wortliste` 
+  Python-Module für die Arbeit mit der `Wortliste`
   Wird von den anderen Python-Skripten importiert.
-  
-  Aufruf mit ``python werkzeug.py`` startet einen 
+
+  Aufruf mit ``python werkzeug.py`` startet einen
   Test der Werkzeuge und der inneren Konsistenz der Wortliste
   (Doppeleinträge, Übereinstimmung Schlüssel-Trennmuster).
 
@@ -45,7 +45,7 @@ Siehe auch den Abschnitt `Arbeitsfluss`_ am Ende dieses Dokumentes.
 Achtung experimentell:
 
 * Die Skripte wurden für die eigene Arbeit mit der Wortliste entwickelt und
-  erfordern zum Teil Anpassungen im Quelltext, eine gewisse Einarbeitung, 
+  erfordern zum Teil Anpassungen im Quelltext, eine gewisse Einarbeitung,
   Lesen der enthaltenen Dokumentation und gegebenenfalls Rücksprachen mit
   dem Autor.
 
@@ -54,24 +54,24 @@ Achtung experimentell:
   ``wortliste.patch``.
 
 * Die Änderungen in dieser Datei können nach Korrekturlesen mittels ::
-  
+
     patch ../../wortliste < wortliste.patch
-    
+
   auf die Wortliste angewendet werden.
 
 prepare_patch.py
   Helfer für kleine Editieraufgaben, u.a. entfernen von Doppeleinträgen,
   Einsortieren neuer Einträge, Überschreiben mit korrigierten Einträgen, ...
   Erstellt eine Patch-Datei.
-  
+
   Aufruf: siehe ``./prepare_patch.py -h``
 
 
 analyse.py
   Sammeln und Sortieren von Teilwörtern
-  
+
   Aufruf: ``python analyse.py``
-  
+
           Vorher in Zeile 355 ff. die gewünschte Sprachvariante
           durch ein/auskommentieren wählen.
 
@@ -87,27 +87,27 @@ analyse.py
 abgleich_endungen.py
   Abgleich der Trennstellen für Ableitungen/Varianten mit unterschiedlicher
   Endung.
-  
+
   Die zu vergleichenden Endungen sind im Skript in der Liste ``endungen``
-  definiert.  
+  definiert.
 
 
 abgleich_sprachvarianten.py
   Abgleich der Trennstellen zwischen Sprachvarianten
-  
+
   Aufruf: ``python abgleich_sprachvarianten.py``
-  
+
   * Übertragen von kategorisierten Trennstellen zwischen Sprachvarianten
     desselben Wortes, und/oder
 
   * Zusammenfassen von Feldern mit gleichem Inhalt wenn das Ergebnis ein
     wohlgeformter Eintrag ist.
-  
+
 
 abgleich_teilwoerter.py
   Übertragen von kategorisierten Trennstellen von Teilwörtern auf
   Vorkommen dieser Teilwörter mit unkategorisierten Trennstellen.
-  
+
   Aufruf: ``python abgleich_teilwoerter.py``
 
           Vorher in Zeile 26 ff. die gewünschte Sprachvariante
@@ -132,23 +132,23 @@ abgleich_neueintraege.py
 
   Übertragen von kategorisierten Trennstellen vorhandener Wörter
   auf neu aufzunehmende, ungetrennte Wörter.
-  
-  Erwartet eine Datei mit 1 Wort/Zeile. 
+
+  Erwartet eine Datei mit 1 Wort/Zeile.
   Pfad/Dateiname im Abschnitt Konfiguration anpassen!
-  
+
   Schreibt eine Liste von Einträgen für die Wörter, welche durch Abgleich
   mit der Datenbasis getrennt werden konnten auf stdout.
-  
+
   Die Liste kann nach ``neu.todo`` gespeichert und (nach Durchsicht) mit
   ``prepare_patch.py neu`` in die Wortliste eingepflegt werden.
 
 
 wortfugen.py
   Suche nach "Teilwortkandidaten" in der Wortliste.
-  
+
 test_teilwoerter.py
   Test der Markierung von Komposita in der Wortliste
-  
+
 vorsilben_in_teilwoertern.py
   Spezialwerkzeug zur Präfixmarkierung.
 
@@ -162,7 +162,7 @@ Lang-s Schreibung
 s2long-s.py
   Automatische Bestimmung der S-Schreibung auf Basis der Silbentrennung
   in der `Wortliste der deutschsprachigen Trennmustermannschaft`.
-  
+
   Gesamtwortzahl (traditionelle Rechtschreibung): 422398
   Automatisch konvertiert: 418440
   Kategorisierung der Trennstellen fehlt: 3903
@@ -171,33 +171,38 @@ s2long-s.py
 Arbeitsfluss
 ============
 
-Trennstellenkategorisierung mit Hilfe der Python-Skripte, 
+Trennstellenkategorisierung mit Hilfe der Python-Skripte,
 2-stufiges Vorgehen:
 
 * Erstellen einer Liste mit Teilwörtern (Zerlegung ausgezeichneter Komposita
   an den Wortfugen "="):
-  
+
   - in `analyse.py` die gewünschte Sprachvariante ein-/auskommentieren.
-  
+
   - ``python analyse.py``
-  
+
   Die erstellte Wortliste ist ``teilwoerter-<Sprachtag>.txt``.
-  
-* Bearbeiten der generierten Datei 
+
+* Bearbeiten der generierten Datei
 
   - im Texteditor (suchen/ersetzen, regexp-replace, ...)
-  
-  - mit Skripten (``abgleich_praefixe.py``, 
-                  ``abgleich_suffixe.py``, 
+
+  - mit Skripten (``abgleich_praefixe.py``,
+<<<<<<< HEAD
+                  ``abgleich_suffixe.py``,
                   ``vorsilben_in_teilwoertern.py``)
-  
+=======
+    		  ``abgleich_suffixe.py``,
+    		  ``vorsilben_in_teilwoertern.py``)
+>>>>>>> spell
+
 * Rückübertragen der Korrekturen auf die Wortliste
 
   - in `abgleich_teilwoerter.py` die gewünschte Sprachvariante und
     Bearbeitungsfunktion ein-/aukommentieren.
-  
+
   - ``python abgleich_teilwoerter.py``
 
   - Prüfen der Kontrollausgabe, ggf. Korrektur von ``wortliste.patch``.
-  
+
   - ``patch ../../wortliste < wortliste.patch``

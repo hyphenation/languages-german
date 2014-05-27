@@ -22,7 +22,7 @@
 #
 # ::
 
-import re, sys, codecs, copy, os
+import sys, codecs
 from werkzeug import WordFile, WordEntry, join_word, toggle_case
 from expand_teilwoerter import expand_wordfile
 

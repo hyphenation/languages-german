@@ -232,8 +232,14 @@ if __name__ == '__main__':
             
     sys.exit()
         
-    
+if __name__ == '__main__':
 
+    # sys.stdout mit UTF8 encoding.
+    sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
+
+# `Wortliste` einlesen::
+
+    wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
     words = expand_wordfile(wordfile)
 
     print len(words), "expandiert"
