@@ -13,10 +13,10 @@
 #
 # Erwartet eine Datei mit 1 Wort/Zeile.
 # Pfad/Dateiname im Abschnitt Konfiguration anpassen!
-# 
+#
 # Schreibt eine Liste von Einträgen für die Wörter, welche durch Abgleich
 # mit der Datenbasis getrennt werden konnten auf stdout.
-# 
+#
 # Die Liste kann nach ``neu.todo`` gespeichert und (nach Durchsicht) mit
 # ``prepare_patch.py neu`` in die Wortliste eingepflegt werden.
 #
@@ -32,7 +32,6 @@ from expand_teilwoerter import expand_wordfile
 # Pfad zur Datei mit den neu einzutragenden Wörtern::
 
 neuwortdatei = "zusatz-de-1996-aspell-compact"
-
 
 # Funktionen
 # -----------
@@ -61,8 +60,7 @@ def praefixabgleich(key, praefix, grossklein=False):
     # print "fundum", key, unicode(entry)
     for wort in altentry[1:]:
         if not wort.startswith(u'-'):
-            if grossklein:
-                wort = toggle_case(wort)
+            wort = wort.lower()
             wort = u'<'.join([praefix, wort])
         entry.append(wort)
 
@@ -84,16 +82,17 @@ praefixe = [u'abo',
             u'af-ro',
             u'ag-ro',
             u'al-lergo',
+            u'al-lein',
             u'all',
             u'als',
             u'am-bi',
             u'ami-no',
-            u'an',
             u'an-dro',
             u'an-gio',
             u'an-thro-po',
             u'an-ti',
             u'ang-lo',
+            u'an',
             u'apo',
             u'ar-chaeo',
             u'ar-che',
@@ -146,13 +145,13 @@ praefixe = [u'abo',
             u'en-te-ro',
             u'ent',
             u'epi',
-            u'er',
             u'er-go',
+            u'er',
             u'es-chato',
             u'eth-no',
             u'ety-mo',
-            u'ex',
             u'ext-ro',
+            u'ex',
             u'fe-ro',
             u'fem-to',
             u'fer-ro',
@@ -161,11 +160,11 @@ praefixe = [u'abo',
             u'fran-ko',
             u'für',
             u'ga-so',
-            u'ge',
             u'ge-gen',
             u'ge-no',
             u'ge-ron-to',
             u'geo',
+            u'ge',
             u'gi-ga',
             u'gi-gan-to',
             u'go-no',
@@ -445,6 +444,7 @@ endungen = [
             (u'', u'>chen'),
             (u'', u'>heit'),
             (u'', u'>keit'),
+            (u'', u'>los'),
             (u'', u'>schaft'),
             (u'', u'>schaft'),
             (u'', u'>wei-se'),
@@ -658,7 +658,7 @@ def zerlege(s):
 # Zerlege String, wenn die Teile in der Wortliste vorhanden sind, setze
 # sie neu zusammen und übernehme die Trennmarkierer:
 
-        
+
 def trenne_key(key, grossklein = False):
     entries = []
     for k1, k2 in zerlege(key):
@@ -676,7 +676,7 @@ def trenne_key(key, grossklein = False):
                     e1 = [e1[1]] * len(e2)
                 elif len(e2) == 2:
                     e2 = [e2[1]] * len(e1)
-                else:           
+                else:
                     continue
             entry = WordEntry(key)
             for w1, w2 in zip(e1,e2)[1:]:
@@ -709,14 +709,19 @@ if __name__ == '__main__':
 
     wordfile = WordFile('../../wortliste')
     words = expand_wordfile(wordfile)
-    
+
+    for alt, neu in endungen:
+        words.pop(join_word(neu), None)
+
+
     # # schon expandierte Liste:
     # wordfile = WordFile('wortliste-expandiert') # + Teilwort-Entries
     # words = wordfile.asdict()
-    
-    neueintraege = []
-    neueintraege_grossklein = []
-    restwoerter = []
+
+    neue = []
+    neue_grossklein = []
+    neue_doppelt = []
+    rest = []
 
 # Erstellen der neuen Einträge::
 
@@ -731,17 +736,17 @@ if __name__ == '__main__':
 
         entry = words.get(key)
         if entry:
-            neueintraege.append(entry)
+            neue.append(entry)
             continue
         # kleingeschrieben
         entry = words.get(key.lower())
         if entry:
-            neueintraege_grossklein.append(entry)
+            neue_grossklein.append(entry)
             continue
         # Großgeschrieben
         entry = words.get(key.title())
         if entry:
-            neueintraege_grossklein.append(entry)
+            neue_grossklein.append(entry)
             continue
 
 # Endungsabgleich::
@@ -749,7 +754,7 @@ if __name__ == '__main__':
         for alt, neu in endungen:
             entry = endungsabgleich(key, alt, neu, grossklein=False)
             if entry:
-                neueintraege.append(entry)
+                neue.append(entry)
                 OK = True
                 # break
         if OK:
@@ -758,7 +763,7 @@ if __name__ == '__main__':
         for alt, neu in endungen:
             entry = endungsabgleich(key, alt, neu, grossklein=True)
             if entry:
-                neueintraege_grossklein.append(entry)
+                neue_grossklein.append(entry)
                 OK = True
                 # break
         if OK:
@@ -769,12 +774,12 @@ if __name__ == '__main__':
         for praefix in praefixe:
             entry = praefixabgleich(key, praefix, grossklein=False)
             if entry:
-                neueintraege.append(entry)
+                neue.append(entry)
                 OK = True
                 break
             entry = praefixabgleich(key, praefix, grossklein=True)
             if entry:
-                neueintraege_grossklein.append(entry)
+                neue_grossklein.append(entry)
                 OK = True
                 break
         if OK:
@@ -784,30 +789,53 @@ if __name__ == '__main__':
 
         entries = trenne_key(key, grossklein=False)
         if entries:
-            neueintraege.extend(entries)
+            neue.extend(entries)
             continue
         entries = trenne_key(key, grossklein=True)
         if entries:
-            neueintraege_grossklein.extend(entries)
+            neue_grossklein.extend(entries)
             continue
 
 # Nicht gefundene Wörter::
 
-        restwoerter.append(key)
+        rest.append(key)
 
+
+# Mehrdeutige aussortieren::
+
+    keys = set()
+    doppelkeys = set()
+
+    # doppelte keys finden:
+    for entry in neue + neue_grossklein:
+        key = entry[0].lower()
+        if key in keys:
+            doppelkeys.add(key)
+        keys.add(key)
+
+    # doppelte Einträge "verlegen":
+    for entry in neue + neue_grossklein:
+        if key in doppelkeys:
+            neue_doppelt.append(entry)
 
 # Ausgabe::
 
-    print u'# als Teilwörter'
-    for entry in neueintraege:
-        print unicode(entry)
-    print
-    print u'# als Teilwörter (andere Großschreibung)'
-    for entry in neueintraege_grossklein:
+    print u'\n# eindeutig abgeleitet'
+    for entry in neue:
+        if entry[0].lower() not in doppelkeys:
+            print unicode(entry)
+
+    print u'\n# eindeutig abgeleitet (andere Großschreibung)'
+    for entry in neue_grossklein:
+        if entry[0].lower() not in doppelkeys:
+            print unicode(entry)
+
+    print u'\n# mehrdeutig abgeleitet'
+    for entry in neue_doppelt:
         print unicode(entry)
 
-    outfile = open(neuwortdatei+'-rest', 'w')
+    outfile = open(neuwortdatei+'.rest', 'w')
 
-    for wort in restwoerter:
+    for wort in rest:
         outfile.write(wort.encode('utf8')+'\n')
     outfile.close()

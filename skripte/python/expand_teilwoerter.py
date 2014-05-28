@@ -112,6 +112,8 @@ def multisplit(wort):
             if u'==' in p2:
                 parts.append(p2)
                 continue
+            p2 = p2.replace(u'<=', u'<')
+            p2 = p2.replace(u'=>', u'>')
             for p1 in multisplitter(p2, u'='):
                 parts.append(p1)
     if wort[:2].istitle():
@@ -182,12 +184,13 @@ def expand_wordfile(wordfile):
             entries = split_entry(entry)
         except IndexError:  # unterschiedliche Zerlegung je nach Sprache
             # print "problematisch", unicode(entry)
-            words[entry[0].lower()] = entry
+            words[entry[0]] = entry
             continue
         
         for e in entries:
-            if len(entries) == 1 or e[0].lower() not in words:
-                words[e[0].lower()] = e
+            if len(entries) == 1 or (
+                e[0].lower() not in words and e[0].title() not in words):
+                words[e[0]] = e
     
     return words
 

@@ -347,10 +347,10 @@ def neu(wordfile, datei):
                 line = u'%s;%s' % (key, line)
         # Test auf "Neuwert":
         if key in words:
-            print key, 'schon vorhanden'
+            print key.encode('utf8'), 'schon vorhanden'
             continue
         if key.lower() in words or key.title() in words:
-            print key, 'mit anderer Groß-/Kleinschreibung vorhanden'
+            print key.encode('utf8'), 'mit anderer Groß-/Kleinschreibung vorhanden'
             continue
         wortliste_neu.append(WordEntry(line))
         words.add(key)
@@ -380,15 +380,12 @@ def doppelte(wordfile, use_first=False):
     wortliste_neu = worddict.values() # korrigierte Liste
     wortliste_neu.sort(key=sortkey_duden)
 
-    print len(wortliste) - len(wortliste_neu), u"Einträge entfernt"
+    print len(wortliste) - len(wortliste_neu), "Einträge entfernt"
     return (wortliste, wortliste_neu)
 
 # Default-Aktion::
 
 if __name__ == '__main__':
-
-    # sys.stdout mit UTF8 encoding.
-    sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
 # Optionen::
 
@@ -451,6 +448,6 @@ if __name__ == '__main__':
         # print patch
         patchfile = open(options.patchfile, 'w')
         patchfile.write(patch + '\n')
-        print u'Änderungen nach %s geschrieben' % options.patchfile
+        print 'Änderungen nach %s geschrieben' % options.patchfile
     else:
-        print u'keine Änderungen'
+        print 'keine Änderungen'
