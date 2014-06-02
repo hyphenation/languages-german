@@ -31,7 +31,9 @@ from expand_teilwoerter import expand_wordfile
 
 # Pfad zur Datei mit den neu einzutragenden Wörtern::
 
-neuwortdatei = "zusatz-de-1996-aspell-compact"
+# neuwortdatei = "zusatz-de-1996-aspell-compact"
+# neuwortdatei = "spell/dehyph-exptl-MV-KorrekturenA-Z.txt"
+neuwortdatei = "DDR.txt"
 
 # Funktionen
 # -----------
@@ -727,11 +729,10 @@ if __name__ == '__main__':
 
     for line in open(neuwortdatei):
         OK = False
-        key = line.decode('utf8').strip()
-
-        if len(key) <= 3:
-            continue
-
+        line = line.decode('utf8').strip()
+        newentry = WordEntry(line)
+        key = newentry[0]
+        
 # Test auf vorhandene (Teil-) Wörter:
 
         entry = words.get(key)
@@ -754,6 +755,7 @@ if __name__ == '__main__':
         for alt, neu in endungen:
             entry = endungsabgleich(key, alt, neu, grossklein=False)
             if entry:
+                entry.comment = newentry.comment
                 neue.append(entry)
                 OK = True
                 # break
@@ -763,6 +765,7 @@ if __name__ == '__main__':
         for alt, neu in endungen:
             entry = endungsabgleich(key, alt, neu, grossklein=True)
             if entry:
+                entry.comment = newentry.comment
                 neue_grossklein.append(entry)
                 OK = True
                 # break
@@ -774,11 +777,13 @@ if __name__ == '__main__':
         for praefix in praefixe:
             entry = praefixabgleich(key, praefix, grossklein=False)
             if entry:
+                entry.comment = newentry.comment
                 neue.append(entry)
                 OK = True
                 break
             entry = praefixabgleich(key, praefix, grossklein=True)
             if entry:
+                entry.comment = newentry.comment
                 neue_grossklein.append(entry)
                 OK = True
                 break
@@ -798,20 +803,20 @@ if __name__ == '__main__':
 
 # Nicht gefundene Wörter::
 
-        rest.append(key)
+        rest.append(newentry)
 
 
 # Mehrdeutige aussortieren::
 
-    keys = set()
+    entries = {}
     doppelkeys = set()
 
     # doppelte keys finden:
     for entry in neue + neue_grossklein:
         key = entry[0].lower()
-        if key in keys:
-            doppelkeys.add(key)
-        keys.add(key)
+        if key in entries and entry != entries[key]:
+                doppelkeys.add(key)
+        entries[key] = entry
 
     # doppelte Einträge "verlegen":
     for entry in neue + neue_grossklein:
@@ -834,8 +839,7 @@ if __name__ == '__main__':
     for entry in neue_doppelt:
         print unicode(entry)
 
-    outfile = open(neuwortdatei+'.rest', 'w')
+    print u'\n# Rest'
 
-    for wort in rest:
-        outfile.write(wort.encode('utf8')+'\n')
-    outfile.close()
+    for entry in rest:
+        print unicode(entry)
