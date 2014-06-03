@@ -43,12 +43,6 @@ if ($#ARGV != 1) {
       "  vor dem letzten Buchstaben in der Ausgabe.\n";
 }
 
-sub before_exit {
-  chdir($ENV{HOME}) || chdir('/');
-}
-
-$SIG{__DIE__} = 'before_exit';
-
 my $trennmuster = File::Spec->rel2abs($ARGV[0]);
 my $translation = File::Spec->rel2abs($ARGV[1]);
 my $tempdir = File::Temp::tempdir(CLEANUP => 1);
@@ -130,6 +124,8 @@ while (@eingabe) {
   print @ergebnis;
 }
 
-before_exit();
+END {
+  chdir($ENV{HOME}) || chdir('/');
+}
 
 # eof

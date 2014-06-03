@@ -89,8 +89,8 @@ sub entferne_marker {
 
 
 while (<>) {
-  chop;
   next if /^#/;
+  chop;
 
   # Entferne Kommentare.
   s/#.*$//;
