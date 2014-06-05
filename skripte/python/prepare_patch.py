@@ -34,7 +34,7 @@ from copy import copy, deepcopy
 
 
 from werkzeug import WordFile, WordEntry, join_word, udiff, sortkey_duden
-
+from abgleich_sprachvarianten import regelaenderungen
 
 def teste_datei(datei):
     """Teste, ob Datei geöffnet werden kann."""
@@ -319,10 +319,6 @@ def neu(wordfile, datei):
     wortliste_neu = copy(wortliste)
     words = set(entry[0] for entry in wortliste)     # vorhandene Wörter
 
-    # Regeländerungen:
-    r1901 = (u'-st', u'{ck/k-k}')
-    r1996 = (u's-t', u'-ck')
-    
     for line in korrekturen:
         if line.startswith('#'):
             continue
@@ -333,18 +329,8 @@ def neu(wordfile, datei):
         # Eintrag ggf. komplettieren:
         if u';' in line:
             key = line.split(u';')[0]
-        else:
-            key = join_word(line)
-            for r1, r2 in zip(r1901, r1996):
-                if r1 in line:
-                    line = u'%s;-2-;%s;%s' % (key, line, line.replace(r1,r2))
-                if r2 in line:
-                    line = u'%s;-2-;%s;%s' % (key, line.replace(r2,r1), line)
-            # 'ßt' und Schluß-ß auch in de-1996 möglich (langer Vokal)
-            if u'sst' in line or line.endswith(u'ss'):
-                line = u'%s;-2-;%s;' % (key, line)
-            if u';' not in line: # keine Regeländerung im Wort
-                line = u'%s;%s' % (key, line)
+        else: # getrenntes Wort
+            line = regelaenderungen(line)
         # Test auf "Neuwert":
         if key in words:
             print key.encode('utf8'), 'schon vorhanden'

@@ -23,7 +23,8 @@
 # ::
 
 import sys, codecs
-from werkzeug import WordFile, WordEntry, join_word, toggle_case
+from collections import defaultdict  # Wörterbuch mit Default
+from werkzeug import WordFile, WordEntry, join_word, toggle_case, sortkey_duden
 from expand_teilwoerter import expand_wordfile
 
 # Konfiguration
@@ -31,9 +32,10 @@ from expand_teilwoerter import expand_wordfile
 
 # Pfad zur Datei mit den neu einzutragenden Wörtern::
 
-# neuwortdatei = "zusatz-de-1996-aspell-compact"
-# neuwortdatei = "spell/dehyph-exptl-MV-KorrekturenA-Z.txt"
-neuwortdatei = "DDR.txt"
+# neuwortdatei = "spell/zusatz-de-1996-aspell-compact"
+neuwortdatei = "spell/dehyph-exptl-MV-KorrekturenA-Z.txt"
+# neuwortdatei = "spell/DDR.txt"
+neuwortdatei = 'philo.txt'
 
 # Funktionen
 # -----------
@@ -564,6 +566,7 @@ endungen = [
             (u'n', u'-er'),
             (u'n', u'-ne'),
             (u'n', u'-nen'),
+            (u'on', u'o-nis-mus'),
             (u'n', u'-nis-mus'),
             (u'n', u'r'),
             (u'n', u'st'),
@@ -701,11 +704,32 @@ def trenne_key(key, grossklein = False):
             entries.append(entry)
     return entries
 
+def filter_neuliste(neuwortdatei, words):
+    neue = []
+    for line in open(neuwortdatei):
+        line = line.decode('utf8').strip()
+        if line.startswith('#'):
+            neue.append(line)
+            continue 
+        neueintrag = WordEntry(line)
+        if neueintrag != words.get(neueintrag[0]):
+            neue.append(line)
+        else:
+            print 'Doppeleintrag:', line
+    return neue
+
 
 if __name__ == '__main__':
 
     # sys.stdout mit UTF8 encoding.
     sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
+    
+# Filtern::
+
+    # words = WordFile('../../wortliste').asdict()
+    # for line in filter_neuliste(neuwortdatei, words):
+    #     print line
+    # sys.exit()
 
 # `Wortliste` einlesen::
 
@@ -715,6 +739,8 @@ if __name__ == '__main__':
     for alt, neu in endungen:
         words.pop(join_word(neu), None)
 
+    for unwort in [u'Em']:
+        words.pop(unwort, None)
 
     # # schon expandierte Liste:
     # wordfile = WordFile('wortliste-expandiert') # + Teilwort-Entries
@@ -722,17 +748,20 @@ if __name__ == '__main__':
 
     neue = []
     neue_grossklein = []
-    neue_doppelt = []
     rest = []
 
 # Erstellen der neuen Einträge::
 
-    for line in open(neuwortdatei):
+    newentries = [WordEntry(line.decode('utf8').strip())
+            for line in open(neuwortdatei)
+           if not line.startswith('#')]
+
+    for newentry in newentries:
         OK = False
-        line = line.decode('utf8').strip()
-        newentry = WordEntry(line)
         key = newentry[0]
-        
+        # print key, unicode(newentry)
+        # continue
+
 # Test auf vorhandene (Teil-) Wörter:
 
         entry = words.get(key)
@@ -805,38 +834,72 @@ if __name__ == '__main__':
 
         rest.append(newentry)
 
-
 # Mehrdeutige aussortieren::
 
-    entries = {}
+    alle_neuen = {}
     doppelkeys = set()
+    doppelkeys_gleich = defaultdict(int)
 
     # doppelte keys finden:
     for entry in neue + neue_grossklein:
         key = entry[0].lower()
-        if key in entries and entry != entries[key]:
+        if key in alle_neuen:
+            if entry == alle_neuen[key]:
+                doppelkeys_gleich[key] += 1
+            else:
                 doppelkeys.add(key)
-        entries[key] = entry
+        alle_neuen[key] = entry
 
     # doppelte Einträge "verlegen":
-    for entry in neue + neue_grossklein:
+    eindeutige = []
+    eindeutige_grossklein = []
+    doppelte = []
+
+    for entry in neue:
+        key = entry[0].lower()
         if key in doppelkeys:
-            neue_doppelt.append(entry)
+            doppelte.append(entry)
+        elif doppelkeys_gleich[key] > 0:
+            doppelkeys_gleich[key] -= 1
+        else:
+            eindeutige.append(entry)
+
+    for entry in neue_grossklein:
+        key = entry[0].lower()
+        if key in doppelkeys:
+            doppelte.append(entry)
+        elif doppelkeys_gleich[key] > 0:
+            doppelkeys_gleich[key] -= 1
+        else:
+            eindeutige_grossklein.append(entry)
+
+
+# Vergleich mit Original::
+
+    identische = {}
+    for entry in newentries:
+        key = entry[0].lower()
+        if entry == alle_neuen.get(key):
+            identische[key] = entry
 
 # Ausgabe::
 
+    print u'\n# identisch rekonstruiert:'
+    for entry in sorted(identische.values(), key=sortkey_duden):
+        print unicode(entry)
+
     print u'\n# eindeutig abgeleitet'
-    for entry in neue:
-        if entry[0].lower() not in doppelkeys:
+    for entry in eindeutige:
+        if entry[0].lower() not in identische:
             print unicode(entry)
 
     print u'\n# eindeutig abgeleitet (andere Großschreibung)'
-    for entry in neue_grossklein:
-        if entry[0].lower() not in doppelkeys:
+    for entry in eindeutige_grossklein:
+        if entry[0].lower() not in identische:
             print unicode(entry)
 
     print u'\n# mehrdeutig abgeleitet'
-    for entry in neue_doppelt:
+    for entry in doppelte:
         print unicode(entry)
 
     print u'\n# Rest'
