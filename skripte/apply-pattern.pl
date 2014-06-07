@@ -37,7 +37,7 @@ if ($#ARGV != 1) {
   die "Aufruf:  $prog [-1] trennmuster german.tr < eingabe > ausgabe\n" .
       "\n" .
       "  `eingabe', `ausgabe' in UTF-8-Kodierung,\n" .
-      "  `trennmuster', `german.tr' in Latin-1-Kodierung\n" .
+      "  `trennmuster', `german.tr' in Latin-9-Kodierung\n" .
       "\n" .
       "  Mit Option `-1' bleiben Trennungen nach dem ersten und\n" .
       "  vor dem letzten Buchstaben in der Ausgabe.\n";
@@ -59,7 +59,7 @@ open TEMP, '>', $tempdatei
 || die "$prog: Kann temporäre Datei `$tempdatei' nicht öffnen: $!\n";
 
 binmode(STDIN, ":encoding(utf8)");  # Eingabe (wortliste) in UTF-8
-binmode(TEMP, ":encoding(latin1)"); # patgen erwartet Latin-1
+binmode(TEMP, ":encoding(latin9)"); # patgen erwartet Latin-9
 
 while (<STDIN>) {
   s/[·=|<>-]//g;

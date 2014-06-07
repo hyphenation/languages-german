@@ -99,8 +99,8 @@ TRAD = dehypht-x$(MAJOR)
 REFO = dehyphn-x$(MAJOR)
 SWISS = dehyphts-x$(MAJOR)
 
-LC_ENVVARS = LC_COLLATE=de_DE.ISO8859-1 \
-             LC_CTYPE=de_DE.ISO8859-1
+LC_ENVVARS = LC_COLLATE=de_DE.ISO8859-15 \
+             LC_CTYPE=de_DE.ISO8859-15
 
 CAT = cat
 CHDIR = cd
@@ -108,7 +108,7 @@ COPY = cp
 DATE = $(shell date '+%Y-%m-%d')
 ECHO = echo
 GIT = git
-ICONV = iconv -f latin1 -t utf-8
+ICONV = iconv -f latin9 -t utf-8
 MKDIR = mkdir -p
 PERL = perl
 PWD = pwd

@@ -44,7 +44,7 @@
 # -v  Verhindere die Ausgabe von Versalformen, wo »ß« durch »ss« ersetzt
 #     ist.
 #
-# -l  Konvertiere die Ausgabe von UTF-8 nach latin-1 (wie von »patgen«
+# -l  Konvertiere die Ausgabe von UTF-8 nach latin-9 (wie von »patgen«
 #     benötigt).
 
 use strict;
@@ -74,7 +74,7 @@ $prog =~ s@.*/@@;
 binmode(STDIN, ":encoding(utf8)");
 
 if ($opt_l) {
-  binmode(STDOUT, ":encoding(latin1)");
+  binmode(STDOUT, ":encoding(latin9)");
 }
 else {
   binmode(STDOUT, ":encoding(utf8)");

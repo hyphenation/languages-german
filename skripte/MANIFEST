@@ -43,7 +43,7 @@ extract-tex.pl
 # Option »-v« verhindert die Ausgabe von Versalformen, wo »ß« durch »ss«
 # ersetzt ist.
 #
-# Option »-l« konvertiert die Ausgabe nach latin-1 (wie von »patgen«
+# Option »-l« konvertiert die Ausgabe nach latin-9 (wie von »patgen«
 # benötigt).
 
 make-full-pattern.sh
@@ -76,7 +76,6 @@ patgen-list-diff.awk
 # 'hyph'.  Beim Aufruf des Skripts muss die Variable 'ftr' mit dem Namen
 # der Translate-Datei für Patgen vorbelegt werden:
 #   gawk -v ftr=<translate datei> ...
-# latin1
 
 patgen-list-diff.sh
 # -*- coding: utf-8 -*-

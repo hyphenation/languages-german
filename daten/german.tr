@@ -3,6 +3,8 @@
 %% defining the letters used for generating German hyphenation patterns
 %% with patgen.
 %%
+%% The encoding of this file is latin-9.
+%%
 %% created by Werner Lemberg <wl@gnu.org>
  a A
  ä Ä
@@ -40,10 +42,12 @@
  ô Ô
  ö Ö
  ø Ø
+ ½ ¼
  p P
  q Q
  r R
  s S
+ ¨ ¦
  ß
  t T
  u U
@@ -53,4 +57,6 @@
  w W
  x X
  y Y
+ ÿ ¾
  z Z
+ ¸ ´
