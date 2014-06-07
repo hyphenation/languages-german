@@ -27,14 +27,19 @@ werden.
 * Der Ersatz _sz_ für _ß_ in der traditionellen Rechtschreibung wird
   bisher nicht berücksichtigt.
 
-* Es werden bisher nur Wörter berücksichtigt, die sich in der Kodierung
-  ISO-8859-1 darstellen lassen.  Beispielsweise wird das Wort _Œuvre_
-  (`Oeuvre`) nur in der in Klammern angegebenen Transkription richtig
-  getrennt.
-
 
 
 # Änderungen
+
+## v (--)
+
+#### Trennmuster
+
+* Der Prozess der Musterberechnung wurde geändert, so dass in Patgen
+  alle im Zeichensatz ISO-8859-15 enthaltenen Buchstaben genutzt werden
+  können.  Unter anderem werden jetzt auch die Wörter _Œuvre_ und
+  _Škoda_ sicher korrekt getrennt.
+
 
 ## v0.40 (2014-05-21)
 
