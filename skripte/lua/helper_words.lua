@@ -300,29 +300,42 @@ local word = P{
    -- Ein Buchstabenkluster besteht aus aufeinanderfolgenden Buchstaben.
    -- Die Capture sammelt alle Buchstaben.
    cl_letter = C(V"letter"^1),
-   -- Die folgenden Buchstaben sind zulässig:
+   -- Die folgenden Buchstaben sind zulässig: Die Buchstaben der
+   -- Kodierung ISO-8859-15.  Bis auf ï, Ï, ý, Ý wie in daten/german.tr.
    letter = R("az", "AZ")
-   + P"Ä"
-   + P"Ö"
-   + P"Ü"
-   + P"ß" / _property_has_eszett
-   + P"à"
-   + P"á"
-   + P"â"
-   + P"ä"
-   + P"ç"
-   + P"è"
-   + P"é"
-   + P"ê"
-   + P"ë"
-   + P"í"
-   + P"î"
-   + P"ñ"
-   + P"ó"
-   + P"ô"
-   + P"ö"
-   + P"ü"
-,
+      + P"à" + P"À"
+      + P"á" + P"Á"
+      + P"ä" + P"Ä"
+      + P"â" + P"Â"
+      + P"ã" + P"Ã"
+      + P"ä" + P"Ä"
+      + P"å" + P"Å"
+      + P"æ" + P"Æ"
+      + P"ç" + P"Ç"
+      + P"è" + P"È"
+      + P"é" + P"É"
+      + P"ê" + P"Ê"
+      + P"ë" + P"Ë"
+      + P"ì" + P"Ì"
+      + P"í" + P"Í"
+      + P"î" + P"Î"
+      + P"ñ" + P"Ñ"
+      + P"ò" + P"Ò"
+      + P"ó" + P"Ó"
+      + P"ô" + P"Ô"
+      + P"õ" + P"Õ"
+      + P"ö" + P"Ö"
+      + P"ø" + P"Ø"
+      + P"œ" + P"Œ"
+      + P"š" + P"Š"
+      + P"ß" / _property_has_eszett
+      + P"ù" + P"Ù"
+      + P"ú" + P"Ú"
+      + P"û" + P"Û"
+      + P"ü" + P"Ü"
+      + P"ÿ" + P"Ÿ"
+      + P"ž" + P"Ž"
+   ,
    --
    -- Ausdrücke für Alternativen
    --
