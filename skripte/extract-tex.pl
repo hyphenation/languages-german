@@ -74,7 +74,7 @@ $prog =~ s@.*/@@;
 binmode(STDIN, ":encoding(utf8)");
 
 if ($opt_l) {
-  binmode(STDOUT, ":encoding(latin9)");
+  binmode(STDOUT, ":encoding(iso-8859-15)");
 }
 else {
   binmode(STDOUT, ":encoding(utf8)");
