@@ -115,7 +115,7 @@ class WordEntry(list):
 #
 # Kommentare (aktualisiert, wenn Kommentar vorhanden)::
 
-    comment = None
+    comment = u''
 
 # Feldbelegung:
 #
@@ -183,7 +183,7 @@ class WordEntry(list):
 
     def __unicode__(self):
         line = ';'.join(self)
-        if self.comment is not None:
+        if self.comment:
             line += ' #' + self.comment
         return line
 
@@ -354,6 +354,68 @@ class WordEntry(list):
                 self.pop()
                 self.pop()
 
+
+# Prüfe auf Vorkommen von Regeländerungen der Orthographiereform 1996.
+#
+# >>> entry = WordEntry(u'Würste;Wür-ste')
+# >>> entry.regelaenderungen()
+# >>> print unicode(entry)
+# Würste;-2-;Wür-ste;Würs-te
+# >>> entry = WordEntry(u'Würste;Würs-te')
+# >>> entry.regelaenderungen()
+# >>> print unicode(entry)
+# Würste;-2-;Wür-ste;Würs-te
+# >>> entry = WordEntry(u'Hecke;He-cke')
+# >>> entry.regelaenderungen()
+# >>> print unicode(entry)
+# Hecke;-2-;He{ck/k-k}e;He-cke
+# >>> entry = WordEntry(u'Ligusterhecke;Ligu-ster=he{ck/k-k}e')
+# >>> entry.regelaenderungen()
+# >>> print unicode(entry)
+# Ligusterhecke;-2-;Ligu-ster=he{ck/k-k}e;Ligus-ter=he-cke
+# >>> entry = WordEntry(u'Hass;Hass')
+# >>> entry.regelaenderungen()
+# >>> print unicode(entry)
+# Hass;-2-;-3-;Hass;Hass
+# >>> entry = WordEntry(u'fasst;fasst')
+# >>> entry.regelaenderungen()
+# >>> print unicode(entry)
+# fasst;-2-;-3-;fasst;fasst
+#
+# ::
+
+    def regelaenderungen(self):
+        # Regeländerungen:
+        r1901 = (u'-st', u'{ck/k-k}')
+        r1996 = (u's-t', u'-ck')
+        # kein Schluss-ss und sst in de-1901
+        # aber: 'ßt' und Schluß-ß auch in de-1996 möglich (langer Vokal)
+    
+        w1901 = self.get('de-1901')
+        w1996 = self.get('de-1996')
+        
+        for r1, r2 in zip(r1901, r1996):
+            w1901 = w1901.replace(r2,r1)
+            w1996 = w1996.replace(r1,r2)
+        if u'sst' in w1901 or w1901.endswith(u'ss'):
+            w1901 = None
+    
+        if w1901 == w1996: # keine Regeländerung im Wort
+            if len(self) > 2:
+                self.conflate_fields()
+            return
+        elif w1901 is None:
+            self.extend( ['']*(5-len(self)) )
+            self[1] = u'-2-'
+            self[2] = u'-3-'
+            self[3] = w1996
+            self[4] = w1996
+        else:
+            self.extend( ['']*(4-len(self)) )
+            self[1] = u'-2-'
+            self[2] = w1901
+            self[3] = w1996
+            
 
 
 # Funktionen
@@ -731,25 +793,32 @@ def toggle_case(wort):
 # >>> print ', '.join(e[0] for e in s)
 # Abflussrohren, Abflußrohren, Abflußröhren
 #
-# Umlautumschreibung:
+# Umschreibung
 #
-# ::
+# Ligaturen auflösen und andere "normalisierunde" Ersetzungen für den
+# (Haupt-)Sortierschlüssel (Akzente werden über ``unicodedata.normalize``
+# entfernt)::
 
-umschrift = {
-             ord(u'A'): u'A*',
-             ord(u'Ä'): u'Ae',
-             ord(u'O'): u'O*',
-             ord(u'Ö'): u'Oe',
-             ord(u'U'): u'U*',
-             ord(u'Ü'): u'Ue',
-             ord(u'a'): u'a*',
-             ord(u'ä'): u'ae',
-             ord(u'o'): u'o*',
-             ord(u'ö'): u'oe',
-             ord(u'u'): u'u*',
-             ord(u'ü'): u'ue',
-             ord(u'ß'): u'sz',
-          }
+umschrift_skey = {
+                  ord(u'æ'): u'ae',
+                  ord(u'œ'): u'oe',
+                  ord(u'ſ'): u's',
+                 }
+
+# "Zweitschlüssel" zur Unterscheidung von Umlauten/SZ und Basisbuchstaben::
+
+umschrift_subkey = {
+                    ord(u'a'): u'a*',
+                    ord(u'å'): u'aa',
+                    ord(u'ä'): u'ae',
+                    ord(u'o'): u'o*',
+                    ord(u'ö'): u'oe',
+                    ord(u'ø'): u'oe',
+                    ord(u'u'): u'u*',
+                    ord(u'ü'): u'ue',
+                    ord(u'ß'): u'sz',
+                   }
+
 
 # sortkey_duden
 # -------------
@@ -785,6 +854,7 @@ def sortkey_duden(entry):
 # Akzent als "Grundzeichen + kombinierender Akzent". Anschließend alle
 # nicht-ASCII-Zeichen ignorieren::
 
+    skey = skey.translate(umschrift_skey)
     skey = unicodedata.normalize('NFKD', skey)
     skey = unicode(skey.encode('ascii', 'ignore'))
 
@@ -797,8 +867,8 @@ def sortkey_duden(entry):
 # ::
 
     if key != skey:
-        subkey = key.translate(umschrift)
-        skey = u' '.join([skey,subkey])
+        subkey = key.translate(umschrift_subkey)
+        skey = u'%s %s' % (skey,subkey)
 
 # Gib den Sortierschlüssel zurück::
 

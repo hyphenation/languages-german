@@ -48,49 +48,6 @@ def conflate(wortliste):
         entry.conflate_fields()
         continue
 
-# Prüfe ein getrenntes Wort auf Vorkommen von Regeländerungen der
-# Orthographiereform 1996.
-# Gib eine Eintragszeile zurück.
-#
-# >>> from abgleich_sprachvarianten import regelaenderungen
-# >>> print regelaenderungen(u'Wür-ste')
-# Würste;-2-;Wür-ste;Würs-te
-# >>> print regelaenderungen(u'Würs-te')
-# Würste;-2-;Wür-ste;Würs-te
-# >>> print regelaenderungen(u'He-cke')
-# Hecke;-2-;He{ck/k-k}e;He-cke
-# >>> print regelaenderungen(u'Ligu-ster=he-cke')
-# Ligusterhecke;-2-;Ligu-ster=he{ck/k-k}e;Ligus-ter=he-cke
-# >>> print regelaenderungen(u'Hass')
-# Hass;-2-;-3-;Hass;Hass
-# >>> print regelaenderungen(u'fasst')
-# fasst;-2-;-3-;fasst;fasst
-#
-# ::
-
-def regelaenderungen(wort):
-    # Regeländerungen:
-    r1901 = (u'-st', u'{ck/k-k}')
-    r1996 = (u's-t', u'-ck')
-    # kein Schluss-ss und sst in de-1901
-    # aber: 'ßt' und Schluß-ß auch in de-1996 möglich (langer Vokal)
-
-    w1901, w1996 = wort, wort
-    for r1, r2 in zip(r1901, r1996):
-        w1901 = w1901.replace(r2,r1)
-        w1996 = w1996.replace(r1,r2)
-    if u'sst' in wort or wort.endswith(u'ss'):
-        w1901 = None
-
-    if w1901 == w1996: # keine Regeländerung im Wort
-        line = u'%s;%s' % (join_word(wort), wort)
-    elif w1901 is None:
-        line = u'%s;-2-;-3-;%s;%s' % (join_word(wort), w1996, w1996)
-    else:
-        line = u'%s;-2-;%s;%s' % (join_word(wort), w1901, w1996)
-
-    return line
-
 
 if __name__ == '__main__':
 

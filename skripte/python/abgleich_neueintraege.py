@@ -35,7 +35,10 @@ from expand_teilwoerter import expand_wordfile
 # neuwortdatei = "spell/zusatz-de-1996-aspell-compact"
 neuwortdatei = "spell/dehyph-exptl-MV-KorrekturenA-Z.txt"
 # neuwortdatei = "spell/DDR.txt"
-neuwortdatei = 'philo.txt'
+
+# Vorhandene identische Einträge aus Neueinträgen aussortieren::
+
+filtern = False
 
 # Funktionen
 # -----------
@@ -423,7 +426,7 @@ def endungsabgleich(key, alt, neu, grossklein=False):
                                             altkey, key, alt, neu, unicode(entry))
         return ''
 
-    entry.conflate_fields()
+    entry.regelaenderungen()
     return entry
 
 
@@ -494,8 +497,8 @@ endungen = [
             (u'-te',u't'),
             (u'-tern', u't-re'),
             (u'-ös', u'ö-se'),
-            (u'a', u'-ar'),
-            (u'a', u'-as'),
+            (u'a', u'ar'),
+            (u'a', u'as'),
             (u'b', u'-be'),
             (u'b', u'-ber'),
             (u'bar', u't'),
@@ -511,7 +514,7 @@ endungen = [
             (u'd', u'-der'),
             (u'd', u'-des'),
             (u'd', u'>heit'),
-            (u'e', u'-en'),
+            (u'e', u'en'),
             (u'e-ren', u'-ti-on'),
             (u'e-ren', u'sch'),
             (u'el', u'le'),
@@ -666,6 +669,7 @@ def zerlege(s):
 
 def trenne_key(key, grossklein = False):
     entries = []
+    sep = u'='
     for k1, k2 in zerlege(key):
         if grossklein:
             k1 = toggle_case(k1)
@@ -693,16 +697,15 @@ def trenne_key(key, grossklein = False):
                     if grossklein:
                         w1 = toggle_case(w1)
                     w2 = w2.lower()
-                    if (u'==' in w1) or (u'==' in w2):
-                        sep = u'==='
-                    elif (u'=' in w1) or (u'=' in w2):
-                        sep = u'=='
-                    else:
-                        sep = u'='
-                    wort = sep.join([w1, w2])
+                    level = 1
+                    while (level*sep in w1) or (level*sep in w2):
+                        level += 1
+                    wort = (level*sep).join([w1, w2])
                 entry.append(wort)
+            entry.conflate_fields()
             entries.append(entry)
     return entries
+
 
 def filter_neuliste(neuwortdatei, words):
     neue = []
@@ -710,12 +713,13 @@ def filter_neuliste(neuwortdatei, words):
         line = line.decode('utf8').strip()
         if line.startswith('#'):
             neue.append(line)
-            continue 
+            continue
         neueintrag = WordEntry(line)
-        if neueintrag != words.get(neueintrag[0]):
-            neue.append(line)
+        alteintrag = words.get(neueintrag[0])
+        if len(neueintrag) == 1 or neueintrag == alteintrag:
+            print 'vorhanden:', line
         else:
-            print 'Doppeleintrag:', line
+            neue.append(line)
     return neue
 
 
@@ -723,14 +727,15 @@ if __name__ == '__main__':
 
     # sys.stdout mit UTF8 encoding.
     sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
-    
+
 # Filtern::
 
-    # words = WordFile('../../wortliste').asdict()
-    # for line in filter_neuliste(neuwortdatei, words):
-    #     print line
-    # sys.exit()
-
+    if filtern:
+        words = WordFile('../../wortliste').asdict()
+        for line in filter_neuliste(neuwortdatei, words):
+            print line
+        sys.exit()
+    
 # `Wortliste` einlesen::
 
     wordfile = WordFile('../../wortliste')
@@ -878,9 +883,11 @@ if __name__ == '__main__':
 
     identische = {}
     for entry in newentries:
-        key = entry[0].lower()
-        if entry == alle_neuen.get(key):
+        altentry = alle_neuen.get(entry[0].lower())
+        if entry == altentry:
             identische[key] = entry
+        elif altentry:
+            alle_neuen.get(key).comment += u'WL:' + u';'.join(entry[1:])
 
 # Ausgabe::
 

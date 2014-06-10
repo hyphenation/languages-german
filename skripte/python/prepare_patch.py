@@ -34,7 +34,6 @@ from copy import copy, deepcopy
 
 
 from werkzeug import WordFile, WordEntry, join_word, udiff, sortkey_duden
-from abgleich_sprachvarianten import regelaenderungen
 
 def teste_datei(datei):
     """Teste, ob Datei geöffnet werden kann."""
@@ -327,18 +326,20 @@ def neu(wordfile, datei):
         if not line:
             continue
         # Eintrag ggf. komplettieren:
-        if u';' in line:
-            key = line.split(u';')[0]
-        else: # getrenntes Wort
-            line = regelaenderungen(line)
+        if u';' not in line:
+            line = u's%;s%' % (join_word(line), line)
+        entry = WordEntry(line)
+        key = entry[0]
         # Test auf "Neuwert":
         if key in words:
             print key.encode('utf8'), 'schon vorhanden'
             continue
         if key.lower() in words or key.title() in words:
-            print key.encode('utf8'), 'mit anderer Groß-/Kleinschreibung vorhanden'
+            print key.encode('utf8'), 'mit anderer Großschreibung vorhanden'
             continue
-        wortliste_neu.append(WordEntry(line))
+        
+        entry.regelaenderungen() # teste auf Dinge wie s-t/-st
+        wortliste_neu.append(entry)
         words.add(key)
 
     # Sortieren
