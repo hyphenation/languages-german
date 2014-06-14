@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
-# :Copyright: © 2012 Günter Milde.
+# :Copyright: © 2012, 2014 Günter Milde.
 # :Licence:   This work may be distributed and/or modified under
 #             the conditions of the `LaTeX Project Public License`,
 #             either version 1.3 of this license or (at your option)
 #             any later  version.
-# :Version:   0.2 (2012-02-07)
+# :Version:   0.3 (2014-06-14)
 
 # ===================================================================
 # Langes oder rundes S: Automatische Konversion nach Silbentrennung
@@ -42,16 +42,8 @@ wordfile = WordFile('../../wortliste') # volle Liste (≅ 400 000 Wörter
 # Trennzeichen
 # ------------
 # 
-# Die Trennzeichen der Wortliste sind
-# 
-# == ================================================================
-# \· ungewichtete Trennstellen (solche, wo noch niemand sich um die
-#    Gewichtung gekümmert hat)
-# .  unerwünschte Trennstellen (sinnverwirrend), z.B. Ur-in.stinkt
-# =  Haupttrennstellen
-# \- Nebentrennstellen
-# |  Trennstellen nach Vorsilben.
-# == ================================================================
+# Die Trennzeichen der Wortliste finden sich in der Datei
+# `README.wortliste`.
 # 
 # 
 # Funktionen
@@ -67,7 +59,7 @@ def s_ersetzen(word):
 # ſ steht im Silbenanlaut::
 
     word = re.sub(ur'^s', ur'ſ', word)
-    word = re.sub(ur'([-|<>=·.])s', ur'\1ſ', word)
+    word = re.sub(ur'([-<>=·.])s', ur'\1ſ', word)
 
 # ſ steht im Inlaut als stimmhaftes s zwischen Vokalen
 # (gilt auch für ungetrenntes ss zwischen Selbstlauten, z.B. Hausse, Baisse)::
@@ -84,7 +76,7 @@ def s_ersetzen(word):
     # word = word.replace(u'ps', u'pſ')  
     word = word.replace(u'Ps', u'Pſ')  # Ψ
     word = re.sub(ur'^ps', ur'pſ', word) # ψ (ps am Wortanfang)
-    word = re.sub(ur'([-|<>=·.])ps', ur'\1pſ', word) # ψ (ps am Silbenanfang)
+    word = re.sub(ur'([-<>=·.])ps', ur'\1pſ', word) # ψ (ps am Silbenanfang)
 
     word = word.replace(u'ſsſt', u'ſſſt') # Pssst!
 
@@ -92,13 +84,13 @@ def s_ersetzen(word):
 # ~~~~~~~~~~~~~~~~~~
 # 
 # Die Verbindungen ss, sp, st (und manchmal sz) werden zu ſſ, ſp, ſt und
-# ſz auch wenn sie durch eine Nebentrennstelle (Trennung innerhalb eines
+# ſz, auch wenn sie durch eine Nebentrennstelle (Trennung innerhalb eines
 # Wortbestandteiles) getrennt sind (für sz/ſz wurden Spezialregeln erstellt,
 # die Vorkommnisse in der Wortliste erfassen).
 # 
 # s bleibt rund vor einer Haupttrennstelle (Trennung an der Grenze zweier
 # Wortbestandteile (Vorsilb<=Stamm, Bestimmungswort=Grundwort), im Auslaut
-# und nach Vorsilben wie aus-, dis-,  (mit ``|`` markiert)::
+# und nach Vorsilben wie "aus-" oder "dis-"::
 
     word = word.replace(u's-ſ', u'ſ-ſ')
     word = word.replace(u's.ſ', u'ſ.ſ')
@@ -119,16 +111,17 @@ def s_ersetzen(word):
 # ſz trotz Trennzeichen::
 
     word = word.replace(u's-zen', ur'ſ-zen')   # Adoleszenz, Aszendent, ...
+    word = word.replace(u's-ze-n', ur'ſ-ze-n') # Damaszener, ...
     word = word.replace(u's-zi-n', ur'ſ-zi-n') # faszinieren, ...
     word = word.replace(u'as-zi', u'aſ-zi')    # [Ll]asziv, ...
-    word = word.replace(u'vis-zi', u'iſ-zi')   # Mukoviszidose
+    word = word.replace(u'vis-zi', u'viſ-zi')   # Mukoviszidose
     word = word.replace(u's-zil', ur'ſ-zil')   # Os-zil-la-ti-on
-    word = word.replace(u's-zie', ur'reſ-zie') # fluo-res-zie-ren, ...
+    word = word.replace(u's-zie', ur'ſ-zie') # fluo-res-zie-ren, ...
 
-# ſ wird geschrieben, wenn der S-Laut nur scheinbar im Auslaut steht weil ein
-# folgendes unbetontes e ausfällt::
+# ſ wird geschrieben, wenn der S-Laut nur scheinbar im Auslaut steht, weil
+# ein folgendes unbetontes e ausfällt::
 
-   # Basel, Beisel, Pilsen, drechseln, wechseln, häckseln
+    # Basel, Beisel, Pilsen, drechseln, wechseln, häckseln
     word = word.replace(u'Bas-ler', u'Baſ-ler')
     word = word.replace(u'Pils-ner', u'Pilſ-ner')
     word = word.replace(u'echs-ler', u'echſ-ler') # Dechsler, Wechsler
@@ -151,21 +144,21 @@ def s_ersetzen(word):
 
     word = word.replace(u'cresc', u'creſc')
 
-# Alternativtrennung wo beide Fälle ſ verlangen:
+# Alternativtrennung, wo beide Fälle ſ verlangen:
 
-    word = word.replace(u'er.]sa', u'er.]ſa') # Kind=er|satz/Kin-der=satz
+    word = word.replace(u'er<.]sa', u'er<.]ſa') # Kind=er<.satz/Kin-der=satz
 
 # ſſ steht am Wortende der österreichischen Schreibung von Fremdwörtern
 # auf ß und bei Eigennamen::
 
     word = re.sub(ur'ss$', ur'ſſ', word)
-    word = word.replace(u'ss=', u'ſſ=')
+    word = re.sub(ur'ss([<>=])', ur'ſſ\1', word)
 
 # Fremdwörter
 # ~~~~~~~~~~~
 # 
 # Schreibung nach Regeln der Herkunftssprache. Dabei ist zu bedenken, daß zu
-# der Zeit als das lange s im Antiquasatz noch üblich war (bis ca. 1800) die
+# der Zeit, als das lange s im Antiquasatz noch üblich war (bis ca. 1800), die
 # Rechtschreibung freier gehandhabt wurde und mehrfach Wandlungen unterworfen
 # war [West06]_.
 # 
@@ -240,8 +233,8 @@ spezialfaelle_rund_s = [(fall, fall.replace('s', '~'))
 
 def is_complete(word):
 
-# Ersetze s an Stellen wo es rund zu schreiben ist durch ~ und teste auf
-# verbliebene Vorkommen:
+# Ersetze s an Stellen, wo es rund zu schreiben ist, durch ~ und teste auf
+# verbliebene Vorkommen.
 # 
 # Einzelfälle mit rundem S (substrings)::
 
@@ -256,7 +249,7 @@ def is_complete(word):
     # word = re.sub(ur'ss(=|$)', ur'~~\1', word)
 
 # s steht am Silbenende (vor Nebentrennstellen), wenn kein p, t, z oder ſ
-# folgt (in der traditionellen Schreibung, wird st nicht getrennt)::
+# folgt (in der traditionellen Schreibung wird st nicht getrennt)::
 
     # word = re.sub(ur'ss?([·.\-][^ptzſ])', ur'~\1', word) # konservativ
     word = re.sub(ur'ss?([·.\-][^pzſ])', ur'~\1', word)   # traditionell
@@ -265,9 +258,9 @@ def is_complete(word):
 
     word = word.replace(u's-ph', u'~-ph')
 
-# s steht nach Vorsilben (wie aus|, dis|) auch wenn s, p, t, oder z folgt::
+# s steht nach Vorsilben (wie aus-, dis-), auch wenn s, p, t, oder z folgt::
 
-    word = word.replace(u's|', u'~|')
+    word = re.sub(ur's([<>])', ur'~\1', word)
 
 # s steht im Inlaut vor k, n, w::
 
