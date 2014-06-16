@@ -10,7 +10,7 @@
 # ===================================================================
 # Langes oder rundes S: Automatische Konversion nach Silbentrennung
 # ===================================================================
-# 
+#
 # ::
 
 """
@@ -19,10 +19,10 @@ in der `Wortliste der deutschsprachigen Trennmustermannschaft`.
 """
 
 # .. contents::
-# 
+#
 # Vorspann
 # ========
-# 
+#
 # Lade Funktionen und Klassen für reguläre Ausdrücke::
 
 import re
@@ -30,10 +30,10 @@ from werkzeug import WordFile, join_word
 
 # Ausgangsbasis
 # =============
-# 
+#
 # Die freie `Wortliste der deutschsprachigen Trennmustermannschaft`_
 # ("Lembergsche Liste")
-# 
+#
 # ::
 
 wordfile = WordFile('../../wortliste') # volle Liste (≅ 400 000 Wörter
@@ -41,17 +41,26 @@ wordfile = WordFile('../../wortliste') # volle Liste (≅ 400 000 Wörter
 
 # Trennzeichen
 # ------------
-# 
-# Die Trennzeichen der Wortliste finden sich in der Datei
-# `README.wortliste`.
-# 
-# 
+#
+# Die Trennzeichen der Wortliste sind
+#
+# == ================================================================
+# \· ungewichtete Trennstellen (solche, wo noch niemand sich um die
+#    Gewichtung gekümmert hat)
+# .  unerwünschte Trennstellen (sinnverwirrend), z.B. Ur-in.stinkt
+# =  Haupttrennstellen
+# \- Nebentrennstellen
+# <  Trennstellen nach Vorsilben
+# >  Trennstellen vor Suffixen
+# == ================================================================
+#
+#
 # Funktionen
 # ==========
-# 
+#
 # ſ-Regeln
 # --------
-# 
+#
 # Siehe [wikipedia]_ und ("DDR"-) [Duden]_ (Regeln K 44,45)::
 
 def s_ersetzen(word):
@@ -64,8 +73,8 @@ def s_ersetzen(word):
 # ſ steht im Inlaut als stimmhaftes s zwischen Vokalen
 # (gilt auch für ungetrenntes ss zwischen Selbstlauten, z.B. Hausse, Baisse)::
 
-    word = re.sub(ur'([AEIOUYÄÖÜaeiouäöü])s([aeiouyäöü])', ur'\1ſ\2', word)
-    word = re.sub(ur'([AEIOUYÄÖÜaeiouäöü])ss([aeiouyäöü])', ur'\1ſſ\2', word)
+    word = re.sub(ur'([AEIOUYÄÖÜaeiouäöüé])s([aeiouyäöüé])', ur'\1ſ\2', word)
+    word = re.sub(ur'([AEIOUYÄÖÜaeiouäöüé])ss([aeiouyäöüé])', ur'\1ſſ\2', word)
 
 # ſ steht in den Verbindungen sp, st, sch und in Digraphen::
 
@@ -73,7 +82,7 @@ def s_ersetzen(word):
     word = word.replace(u'sp', u'ſp')
     word = word.replace(u'sch', u'ſch')
 
-    # word = word.replace(u'ps', u'pſ')  
+    # word = word.replace(u'ps', u'pſ')
     word = word.replace(u'Ps', u'Pſ')  # Ψ
     word = re.sub(ur'^ps', ur'pſ', word) # ψ (ps am Wortanfang)
     word = re.sub(ur'([-<>=·.])ps', ur'\1pſ', word) # ψ (ps am Silbenanfang)
@@ -82,44 +91,39 @@ def s_ersetzen(word):
 
 # ſ vor Trennstellen
 # ~~~~~~~~~~~~~~~~~~
-# 
-# Die Verbindungen ss, sp, st (und manchmal sz) werden zu ſſ, ſp, ſt und
-# ſz, auch wenn sie durch eine Nebentrennstelle (Trennung innerhalb eines
-# Wortbestandteiles) getrennt sind (für sz/ſz wurden Spezialregeln erstellt,
-# die Vorkommnisse in der Wortliste erfassen).
-# 
-# s bleibt rund vor einer Haupttrennstelle (Trennung an der Grenze zweier
-# Wortbestandteile (Vorsilb<=Stamm, Bestimmungswort=Grundwort), im Auslaut
-# und nach Vorsilben wie "aus-" oder "dis-"::
+#
+# Die Verbindungen ss, sp¹, st werden zu ſſ, ſp und ſt, auch wenn sie
+# durch eine Nebentrennstelle (Trennung innerhalb eines Wortbestandteiles)
+# getrennt sind. Das s bleibt rund im Auslaut, d.h. am Wortende und vor
+# einer Haupttrennstelle (Trennung an der Grenze zweier Wortbestandteile
+# (Vorsilb<Stamm, Bestimmungswort=Grundwort). Für sz und sk gelten
+# Spezialregeln, die die Herkunft der Wörter beachten (siehe `Spezialfälle`_
+# sowie `Fremdwörter und Eingennamen`_). 
+#
+# ¹ s bleibt rund vor Nebentrennstelle wenn ph folgt (Phos-phor).
+#
+# ::
 
-    word = word.replace(u's-ſ', u'ſ-ſ')
-    word = word.replace(u's.ſ', u'ſ.ſ')
-    word = word.replace(u's-p', u'ſ-p')
-    word = word.replace(u's.p', u'ſ.p')
-    word = word.replace(u's-t', u'ſ-t') # Reformschreibung
-    word = word.replace(u's.t', u'ſ.t')
-
-
-# s bleibt aber rund vor Nebentrennstelle wenn ph folgt (Phos-phor)::
-
-    word = word.replace(u'ſ-ph', u's-ph')
+    word = re.sub(ur's[-.]+ſ([aeiouyäöüé])', ur'ſ-ſ\1', word)
+    word = re.sub(ur's[-.]+p([^h])', ur'ſ-p\1', word)
+    word = re.sub(ur's[-.]+t', ur'ſ-p', word) # Reformschreibung
 
 
 # Spezialfälle
 # ~~~~~~~~~~~~
-# 
+#
 # ſz trotz Trennzeichen::
 
     word = word.replace(u's-zen', ur'ſ-zen')   # Adoleszenz, Aszendent, ...
     word = word.replace(u's-ze-n', ur'ſ-ze-n') # Damaszener, ...
     word = word.replace(u's-zi-n', ur'ſ-zi-n') # faszinieren, ...
     word = word.replace(u'as-zi', u'aſ-zi')    # [Ll]asziv, ...
-    word = word.replace(u'vis-zi', u'viſ-zi')   # Mukoviszidose
+    word = word.replace(u'vis-zi', u'viſ-zi')  # Mukoviszidose
     word = word.replace(u's-zil', ur'ſ-zil')   # Os-zil-la-ti-on
-    word = word.replace(u's-zie', ur'ſ-zie') # fluo-res-zie-ren, ...
+    word = word.replace(u's-zie', ur'ſ-zie')   # fluo-res-zie-ren, ...
 
-# ſ wird geschrieben, wenn der S-Laut nur scheinbar im Auslaut steht, weil
-# ein folgendes unbetontes e ausfällt::
+# ſ wird geschrieben, wenn der S-Laut nur scheinbar im Auslaut steht,
+# weil ein folgendes unbetontes e ausfällt::
 
     # Basel, Beisel, Pilsen, drechseln, wechseln, häckseln
     word = word.replace(u'Bas-ler', u'Baſ-ler')
@@ -140,7 +144,7 @@ def s_ersetzen(word):
     word = word.replace(u'ssl', u'ſſl')
 
 # ſ steht auch am Ende von Abkürzungen, wenn es im abgekürzten Wort steht
-# (Abſ. - Abſatz/Abſender, (de)creſc. - (de)creſcendo, das. - daselbst ...)
+# (Abſ. - Abſatz/Abſender, (de)creſc. - (de)creſcendo, daſ. - daſelbst ...)
 
     word = word.replace(u'cresc', u'creſc')
 
@@ -148,62 +152,68 @@ def s_ersetzen(word):
 
     word = word.replace(u'er<.]sa', u'er<.]ſa') # Kind=er<.satz/Kin-der=satz
 
-# ſſ steht am Wortende der österreichischen Schreibung von Fremdwörtern
-# auf ß und bei Eigennamen::
-
-    word = re.sub(ur'ss$', ur'ſſ', word)
-    word = re.sub(ur'ss([<>=])', ur'ſſ\1', word)
-
-# Fremdwörter
-# ~~~~~~~~~~~
-# 
+# Fremdwörter und Eigennamen
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
 # Schreibung nach Regeln der Herkunftssprache. Dabei ist zu bedenken, daß zu
 # der Zeit, als das lange s im Antiquasatz noch üblich war (bis ca. 1800), die
 # Rechtschreibung freier gehandhabt wurde und mehrfach Wandlungen unterworfen
 # war [West06]_.
-# 
-# Im Deutschen werden im Fraktursatz nicht eingedeutschte Fremdwörter in
-# Antiqua mit rund-s geschrieben.
-# 
+#
+# Im Deutschen werden im Fraktursatz nicht eingedeutschte Fremdwörter
+# lateinischen und romanischen Ursprungs in Antiqua mit rund-s geschrieben.
+#
 # English:
 #   The long, medial, or descending ess, as distinct from the short or
 #   terminal ess. In Roman script, the long ess was used everywhere except at
 #   the end of words, where the short ess was used, and frequently in what is
 #   now the digraph «ss», which was often written «ſs» rather than «ſſ»
 #   [en.wiktionary.org]_. See also [Typefounder08]_ and [West06]_.
-# 
+#
 # ::
 
     word = word.replace(u'sh', u'ſh')       # (englisch)
-    # word = word.replace(u'sc', u'ſc')     # (englisch) Diſc oder Disc?
+    word = word.replace(u'Disc', u'Diſc')   # (englisch)
     word = word.replace(u'Csar', u'Cſar')   # Cs -> Tsch (ungarisch)
     # word = word.replace(u'sz', u'ſz')     # polnisch, ungarisch
     word = word.replace(u'Liszt', u'Liſzt') # ungarisch
     word = word.replace(u'Pusz', u'Puſz')   # Pusz-ta ungarisch
     word = re.sub(ur'([Tt])s([aeiouy])', ur'\1ſ\2', word) # ts (chinesisch)
-    
+
+
+# Schreibung von Fremdwörtern und Eigennamen mit Schluss-ß:
+#
 #   Der 1971er [Duden]_ führt zu englischen Fremdwörtern mit Schluß-ß die
 #   österreichische Schreibung mit "ss" auf (Miß, engl. und österr. Schreibung
-#   Miss) wobei das Schluß-s nicht unterstrichen (also lang) ist.
-#   So auch Boss, Business, Stewardess,
-#   TODO so machen, oder ſs? ::
-    
-    # word = re.sub(ur'ness$', 'neſſ') # Buſineſſ, Fairneſſ
-    # word = re.sub(ur'ness=', 'neſſ=')
-    # word = re.sub(ur'dress$', 'dreſſ') # Dreſſ
-    # word = re.sub(ur'Dress=', 'Dreſſ=')
-    # word = word.replace(u'Miss', u'Miſſ')
+#   Miss) wobei das Schluß-s nicht unterstrichen ist (also lang sein müßte).
+#   So auch Boss, Business, Stewardess.
+#
+#   Dagegen sagt [en.wiktionary.org]_: "the digraph «ss» was often
+#   written «ſs» rather than «ſſ»".
+#
+# ::
+
+    # TODO so machen, oder ſs (wie in de-1996)? :
+    # if sprachvariante == 'de-1901':
+    #     word = re.sub(ur'ss$', ur'ſſ', word)
+    #     word = word.replace(u'ss=', u'ſſ=')
+    #     word = word.replace(u'ss-ſch', u'ſſ-ſch')
+
+    word = re.sub(u'ss$', u'ſs', word)
+    word = word.replace(u'ss=', u'ſs=')
+    word = word.replace(u'ss-ſch', u'ſs-ſch')
+
 
     return word
 
 # s-Regeln
 # --------
-# 
+#
 # Test auf verbliebene Unklarheiten
-# 
+#
 # Wenn ein Wort "s" nur an Stellen enthält wo die Regeln rundes S vorsehen,
 # ist die automatische Konversion abgeschlossen.
-# 
+#
 # Ausnahmen und spezielle Regeln
 #
 # Liste von Teilstrings, welche stets rund-s behalten ::
@@ -211,24 +221,29 @@ def s_ersetzen(word):
 spezialfaelle_rund_s = [
 
 # Abkürzungen::
-                        
-    u'Ausg', u'ausſchl', u'insb', u'desgl', u'hrsg', u'insb',
-                        
+
+    u'Ausg', u'ausſchl', u'desgl', u'hrsg', u'insb',
+
 # ausgelassenes flüchtiges e::
-   
+
     u'Dresd-ne', # Dresd·ner/Dresd·ner·in
-    
+
 # s steht auch in einigen Fremdwörtern vor z::
 
     u'on-fis-zie', # konfiszieren
     u'le-bis-z',   # plebiszit
     u'is-zi-pl',   # Disziplin (nach Duden (1934) auch Diſziplin).
-# ss im Auslaut
-    u'Gauss',      # vgl. "Briefwechsel zwischen C.F. Gauss und H.C. Schumacher, herausg. von C.A.F. Peters"
+    u'mas-ze-ner'   # Damaszener                        
+
+# ss im Auslaut (vgl. `Fremdwörter und Eigennamen`_)::
+
+    # u'Gauss',    # vgl. "Briefwechsel zwischen C.F. Gauss und H.C. Schumacher, herausg. von C.A.F. Peters"
                    # aber Boſſ, Busineſſ, Dreſſ
+    u'ſs-ſch'      # Graſs-ſcher, Weiſs-ſches, Zeiſs-ſche
+                        
                        ]
-    
-spezialfaelle_rund_s = [(fall, fall.replace('s', '~')) 
+
+spezialfaelle_rund_s = [(fall, fall.replace('s', '~'))
                         for fall in spezialfaelle_rund_s]
 
 def is_complete(word):
@@ -241,12 +256,14 @@ def is_complete(word):
     for fall, ersatz in spezialfaelle_rund_s:
         word = word.replace(fall, ersatz)
 
-# s steht am Wortende, auch in Zusammensetzungen (vor Haupttrennstellen).
-# Dasselbe gilt für Doppel-s (aus Fremdwörtern) in der traditionellen
-# Rechtschreibung::
+# s steht am Wortende, auch in Zusammensetzungen (vor Haupttrennstellen)::
 
-    word = re.sub(ur's(=|$)', ur'~\1', word)
-    # word = re.sub(ur'ss(=|$)', ur'~~\1', word)
+    word = re.sub(ur's($|[=<>])', ur'~\1', word)
+
+# Einige ältere Quellen schreiben ss am Schluss von Fremdwörtern oder Namen
+# (Gauss). Andere schreiben ſs oder ſſ. ::
+
+    #word = re.sub(ur'ss(=|$)', ur'~~\1', word)
 
 # s steht am Silbenende (vor Nebentrennstellen), wenn kein p, t, z oder ſ
 # folgt (in der traditionellen Schreibung wird st nicht getrennt)::
@@ -258,9 +275,14 @@ def is_complete(word):
 
     word = word.replace(u's-ph', u'~-ph')
 
-# s steht nach Vorsilben (wie aus-, dis-), auch wenn s, p, t, oder z folgt::
+# s steht nach Vorsilben (wie aus<, dis<) auch wenn s, p, t, oder z folgt::
 
-    word = re.sub(ur's([<>])', ur'~\1', word)
+    word = word.replace(u's<', u'~<')
+
+# s steht vor Trennstellen am Suffixanfang (wie >sen, >son),
+# auch wenn s, p, t, oder z folgt::
+
+    word = word.replace(u's>', u'~>')
 
 # s steht im Inlaut vor k, n, w::
 
@@ -273,24 +295,28 @@ def is_complete(word):
 
 # Globale Variablen
 # =================
-# 
+#
 # Rechtschreibvariante
 # --------------------
-# 
+#
 # Angabe der Sprachvariante nach [BCP47]_ (Reformschreibung 'de' oder 'de-1996',
 # Schweiz 'de-CH', ...)
-# 
-# Zur Zeit werden nur Wörter in traditioneller Schreibweise behandelt::
 
 sprachvariante = 'de-1901'
+
+# Für gebrochene Schriften gibt es den ISO Sprachtag
+#
+#   :Latf: Latin (Fraktur variant)
+#
+# also "Lateinisches Alphabet, gebrochen". Wir hätten dann "de-1901-Latf".
 
 
 # Kategorien
 # ----------
-# 
+#
 # Der Algorithmus sortiert die Wörter der Trennliste in die folgenden
 # Kategorien:
-# 
+#
 # Menge aller Wörter der Liste (ohne Trennmuster)::
 
 words = set()
@@ -300,7 +326,7 @@ words = set()
 completed = []
 
 # Offene Fälle mit Trennmuster-Feldern wie im Original:
-# 
+#
 # Zur automatischen Konvertierung fehlt die Unterscheidung in Haupt- und
 # Nebentrennstellen (Wichtung)::
 
@@ -313,7 +339,7 @@ offen = []
 
 # Hauptschleife
 # =============
-# 
+#
 # Iteration über alle Zeilen der Wortliste::
 
 for entry in wordfile:
@@ -328,7 +354,7 @@ for entry in wordfile:
 
 # Vorsortieren
 # ------------
-# 
+#
 # Wörter ohne Binnen-s müssen nicht konvertiert werden. Damit wird die
 # Wortliste ungefähr um die Hälfte kürzer::
 
@@ -356,53 +382,46 @@ for entry in wordfile:
 
 # Ausgabe
 # =======
-# 
+#
 # Wortliste mit automatisch bestimmter S-Schreibung, ohne Trennstellen::
 
 completed_file = file('wortliste-lang-s', 'w')
 completed_file.write(u'\n'.join(completed).encode('utf8') + '\n')
 
-# Wortlisten mit noch offenen Fällen::
-
-for todo in ['ungewichtet', 'offen']:
-    todo_file = file('wortliste-lang-s-'+todo, 'w')
-    todo = globals()[todo] # get variable from string
-    todo = [unicode(entry) for entry in todo]
-    # todo = [entry[0] for entry in todo]
-    todo_file.write(u'\n'.join(todo).encode('utf8') + '\n')
-
-
 # Auswertung
 # ==========
-# 
+#
 # ::
 
-print "Gesamtwortzahl (traditionelle Rechtschreibung):", len(words)
-print "Automatisch konvertiert:", len(completed)
-print "Kategorisierung der Trennstellen fehlt:", len(ungewichtet)
-print "noch offen:", len(offen)
+print "# Gesamtwortzahl (traditionelle Rechtschreibung):", len(words)
+print "# Automatisch konvertiert:", len(completed)
+print "# Kategorisierung der Trennstellen fehlt:", len(ungewichtet)
+for entry in ungewichtet:
+    print unicode(entry).encode('utf8')
+print "# noch offen/unklar:", len(offen)
+for entry in offen:
+    print unicode(entry).encode('utf8')
 
-print "\nkonvertiert+nichtklassifiziert+offen:", 
-print len(completed) + len(ungewichtet) + len(offen)
+# print "# konvertiert+nichtklassifiziert+offen:",
+# print len(completed) + len(ungewichtet) + len(offen)
 
 
 
 # Diskussion
 # ==========
-# 
+#
 # Statistik
 # ---------
-# 
-# | Gesamtwortzahl (traditionelle Rechtschreibung) 417629
-# | Automatisch konvertiert 401591
-# | nur in neuer Rechtschreibung 4653
-# | noch offen 9612
-# 
-# 
+#
+# Gesamtwortzahl (traditionelle Rechtschreibung): 427746
+# Automatisch konvertiert: 427740
+# Kategorisierung der Trennstellen fehlt: 0
+# noch offen: 6
+#
 # Die Mehrzahl der Wörter der Trennliste wurde nach den Regeln des Dudens in
 # die Schreibung mit langem `S` (ſ) konvertiert (wobei ungefähr die Hälfte der
 # Wörter kein kleines `s` enthält womit die Konversion trivial wird).
-# 
+#
 # Der größte Teil der ca. 16 000 noch offenen Fälle kann durch Unterscheidung
 # in Haupt- und Nebentrennstellen (z.B. mit dem SiSiSi_-Algorithmus) gelöst
 # werden. CTAN enthält eine (alte) Variante mit Atomlisten im Text-Format
@@ -410,81 +429,82 @@ print len(completed) + len(ungewichtet) + len(offen)
 # Variante `Java-SiSiSi` enthält eine Schnittstelle zum
 # Wortanalysealgorithmus, die es ermöglicht SiSiSi als Bibliothek in fremde
 # Programme einzubinden.
-# 
+#
 # Für eine beschränke Anzahl offener Fälle wurden Ausnahmeregeln und Ausnahmen
 # implementiert.
-# 
+#
 # Das Resultat muß noch auf nicht erfaßte Ausnahmen und Sonderfälle geprüft
 # werden. Fehlentscheidungen sind nicht auszuschließen.
-# 
-# 
+#
+#
 # Offene Fälle
 # ------------
-# 
+#
 # Wörter mit ſ am Wort oder Silbenende
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 
+#
 # * sp, ss, st und sz wird zu ſp, ſſ, ſt und ſz, auch wenn das ſ vor einer
 #   Nebentrennstelle steht (z.B. Weſ-pe, eſ-ſen, abbürſ-ten (Reformtrennung)
 #   und Faſ-zination)
-# 
+#
 #   **Aber** rundes s am Wortende und nach Vorsilben, z.B.
 #   dis=putieren, Aus=ſage, aus=tragen, aus=zeichnen.
-# 
-# 
+#
+#
 # Wörter mit identischer Schreibung ohne lang-s
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# 
-# * Wach[s/ſ]tube?
-# 
+#
+# * Wach[s/ſ]tube: Wach-stube oder Wachs-Tube
+# * Ga[s/ſ]traſſe: Gas-Trasse oder Gast-Rasse
+#
 # Unklare Schreibung
 # ~~~~~~~~~~~~~~~~~~
-# 
+#
 # * Tonarten (As-Dur oder Aſ-Dur)
-# 
+#
 #   - Im Fraktur-Duden steht As in Antiqua mit rundem s, aber
 #   - im 1976-er [Duden]_ steht As ohne Unterstreichung des `s`.
-# 
-# 
-# 
+#
+#
+#
 # Quellen
 # =======
-# 
+#
 # .. [Duden] `Der Große Duden` 16. Auflage, VEB Bibliographisches Institut
 #    Leipzig, 1971
-# 
+#
 #    Kennzeichnet im Stichwortteil rundes s durch Unterstreichen.
-# 
+#
 # .. [wikipedia] Langes s
 #    http://de.wikipedia.org/wiki/Langes_s
-# 
+#
 # .. [en.wiktionary.org]
 #    http://en.wiktionary.org/wiki/%C5%BF
-# 
+#
 # .. [Typefounder08]
 #    http://typefoundry.blogspot.com/2008/01/long-s.html
-# 
+#
 # .. [West06] Andrew West, `The rules for long s`, 2006
 #    http://babelstone.blogspot.com/2006/06/rules-for-long-s.html
-# 
-# .. [BCP47]  A. Phillips und M. Davis, (Editoren.), 
+#
+# .. [BCP47]  A. Phillips und M. Davis, (Editoren.),
 #    `Tags for Identifying Languages`, http://www.rfc-editor.org/rfc/bcp/bcp47.txt
-# 
-# .. [gruber03] Martin Gruber, 
-#    `Effiziente Gestaltung der Wortanalyse in SiSiSi`, Diplomarbeit, 2003, 
+#
+# .. [gruber03] Martin Gruber,
+#    `Effiziente Gestaltung der Wortanalyse in SiSiSi`, Diplomarbeit, 2003,
 #    http://www.ads.tuwien.ac.at/publications/bib/pdf/gruber-03.pdf
-# 
+#
 # .. Links:
-# 
+#
 # .. _Wortliste der deutschsprachigen Trennmustermannschaft:
 #    http://mirrors.ctan.org/language/hyphenation/dehyph-exptl/projektbeschreibung.pdf
-# 
+#
 # .. _SiSiSi: http://www.ads.tuwien.ac.at/research/SiSiSi.html
-# 
+#
 # .. _Ur-SiSiSi: ftp://ftp.dante.de/pub/tex/systems/unix/sisisi/
-# 
-# 
+#
+#
 # .. Fragen, Spezialfälle, Beispiele
-# 
+#
 #  http://www.e-welt.net/bfds_2003/bund/fragen/13_Langes%20oder%20rundes%20S.pdf
 #  http://www.e-welt.net/bfds_2003/bund/fragen/12_hs%20und%20scharfes%20s_1.pdf
