@@ -22,11 +22,12 @@ AKTION ist eine von:
   korrektur:      Einträge durch alternative Version ersetzen.
   neu:            Einträge hinzufügen,
   reformschreibung: Eintrag in "nur Reformschreibung" ändern.
+  zusammenfassen: Sprachvarianten zusammenfassen wenn gleich.
 """
 
 # Die ``<AKTION>.todo`` Dateien in diesem Verzeichnis beschreiben das
 # jeweils erforderliche Datenformat im Dateikopf.
-# 
+#
 # ::
 
 import optparse, sys, os, codecs
@@ -59,11 +60,11 @@ sprachvariante = 'de-1901'         # "traditionell"
 
 
 # Allgemeine Korrektur (z.B. Fehltrennung)
-# 
+#
 # Format:
 #  * ein Wort mit Trennstellen (für "Sprachvariante"):
 #  * vollständiger Eintrag (für Wörter mit Sprachvarianten).
-# 
+#
 # ::
 
 def korrektur(wordfile, datei):
@@ -117,10 +118,10 @@ def fehleintraege(wordfile, datei):
     """Entfernen der Einträge aus einer Liste von Fehleinträgen """
 
 # Fehleinträge aus Datei.
-# 
+#
 # Format:
 #   Ein Eintrag/Zeile, mit oder ohne Trennzeichen
-# 
+#
 # ::
 
     if not datei:
@@ -144,19 +145,19 @@ def fehleintraege(wordfile, datei):
         print 'nicht gefunden:'
         for w in korrekturen:
             print w.encode('utf8')
-    
+
     return (wortliste, wortliste_neu)
 
 
 # Groß-/Kleinschreibung ändern
 # ----------------------------
-# 
+#
 # Umstellen der Groß- oder Kleinschreibung auf die Variante in der Datei
 # ``grossklein.todo``
-# 
+#
 # Format:
 #   ein Eintrag oder Wort pro Zeile, mit vorhandener Groß-/Kleinschreibung.
-# 
+#
 # ::
 
 def grossklein(wordfile, datei):
@@ -218,13 +219,13 @@ def grossabgleich(wordfile):
 
 # Sprachvariante ändern
 # ---------------------
-# 
+#
 # Einträge mit allgemeingültiger (oder sonstwie mehrfacher) Sprachvariante
 # in "nur in Reformschreibung" (allgemein) ändern.
-# 
+#
 # Format:
 #   ein Wort/(Alt-)Eintrag pro Zeile.
-# 
+#
 # ::
 
 def reformschreibung(wordfile, datei):
@@ -260,12 +261,12 @@ def reformschreibung(wordfile, datei):
 
 # Getrennte Einträge für Sprachvarianten
 # --------------------------------------
-# 
+#
 # Korrigiere fehlende Spezifizierung nach Sprachvarianten, z.B.
-# 
+#
 # - System;Sy-stem
 # + System;-2-;Sy-stem;Sys-tem
-# 
+#
 # ::
 
 def sprachvariante_split(wordfile, alt, neu,
@@ -289,11 +290,11 @@ def sprachvariante_split(wordfile, alt, neu,
 
 # Neueinträge prüfen und vorbereiten
 # ----------------------------------
-# 
+#
 # Die in einer Datei (ein Neueintrag pro Zeile) gesammelten Vorschläge auf
 # auf Neuwert testen (vorhandene Wörter werden ignoriert, unabhängig von der
 # Groß-/Kleinschreibung) und einsortieren.
-# 
+#
 # Akzeptierte Formate:
 #
 #  * vollständiger Eintrag (für Wörter mit Sprachvarianten oder Kommentaren).
@@ -301,9 +302,9 @@ def sprachvariante_split(wordfile, alt, neu,
 #  * ein Wort mit Trennstellen:
 #
 #    - Schlüssel wird generiert und vorangestellt (durch Semikolon getrennt).
-#    - Test auf einfache/häufige Reformänderungen 1996: 
+#    - Test auf einfache/häufige Reformänderungen 1996:
 #      s-t/-st, {ck/k-k}/c-k
-# 
+#
 # ::
 
 def neu(wordfile, datei):
@@ -337,7 +338,7 @@ def neu(wordfile, datei):
         if key.lower() in words or key.title() in words:
             print key.encode('utf8'), 'mit anderer Großschreibung vorhanden'
             continue
-        
+
         entry.regelaenderungen() # teste auf Dinge wie s-t/-st
         wortliste_neu.append(entry)
         words.add(key)
@@ -369,6 +370,22 @@ def doppelte(wordfile, use_first=False):
 
     print len(wortliste) - len(wortliste_neu), "Einträge entfernt"
     return (wortliste, wortliste_neu)
+
+
+def conflate(wortliste):
+
+    wortliste = list(wordfile)
+    wortliste_neu = [] # korrigierte Liste
+
+    for entry in wortliste:
+        if len(entry) > 2:
+            # Felder zusammenfassen:
+            entry = copy(entry)
+            entry.conflate_fields()
+        wortliste_neu.append(entry)
+
+    return (wortliste, wortliste_neu)
+
 
 # Default-Aktion::
 
@@ -419,6 +436,8 @@ if __name__ == '__main__':
         (wortliste, wortliste_neu) = korrektur(wordfile, options.todo)
     elif aktion == 'reformschreibung':
         (wortliste, wortliste_neu) = reformschreibung(wordfile, options.todo)
+    elif aktion == 'zusammenfassen':
+        (wortliste, wortliste_neu) = conflate(wordfile)
     else:
         print 'Unbekannte AKTION', '\n'
         parser.print_help()

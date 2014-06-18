@@ -39,16 +39,6 @@ from werkzeug import WordFile, WordEntry, join_word, udiff, sprachabgleich
 #
 # ::
 
-def conflate(wortliste):
-
-    for entry in wortliste:
-        if len(entry) <= 2:
-            continue # allgemeine Schreibung
-        # Felder zusammenfassen:
-        entry.conflate_fields()
-        continue
-
-
 if __name__ == '__main__':
 
     # sys.stdout mit UTF8 encoding.
@@ -62,9 +52,6 @@ if __name__ == '__main__':
 
     wordfile.seek(0)            # Pointer zurücksetzen
     words = wordfile.asdict()
-
-    # Bearbeiten der wortliste "in-place"
-    # conflate(wortliste)
 
     for oldentry in wortliste:
         if len(oldentry) <= 2:
