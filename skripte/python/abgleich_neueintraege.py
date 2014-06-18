@@ -39,6 +39,12 @@ neuwortdatei = "spell/dehyph-exptl-MV-KorrekturenA-Z.txt"
 # Vorhandene identische Einträge aus Neueinträgen aussortieren::
 
 filtern = False
+# filtern = True
+
+# Trennmusterliste
+
+wordfile = WordFile('../../wortliste')
+
 
 # Funktionen
 # -----------
@@ -714,14 +720,20 @@ def filter_neuliste(neuwortdatei, words):
         if line.startswith('#'):
             neue.append(line)
             continue
-        neueintrag = WordEntry(line)
-        alteintrag = words.get(neueintrag[0])
-        if len(neueintrag) == 1 or neueintrag == alteintrag:
+        neukey = line.split(u';')[0]
+        if neukey in words:
             print 'vorhanden:', line
         else:
             neue.append(line)
     return neue
 
+def print_proposal(entry):
+    proposal = getattr(entry, "proposal", u'')
+    if proposal:
+        print u' ' + unicode(entry)
+        print u'#' + unicode(proposal)
+    else:
+        print unicode(entry)
 
 if __name__ == '__main__':
 
@@ -731,14 +743,13 @@ if __name__ == '__main__':
 # Filtern::
 
     if filtern:
-        words = WordFile('../../wortliste').asdict()
+        words = wordfile.asdict()
         for line in filter_neuliste(neuwortdatei, words):
             print line
         sys.exit()
-    
+
 # `Wortliste` einlesen::
 
-    wordfile = WordFile('../../wortliste')
     words = expand_wordfile(wordfile)
 
     for alt, neu in endungen:
@@ -757,13 +768,14 @@ if __name__ == '__main__':
 
 # Erstellen der neuen Einträge::
 
-    newentries = [WordEntry(line.decode('utf8').strip())
-            for line in open(neuwortdatei)
-           if not line.startswith('#')]
+    proposals = [WordEntry(line.decode('utf8').strip())
+                 for line in open(neuwortdatei)
+                 if not line.startswith('#')]
 
-    for newentry in newentries:
+    for newentry in proposals:
         OK = False
         key = newentry[0]
+
         # print key, unicode(newentry)
         # continue
 
@@ -882,12 +894,14 @@ if __name__ == '__main__':
 # Vergleich mit Original::
 
     identische = {}
-    for entry in newentries:
-        altentry = alle_neuen.get(entry[0].lower())
-        if entry == altentry:
-            identische[key] = entry
-        elif altentry:
-            alle_neuen.get(key).comment += u'WL:' + u';'.join(entry[1:])
+    for proposal in proposals:
+        key = proposal[0].lower()
+        newentry = alle_neuen.get(key)
+        if proposal == newentry:
+            identische[key] = proposal
+        else:
+            if newentry:
+                newentry.proposal = proposal
 
 # Ausgabe::
 
@@ -898,18 +912,18 @@ if __name__ == '__main__':
     print u'\n# eindeutig abgeleitet'
     for entry in eindeutige:
         if entry[0].lower() not in identische:
-            print unicode(entry)
-
+            print_proposal(entry)
     print u'\n# eindeutig abgeleitet (andere Großschreibung)'
     for entry in eindeutige_grossklein:
         if entry[0].lower() not in identische:
-            print unicode(entry)
+            print_proposal(entry)
 
     print u'\n# mehrdeutig abgeleitet'
     for entry in doppelte:
-        print unicode(entry)
+        print_proposal(entry)
+
 
     print u'\n# Rest'
 
     for entry in rest:
-        print unicode(entry)
+        print_proposal(entry)

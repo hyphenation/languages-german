@@ -325,7 +325,10 @@ class WordEntry(list):
 # >>> auffrass.conflate_fields()
 # >>> print auffrass
 # auffrass;-2-;-3-;-4-;auf-frass
-#
+# >>> entry = WordEntry(u'distanziert;-2-;di-stan-ziert;di-stan-ziert')
+# >>> entry.conflate_fields()
+# >>> print entry
+# distanziert;di-stan-ziert
 # Aber nicht, wenn die Trennstellen sich unterscheiden:
 #
 # >>> abenddienste = WordEntry(
@@ -393,6 +396,9 @@ class WordEntry(list):
     
         w1901 = self.get('de-1901')
         w1996 = self.get('de-1996')
+        
+        if w1901 is None or w1996 is None:
+            return
         
         for r1, r2 in zip(r1901, r1996):
             w1901 = w1901.replace(r2,r1)
