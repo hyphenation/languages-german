@@ -74,7 +74,7 @@ def s_ersetzen(word):
 # (gilt auch für ungetrenntes ss zwischen Selbstlauten, z.B. Hausse, Baisse)::
 
     word = re.sub(ur'([AEIOUYÄÖÜaeiouäöüé])s([aeiouyäöüé])', ur'\1ſ\2', word)
-    word = re.sub(ur'([AEIOUYÄÖÜaeiouäöüé])ss([aeiouyäöüé])', ur'\1ſſ\2', word)
+    word = re.sub(ur'([AEIOUYÄÖÜaeiouäöüé])ss([aeiouyäöüés])', ur'\1ſſ\2', word)
 
 # ſ steht in den Verbindungen sp, st, sch und in Digraphen::
 
@@ -87,7 +87,7 @@ def s_ersetzen(word):
     word = re.sub(ur'^ps', ur'pſ', word) # ψ (ps am Wortanfang)
     word = re.sub(ur'([-<>=·.])ps', ur'\1pſ', word) # ψ (ps am Silbenanfang)
 
-    word = word.replace(u'ſsſt', u'ſſſt') # Pssst!
+    # word = word.replace(u'ſsſt', u'ſſſt') # Pssst!
 
 # ſ vor Trennstellen
 # ~~~~~~~~~~~~~~~~~~
@@ -302,14 +302,15 @@ def is_complete(word):
 # Angabe der Sprachvariante nach [BCP47]_ (Reformschreibung 'de' oder 'de-1996',
 # Schweiz 'de-CH', ...)
 
-sprachvariante = 'de-1901'
+sprachtag = 'de-1901'
 
 # Für gebrochene Schriften gibt es den ISO Sprachtag
 #
 #   :Latf: Latin (Fraktur variant)
 #
-# also "Lateinisches Alphabet, gebrochen". Wir hätten dann "de-1901-Latf".
-
+# also "Lateinisches Alphabet, gebrochen". Wir hätten dann "de-1901-Latf" und
+# "de-1996-Latf"
+# http://www.unicode.org/iso15924/iso15924-codes.html
 
 # Kategorien
 # ----------
@@ -344,7 +345,7 @@ offen = []
 
 for entry in wordfile:
 
-    word = entry.get(sprachvariante)  # Wort mit Trennstellen
+    word = entry.get(sprachtag)  # Wort mit Trennstellen
     if word is None: # Wort existiert nicht in der Sprachvariante
         continue
 
@@ -372,7 +373,7 @@ for entry in wordfile:
         completed.append(join_word(word))
         continue
 
-    entry.set(word, sprachvariante) # Rückschreiben von teilweisen Ersetzungen
+    entry.set(word, sprachtag) # Rückschreiben von teilweisen Ersetzungen
 
     if word.find(u's·') != -1:
         ungewichtet.append(entry)
@@ -385,7 +386,7 @@ for entry in wordfile:
 #
 # Wortliste mit automatisch bestimmter S-Schreibung, ohne Trennstellen::
 
-completed_file = file('wortliste-lang-s', 'w')
+completed_file = file('words-' + sprachtag + 'Latf.txt', 'w')
 completed_file.write(u'\n'.join(completed).encode('utf8') + '\n')
 
 # Auswertung

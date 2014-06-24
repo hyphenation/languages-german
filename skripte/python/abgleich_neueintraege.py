@@ -553,6 +553,7 @@ endungen = [
             (u'ie', u'e'),
             (u'in', u'en'),
             (u'isch', u'i-sche'),
+            (u'ck', u'-cke'),
             (u'k', u'-ke'),
             (u'k', u'-ken'),
             (u'k', u'-ker'),
@@ -567,7 +568,7 @@ endungen = [
             (u'lt', u'-le'),
             (u'm', u'-me'),
             (u'm', u'-mer'),
-            (u'me', u'-men'),
+            (u'me', u'men'),
             (u'mus', u'men'),
             (u'mus', u'ten'),
             (u'mus', u'tik'),
@@ -668,6 +669,17 @@ def zerlege(s):
     for i in range(1, len(s)):
         yield s[:i], s[i:]
 
+# Zerlege Kompositum in gleichberechtigte Teile::
+
+# >>> from abgleich_neueintraege import split_composits
+# >>> from werkzeug import WordEntry
+# >>> split_composits(WordEntry(u'Blockheizkraftwerk;Block===heiz==kraft=werk'))
+# [u'Block', u'heiz', u'kraft', u'werk']
+#
+# ::
+
+def split_composits(entry):
+    return [w for w in entry[1].split(u'=') if w]
 
 # Zerlege String, wenn die Teile in der Wortliste vorhanden sind, setze
 # sie neu zusammen und übernehme die Trennmarkierer:
@@ -695,7 +707,7 @@ def trenne_key(key, grossklein = False):
                     continue
             entry = WordEntry(key)
             for w1, w2 in zip(e1,e2)[1:]:
-                if w1.startswith(u'-'):
+                if w1.startswith(u'-'): # empty column -2-, -3-, ...
                     wort = w1
                 elif w2.startswith(u'-'):
                     wort = w2
@@ -710,6 +722,16 @@ def trenne_key(key, grossklein = False):
                 entry.append(wort)
             entry.conflate_fields()
             entries.append(entry)
+            # Teste auf 3-teilige Composita und entferne die Wichtung:
+            # ['Kau==zahn=weh', 'Kau=zahn=weh'] -> ['Kau=zahn=weh']
+            if len(entries) == 2:
+                teile = [split_composits(entry) for entry in entries]
+                if teile[0] == teile[1]:
+                    level = 1
+                    while level*sep in teile[0]:
+                        level += 1
+                    entries = [entries[0]]
+                    entries[0][1] = entries[0][1].replace((level+1)*sep, level*sep)
     return entries
 
 
@@ -723,6 +745,10 @@ def filter_neuliste(neuwortdatei, words):
         neukey = line.split(u';')[0]
         if neukey in words:
             print 'vorhanden:', line
+        elif neukey.title() in words:
+            print 'Vorhanden:', line
+        elif neukey.lower() in words:
+            print 'vorhanden (kleingeschrieben):', line
         else:
             neue.append(line)
     return neue

@@ -328,7 +328,7 @@ def neu(wordfile, datei):
             continue
         # Eintrag ggf. komplettieren:
         if u';' not in line:
-            line = u's%;s%' % (join_word(line), line)
+            line = u'%s;%s' % (join_word(line), line)
         entry = WordEntry(line)
         key = entry[0]
         # Test auf "Neuwert":

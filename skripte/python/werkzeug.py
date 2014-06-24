@@ -162,8 +162,9 @@ class WordEntry(list):
 # eventuell vorhandenen Kommentar abtrennen und speichern::
 
         if '#' in line:
-            line, self.comment = line.split('#')
-            line = line.rstrip()
+            line = line.split(u'#')
+            self.comment = u'#'.join(line[1:])
+            line = line[0].rstrip()
 
 # Zerlegen in Datenfelder, in Liste eintragen::
 
