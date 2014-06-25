@@ -32,8 +32,7 @@ from expand_teilwoerter import expand_wordfile
 
 # Pfad zur Datei mit den neu einzutragenden Wörtern::
 
-# neuwortdatei = "spell/zusatz-de-1996-aspell-compact"
-neuwortdatei = "spell/dehyph-exptl-MV-KorrekturenA-Z.txt"
+neuwortdatei = "spell/zusatz-de-1996-aspell-compact"
 # neuwortdatei = "spell/DDR.txt"
 
 # Vorhandene identische Einträge aus Neueinträgen aussortieren::
@@ -755,7 +754,7 @@ def filter_neuliste(neuwortdatei, words):
 
 def print_proposal(entry):
     proposal = getattr(entry, "proposal", u'')
-    if proposal:
+    if proposal and len(proposal) > 1:
         print u' ' + unicode(entry)
         print u'#' + unicode(proposal)
     else:
