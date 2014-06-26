@@ -432,44 +432,77 @@ local words_ss = {}
 --
 -- @param record zu prüfender Datensatz
 --
--- @return Typ des Datensatzes, falls dieser wohlgeformt ist;<br />
--- <code>nil</code>, falls der Datensatz kein zulässiges Format hat;<br
--- /> <code>false, field, msg</code>, falls der Datensatz unzulässige
--- Wörter enthält.  <code>field</code> gibt die Nummer des fehlerhaften
--- Feldes an.  <code>msg</code> ist ein String, der den Fehler näher
--- beschreibt.
+-- @return <code>true, info</code>, falls der Datensatz wohlgeformt
+-- ist;<br /> <code>false, info</code>, falls der Datensatz nicht
+-- wohlgeformt ist.<br /> <code>info</code> ist eine Tabelle mit näheren
+-- Informationen zum Datensatz bzw. zum Fehler.  Hat der Datensatz ein
+-- unzulässiges Format, so ist <code>info = nil</code>.  Andernfalls
+-- enthält <code>info</code> das Wort des ersten Feldes des Datensatzes,
+-- Informationen zu dessen Eszett-Schreibung sowie den Datensatztyp.<br
+-- /> Enthält der Datensatz ein unzulässiges Wort, so enthält
+-- <code>info</code> die Feldnummer und eine Fehlerbeschreibung des
+-- unzulässigen Wortes.
 local function validate_record(record)
    -- Prüfe Gültigkeit des Datensatzes.
-   local type = identify_record(record)
-   if not type then return nil end
+   local rectype = identify_record(record)
+   if not rectype then return false, nil end
+   -- Sichere Typ in Rückgabetabelle.
+   local info = { type = rectype }
    -- Verzichte auf Prüfung der Wortstruktur bei bestimmten Datensätzen.
    if whitelist[record] then
-      return type
+      info.is_whitelisted = true
+      return true, info
    end
    -- Zerlege Datensatz.
    local trec = split(record)
    -- Merke Inhalt von Feld 1 für Gleichheitsprüfung der belegten
    -- Felder.
    local field1 = trec[1]
+   if not field1 then
+      info.errfield = 1
+      info.errmsg = "leer"
+      return false, info
+   end
+   -- Sichere Inhalt von Feld 1 in Rückgabetabelle.
+   info.field1 = field1
    -- Merke Eigenschaften von Feld 1 für Eszett-Prüfung (siehe unten).
    local props1
-   if not field1 then return false, 1, "leer" end
    for i = 1,#trec do
       local word = trec[i]
       if word then
          -- Hat das Wort eine zulässige Struktur?
          local props, msg = validate_word(word)
-         if not props then return false, i, msg end
+         if not props then
+            info.errfield = i
+            info.errmsg = msg
+            return false, info
+         end
          if i == 1 then props1 = props end
          -- Stimmt Wort mit Feld 1 überein?
          word = Ugsub(props.norm_word, "-", "")
-         if word ~= field1 then return false, i, "ungleich Feld 1" end
+         if word ~= field1 then
+            info.errfield = i
+            info.errmsg = "ungleich Feld 1"
+            return false, info
+         end
          -- Tritt eine Spezialtrennung an unzulässiger Feldnummer auf?
-         if props.has_nonstd and (i==2 or i==4 or i==5 or i==7) then return false, i, "unzulässige Spezialtrennung" end
+         if props.has_nonstd and (i==2 or i==4 or i==5 or i==7) then
+            info.errfield = i
+            info.errmsg = "unzulässige Spezialtrennung"
+            return false, info
+         end
          -- Tritt eine Dreikonsonantenregel für 's' an unzulässiger Feldnummer auf?
-         if props.has_nonstd_sss and (i ~= 8) then return false, i, "unzulässige Spezialtrennung" end
+         if props.has_nonstd_sss and (i ~= 8) then
+            info.errfield = i
+            info.errmsg = "unzulässige Spezialtrennung"
+            return false, info
+         end
          -- Tritt 'ß' an unzulässiger Feldnummer auf?
-         if props.has_eszett and (i > 4) then return false, i, "unzulässiges ß" end
+         if props.has_eszett and (i > 4) then
+            info.errfield = i
+            info.errmsg = "unzulässiges Eszett"
+            return false, info
+         end
       end
    end
    -- Speichere alle Wörter mit Eszett und ohne Eszett, aber mit
@@ -481,7 +514,7 @@ local function validate_record(record)
    elseif Ufind(field1, 'ss') then
       words_ss[Ulower(field1)] = true
    end
-   return type
+   return true, info
 end
 M.validate_record = validate_record
 
@@ -521,20 +554,20 @@ local function validate_file(f)
    -- Iteriere über Zeilen der Eingabe.
    for record in f:lines() do
       total = total + 1
-      local type, field, msg = validate_record(record)
+      local is_valid, info = validate_record(record)
       -- Datensatz zulässig?
-      if type then
+      if is_valid then
          -- Zähle Vorkommen des Typs.
-         count[type] = count[type] + 1
-      else
+         count[info.type] = count[info.type] + 1
+      else-- Datensatz unzulässig.
          invalid = invalid + 1
          -- Zeile ausgeben.
          io.stderr:write("Zeile ", tostring(total))
          -- Fehlermeldung ausgeben.
-         if type == false then
-            io.stderr:write(" Feld ", tostring(field), ": ", msg)
-         else
+         if not info then
             io.stderr:write(" ungültiger Datensatz")
+         else
+            io.stderr:write(" Feld ", tostring(info.errfield), ": ", info.errmsg)
          end
          -- Datensatz ausgeben.
          io.stderr:write(": ", record, "\n")
