@@ -555,7 +555,7 @@ local function validate_file(f)
             -- Prüfung auf vorhandene Eszett-Ersatzschreibung.
             if info.has_eszett then
                local word_ss = Ulower(Ugsub(info.field1, "ß", "ss"))
-               words_eszett[word_ss] = true
+               words_eszett[word_ss] = cnt_lineno
             elseif Ufind(info.field1, "ss") then
                words_ss[Ulower(info.field1)] = true
             end
@@ -574,13 +574,22 @@ local function validate_file(f)
          io.stderr:write(": ", record, "\n")
       end
    end
+   -- Sequenz fehlender Doppel-s-Schreibungen.
+   local bad_words_ss = {}
    -- Prüfe, ob zu jeder Eszett-Schreibung eine Doppel-s-Schreibung
    -- vorhanden ist.
    for word_ss in pairs(words_eszett) do
       if not words_ss[word_ss] then
          cnt_invalid = cnt_invalid + 1
-         io.stderr:write("fehlende Doppel-s-Schreibung: ", word_ss, "\n")
+         -- Merke fehlendes Doppel-s-Wort für sortierte Ausgabe.
+         table.insert(bad_words_ss, word_ss)
       end
+   end
+   -- Sortiere fehlende Doppel-s-Schreibungen nach Zeilennummer der Eszett-Schreibung.
+   table.sort(bad_words_ss, function(a,b) return words_eszett[a] < words_eszett[b] end)
+   -- Gebe fehlende Doppel-s-Schreibungen sortiert aus.
+   for _,word_ss in ipairs(bad_words_ss) do
+      io.stderr:write("Zeile ", words_eszett[word_ss], " fehlende Doppel-s-Schreibung: ", word_ss, "\n")
    end
    return {
       cnt_total = cnt_lineno,
