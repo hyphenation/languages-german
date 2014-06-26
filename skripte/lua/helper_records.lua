@@ -421,12 +421,6 @@ end
 M.read_exception_file = read_exception_file
 
 
--- Tabelle von Wörtern mit Eszett.
-local words_eszett = {}
--- Tabelle von Wörtern ohne Eszett, aber mit Doppel-s.
-local words_ss = {}
-
-
 --- Prüfe einen Datensatz auf Wohlgeformtheit.  Geprüft wird das Format
 --- des Datensatzes und die Zulässigkeit sämtlicher Wörter.
 --
@@ -505,15 +499,7 @@ local function validate_record(record)
          end
       end
    end
-   -- Speichere alle Wörter mit Eszett und ohne Eszett, aber mit
-   -- Doppel-s, in Kleinschreibung für spätere Prüfung auf vorhandene
-   -- Eszett-Ersatzschreibung.
-   if props1.has_eszett then
-      local word_ss = Ulower(Ugsub(field1, 'ß', 'ss'))
-      words_eszett[word_ss] = true
-   elseif Ufind(field1, 'ss') then
-      words_ss[Ulower(field1)] = true
-   end
+   info.has_eszett = props1.has_eszett
    return true, info
 end
 M.validate_record = validate_record
@@ -551,6 +537,10 @@ local function validate_file(f)
       ux_rxtr_ = 0,
       ux_rxtrs = 0,
    }
+   -- Tabelle von Wörtern mit Eszett.
+   local words_eszett = {}
+   -- Tabelle von Wörtern ohne Eszett, aber mit Doppel-s.
+   local words_ss = {}
    -- Iteriere über Zeilen der Eingabe.
    for record in f:lines() do
       total = total + 1
@@ -559,6 +549,17 @@ local function validate_file(f)
       if is_valid then
          -- Zähle Vorkommen des Typs.
          count[info.type] = count[info.type] + 1
+         if not info.is_whitelisted then
+            -- Speichere alle Wörter i) mit Eszett und ii) ohne Eszett,
+            -- aber mit Doppel-s, in Kleinschreibung für nachgelagerte
+            -- Prüfung auf vorhandene Eszett-Ersatzschreibung.
+            if info.has_eszett then
+               local word_ss = Ulower(Ugsub(info.field1, "ß", "ss"))
+               words_eszett[word_ss] = true
+            elseif Ufind(info.field1, "ss") then
+               words_ss[Ulower(info.field1)] = true
+            end
+         end
       else-- Datensatz unzulässig.
          invalid = invalid + 1
          -- Zeile ausgeben.
