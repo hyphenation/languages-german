@@ -541,6 +541,8 @@ local function validate_file(f)
    local words_eszett = {}
    -- Tabelle von Wörtern ohne Eszett, aber mit Doppel-s.
    local words_ss = {}
+   -- Zeilennummern unzulässiger Datensätze.
+   local bad_lineno = {}
    -- Iteriere über Zeilen der Eingabe.
    for record in f:lines() do
       cnt_lineno = cnt_lineno + 1
@@ -572,17 +574,21 @@ local function validate_file(f)
          end
          -- Datensatz ausgeben.
          io.stderr:write(": ", record, "\n")
+         -- Merke fehlerhafte Zeilennummer für Commit-Ermittlung.
+         table.insert(bad_lineno, cnt_lineno)
       end
    end
    -- Sequenz fehlender Doppel-s-Schreibungen.
    local bad_words_ss = {}
    -- Prüfe, ob zu jeder Eszett-Schreibung eine Doppel-s-Schreibung
    -- vorhanden ist.
-   for word_ss in pairs(words_eszett) do
+   for word_ss,lineno in pairs(words_eszett) do
       if not words_ss[word_ss] then
          cnt_invalid = cnt_invalid + 1
          -- Merke fehlendes Doppel-s-Wort für sortierte Ausgabe.
          table.insert(bad_words_ss, word_ss)
+         -- Merke fehlerhafte Zeilennummer für Commit-Ermittlung.
+         table.insert(bad_lineno, lineno)
       end
    end
    -- Sortiere fehlende Doppel-s-Schreibungen nach Zeilennummer der Eszett-Schreibung.
@@ -595,6 +601,7 @@ local function validate_file(f)
       cnt_total = cnt_lineno,
       cnt_invalid = cnt_invalid,
       cnt_rectypes = cnt_rectypes,
+      bad_lineno = bad_lineno,
    }
 end
 M.validate_file = validate_file
