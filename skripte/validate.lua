@@ -58,13 +58,15 @@ end
 
 
 -- Lese Ausnahmeliste.
-local fname = "wortliste.ausnahmen"
-fname = hrecords.read_exception_file(fname)
-print("Verwende Ausnahmeliste " .. fname)
+local fname_ex = "wortliste.ausnahmen"
+fname_ex = hrecords.read_exception_file(fname_ex)
+print("Verwende Ausnahmeliste " .. fname_ex)
 
 
--- Prüfe Wortliste auf Standardeingabe.
-local info = hrecords.validate_file(io.stdin)
+-- Lese von Standardeingabe.
+local fin_db = io.stdin
+-- Prüfe Wortliste.
+local info = hrecords.validate_file(fin_db)
 
 
 -- Ausgabe.
