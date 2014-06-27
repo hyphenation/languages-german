@@ -64,16 +64,16 @@ print("Verwende Ausnahmeliste " .. fname)
 
 
 -- Prüfe Wortliste auf Standardeingabe.
-local count = hrecords.validate_file(io.stdin)
+local info = hrecords.validate_file(io.stdin)
 
 
 -- Ausgabe.
 if opt.s then
-   hrecords.output_record_statistics(count)
+   hrecords.output_record_statistics(info.cnt_rectypes)
 end
-print("gesamt    ", count.total)
-print("ungültig  ", count.invalid)
+print("gesamt    ", info.cnt_total)
+print("ungültig  ", info.cnt_invalid)
 
 
 -- Ende mit Fehlerkode?
-if count.invalid > 0 then os.exit(1) end
+if info.cnt_invalid > 0 then os.exit(1) end

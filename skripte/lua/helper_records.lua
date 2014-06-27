@@ -517,11 +517,11 @@ M.validate_record = validate_record
 -- @return Tabelle mit Häufigkeiten der Datensatztypen.
 local function validate_file(f)
    -- Gesamtzahl der Datensätze.
-   local total = 0
+   local cnt_lineno = 0
    -- Anzahl der ungültigen Datensätze.
-   local invalid = 0
+   local cnt_invalid = 0
    -- Anzahl der identifizierten Datensatztypen.
-   local count = {
+   local cnt_rectypes = {
       ua = 0,
       uxt_ = 0,
       ux_r = 0,
@@ -543,12 +543,12 @@ local function validate_file(f)
    local words_ss = {}
    -- Iteriere über Zeilen der Eingabe.
    for record in f:lines() do
-      total = total + 1
+      cnt_lineno = cnt_lineno + 1
       local is_valid, info = validate_record(record)
       -- Datensatz zulässig?
       if is_valid then
          -- Zähle Vorkommen des Typs.
-         count[info.type] = count[info.type] + 1
+         cnt_rectypes[info.type] = cnt_rectypes[info.type] + 1
          if not info.is_whitelisted then
             -- Speichere alle Wörter i) mit Eszett und ii) ohne Eszett,
             -- aber mit Doppel-s, in Kleinschreibung für nachgelagerte
@@ -561,9 +561,9 @@ local function validate_file(f)
             end
          end
       else-- Datensatz unzulässig.
-         invalid = invalid + 1
+         cnt_invalid = cnt_invalid + 1
          -- Zeile ausgeben.
-         io.stderr:write("Zeile ", tostring(total))
+         io.stderr:write("Zeile ", tostring(cnt_lineno))
          -- Fehlermeldung ausgeben.
          if not info then
             io.stderr:write(" ungültiger Datensatz")
@@ -578,13 +578,15 @@ local function validate_file(f)
    -- vorhanden ist.
    for word_ss in pairs(words_eszett) do
       if not words_ss[word_ss] then
-         invalid = invalid + 1
+         cnt_invalid = cnt_invalid + 1
          io.stderr:write("fehlende Doppel-s-Schreibung: ", word_ss, "\n")
       end
    end
-   count.total = total
-   count.invalid = invalid
-   return count
+   return {
+      cnt_total = cnt_lineno,
+      cnt_invalid = cnt_invalid,
+      cnt_rectypes = cnt_rectypes,
+   }
 end
 M.validate_file = validate_file
 
