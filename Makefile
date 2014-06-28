@@ -89,6 +89,23 @@ ifneq ($(findstring major,$(MAKECMDGOALS)),)
     major:
 	    @:
   endif
+else ifneq ($(findstring fugen,$(MAKECMDGOALS)),)
+  MAJOR = -fugen
+  # All combinations of `-', `<', `>' get removed,
+  # runs of `=' are converted to a hyphen.
+  SEDMAJOR = $(SED) -e '/[=<>-]/!n' \
+                    -e 's/-//g' \
+                    -e 's/[<>][<>]*//g' \
+                    -e 's/[=][=]*/-/g'
+  PERLMAJOR = -g $(W)
+
+  ifeq ($(words $(MAKECMDGOALS)),1)
+    fugen: all
+  else
+    # This is to suppress the `nothing to be done' warning.
+    fugen:
+	    @:
+  endif
 else
   MAJOR =
   SEDMAJOR = cat

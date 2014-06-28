@@ -7,8 +7,7 @@ auto/
 /wortliste-lang-s
 /german.dic
 /pre-1901.wl
-/dehypht-x/*
-/dehyphn-x/*
+/dehyph*-x*/*
 dokumente/index.html
 tmp*
 temp*
