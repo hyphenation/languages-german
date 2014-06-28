@@ -14,6 +14,8 @@
 # * Zusammenfassen von Feldern mit gleichem Inhalt wenn das Ergebnis ein
 #   wohlgeformter Eintrag ist.
 #
+# * Ergänzen von Formen mit SS statt ß.
+#
 # ::
 
 import re, sys, codecs, copy
@@ -55,6 +57,16 @@ if __name__ == '__main__':
 
     for oldentry in wortliste:
         if len(oldentry) <= 2:
+            # Ggf. Ergänzen der GROSS-Variante:
+            if (u'ß' in oldentry[0] 
+                and oldentry[0].replace(u'ß', u'ss') not in words
+                and oldentry[0].replace(u'ß', u'ss').lower() not in words
+                and oldentry[0].replace(u'ß', u'ss').title() not in words
+               ):
+                entry = WordEntry(oldentry[0].replace(u'ß', u'ss')
+                                  + u';-2-;-3-;-4-;'
+                                  + oldentry[1].replace(u'ß', u'ss'))
+                wortliste_neu.append(entry)
             wortliste_neu.append(oldentry)
             continue
         entry = copy.copy(oldentry)
@@ -70,12 +82,6 @@ if __name__ == '__main__':
                 if entry.get('de-1901-x-GROSS'):
                     wort1901 = entry.get('de-1901-x-GROSS')
                     wort1901 = wort1901.replace(u'ss', u'ß')
-                    # wort1901 = wort1901.replace(u'sst', u'ßt')
-                    # wort1901 = wort1901.replace(u'ss=', u'ß=')
-                    # wort1901 = wort1901.replace(u'ss>', u'ß>')
-                    # wort1901 = wort1901.replace(u'ss<', u'ß<')
-                    # wort1901 = wort1901.replace(u'-ss', u'-ß')
-                    # wort1901 = re.sub(u'ss$', u'ß', wort1901)
                     if not u'/' in wort1901 and len(wort1901)>3:
                         print u'%s;-2-;%s;-4-' % (join_word(wort1901), wort1901)
                 pass  # e.g. "Abfahrtßpezialisten"
@@ -83,12 +89,30 @@ if __name__ == '__main__':
             try:
                 sprachabgleich(entry, words[entry[0].replace(u'ß', u'ss')])
             except KeyError:
-                # print entry[0].replace(u'ss', u'ß'), "fehlt"
-                pass
-        if oldentry == entry:
-            wortliste_neu.append(oldentry)
-        else:
-            wortliste_neu.append(entry)
+                # Ergänzen der GROSS-Variante
+                if entry.get('de-1996') is None:
+                    oldentry = WordEntry(u';'.join(
+                                        [entry[0].replace(u'ß', u'ss'),
+                                         u'-2-;-3-', 
+                                         entry[2].replace(u'ß', u'ss'),
+                                         entry[2].replace(u'ß', u'ss')]))
+                elif entry.get('de-1996') is None:
+                    # Dämmmassnahmen;-2-;-3-;-4-;-5-;-6-;Dämm==mass=nah-men;-8-
+                    oldentry = WordEntry(entry[0].replace(u'ß', u'ss')
+                                      + u';-2-;-3-;-4-;-5-;-6-;'
+                                      + entry[3].replace(u'ß', u'ss')
+                                      + u'-8-')
+                else:
+                    oldentry = WordEntry(u';'.join(
+                                        [entry[0].replace(u'ß', u'ss'),
+                                         u'-2-;-3-;-4-;-5-', 
+                                         entry[2].replace(u'ß', u'ss'),
+                                         entry[3].replace(u'ß', u'ss'),
+                                         u'-8-']))
+                    
+                wortliste_neu.append(oldentry)
+                
+        wortliste_neu.append(entry)
 
 
 
