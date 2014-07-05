@@ -146,7 +146,7 @@ override SRCDIR := $(shell cd $(SRCDIR); $(PWD))
 
 all: pattern-trad pattern-refo pattern-swiss
 
-.PHONY: pattern-trad pattern-refo pattern-swiss major
+.PHONY: pattern-trad pattern-refo pattern-swiss major fugen
 pattern-trad: $(TRADFILES)
 pattern-refo: $(REFOFILES)
 pattern-swiss: $(SWISSFILES)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
-# :Copyright: © 2011 Günter Milde.
+# :Copyright: © 2014 Günter Milde.
 #             Released without warranty under the terms of the
 #             GNU General Public License (v. 2 or later)
 # :Id: $Id:  $
