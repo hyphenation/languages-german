@@ -37,6 +37,15 @@ werkzeug.py
   Test der Werkzeuge und der inneren Konsistenz der Wortliste
   (Doppeleinträge, Übereinstimmung Schlüssel-Trennmuster).
 
+hyphenation.py
+  Hyphenation, using a pure Python implementation Frank Liang's algorithm.
+
+  This module provides a class to hyphenate words. 
+  Verwendet in hyphenate_neueintraege.py
+  
+  Command-line usage: ./hyphenation.py [options] [words to be hyphenated]
+
+
 Skripte zur Trennstellenkategorisierung
 =======================================
 
@@ -142,6 +151,21 @@ abgleich_neueintraege.py
   Die Liste kann nach ``neu.todo`` gespeichert und (nach Durchsicht) mit
   ``prepare_patch.py neu`` in die Wortliste eingepflegt werden.
 
+hyphenate_neueintraege.py
+  Versuche kategorisierte Trennung über "hyphenation"-Algorithmus und 
+  patgen-patterns.
+  
+  Verwendet Pattern-Dateien welche über die "make" Ziele
+  `make pattern-refo`, `make major pattern-refo` und 
+  `make fugen pattern-refo` im Wurzelverzeichnis der wortliste generiert
+  werden können.
+
+  Erwartet eine Datei mit 1 Wort/Zeile.
+  Pfad/Dateiname im Abschnitt Konfiguration anpassen!
+
+  Schreibt eine Liste auf stdout. Die Liste kann nach ``neu.todo``
+  gespeichert und (nach Durchsicht) mit ``prepare_patch.py neu`` in die
+  Wortliste eingepflegt werden.
 
 wortfugen.py
   Suche nach "Teilwortkandidaten" in der Wortliste.
@@ -192,8 +216,8 @@ Trennstellenkategorisierung mit Hilfe der Python-Skripte,
                   ``abgleich_suffixe.py``,
                   ``vorsilben_in_teilwoertern.py``)
 =======
-    		  ``abgleich_suffixe.py``,
-    		  ``vorsilben_in_teilwoertern.py``)
+                  ``abgleich_suffixe.py``,
+                  ``vorsilben_in_teilwoertern.py``)
 >>>>>>> spell
 
 * Rückübertragen der Korrekturen auf die Wortliste
@@ -206,3 +230,18 @@ Trennstellenkategorisierung mit Hilfe der Python-Skripte,
   - Prüfen der Kontrollausgabe, ggf. Korrektur von ``wortliste.patch``.
 
   - ``patch ../../wortliste < wortliste.patch``
+
+
+Trennung unbekannter Wörter (2 Alternativen):
+
+* Mit `abgleich_neueintraege.py` versuchen, ob Trennstellen durch Vergleich
+  mit vorhandenen Einträgen bestimmt werden können. Liefert Vorschläge für
+  gewichtete, kategorisierte Einträge, die nach Durchsicht und Korrekturen
+  mit prepare_patch.py eingepflegt werden können.
+
+* Mit `hyphenate_neueintraege.py` Trennstellen durch Anwendung des
+  TeX-Algorithmus bestimmen. Liefert kategorisierte Einträge ohne Wichtung,
+  die nach Durchsicht und Korrekturen mit prepare_patch.py eingepflegt
+  werden können.
+  
+  
