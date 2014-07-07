@@ -23,6 +23,7 @@ from hyphenation import Hyphenator
 # Pfad zur Datei mit den neu einzutragenden Wörtern::
 
 neuwortdatei = "spell/zusatz-de-1996-aspell-compact"
+neuwortdatei = "spell/unkategorisiert"
 # neuwortdatei = "spell/DDR.txt"
 
 
@@ -47,9 +48,35 @@ h_fugen = Hyphenator(pfile_fugen)
 
 def trenne(entry):
     key = entry[0]
-    word = u'='.join([u'<'.join([h_all.hyphenate_word(part, '-') 
-                                 for part in h_major.split_word(teilwort)])
-                      for teilwort in h_fugen.split_word(key)])
+    parts_fugen = h_fugen.split_word(key)
+    parts_major = h_major.split_word(key)
+    parts_all = h_all.split_word(key)
+    
+    parts = [] # Liste von Silben und Trennzeichen, wird am Ende zusammengefügt.
+    p_major = '' # zum Vergleich mit parts_major
+    p_fugen = ''
+    # Kategorisierung der Trennstellen
+    for part_all in parts_all[:-1]:
+        parts.append(part_all)
+        p_fugen += part_all
+        p_major += part_all
+        if p_fugen == parts_fugen[0]:
+            parts_fugen.pop(0)
+            p_fugen = ''
+            parts.append(u'=')
+        elif p_major == parts_major[0]:
+            parts_major.pop(0)
+            p_major = ''
+            parts.append(u'<')
+        else:
+            parts.append(u'-')
+    parts.append(parts_all[-1])
+    word = u''.join(parts)
+    
+    # Alternative Kategorisierung über Zerlegung der Teilwörter/Wortteile:
+    # word = u'='.join([u'<'.join([h_all.hyphenate_word(part, '-') 
+    #                              for part in h_major.split_word(teilwort)])
+    #                   for teilwort in h_fugen.split_word(key)])
     return WordEntry(key + u';' + word)
 
 if __name__ == '__main__':
