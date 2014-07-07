@@ -83,11 +83,13 @@ def korrektur(wordfile, datei):
         if not line:
             continue
         # Eintrag ggf. komplettieren
-        if u';' in line:
-            key = line.split(';')[0]
-        else:
-            key = join_word(line)
-        korrekturen[key] = line
+        if u';' not in line:
+            line = u'%s;%s' % (join_word(line), line)
+        entry = WordEntry(line)
+        key = entry[0]
+        entry.regelaenderungen() # teste auf Dinge wie s-t/-st
+            
+        korrekturen[key] = entry
 
     wortliste = list(wordfile)
     wortliste_neu = [] # korrigierte Liste
@@ -95,13 +97,7 @@ def korrektur(wordfile, datei):
     for entry in wortliste:
         key = entry[0]
         if key in korrekturen:
-            korrektur = korrekturen.pop(key)
-            if u';' in korrektur:
-                entry = WordEntry(korrektur)
-            else:
-                entry = copy(entry)
-                entry.set(korrektur, sprachvariante)
-                # print entry
+            entry = korrekturen.pop(key)
         wortliste_neu.append(entry)
 
     if korrekturen:
