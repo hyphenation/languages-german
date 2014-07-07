@@ -14,12 +14,13 @@
 #
 #   make pattern-trad SRCDIR=~/git/wortliste
 #
-# If you add the (phony) target `major', patterns which only use major
-# hyphenation points (`Haupttrennstellen') are created.  Example:
+# If you add one of the (phony) targets `major', `fugen', or `suffix',
+# patterns which only use major hyphenation points (`Haupttrennstellen') 
+# are created.  Example:
 #
 #   make major pattern-refo
 #
-# The used directories names are the same as above but with `-major'
+# The used directories names are the same as above but with `-major' (etc.)
 # appended to the names.
 #
 # To control the used weights in the major hyphenation patterns, add
@@ -44,15 +45,20 @@
 #
 #   make pattern-trad SRCDIR=~/git/wortliste
 #
-# Wird zusätzlich das zusätzliche (künstliche) Ziel `major' angegeben,
-# werden Haupttrennstellmuster erzeugt.
+# Wird eines der zusätzlichen (künstliche) Ziele `major', `fugen' oder
+# `suffix' angegeben, werden Haupttrennstellmuster erzeugt.
 #
 # Beispiel:
 #
 #   make major pattern-refo
 #
 # Die verwendeten Verzeichnisnamen sind die gleichen wie oben, allerdings
-# mit einem angehängten `-major'.
+# mit einem angehängten `-major', `-fugen' bzw. `-suffix'.
+# 
+# Diese Spezialmuster spiegeln die Auszeichnung in der Liste direkt wider. 
+# Sie haben nicht das Ziel, "gute" Trennungen in Texten zu erzeugen sondern
+# sind zum Testen der Konsistenz der Auszeichnung sowie zum "kategorisierten"
+# Markieren der Trennstellen neuer Wörter gedacht.
 #
 # Die Wichtung der verwendeten Haupttrennstellen kann mittels der Variable
 # `W=N' kontrolliert werden, wo `N' die Qualität angibt: Wert 1 selektiert
@@ -74,11 +80,11 @@ WORDLIST = wortliste
 ifneq ($(findstring major,$(MAKECMDGOALS)),)
   MAJOR = -major
   # A single `-' gets removed; all other combinations of `-', `<', `>',
-  # `=', and `|' are converted to a hyphen.
-  SEDMAJOR = $(SED) -e '/[=|<>-]/!n' \
+  # and `=' are converted to a hyphen.
+  SEDMAJOR = $(SED) -e '/[=<>-]/!n' \
                     -e 's/---*/=/g' \
                     -e 's/-//g' \
-                    -e 's/[=|<>][=|<>]*/-/g' \
+                    -e 's/[=<>][=<>]*/-/g' \
                     -e '/-/!d'
   PERLMAJOR = -g $(W)
 
@@ -104,6 +110,23 @@ else ifneq ($(findstring fugen,$(MAKECMDGOALS)),)
   else
     # This is to suppress the `nothing to be done' warning.
     fugen:
+	    @:
+  endif
+else ifneq ($(findstring suffix,$(MAKECMDGOALS)),)
+  MAJOR = -suffix
+  # All combinations of `-', `<', `=' get removed,
+  # runs of `>' are converted to a hyphen.
+  SEDMAJOR = $(SED) -e '/[=<>-]/!n' \
+                    -e 's/-//g' \
+                    -e 's/[<=][<=]*//g' \
+                    -e 's/[>][>]*/-/g'
+  PERLMAJOR = -g $(W)
+
+  ifeq ($(words $(MAKECMDGOALS)),1)
+    suffix: all
+  else
+    # This is to suppress the `nothing to be done' warning.
+    suffix:
 	    @:
   endif
 else
@@ -146,10 +169,12 @@ override SRCDIR := $(shell cd $(SRCDIR); $(PWD))
 
 all: pattern-trad pattern-refo pattern-swiss
 
-.PHONY: pattern-trad pattern-refo pattern-swiss major fugen
+.PHONY: pattern-trad pattern-refo pattern-swiss major fugen suffix
 pattern-trad: $(TRADFILES)
 pattern-refo: $(REFOFILES)
 pattern-swiss: $(SWISSFILES)
+
+# intermediate targets
 
 # auxiliary targets
 
