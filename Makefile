@@ -15,7 +15,7 @@
 #   make pattern-trad SRCDIR=~/git/wortliste
 #
 # If you add one of the (phony) targets `major', `fugen', or `suffix',
-# patterns which only use major hyphenation points (`Haupttrennstellen') 
+# patterns that only use major hyphenation points (`Haupttrennstellen')
 # are created.  Example:
 #
 #   make major pattern-refo
@@ -45,7 +45,7 @@
 #
 #   make pattern-trad SRCDIR=~/git/wortliste
 #
-# Wird eines der zusätzlichen (künstliche) Ziele `major', `fugen' oder
+# Wird eines der zusätzlichen (künstlichen) Ziele `major', `fugen' oder
 # `suffix' angegeben, werden Haupttrennstellmuster erzeugt.
 #
 # Beispiel:
@@ -54,8 +54,8 @@
 #
 # Die verwendeten Verzeichnisnamen sind die gleichen wie oben, allerdings
 # mit einem angehängten `-major', `-fugen' bzw. `-suffix'.
-# 
-# Diese Spezialmuster spiegeln die Auszeichnung in der Liste direkt wider. 
+#
+# Diese Spezialmuster spiegeln die Auszeichnung in der Liste direkt wider.
 # Sie haben nicht das Ziel, "gute" Trennungen in Texten zu erzeugen sondern
 # sind zum Testen der Konsistenz der Auszeichnung sowie zum "kategorisierten"
 # Markieren der Trennstellen neuer Wörter gedacht.
