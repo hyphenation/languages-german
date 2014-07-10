@@ -34,6 +34,7 @@ neuwortdatei = "spell/unkategorisiert"
 pfile_all = glob.glob('../../dehyphn-x/dehyphn-x-*.pat')[-1]
 pfile_major = glob.glob('../../dehyphn-x-major/dehyphn-x-major-*.pat')[-1]
 pfile_fugen = glob.glob('../../dehyphn-x-fugen/dehyphn-x-fugen-*.pat')[-1]
+pfile_suffix = glob.glob('../../dehyphn-x-suffix/dehyphn-x-suffix-*.pat')[-1]
 
 
 
@@ -42,6 +43,7 @@ pfile_fugen = glob.glob('../../dehyphn-x-fugen/dehyphn-x-fugen-*.pat')[-1]
 h_all = Hyphenator(pfile_all)
 h_major = Hyphenator(pfile_major)
 h_fugen = Hyphenator(pfile_fugen)
+h_suffix = Hyphenator(pfile_suffix)
         
 
 # Trenne mit Hyphenator::
@@ -50,20 +52,27 @@ def trenne(entry):
     key = entry[0]
     parts_fugen = h_fugen.split_word(key)
     parts_major = h_major.split_word(key)
+    parts_suffix = h_suffix.split_word(key)
     parts_all = h_all.split_word(key)
     
     parts = [] # Liste von Silben und Trennzeichen, wird am Ende zusammengefügt.
     p_major = '' # zum Vergleich mit parts_major
     p_fugen = ''
+    p_suffix = ''
     # Kategorisierung der Trennstellen
     for part_all in parts_all[:-1]:
         parts.append(part_all)
-        p_fugen += part_all
         p_major += part_all
+        p_fugen += part_all
+        p_suffix += part_all
         if p_fugen == parts_fugen[0]:
             parts_fugen.pop(0)
             p_fugen = ''
             parts.append(u'=')
+        elif p_suffix == parts_suffix[0]:
+            parts_suffix.pop(0)
+            p_suffix = ''
+            parts.append(u'>')
         elif p_major == parts_major[0]:
             parts_major.pop(0)
             p_major = ''
