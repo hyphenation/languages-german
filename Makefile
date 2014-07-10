@@ -97,10 +97,12 @@ ifneq ($(findstring major,$(MAKECMDGOALS)),)
   endif
 else ifneq ($(findstring fugen,$(MAKECMDGOALS)),)
   MAJOR = -fugen
-  # All combinations of `-', `<', `>' get removed,
+  # All combinations of `-', `<', `>', `<=', `=>' get removed,
   # runs of `=' are converted to a hyphen.
   SEDMAJOR = $(SED) -e '/[=<>-]/!n' \
-                    -e 's/-//g' \
+                    -e 's/--*//g' \
+                    -e 's/<=*//g' \
+                    -e 's/=*>//g' \
                     -e 's/[<>][<>]*//g' \
                     -e 's/[=][=]*/-/g'
   PERLMAJOR = -g $(W)
