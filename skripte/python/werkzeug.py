@@ -203,6 +203,12 @@ class WordEntry(list):
 # 1
 # >>> aalbestand.lang_index('de-1996')
 # 1
+# >>> aalbestand.lang_index('de-x-GROSS')
+# 1
+# >>> aalbestand.lang_index('de-1901-x-GROSS')
+# 1
+# >>> aalbestand.lang_index('de-1996-x-GROSS')
+# 1
 # >>> abbeissen = WordEntry(
 # ...     u'abbeissen;-2-;-3-;-4-;-5-;ab<bei-ssen;ab<beis-sen;ab<beis-sen')
 # >>> print abbeissen.lang_index('de')
@@ -288,6 +294,8 @@ class WordEntry(list):
 
     def set(self, wort, sprachvariante):
         i = self.lang_index(sprachvariante)
+        if wort is None:
+            wort = u'-%d-' % i+1
         if i is None:
             raise IndexError, "kann kein leeres Feld setzen"
         self[i] = wort
@@ -330,6 +338,7 @@ class WordEntry(list):
 # >>> entry.conflate_fields()
 # >>> print entry
 # distanziert;di-stan-ziert
+#
 # Aber nicht, wenn die Trennstellen sich unterscheiden:
 #
 # >>> abenddienste = WordEntry(

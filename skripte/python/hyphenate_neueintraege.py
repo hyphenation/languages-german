@@ -23,7 +23,6 @@ from hyphenation import Hyphenator
 # Pfad zur Datei mit den neu einzutragenden Wörtern::
 
 neuwortdatei = "spell/zusatz-de-1996-aspell-compact"
-neuwortdatei = "spell/unkategorisiert"
 # neuwortdatei = "spell/DDR.txt"
 
 
