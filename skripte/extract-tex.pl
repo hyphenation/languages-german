@@ -143,11 +143,12 @@ while (<>) {
       #
       #   -2   Wortteil
       #   -1   -
-      #    0   <, >
-      #    1   =
-      #    2   ==, <=, =>
-      #    3   ===, <==, ==>
-      #    ...
+      #    0   --
+      #    1   <, >
+      #    2   =
+      #    3   ==, <=, =>
+      #    4   ===, <==, ==>
+      #    ..
       #
       # Bei mehrfachem Auftreten von »<« hat das am meisten links stehende
       # den höchsten Rang.  Bei mehrfachem Auftreten von »>« hat das am
@@ -185,14 +186,17 @@ while (<>) {
         if ($m =~ /^-$/) {
           $w = -1;
         }
-        elsif ($m =~ /^[<>]$/) {
+        elsif ($m =~ /^--$/) {
           $w = 0;
         }
-        elsif ($m =~ /^=$/) {
+        elsif ($m =~ /^[<>]$/) {
           $w = 1;
         }
+        elsif ($m =~ /^=$/) {
+          $w = 2;
+        }
         elsif ($m =~ /( ==*>? | <?=*= )/x) {
-          $w = length($1);
+          $w = length($1) + 1;
         }
         else {
           warn "Zeile $INPUT_LINE_NUMBER:"
