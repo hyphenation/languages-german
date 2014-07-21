@@ -72,6 +72,7 @@ W = 0
 
 DATADIR = $(SRCDIR)/daten
 SCRIPTDIR = $(SRCDIR)/skripte
+PYSCRIPTDIR = $(SRCDIR)/skripte/python
 WORDLIST = wortliste
 # Variables FROM and TO are used by goal `pidiff'.  FROM must be a
 # commit set from shell, like `make pidiff FROM=abcdef', TO is optional
@@ -140,6 +141,7 @@ endif
 TRAD = dehypht-x$(MAJOR)
 REFO = dehyphn-x$(MAJOR)
 SWISS = dehyphts-x$(MAJOR)
+LANGS = de-Latf
 
 LC_ENVVARS = LC_COLLATE=de_DE.ISO8859-15 \
              LC_CTYPE=de_DE.ISO8859-15
@@ -154,6 +156,7 @@ ICONV = iconv -f iso-8859-15 -t utf-8
 MKDIR = mkdir -p
 PERL = perl
 PWD = pwd
+PYTHON = python
 SED = sed
 SH = bash
 SORT = $(LC_ENVVARS) sort -d \
@@ -290,5 +293,34 @@ $(SWISS)/$(SWISS)-$(DATE).tex: $(DATADIR)/$(SWISS).tex.in
 
 pidiff:
 	$(SH) skripte/patgen-list-diff.sh $(FROM) $(TO)
+
+# Listen und Patterns für Langes-S (Orthographie für Satz mit 
+# gebrochenen Schriften (de-Latf: deutsch, Latin-script-fraktur)
+
+$(LANGS)/words-de-1901-Latf.txt: $(PYSCRIPTDIR)/s2long-s.py
+	$(MKDIR) $(LANGS)
+	$(PYTHON) $(PYSCRIPTDIR)/s2long-s.py -i wortliste -l de-1901 \
+	   -o $(LANGS)/words-de-1901-Latf.txt
+
+$(LANGS)/words-de-1901-Latf.hyphenated: $(LANGS)/words-de-1901-Latf.txt
+	$(PYTHON) $(PYSCRIPTDIR)/long_s_quasihyph.py < $< > $@
+
+$(LANGS)/de-1901-Latf.pat: $(LANGS)/words-de-1901-Latf.hyphenated
+	$(CHDIR) $(LANGS); \
+          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(DATADIR)/german.tr
+	$(CAT) $(LANGS)/pattern.8 | $(ICONV) >> $@;
+
+$(LANGS)/words-de-1996-Latf.txt: $(PYSCRIPTDIR)/s2long-s.py
+	$(PYTHON) $(PYSCRIPTDIR)/s2long-s.py -i wortliste -l de-1996 \
+	   -o $(LANGS)/words-de-1996-Latf.txt
+
+$(LANGS)/words-de-1996-Latf.hyphenated: $(LANGS)/words-de-1996-Latf.txt
+	$(PYTHON) $(PYSCRIPTDIR)/long_s_quasihyph.py < $< > $@
+	
+
+$(LANGS)/de-1996-Latf.pat: $(LANGS)/words-de-1996-Latf.hyphenated
+	$(CHDIR) $(LANGS); \
+          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(DATADIR)/german.tr
+	$(CAT) $(LANGS)/pattern.8 | $(ICONV) >> $@;
 
 # EOF
