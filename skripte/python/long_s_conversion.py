@@ -20,22 +20,34 @@ from hyphenation import Hyphenator
 # Die Lang-S Pattern-Dateien welche über "make" Ziele
 # im Wurzelverzeichnis der wortliste generiert werden::
 
-pfile_1901 = '../../de-Latf/de-1901-Latf.pat'
-pfile_1996 = '../../de-Latf/de-1996-Latf.pat'
+pfile = '../../de-Latf/de-1901-Latf.pat'
+# pfile = '../../de-Latf/de-1996-Latf.pat'
 
 # Trenner-Instanzen::
 
-h_Latf = Hyphenator(pfile_1901)
-# h_1996 = Hyphenator(pfile_1996)
+# TODO: `pfile` konfigurierbar
+h_Latf = Hyphenator(pfile) 
+
+
+# ſ steht auch am Ende von Abkürzungen, wenn es im abgekürzten Wort steht
+# (Abſ. - Abſatz/Abſender, (de)creſc. - (de)creſcendo, daſ. - daſelbst ...)
+# ::
+
+exceptions = {u'Abs': u'Abſ', # Abſatz/Abſender
+            # u'das': u'daſ', # daſelbst (nicht von Artikel "das" zu unterscheiden!)
+             }
 
 
 # Konvertierung mit Hyphenator::
 
 def transformiere(wort, hyphenator=h_Latf):
     
+    if wort in exceptions:
+        return exceptions[wort]
+        
     parts = hyphenator.split_word(wort)
 
-    # alle klein S außer Schluss-S zu Lang-s:
+    # Wandle in jedem Teil alle klein S zu Lang-S, außer am Schluss:
     
     parts = [re.sub(u's(.)', ur'ſ\1', part) for part in parts]
 
