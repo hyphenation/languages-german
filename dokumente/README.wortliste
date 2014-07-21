@@ -86,7 +86,7 @@ Anmerkungen:
 * Viele Präfixe, die im heutigen Sprachverständnis nicht als eigenständig
   wahrgenommen werden, sind nicht speziell markiert:
 
-    En-er-gie, Ant-wort
+    Ant-wort
 
   Kriterien sind neben der „Güte“ der Trennstelle (geringe Störung des
   Leseflusses bei Zeilenumbruch an dieser Stelle) die Lang-s-Schreibung
@@ -142,15 +142,13 @@ nicht gewichtet:
 
   Abend=brot=zeit               Abendbrot-Zeit / Abend-Brotzeit
 
-Das gemischte Trennzeichen „<=“ kennzeichnet die Bindungsverhältnisse,
-wenn sich ein Präfix auf mehrere Teile eines Kompositums bezieht:
+Die gemischten Trennzeichen „<=“ und „=>“ kennzeichnen die
+Bindungsverhältnisse, wenn sich ein Affix auf mehrere Teile eines
+Kompositums bezieht:
 
   un<=wahr=schein-lich          un + (wahr + scheinlich)
   Ober<=be<fehls=ha-ber         Ober + ((be + fehls) + haber)
   Be<=gut=ach-tungs==frist      (Be + (gut + achtungs)) + frist
-
-Das gemischte Trennzeichen „=>“ kennzeichnet die Bindungsverhältnisse,
-wenn sich ein Suffix auf das vorhergehende Kompositum bezieht:
 
   an-dert=halb=>fach            (andert + halb) + fach
   zwei==ein=halb==>fa-che       (zwei + (ein + halb)) + fache

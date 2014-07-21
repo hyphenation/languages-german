@@ -1,0 +1,68 @@
+ 2 1
+%% This is the file de-Latf.tr 
+%% defining the letters used for generating pseudo-hyphenation patterns
+%% for "German with Latin script (fraktur)" (de-Latf) with patgen.
+%%
+%% When typesetting with fraktur/blackletter types, German orthography 
+%% requires a distinction between two lower case letters for the S-sound:
+%% long-S (Binnen-S) and round-s (Schluss-S), where in texts typeset in
+%% Antiqua fonts only round-s is used.
+%%
+%% The encoding of this file is ISO-8859-15 (latin-9).
+%%
+%% modified by Guenter Milde from german.tr by Werner Lemberg
+%% (c) Die deutsche Trennmustergruppe <trennmuster@dante.de>
+ a A
+ ä Ä
+ â Â
+ à À
+ á Á
+ ã Ã
+ å Å
+ æ Æ
+ b B
+ c C
+ ç Ç
+ d D
+ e E
+ é É
+ è È
+ ë Ë
+ ê Ê
+ f F
+ g G
+ h H
+ i I
+ í Í
+ ì Ì
+ î Î
+ j J
+ k K
+ l L
+ m M
+ n N
+ ñ Ñ
+ o O
+ ó Ó
+ ò Ò
+ ô Ô
+ ö Ö
+ ø Ø
+ ½ ¼
+ p P
+ q Q
+ r R
+ s S
+ ¨ ¦
+ ß
+ t T
+ u U
+ ú Ú
+ ü Ü
+ v V
+ w W
+ x X
+ y Y
+ ÿ ¾
+ z Z
+ ¸ ´

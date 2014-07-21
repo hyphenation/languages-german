@@ -28,7 +28,7 @@ dokumente/
 # Dokumentation des Wortlisten-Formates
  
 skripte/
-# Dieses Verzeichnis enthält in bunter Mischung Werkzeuge, die für die
+# Dieses Verzeichnis enthält Werkzeuge, die für die
 # Generierung von Trennmustern nötig oder für die Erstellung, Kontrolle,
 # Analyse und Manipulations von Wortlisten nützlich sind.
-# näheres in skripte/README
+# Näheres in skripte/MANIFEST.
