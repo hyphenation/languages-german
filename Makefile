@@ -60,7 +60,7 @@
 # sind zum Testen der Konsistenz der Auszeichnung sowie zum "kategorisierten"
 # Markieren der Trennstellen neuer Wörter gedacht.
 #
-# Bei `major' kann die Menge der verwendeten Haupttrennstellen mittels der 
+# Bei `major' kann die Menge der verwendeten Haupttrennstellen mittels der
 # Variable `W=N' (Wichtungs-Schwellwert)
 # kontrolliert werden, wo `N' die Qualität angibt: Wert 1 selektiert
 # nur die besten Haupttrennstellen, Wert 2 die besten und zweitbesten
@@ -300,7 +300,7 @@ $(SWISS)/$(SWISS)-$(DATE).tex: $(DATADIR)/$(SWISS).tex.in
 pidiff:
 	$(SH) skripte/patgen-list-diff.sh $(FROM) $(TO)
 
-# Listen und Patterns für Langes-S (Orthographie für Satz mit 
+# Listen und Patterns für Langes-S (Orthographie für Satz mit
 # gebrochenen Schriften (de-Latf: deutsch, Latin script, fraktur)
 
 .PHONY: de-1901-Latf de-1996-Latf
@@ -308,8 +308,8 @@ de-1901-Latf: $(LATF)/de-1901-Latf.pat
 
 $(LATF)/words-de-1901-Latf.txt: $(PYSCRIPTDIR)/s2long-s.py
 	$(MKDIR) $(LATF)
-	$(PYTHON) $(PYSCRIPTDIR)/s2long-s.py -i wortliste -l de-1901 \
-	   -o $(LATF)/words-de-1901-Latf.txt
+	$(PYTHON) $(PYSCRIPTDIR)/s2long-s.py --drop-homonyms -l de-1901 \
+	   -i wortliste -o $(LATF)/words-de-1901-Latf.txt
 
 $(LATF)/words-de-1901-Latf.hyphenated: $(LATF)/words-de-1901-Latf.txt
 	$(PYTHON) $(PYSCRIPTDIR)/long_s_quasihyph.py < $< > $@
@@ -322,8 +322,8 @@ $(LATF)/de-1901-Latf.pat: $(LATF)/words-de-1901-Latf.hyphenated
 de-1996-Latf: $(LATF)/de-1996-Latf.pat
 
 $(LATF)/words-de-1996-Latf.txt: $(PYSCRIPTDIR)/s2long-s.py
-	$(PYTHON) $(PYSCRIPTDIR)/s2long-s.py -i wortliste -l de-1996 \
-	   -o $(LATF)/words-de-1996-Latf.txt
+	$(PYTHON) $(PYSCRIPTDIR)/s2long-s.py  --drop-homonyms -l de-1996 \
+	    -i wortliste -o $(LATF)/words-de-1996-Latf.txt
 
 $(LATF)/words-de-1996-Latf.hyphenated: $(LATF)/words-de-1996-Latf.txt
 	$(PYTHON) $(PYSCRIPTDIR)/long_s_quasihyph.py < $< > $@

@@ -25,8 +25,7 @@ parser.add_option('-e', '--encoding', dest='encoding',
 
 lines = (line.decode('utf-8') for line in sys.stdin)
 
-words = (re.sub(ur'\[(.*)/.*\]', ur'\1',
-                word.replace(u's', u's-').replace(u'ſ', u's').replace(u'-\n', u'\n'))
+words = (word.replace(u's', u's-').replace(u'ſ', u's').replace(u'-\n', u'\n')
          for word in lines)
 
 sys.stdout.writelines(line.encode(options.encoding) for line in words)

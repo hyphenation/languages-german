@@ -85,7 +85,7 @@ class Hyphenator:
             hyphenation points.
         """
         # Short words aren't hyphenated.
-        if len(word) <= lmin + rmin:
+        if len(word) <= (lmin + rmin):
             return [word]
         # If the word is an exception, get the stored points.
         if word.lower() in self.exceptions:
@@ -104,7 +104,7 @@ class Hyphenator:
                                 points[i+j] = max(points[i+j], p[j])
                     else:
                         break
-            # No hyphens in the first two chars or the last two.
+            # No hyphens in the first `lmin` chars or the last `rmin` ones:
             for i in range(lmin):
                 points[i+1] = 0
             for i in range(rmin):
@@ -119,11 +119,11 @@ class Hyphenator:
                 pieces.append('')
         return pieces
 
-    def hyphenate_word(self, word, hyphen=u'­'):
+    def hyphenate_word(self, word, hyphen=u'­', lmin=2, rmin=2):
         """ Return `word` with (soft-)hyphens at the possible
             hyphenation points.
         """
-        return hyphen.join(self.split_word(word))
+        return hyphen.join(self.split_word(word, lmin, rmin))
 
 
 pattern_file = 'en-US.pat'
@@ -145,9 +145,16 @@ if __name__ == '__main__':
     parser.add_option('-i', '--input-file', dest='input_file',
                       help='Eingabedatei (ein Wort/Zeile)',
                       default='')
+    parser.add_option('', '--lmin',
+                      help='Unhyphenated characters at start of word, default 2',
+                      default='2')
+    parser.add_option('', '--rmin',
+                      help='Unhyphenated characters at end of word, default 2',
+                      default='2')
     (options, args) = parser.parse_args()
 
-
+    lmin = int(options.lmin)
+    rmin = int(options.rmin)
 
     if options.exception_file:
         ex_file = open(exception_file)
@@ -167,7 +174,7 @@ if __name__ == '__main__':
     if len(args) > 0:
         words = [word.decode('utf8') for word in args]
         for word in words:
-            print hyphenator.hyphenate_word(word)
+            print hyphenator.hyphenate_word(word, lmin=lmin, rmin=rmin)
     else:
         import doctest
         doctest.testmod(verbose=True)

@@ -57,14 +57,14 @@ from werkzeug import WordFile, WordEntry, join_word
 
 def s_ersetzen(word):
 
-# Spezielle Fälle
-# ~~~~~~~~~~~~~~~
+# Ausnahmeregeln
+# ~~~~~~~~~~~~~~
 #
 # Für sz und sk gelten Regeln, welche die Herkunft der Wörter beachten.
 # Diese und weitere spezielle Fälle, welche Lang-S vor Trennstellen verlangen
-# sind in `Spezialfälle Lang-S`_ gelistet::
+# sind in `Ausnahmen Lang-S`_ gelistet::
 
-    for fall in spezialfaelle_lang_s:
+    for fall in ausnahmen_lang_s:
         word = word.replace(fall.replace(u'ſ', u's'), fall)
 
 # Allgemeine Regeln
@@ -145,7 +145,7 @@ def s_ersetzen(word):
     return word
 
 
-# Spezialfälle Lang-S
+# Ausnahmen Lang-S
 # ~~~~~~~~~~~~~~~~~~~
 #
 # Teilstrings mit Lang-S vor Trennstelle.
@@ -153,7 +153,12 @@ def s_ersetzen(word):
 # ſ wird geschrieben, wenn der S-Laut nur scheinbar im Auslaut steht,
 # weil ein folgendes unbetontes e ausfällt::
 
-spezialfaelle_lang_s = [
+# TODO: es fehlen noch "Abwechslung" u.ä. auf ...lung, 
+# wechsle" u.ä. auf ...sle,
+# und andere Beispiele aus dem neuen Duden!!!
+# Regular Expressions?
+
+ausnahmen_lang_s = [
 
     # Basel, Beisel, Pilsen, drechseln, wechseln, häckseln
     u'Baſ-ler',
@@ -173,18 +178,21 @@ spezialfaelle_lang_s = [
     # Häusl, Lisl, bissl, Glasl, Rössl
     u'ſſl',
     u'ſl',
-                       ]
+
+    u'Wieſn',
+
+]
 
 # ſ steht auch am Ende von Abkürzungen, wenn es im abgekürzten Wort steht
 # (Abſ. - Abſatz/Abſender, (de)creſc. - (de)creſcendo, daſ. - daſelbst ...)
 # ::
 
-spezialfaelle_lang_s.append(u'creſc')
+ausnahmen_lang_s.append(u'creſc')
 
 # Alternativtrennung, wo beide Fälle ſ verlangen::
 
-spezialfaelle_lang_s.append(u'er<.]ſa') # Kind=er<.satz/Kin-der=satz
-spezialfaelle_lang_s.append(u'ſ[-ter=/t') # Tes[-ter=/t=er<.]ken-nung
+ausnahmen_lang_s.append(u'er<.]ſa') # Kind=er<.satz/Kin-der=satz
+ausnahmen_lang_s.append(u'ſ[-ter=/t') # Tes[-ter=/t=er<.]ken-nung
 
 # Fremdwörter und Eigennamen
 # --------------------------
@@ -206,7 +214,7 @@ spezialfaelle_lang_s.append(u'ſ[-ter=/t') # Tes[-ter=/t=er<.]ken-nung
 #
 # ::
 
-spezialfaelle_lang_s.extend([
+ausnahmen_lang_s.extend([
 
     u'ſh',       # (englisch)
     # u'Diſc',   # (englisch) TODO: so, oder Disc (wie eingedeutscht Disk)
@@ -240,6 +248,13 @@ spezialfaelle_lang_s.extend([
     u'Mur-manſk',
     u'ſi-birſk',
     u'Smo-lenſk',
+
+# ſſ steht wenn auf die Vorsilbe "dis-" oder "as-" ein "s" folgt::
+
+    u'aſ<ſ',     # Assoziation, ...
+    u'diſ<ſ',    # Dissoziation, ...
+    u'Diſ<ſ',    # dissonant, ...
+
                        ])
 
 # s-Regeln
@@ -254,7 +269,7 @@ spezialfaelle_lang_s.extend([
 #
 # Liste von Teilstrings, welche stets rund-s behalten ::
 
-spezialfaelle_rund_s = [
+ausnahmen_rund_s = [
 
 # Abkürzungen::
 
@@ -263,7 +278,6 @@ spezialfaelle_rund_s = [
 # ausgelassenes flüchtiges e::
 
     u'Dresd-ne',   # Dresd·ner/Dresd·ner·in
-    u'Wiesn',
 
 # s steht auch in einigen Fremdwörtern vor z und c::
 
@@ -288,7 +302,7 @@ def is_complete(word):
 #
 # Einzelfälle mit rundem S (substrings)::
 
-    for fall in spezialfaelle_rund_s:
+    for fall in ausnahmen_rund_s:
         word = word.replace(fall, fall.replace('s', '~'))
 
 # s steht am Wortende, auch in Zusammensetzungen (vor Haupttrennstellen)::
@@ -312,7 +326,7 @@ def is_complete(word):
     word = word.replace(u's-ph', u'~-ph')
     word = word.replace(u's-ſch', u'~-ſch')
 
-# s steht nach Vorsilben (wie aus<, dis<) auch wenn s, p, t, oder z folgt::
+# s steht nach Vorsilben (wie aus<) auch wenn s, p, t, oder z folgt::
 
     word = word.replace(u's<', u'~<')
 
@@ -362,6 +376,10 @@ if __name__ == '__main__':
                       help=u'Sprachvariante (ISO Sprachtag), '
                       u'Vorgabe "de-1901"',
                       default='de-1901')
+    parser.add_option('-d', '--drop-homonyms', action="store_true",
+                      default=False,
+                      help=u'Bei mehrdeutigen Wörtern, die sich nur in '
+                      'Lang-S-Schreibung unterscheiden, nimm nur das erste.')
 
     (options, args) = parser.parse_args()
 
@@ -437,7 +455,16 @@ if __name__ == '__main__':
                 offen.append(entry)
             continue
 
-        completed.append(join_word(lang_s_word))
+# Mehrdeutigkeiten [ſ/s] oder [s/ſ] auflösen::
+
+        lang_s_word = join_word(lang_s_word)
+        if u'/' in lang_s_word:
+            # 1. Alternative:
+            completed.append(re.sub(ur'\[(.+)/.+\]', ur'\1', lang_s_word))
+            if not options.drop_homonyms:
+                completed.append(re.sub(ur'\[.+/(.+)\]', ur'\1', lang_s_word))
+        else:
+            completed.append(lang_s_word)
         # completed.append(lang_s_word)
 
 

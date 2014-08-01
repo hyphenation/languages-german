@@ -1,5 +1,5 @@
  2 1
-%% This is the file de-Latf.tr 
+%% This is the file de-Latf.tr
 %% defining the letters used for generating pseudo-hyphenation patterns
 %% for "German with Latin script (fraktur)" (de-Latf) with patgen.
 %%
