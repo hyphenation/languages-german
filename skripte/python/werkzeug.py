@@ -220,10 +220,11 @@ class WordEntry(list):
 #
 # ::
 
-    def lang_index(self, sprachvariante):
+    def lang_index(self, lang):
 
-        assert sprachvariante in self.sprachvarianten, \
-            'Sprachvariante nicht in ' + str(self.sprachvarianten.keys())
+        assert lang in self.sprachvarianten, \
+            'Sprachvariante "%s" nicht in %s' % (lang,
+                                self.sprachvarianten.keys())
 
 # Einfacher Fall: eine allgemeine Schreibweise::
 
@@ -233,7 +234,7 @@ class WordEntry(list):
 # Spezielle Schreibung::
 
         try:
-            i = self.sprachvarianten[sprachvariante]
+            i = self.sprachvarianten[lang]
             feld = self[i]
         except IndexError:
             if i > 4 and len(self) == 5:
@@ -266,18 +267,23 @@ class WordEntry(list):
 # None
 # >>> print abbeissen.get('de-x-GROSS')
 # None
+# >>> print abbeissen.get('de,de-x-GROSS')
+# None
 # >>> abbeissen.get('de-1901-x-GROSS')
+# u'ab<bei-ssen'
+# >>> abbeissen.get('de,de-1901,de-1901-x-GROSS')
 # u'ab<bei-ssen'
 # >>> abbeissen.get('de-CH-1901')
 # u'ab<beis-sen'
 #
 # ::
 
-    def get(self, sprachvariante):
-        try:
-            return self[self.lang_index(sprachvariante)]
-        except TypeError:  # Muster in `sprachvariante` nicht vorhanden
-            return None
+    def get(self, sprachvarianten):
+        for lang in sprachvarianten.split(','):
+            i = self.lang_index(lang) # integer>0 or None
+            if i:
+                return self[i]
+        return None
 
 # Trennmuster für Sprachvariante setzen
 #
@@ -290,15 +296,22 @@ class WordEntry(list):
 # ...
 # IndexError: kann kein leeres Feld setzen
 #
+# >>> abbeissen.set('test', 'de-1901,de-1901-x-GROSS')
+# >>> print abbeissen
+# abbeissen;-2-;-3-;-4-;-5-;test;ab<beis-sen;ab<beis-sen
+#
 # ::
 
-    def set(self, wort, sprachvariante):
-        i = self.lang_index(sprachvariante)
-        if wort is None:
-            wort = u'-%d-' % i+1
-        if i is None:
-            raise IndexError, "kann kein leeres Feld setzen"
-        self[i] = wort
+    def set(self, wort, sprachvarianten):
+        for lang in sprachvarianten.split(','):
+            i = self.lang_index(lang)
+            if i is None:
+                continue
+            if wort is None:
+                wort = u'-%d-' % i+1
+            self[i] = wort
+            return
+        raise IndexError, "kann kein leeres Feld setzen"
 
 # Felder für alle Sprachvarianten ausfüllen
 #
@@ -403,19 +416,19 @@ class WordEntry(list):
         r1996 = (u's-t', u'-ck')
         # kein Schluss-ss und sst in de-1901
         # aber: 'ßt' und Schluß-ß auch in de-1996 möglich (langer Vokal)
-    
+
         w1901 = self.get('de-1901')
         w1996 = self.get('de-1996')
-        
+
         if w1901 is None or w1996 is None:
             return
-        
+
         for r1, r2 in zip(r1901, r1996):
             w1901 = w1901.replace(r2,r1)
             w1996 = w1996.replace(r1,r2)
         if u'sst' in w1901 or w1901.endswith(u'ss'):
             w1901 = None
-    
+
         if w1901 == w1996: # keine Regeländerung im Wort
             if len(self) > 2:
                 self.conflate_fields()
@@ -431,7 +444,7 @@ class WordEntry(list):
             self[1] = u'-2-'
             self[2] = w1901
             self[3] = w1996
-            
+
 
 
 # Funktionen
@@ -846,7 +859,7 @@ def sortkey_duden(entry):
 # Sortieren nach erstem Feld (ungetrenntes Wort)::
 
     key = entry[0]
-    
+
     if len(entry) == 1:  # ein Muster pro Zeile, siehe z.B. pre-1901
         key = join_word(key)
 
@@ -1038,7 +1051,7 @@ if __name__ == '__main__':
             print u'-', line,
             print u'+', unicode(entry)
         line = wordfile.readline().rstrip().decode(wordfile.encoding)
-    
+
     print OK, u"Einträge rekonstruiert"
 
 

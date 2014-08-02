@@ -148,6 +148,7 @@ TRAD = dehypht-x$(MAJOR)
 REFO = dehyphn-x$(MAJOR)
 SWISS = dehyphts-x$(MAJOR)
 LATF = de-Latf
+LONG_S = de-long-s
 
 LC_ENVVARS = LC_COLLATE=de_DE.ISO8859-15 \
              LC_CTYPE=de_DE.ISO8859-15
@@ -300,19 +301,37 @@ $(SWISS)/$(SWISS)-$(DATE).tex: $(DATADIR)/$(SWISS).tex.in
 pidiff:
 	$(SH) skripte/patgen-list-diff.sh $(FROM) $(TO)
 
-# Listen und Patterns für Langes-S (Orthographie für Satz mit
-# gebrochenen Schriften (de-Latf: deutsch, Latin script, fraktur)
+# Listen und Patterns de-Latf (deutsch, Latin script, fraktur;
+# Orthographie für Satz mit gebrochenen Schriften und rundem und langem S)
+# 
+# de-Latf...: Variante mit Quasi-Trennstellen nach rund-s
 
-.PHONY: de-1901-Latf de-1996-Latf
+.PHONY: de-Latf de-1901-Latf de-1996-Latf
+
+de-Latf: $(LATF)/de-Latf.pat
+
+$(LATF)/words-de-Latf.txt: wortliste $(PYSCRIPTDIR)/s2long-s.py
+	$(MKDIR) $(LATF)
+	$(PYTHON) $(PYSCRIPTDIR)/s2long-s.py --drop-homonyms \
+	   -l "de-1901,de-1996" -i wortliste -o $(LATF)/words-de-Latf.txt
+
+$(LATF)/words-de-Latf.hyphenated: $(LATF)/words-de-Latf.txt
+	$(PYTHON) $(PYSCRIPTDIR)/de_Latf_quasihyph.py < $< > $@
+
+$(LATF)/de-Latf.pat: $(LATF)/words-de-Latf.hyphenated
+	$(CHDIR) $(LATF); \
+          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(DATADIR)/de-Latf.tr
+	$(CAT) $(LATF)/pattern.8 | $(ICONV) >> $@;
+
 de-1901-Latf: $(LATF)/de-1901-Latf.pat
 
-$(LATF)/words-de-1901-Latf.txt: $(PYSCRIPTDIR)/s2long-s.py
+$(LATF)/words-de-1901-Latf.txt: wortliste $(PYSCRIPTDIR)/s2long-s.py
 	$(MKDIR) $(LATF)
 	$(PYTHON) $(PYSCRIPTDIR)/s2long-s.py --drop-homonyms -l de-1901 \
 	   -i wortliste -o $(LATF)/words-de-1901-Latf.txt
 
 $(LATF)/words-de-1901-Latf.hyphenated: $(LATF)/words-de-1901-Latf.txt
-	$(PYTHON) $(PYSCRIPTDIR)/long_s_quasihyph.py < $< > $@
+	$(PYTHON) $(PYSCRIPTDIR)/de_Latf_quasihyph.py < $< > $@
 
 $(LATF)/de-1901-Latf.pat: $(LATF)/words-de-1901-Latf.hyphenated
 	$(CHDIR) $(LATF); \
@@ -321,16 +340,30 @@ $(LATF)/de-1901-Latf.pat: $(LATF)/words-de-1901-Latf.hyphenated
 
 de-1996-Latf: $(LATF)/de-1996-Latf.pat
 
-$(LATF)/words-de-1996-Latf.txt: $(PYSCRIPTDIR)/s2long-s.py
+$(LATF)/words-de-1996-Latf.txt: wortliste $(PYSCRIPTDIR)/s2long-s.py
 	$(PYTHON) $(PYSCRIPTDIR)/s2long-s.py  --drop-homonyms -l de-1996 \
 	    -i wortliste -o $(LATF)/words-de-1996-Latf.txt
 
 $(LATF)/words-de-1996-Latf.hyphenated: $(LATF)/words-de-1996-Latf.txt
-	$(PYTHON) $(PYSCRIPTDIR)/long_s_quasihyph.py < $< > $@
+	$(PYTHON) $(PYSCRIPTDIR)/de_Latf_quasihyph.py < $< > $@
 
 $(LATF)/de-1996-Latf.pat: $(LATF)/words-de-1996-Latf.hyphenated
 	$(CHDIR) $(LATF); \
           $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(DATADIR)/de-Latf.tr
 	$(CAT) $(LATF)/pattern.8 | $(ICONV) >> $@;
+
+# long-s: Variante mit Quasi-Trennstellen nach Lang-S
+
+.PHONY: de-x-long-s
+de-x-long-s: $(LONG_S)/de-x-long-s.pat
+
+$(LONG_S)/words-de-x-long-s.hyphenated: $(LATF)/words-de-Latf.txt
+	$(MKDIR) $(LONG_S)
+	$(PYTHON) $(PYSCRIPTDIR)/long_s_quasihyph.py < $< > $@
+
+$(LONG_S)/de-x-long-s.pat: $(LONG_S)/words-de-x-long-s.hyphenated
+	$(CHDIR) $(LONG_S); \
+          $(SH) $(SCRIPTDIR)/make-full-pattern.sh $(<F) $(DATADIR)/de-Latf.tr
+	$(CAT) $(LONG_S)/pattern.8 | $(ICONV) >> $@;
 
 # EOF

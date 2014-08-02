@@ -72,8 +72,7 @@ def s_ersetzen(word):
 #
 # ſ steht im Silbenanlaut::
 
-    word = re.sub(ur'^s', ur'ſ', word)
-    word = re.sub(ur'([-<>=·.])s', ur'\1ſ', word)
+    word = re.sub(ur'(^|[-<>=·.])s', ur'\1ſ', word)
 
 # ſ steht im Inlaut als stimmhaftes s zwischen Vokalen
 # (gilt auch für ungetrenntes ss zwischen Selbstlauten, z.B. Hausse, Baisse)::
@@ -81,10 +80,34 @@ def s_ersetzen(word):
     word = re.sub(ur'([AEIOUYÄÖÜaeiouäöüé])s([aeiouyäöüé])', ur'\1ſ\2', word)
     word = re.sub(ur'([AEIOUYÄÖÜaeiouäöüé])ss([aeiouyäöüé])', ur'\1ſſ\2', word)
 
-# ſ steht in den Verbindungen sp, st, sch und in Digraphen, allerdings nicht
-# in der Verbindung "sst", die seit 1996 für "ßt" steht::
 
-    word = re.sub(u'(^|[^s])st', ur'\1ſt', word)
+# Doppel-S statt ß
+# ----------------
+#
+# Wenn kein ß vorhanden ist (GROSSSCHREIBUNG) und in der Schweiz wird ss
+# statt ß geschrieben. Seit 1996 wird auch am Wort-/Silbenende und vor t nach
+# kurzem Vokal ss geschrieben. Der "Reformduden" empfielt im Fraktursatz die
+# Schreibung "ſs" (die auch vor 1901 in Gebrauch war).
+
+# Wir übernehmen diese Schreibung am Wort-/Silbenende::
+
+    word = re.sub(u'ss($|[-=<>.])', ur'ſs\1', word)
+    
+# Vor t schreiben wir nach kurzem Vokal Doppel-ſ::
+
+    word = word.replace(u'sst', u'ſſt')
+
+# Nach langem Vokal steht auch in de-1996 ein ß, in de-x-GROSS ist keine
+# ſ-Wandlung nötig/möglich.
+# TODO: in der Schweizer Orthographie müßte nach langem Vokal oder Zwielaut
+# auch vor t ein ſs stehen (beißt -> beiſst).
+
+# Verbindungen und Digraphen
+# --------------------------
+
+# ſ steht in den Verbindungen sp, st, sch und in Digraphen::
+
+    word = word.replace(u'st', u'ſt')
     word = word.replace(u'sp', u'ſp')
     word = word.replace(u'sch', u'ſch')
 
@@ -111,16 +134,23 @@ def s_ersetzen(word):
     word = re.sub(ur's([-.]+)p([^h])', ur'ſ\1p\2', word)
     word = re.sub(ur'(^|[^s])s([-.]+)t', ur'\1ſ\2t', word) # Reformschreibung
 
+# ſ wird auch geschrieben, wenn der S-Laut nur scheinbar im Auslaut steht,
+# weil ein folgendes unbetontes e ausfällt:
 
-# Doppel-S statt SZ am Silbenende und vor t
-# -----------------------------------------
-#
-# Wenn kein ß vorhanden ist, in der Schweiz und seit der Reform 1996 allgemein
-# nach kurzem Mitlaut wird ss statt ß geschrieben. Der "Reformduden" empfielt
-# im Fraktursatz die Schreibung ſs (die auch vor 1901 in Gebrauch war)::
+# "ss-l", aber nicht bei "...eiss-l" und "Ess-lingen" mit ss statt ß::
 
-    word = re.sub(u'ss($|[-=<>.])', ur'ſs\1', word)
-    word = word.replace(u'sst', u'ſst')
+    word = re.sub(ur'([^iE])ss-l', ur'\1ſſ-l', word) # Droſſ-lung, ...
+
+# "s-l" (Baſ-ler, pinſ-le, Kapſ-lung, Wechſ-ler, wechſ-le, Ries-ling),
+# aber nicht bei
+#   M.s-l:    Mus-lim, Mos-lem, ...
+#   [iys]s-l: Gris-ly, is-lam, Crys-ler, ... (ss-l siehe obige Regel)
+#   s-la:     Bra-tis-la-va, Gos-lar, Bres-lau,
+
+    word = re.sub(ur'([^mM][^siy])s-l([^a])', ur'\1ſ-l\2', word)
+
+# (für weitere Fälle siehe auch `Ausnahmen Lang-S`_):
+
 
 # Fremdwörter und Eigennamen mit Schluss-ß
 # """"""""""""""""""""""""""""""""""""""""
@@ -137,7 +167,7 @@ def s_ersetzen(word):
 # ::
 
     # TODO ſſ oder ſs (wie in de-1996)? :
-    # if sprachvariante == 'de-1901':
+    # if lang == 'de-1901':
     #     word = re.sub(ur'ss$', ur'ſſ', word)
     #     word = word.replace(u'ss=', u'ſſ=')
     #     word = word.replace(u'ss-ſch', u'ſſ-ſch')
@@ -153,41 +183,35 @@ def s_ersetzen(word):
 # ſ wird geschrieben, wenn der S-Laut nur scheinbar im Auslaut steht,
 # weil ein folgendes unbetontes e ausfällt::
 
-# TODO: es fehlen noch "Abwechslung" u.ä. auf ...lung, 
-# wechsle" u.ä. auf ...sle,
-# und andere Beispiele aus dem neuen Duden!!!
-# Regular Expressions?
-
 ausnahmen_lang_s = [
 
-    # Basel, Beisel, Pilsen, drechseln, wechseln, häckseln
-    u'Baſ-ler',
-    u'Kaſſ-ler',
-    u'Pilſ-ner',
-    u'echſ-ler',# Dechsler, Wechsler
-    u'äckſ-ler',# Häcksler
-    u'Röſſl',
+    u'Pilſ-ner',  # < Pilsen, aber Mes-ner, Meiss-ner (de-ch)
+    u'Klauſ-ner', # < Klause, aber Gleiss-ner (de-ch)
+    u'riſſ-ne',   # ge<riss-ne, ... (de-ch)
+    u'oſſ-ne',    # ge<schoss-ne, ge<schloss-ne, ... (de-ch)
+    u'er<leſ-ne', # auserlesne
+    u'unſ-r',     # unsre, unsrige, ...
+    u'ſſl',       # Röſſl
+    u'ſl',        # Beiſl, Häuſl
 
-    # Insel (Rheininsler), zünseln (Maiszünsler)
-    u'inſ-ler',
-    u'ünſ-ler',
-
-    # unsre, unsrige, ...
-    u'unſ-r',
-
-    # Häusl, Lisl, bissl, Glasl, Rössl
-    u'ſſl',
-    u'ſl',
-
+    # Einzelfälle:
+    u'kreiſ-le',
     u'Wieſn',
-
+    u'Schiſſ-la-weng',
+    u'Pſſſt',     # im Duden pst!
 ]
 
-# ſ steht auch am Ende von Abkürzungen, wenn es im abgekürzten Wort steht
+# ſ steht in Abkürzungen, wenn es im abgekürzten Wort steht
 # (Abſ. - Abſatz/Abſender, (de)creſc. - (de)creſcendo, daſ. - daſelbst ...)
 # ::
 
-ausnahmen_lang_s.append(u'creſc')
+ausnahmen_lang_s.extend([
+
+    u'creſc', # creſcendo
+    u'Diſſ',  # Diſſertation
+    u'Maſſ',  # Maſſachuſetts
+
+                        ])
 
 # Alternativtrennung, wo beide Fälle ſ verlangen::
 
@@ -273,11 +297,17 @@ ausnahmen_rund_s = [
 
 # Abkürzungen::
 
-    u'Ausg', u'ausſchl', u'desgl', u'hrsg', u'insb',
+    u'Ausg', # Ausgan, Ausgabe
+    u'ausſchl',
+    u'desgl', # des<gleichen
+    u'Diſſ',  # Diſſertation
+    u'hrsg',  # herausgegeben
+    u'Hrsg',  # Herausgeber
+    u'insb',
 
 # ausgelassenes flüchtiges e::
 
-    u'Dresd-ne',   # Dresd·ner/Dresd·ner·in
+    u'Dresd-ne',   # Dresd-ner/Dresd-ne-rin
 
 # s steht auch in einigen Fremdwörtern vor z und c::
 
@@ -287,11 +317,11 @@ ausnahmen_rund_s = [
     u'mas-ze-ner', # Damaszener
     u'Disc',       # TODO: rund oder Diſc (aber eingedeutscht Disk)
 
-
 # ss im Auslaut (vgl. `Fremdwörter und Eigennamen`_)::
 
     # u'Gauss',    # vgl. "Briefwechsel zwischen C.F. Gauss und H.C. Schumacher, herausg. von C.A.F. Peters"
                    # aber Boſſ, Busineſſ, Dreſſ
+
                        ]
 
 
@@ -319,7 +349,6 @@ def is_complete(word):
 # folgt (in der traditionellen Schreibung wird st nicht getrennt)::
 
     word = re.sub(ur'ss?([·.\-][^ptzſ])', ur'~\1', word) # konservativ
-    # word = re.sub(ur'ss?([·.\-][^pzſ])', ur'~\1', word)   # traditionell
 
 # s steht auch vor Nebentrennstellen, wenn ph oder sch folgt::
 
@@ -339,10 +368,12 @@ def is_complete(word):
 
     word = re.sub(ur's([knw])', ur'~\1', word)
 
-# s steht in der Verbindung sst, die seit 1995 für ßt steht::
+# s steht in der Verbindung sst, die in der Schweiz und
+# bei fehlendem ß (GROSS) für ßt steht::
 
-    word = word.replace(u'ſst', u'ſ~t')
-    word = word.replace(u'ſs-t', u'ſ~-t')
+    # TODO: nur nach Zielaut und langem Vokal.
+    # word = word.replace(u'ſst', u'ſ~t')
+    # word = word.replace(u'ſs-t', u'ſ~-t')
 
 # s steht als zweiter Buchstabe im ersetzten ß::
 
@@ -373,8 +404,8 @@ if __name__ == '__main__':
                       u'Standardausgabe) Vorgabe: "words-<language>-Latf.txt"',
                       default='') # wird später ausgefüllt
     parser.add_option('-l', '--language', dest='language',
-                      help=u'Sprachvariante (ISO Sprachtag), '
-                      u'Vorgabe "de-1901"',
+                      help=u'Sprachvariante(n) (kommagetrennte Liste von '
+                      u'ISO Sprachtags), Vorgabe "de-1901"',
                       default='de-1901')
     parser.add_option('-d', '--drop-homonyms', action="store_true",
                       default=False,
@@ -410,7 +441,7 @@ if __name__ == '__main__':
 # Konvertiere die Wörter der Trennliste und sortiere die Ergebnisse in
 # Listen::
 
-    no_of_words = 0   # Gesamtwortzahl der gewählten Sprache
+    no_of_words = 0   # Gesamtwortzahl der gewählten Sprache(n)
     completed = []    # Automatisch konvertiert
     irreversible = [] # Rückkonversion ungleich Original (Fehler)
     unkategorisiert = [] # Unterscheidung in Haupt- und Nebentrennstellen fehlt
@@ -480,18 +511,19 @@ if __name__ == '__main__':
 #
 # ::
 
-    if options.outfile not in ('-', 'stdout'):
-        print "# Gesamtwortzahl", lang, no_of_words
-        print "# Automatisch konvertiert:", len(completed)
-        print "# erkannte Konvertierungsfehler:", len(irreversible)
-        for entry in irreversible:
-            print unicode(entry).encode('utf8')
-        print "# Kategorisierung der Trennstellen fehlt:", len(unkategorisiert)
-        for entry in unkategorisiert:
-            print unicode(entry).encode('utf8')
-        print "# noch offen/unklar:", len(offen)
-        for entry in offen:
-            print unicode(entry).encode('utf8')
+    sys.stderr.write("# Gesamtwortzahl %s %s\n" % (lang, no_of_words))
+    sys.stderr.write("# Automatisch konvertiert: %d\n" % len(completed))
+    sys.stderr.write("# erkannte Konvertierungsfehler: %d\n"
+                     % len(irreversible))
+    for entry in irreversible:
+        sys.stderr.write(unicode(entry).encode('utf8')+'\n')
+    sys.stderr.write("# Kategorisierung der Trennstellen fehlt: %d\n"
+                     % len(unkategorisiert))
+    for entry in unkategorisiert:
+        sys.stderr.write(unicode(entry).encode('utf8')+'\n')
+    sys.stderr.write("# noch offen/unklar: %d\n" % len(offen))
+    for entry in offen:
+        sys.stderr.write(unicode(entry).encode('utf8')+'\n')
 
 
 # Diskussion

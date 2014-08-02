@@ -5,11 +5,11 @@
 #             GNU General Public License (v. 2 or later)
 # :Id: $Id:  $
 
-# long_s_quasihyph.py: 
+# de_Latf_quasihyph.py: 
 # ============================================================
 
-u"""Filter zum Wandeln von Wörtern mit langem S in
-Pseudo-Trennbeispiele (ausſagen -> auss-agen, eſſen -> es-s-en)."""
+u"""Filter zum Wandeln von Wörtern mit Rund- und Lang-S in
+Pseudo-Trennbeispiele (ausſagen -> aus-sagen)."""
 
 import sys, optparse, re
 
@@ -25,7 +25,7 @@ parser.add_option('-e', '--encoding', dest='encoding',
 
 lines = (line.decode('utf-8') for line in sys.stdin)
 
-words = (word.replace(u'ſ', u's-')
+words = (word.replace(u's', u's-').replace(u'ſ', u's').replace(u'-\n', u'\n')
          for word in lines)
 
 sys.stdout.writelines(line.encode(options.encoding) for line in words)

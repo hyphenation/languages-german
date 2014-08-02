@@ -71,7 +71,7 @@ def transformiere_text(text, hyphenator=h_Latf):
     # Text zerlegen: finde (ggf. leere) Folgen von nicht-Wort-Zeichen
     # gefolgt von Wort-Zeichen. Der Iterator liefert Match-Objekte, mit
     # den Untergruppen 0: nicht-Wort und 1: Wort.
-    it = re.finditer(r"([\W0-9]*)(\w*)", text, flags=re.UNICODE)
+    it = re.finditer(r"([\W0-9_]*)(\w*)", text, flags=re.UNICODE)
     # Konvertierung und Zusammenfügen
     parts = [match.groups()[0] # nicht-Wort Zeichen
              + transformiere(match.groups()[1], hyphenator)
