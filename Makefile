@@ -67,7 +67,7 @@
 # Haupttrennstellen usw.  Der Standardwert für `W' ist 0; er gibt an, dass
 # alle Haupttrennstellen verwendet werden sollen.
 
-# Die Ziele `de-1901-Latf' und `de-1996-Latf' erzeugen (experimentelle)
+# Die Ziele `de-Latf' und `de-x-long-s' erzeugen (experimentelle)
 # Wortlisten und (Quasi-) Trennmuster für die Wandlung von Wörtern in
 # traditioneller oder reformierter Standartorthographie in die Variante mit
 # Unterscheidung von langem und runden S (Binnen-S vs. Schluß-S) wie sie im

@@ -570,8 +570,8 @@ if __name__ == '__main__':
 # * Ga[s/ſ]traſſe:  Gas-Trasse / Gast-Rasse
 # * Schiff[ſ/s]tau: Schiffs-Tau / Schiff-Stau
 #
-# Die Ausgangsdatei schreibt diese mit der "Alternativsyntax" [s/ſ] oder [ſ/s]
-# wie in den obigen Beispielen.
+# Im Normalfall schreibt s2long-s.py beide Varianten in die Ausgabedatei. Die
+# Option --drop_homonyms kann verwendet werden, wenn dies nicht erwünscht ist.
 #
 # Unklare Schreibung
 # ~~~~~~~~~~~~~~~~~~

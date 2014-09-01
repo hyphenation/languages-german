@@ -20,13 +20,11 @@ from hyphenation import Hyphenator
 # Die Lang-S Pattern-Dateien welche über "make" Ziele
 # im Wurzelverzeichnis der wortliste generiert werden::
 
-pfile = '../../de-Latf/de-1901-Latf.pat'
-# pfile = '../../de-Latf/de-1996-Latf.pat'
+pfile = '../../de-Latf/de-Latf.pat'
 
 # Trenner-Instanzen::
 
-# TODO: `pfile` konfigurierbar
-h_Latf = Hyphenator(pfile) 
+h_Latf = Hyphenator(pfile)
 
 
 # ſ steht auch am Ende von Abkürzungen, wenn es im abgekürzten Wort steht
@@ -54,12 +52,12 @@ exceptions = dict((ex.replace(u'ſ', u's'), ex) for ex in exceptions)
 # Konvertierung mit Hyphenator::
 
 def transformiere(wort, hyphenator=h_Latf):
-    
+
     if u's' not in wort:
         return wort
     if wort in exceptions:
         return exceptions[wort]
-        
+
     parts = hyphenator.split_word(wort, rmin=1)
 
     # Wandle in jedem Teil alle klein S zu Lang-S, außer am Schluss:
@@ -89,8 +87,10 @@ if __name__ == '__main__':
     parser.add_option('-t', '--test', action="store_true", default=False,
                       help='Vergleiche Eingabe mit Rekonstruktion, '
                       'Melde Differenzen.')
-                      
+
     (options, args) = parser.parse_args()
+    
+    h_Latf = Hyphenator(options.pattern_file)
 
     # sys.stdout mit UTF8 encoding.
     sys.stdout = codecs.getwriter('utf8')(sys.stdout)
@@ -99,7 +99,7 @@ if __name__ == '__main__':
         lines = [u' '.join(args).decode('utf8')]
     else:
         lines = (line.decode('utf8') for line in sys.stdin)
-    
+
     if options.test:
         for line in lines:
             line2 = transformiere_text(line.replace(u'ſ', u's'))
@@ -108,6 +108,3 @@ if __name__ == '__main__':
     else:
         for line in lines:
             print transformiere_text(line),
-        
-
-
