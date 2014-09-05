@@ -27,9 +27,8 @@ usage = u'%prog [Optionen] [Eingangsdatei]\n' + __doc__
 
 import unicodedata, sys, optparse, os
 # path for local Python modules
-sys.path.append(os.path.join(os.path.dirname(__file__), 'python'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'python'))
 from werkzeug import WordFile, WordEntry, join_word, udiff, sortkey_duden
-
 
 # sortkey_wl
 # ----------
@@ -80,7 +79,8 @@ if __name__ == '__main__':
                       help='alternative (obsolete) Sortierordnung',
                       default=False)
     parser.add_option('-d', '--dump', action="store_true", default=False,
-                      help='Schreibe sortierte Liste auf die Standardausgabe.')
+                      help='Schreibe die sortierte Liste '
+                      'auf die Standardausgabe.')
 
     (options, args) = parser.parse_args()
 
