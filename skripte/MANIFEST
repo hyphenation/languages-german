@@ -114,9 +114,9 @@ validate.lua
 sort.py
   Sortiere die Wortliste und erstelle einen Patch im "unified diff" Format.
 
-  Aufruf: ``./sort.py`` oder ``python sort.py``
+  Aufruf: ``./sort.py wortliste`` oder ``python sort.py wortliste``
 
-  Anwenden des Patches: ``patch ../wortliste < wortliste-sortiert.patch``
+  Anwenden des Patches: ``patch wortliste < wortliste-sortiert.patch``
 
   Details mit ``./sort.py -h``
 
