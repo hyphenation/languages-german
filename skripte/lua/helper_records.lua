@@ -1,7 +1,7 @@
 -- -*- coding: utf-8 -*-
 
 --[[
-Copyright 2012, 2013 Stephan Hennig
+Copyright 2012, 2013, 2014, 2015 Stephan Hennig
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -31,7 +31,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 -- @class module
 -- @name helper_records
 -- @author Stephan Hennig
--- @copyright 2012, 2013, Stephan Hennig
+-- @copyright 2012, 2013, 2014, 2015 Stephan Hennig
 
 -- Die API-Dokumentation kann mit <pre>
 --
@@ -367,7 +367,7 @@ M.identify_record = identify_record
 -- Datensätze in dieser Liste werden nicht auf Wohlgeformtheit der
 -- einzelnen Wörter geprüft.  Schlüssel ist ein Datensatz.  Der Wert
 -- darf nicht zu logisch `falsch` auswerten.
-local whitelist = {}
+local exceptions_regular = {}
 
 
 
@@ -403,22 +403,38 @@ end
 
 
 --- Lese Ausnahmeliste von Datensätzen aus Datei.
+-- Die Datensätze (Zeilen) der Datei werden in der übergebenen Tabelle
+-- als Schlüssel gespeichert.
 --
 -- @param fname Dateiname (optional mit Pfad)
+-- @param exceptions Tabelle, in der Ausnahmen gespeichert werden
 --
 -- @return Dateiname der erfolgreich gelesenen Datei.
-local function read_exception_file(fname)
+local function read_exception_file(fname, exceptions)
    local f, path = _open_exception_file(fname)
    -- Lese Datei in einem Rutsch.
    local s = f:read('*all')
    f:close()
    -- Füge Datensätze der Ausnahmeliste hinzu.
    for record in Ugmatch(s, "(.-)\n") do
-      whitelist[record] = true
+      exceptions[record] = true
    end
    return path .. fname
 end
 M.read_exception_file = read_exception_file
+
+
+
+--- Lese Ausnahmeliste für normale Prüfung.
+--
+-- @param fname Dateiname (optional mit Pfad)
+--
+-- @return Dateiname der erfolgreich gelesenen Datei.
+local function read_regular_exceptions(fname)
+   return read_exception_file(fname, exceptions_regular)
+end
+M.read_regular_exceptions = read_regular_exceptions
+
 
 
 --- Prüfe einen Datensatz auf Wohlgeformtheit.  Geprüft wird das Format
@@ -443,8 +459,8 @@ local function validate_record(record)
    -- Sichere Typ in Rückgabetabelle.
    local info = { type = rectype }
    -- Verzichte auf Prüfung der Wortstruktur bei bestimmten Datensätzen.
-   if whitelist[record] then
-      info.is_whitelisted = true
+   if exceptions_regular[record] then
+      info.is_exception = true
       return true, info
    end
    -- Zerlege Datensatz.
@@ -551,7 +567,7 @@ local function validate_file(f)
       if is_valid then
          -- Zähle Vorkommen des Typs.
          cnt_rectypes[info.type] = cnt_rectypes[info.type] + 1
-         if not info.is_whitelisted then
+         if not info.is_exception then
             -- Speichere alle Wörter i) mit Eszett und ii) ohne Eszett,
             -- aber mit Doppel-s, in Kleinschreibung für nachgelagerte
             -- Prüfung auf vorhandene Eszett-Ersatzschreibung.

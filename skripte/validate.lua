@@ -61,7 +61,7 @@ end
 
 -- Lese Ausnahmeliste.
 local fname_ex = "wortliste.ausnahmen"
-fname_ex = hrecords.read_exception_file(fname_ex)
+fname_ex = hrecords.read_regular_exceptions(fname_ex)
 print("Verwende Ausnahmeliste " .. fname_ex)
 
 
