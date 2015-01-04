@@ -2,7 +2,7 @@
 
 --[[
 
-Copyright 2012, 2013 Stephan Hennig
+Copyright 2012, 2013, 2014, 2015 Stephan Hennig
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -65,13 +65,10 @@ fname_ex = hrecords.read_exception_file(fname_ex)
 print("Verwende Ausnahmeliste " .. fname_ex)
 
 
--- Lese von Standardeingabe.
-local fin_db = io.stdin
--- Oder aus Datei.
+-- Speichere Dateinamenargument der Option --blame.
 local fname_db = opt.b
-if fname_db then
-   fin_db = assert(io.open(fname_db, "r"))
-end
+-- Lese von Standardeingabe oder aus Datei.
+local fin_db = fname_db and assert(io.open(fname_db, "r")) or io.stdin
 
 
 -- Prüfe Wortliste.
