@@ -552,23 +552,18 @@ end
 
 
 --- Prüfe Eszett-Ersatzschreibungen auf Vollständigkeit.
---
--- @return Anzahl fehlerhafter Ersatzschreibungen.
 local function check_eszett()
-   local cnt_invalid = 0
    -- Prüfe, ob zu jeder Eszett-Schreibung eine Doppel-s-Schreibung
    -- vorhanden ist.
    for _,trec_eszett in ipairs(eszett_forms) do
       local ss_form = Ugsub(trec_eszett.eszett_form, "ß", "ss")
       if not ss_forms[ss_form] then
-         cnt_invalid = cnt_invalid + 1
          -- Merke fehlerhafte Zeilennummer für Commit-Ermittlung.
-         table.insert(bad_lineno, trec_eszett.lineno)
+         bad_lineno[trec_eszett.lineno] = true
          -- Gebe fehlende Doppel-s-Schreibung aus.
          io.stderr:write("Zeile ", trec_eszett.lineno, " fehlende Doppel-s-Schreibung: ", trec_eszett[1], "\n")
       end
    end
-   return cnt_invalid
 end
 
 
@@ -585,8 +580,6 @@ end
 local function validate_file(f)
    -- Gesamtzahl der Datensätze.
    local cnt_lineno = 0
-   -- Anzahl der ungültigen Datensätze.
-   local cnt_invalid = 0
    -- Anzahl der identifizierten Datensatztypen.
    local cnt_rectypes = {
       ua = 0,
@@ -619,7 +612,6 @@ local function validate_file(f)
             prepare_eszett_check(trec)
          end
       else-- Datensatz unzulässig.
-         cnt_invalid = cnt_invalid + 1
          -- Zeile ausgeben.
          io.stderr:write("Zeile ", tostring(cnt_lineno))
          -- Fehlermeldung ausgeben.
@@ -631,11 +623,16 @@ local function validate_file(f)
          -- Datensatz ausgeben.
          io.stderr:write(": ", record, "\n")
          -- Merke fehlerhafte Zeilennummer für Commit-Ermittlung.
-         table.insert(bad_lineno, cnt_lineno)
+         bad_lineno[cnt_lineno] = true
       end
    end
-   local cnt_invalid_eszett = check_eszett()
-   cnt_invalid = cnt_invalid + cnt_invalid_eszett
+   -- Nachgeschaltete Eszett-Prüfung.
+   check_eszett()
+   -- Anzahl der ungültigen Datensätze.
+   local cnt_invalid = 0
+   for _,__ in pairs(bad_lineno) do
+      cnt_invalid = cnt_invalid + 1
+   end
    return {
       cnt_total = cnt_lineno,
       cnt_invalid = cnt_invalid,

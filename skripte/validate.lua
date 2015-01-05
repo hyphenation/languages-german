@@ -87,7 +87,7 @@ print("ungültig  ", info.cnt_invalid)
 if opt.b then
    -- Erstelle git-blame-Kommando mit verketteten Zeilennummern.
    local call = "git blame"
-   for _,lineno in ipairs(info.bad_lineno) do
+   for lineno,_ in pairs(info.bad_lineno) do
       call = call .. " -L " .. lineno .."," .. lineno
    end
    call = call .. " " .. fname_db
