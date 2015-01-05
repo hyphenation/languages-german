@@ -522,11 +522,45 @@ M.validate_record = validate_record
 
 
 
+--- Extrahiert den Eintrag für die traditionelle Rechtschreibung.
+local function extract_trad(trec)
+   return trec[2] or trec[3] or trec[5] or trec[6]
+end
+
+--- Extrahiert den Eintrag für die reformierte Rechtschreibung.
+local function extract_refo(trec)
+   return trec[2] or trec[4] or trec[5] or trec[7]
+end
+
+--- Extrahiert den Eintrag für die traditionelle Rechtschreibung in der
+--- Schweiz.
+local function extract_swiss(trec)
+   return trec[2] or trec[3] or trec[5] or trec[8] or trec[6]
+end
+
+
+
+-- Tabelle, die spezifische Daten für die verschiedenen
+-- Rechtschreibungen enthält.
+local spellings = {
+   trad = {
+      extract = extract_trad,
+   },
+   refo = {
+      extract = extract_refo,
+   },
+   swiss = {
+      extract = extract_swiss,
+   },
+}
+
+
+
 -- Tabelle von Wörtern mit Eszett.  Schlüssel sind Indizes, Werte sind
 -- Datensatztabellen.
 local eszett_forms = {}
 -- Tabelle von Wörtern ohne Eszett, aber mit Doppel-s.  Schlüssel sind
--- Doppel-s-Schreibungen, Werte sind `true`.
+-- Doppel-s-Schreibungen, Werte sind Datensatztabellen.
 local ss_forms = {}
 -- Sequenz von Zeilennummern unzulässiger Datensätze.
 local bad_lineno = {}
@@ -545,7 +579,7 @@ local function prepare_eszett_check(trec)
       trec.eszett_form = word_lower
       table.insert(eszett_forms, trec)
    elseif Ufind(word_lower, "ss") then
-      ss_forms[word_lower] = true
+      ss_forms[word_lower] = trec
    end
 end
 
@@ -557,11 +591,27 @@ local function check_eszett()
    -- vorhanden ist.
    for _,trec_eszett in ipairs(eszett_forms) do
       local ss_form = Ugsub(trec_eszett.eszett_form, "ß", "ss")
-      if not ss_forms[ss_form] then
+      local trec_ss = ss_forms[ss_form]
+      -- Fehlt Datensatz mit Doppel-s-Schreibung?
+      if not trec_ss then
          -- Merke fehlerhafte Zeilennummer für Commit-Ermittlung.
          bad_lineno[trec_eszett.lineno] = true
          -- Gebe fehlende Doppel-s-Schreibung aus.
          io.stderr:write("Zeile ", trec_eszett.lineno, " fehlende Doppel-s-Schreibung: ", trec_eszett[1], "\n")
+      else
+         -- Prüfe, ob die Ersatzschreibung in jeder Rechtschreibung
+         -- existiert, in der die Eszett-Schreibung gültig ist.
+         for spelling,data in pairs(spellings) do
+            local hyph_eszett = data.extract(trec_eszett)
+            local hyph_ss = data.extract(trec_ss)
+            -- Fehlende Ersatzschreibung?
+            if hyph_eszett and not hyph_ss then
+               -- Merke fehlerhafte Zeilennummer für Commit-Ermittlung.
+               bad_lineno[trec_ss.lineno] = true
+               -- Gebe fehlende Doppel-s-Schreibung aus.
+               io.stderr:write("Zeile ", trec_ss.lineno, " fehlende Doppel-s-Schreibung (", spelling, "): ", trec_ss[1], "\n")
+            end
+         end
       end
    end
 end
