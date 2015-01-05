@@ -522,8 +522,8 @@ M.validate_record = validate_record
 
 
 
--- Tabelle von Wörtern mit Eszett.  Schlüssel sind
--- Doppel-s-Schreibungen, Werte sind Datensatztabellen.
+-- Tabelle von Wörtern mit Eszett.  Schlüssel sind Indizes, Werte sind
+-- Datensatztabellen.
 local eszett_forms = {}
 -- Tabelle von Wörtern ohne Eszett, aber mit Doppel-s.  Schlüssel sind
 -- Doppel-s-Schreibungen, Werte sind `true`.
@@ -542,8 +542,8 @@ local bad_lineno = {}
 local function prepare_eszett_check(trec)
    local word_lower = Ulower(trec[1])
    if trec.has_eszett then
-      local ss_form = Ugsub(word_lower, "ß", "ss")
-      eszett_forms[ss_form] = trec
+      trec.eszett_form = word_lower
+      table.insert(eszett_forms, trec)
    elseif Ufind(word_lower, "ss") then
       ss_forms[word_lower] = true
    end
@@ -556,24 +556,17 @@ end
 -- @return Anzahl fehlerhafter Ersatzschreibungen.
 local function check_eszett()
    local cnt_invalid = 0
-   -- Sequenz fehlender Doppel-s-Schreibungen.
-   local bad_ss_forms = {}
    -- Prüfe, ob zu jeder Eszett-Schreibung eine Doppel-s-Schreibung
    -- vorhanden ist.
-   for ss_form,trec in pairs(eszett_forms) do
+   for _,trec_eszett in ipairs(eszett_forms) do
+      local ss_form = Ugsub(trec_eszett.eszett_form, "ß", "ss")
       if not ss_forms[ss_form] then
          cnt_invalid = cnt_invalid + 1
-         -- Merke fehlendes Doppel-s-Wort für sortierte Ausgabe.
-         table.insert(bad_ss_forms, ss_form)
          -- Merke fehlerhafte Zeilennummer für Commit-Ermittlung.
-         table.insert(bad_lineno, trec.lineno)
+         table.insert(bad_lineno, trec_eszett.lineno)
+         -- Gebe fehlende Doppel-s-Schreibung aus.
+         io.stderr:write("Zeile ", trec_eszett.lineno, " fehlende Doppel-s-Schreibung: ", trec_eszett[1], "\n")
       end
-   end
-   -- Sortiere fehlende Doppel-s-Schreibungen nach Zeilennummer der Eszett-Schreibung.
-   table.sort(bad_ss_forms, function(a,b) return eszett_forms[a] < eszett_forms[b] end)
-   -- Gebe fehlende Doppel-s-Schreibungen sortiert aus.
-   for _,ss_form in ipairs(bad_ss_forms) do
-      io.stderr:write("Zeile ", eszett_forms[ss_form].lineno, " fehlende Doppel-s-Schreibung: ", ss_form, "\n")
    end
    return cnt_invalid
 end
