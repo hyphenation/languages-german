@@ -522,6 +522,65 @@ M.validate_record = validate_record
 
 
 
+-- Tabelle von Wörtern mit Eszett.  Schlüssel sind
+-- Doppel-s-Schreibungen, Werte sind Tabellen mit Informationen zum
+-- Datensatz.
+local eszett_forms = {}
+-- Tabelle von Wörtern ohne Eszett, aber mit Doppel-s.  Schlüssel sind
+-- Doppel-s-Schreibungen, Werte sind `true`.
+local ss_forms = {}
+-- Sequenz von Zeilennummern unzulässiger Datensätze.
+local bad_lineno = {}
+
+
+
+--- Speichere Varianten von Wörtern mit Eszett.
+-- Speichere alle Wörter i) mit Eszett und ii) ohne Eszett,
+-- aber mit Doppel-s, in Kleinschreibung für nachgelagerte
+-- Prüfung auf vorhandene Eszett-Ersatzschreibung.
+--
+-- @param info Info-Tabelle aus Funktion validate_record() mit weiteren
+-- Feldern.
+local function prepare_eszett_check(info)
+   if info.has_eszett then
+      local ss_form = Ulower(Ugsub(info.field1, "ß", "ss"))
+      eszett_forms[ss_form] = info
+   elseif Ufind(info.field1, "ss") then
+      ss_forms[Ulower(info.field1)] = true
+   end
+end
+
+
+
+--- Prüfe Eszett-Ersatzschreibungen auf Vollständigkeit.
+--
+-- @return Anzahl fehlerhafter Ersatzschreibungen.
+local function check_eszett()
+   local cnt_invalid = 0
+   -- Sequenz fehlender Doppel-s-Schreibungen.
+   local bad_ss_forms = {}
+   -- Prüfe, ob zu jeder Eszett-Schreibung eine Doppel-s-Schreibung
+   -- vorhanden ist.
+   for ss_form,info in pairs(eszett_forms) do
+      if not ss_forms[ss_form] then
+         cnt_invalid = cnt_invalid + 1
+         -- Merke fehlendes Doppel-s-Wort für sortierte Ausgabe.
+         table.insert(bad_ss_forms, ss_form)
+         -- Merke fehlerhafte Zeilennummer für Commit-Ermittlung.
+         table.insert(bad_lineno, info.lineno)
+      end
+   end
+   -- Sortiere fehlende Doppel-s-Schreibungen nach Zeilennummer der Eszett-Schreibung.
+   table.sort(bad_ss_forms, function(a,b) return eszett_forms[a] < eszett_forms[b] end)
+   -- Gebe fehlende Doppel-s-Schreibungen sortiert aus.
+   for _,ss_form in ipairs(bad_ss_forms) do
+      io.stderr:write("Zeile ", eszett_forms[ss_form].lineno, " fehlende Doppel-s-Schreibung: ", ss_form, "\n")
+   end
+   return cnt_invalid
+end
+
+
+
 --- Prüfe eine Datei auf Wohlgeformtheit.
 -- Geprüft werden das Format der Datensätze und die Zulässigkeit
 -- sämtlicher Wörter.  Während der Prüfung werden die Häufigkeiten der
@@ -553,12 +612,6 @@ local function validate_file(f)
       ux_rxtr_ = 0,
       ux_rxtrs = 0,
    }
-   -- Tabelle von Wörtern mit Eszett.
-   local words_eszett = {}
-   -- Tabelle von Wörtern ohne Eszett, aber mit Doppel-s.
-   local words_ss = {}
-   -- Zeilennummern unzulässiger Datensätze.
-   local bad_lineno = {}
    -- Iteriere über Zeilen der Eingabe.
    for record in f:lines() do
       cnt_lineno = cnt_lineno + 1
@@ -568,15 +621,8 @@ local function validate_file(f)
          -- Zähle Vorkommen des Typs.
          cnt_rectypes[info.type] = cnt_rectypes[info.type] + 1
          if not info.is_exception then
-            -- Speichere alle Wörter i) mit Eszett und ii) ohne Eszett,
-            -- aber mit Doppel-s, in Kleinschreibung für nachgelagerte
-            -- Prüfung auf vorhandene Eszett-Ersatzschreibung.
-            if info.has_eszett then
-               local word_ss = Ulower(Ugsub(info.field1, "ß", "ss"))
-               words_eszett[word_ss] = cnt_lineno
-            elseif Ufind(info.field1, "ss") then
-               words_ss[Ulower(info.field1)] = true
-            end
+            info.lineno = cnt_lineno
+            prepare_eszett_check(info)
          end
       else-- Datensatz unzulässig.
          cnt_invalid = cnt_invalid + 1
@@ -594,25 +640,8 @@ local function validate_file(f)
          table.insert(bad_lineno, cnt_lineno)
       end
    end
-   -- Sequenz fehlender Doppel-s-Schreibungen.
-   local bad_words_ss = {}
-   -- Prüfe, ob zu jeder Eszett-Schreibung eine Doppel-s-Schreibung
-   -- vorhanden ist.
-   for word_ss,lineno in pairs(words_eszett) do
-      if not words_ss[word_ss] then
-         cnt_invalid = cnt_invalid + 1
-         -- Merke fehlendes Doppel-s-Wort für sortierte Ausgabe.
-         table.insert(bad_words_ss, word_ss)
-         -- Merke fehlerhafte Zeilennummer für Commit-Ermittlung.
-         table.insert(bad_lineno, lineno)
-      end
-   end
-   -- Sortiere fehlende Doppel-s-Schreibungen nach Zeilennummer der Eszett-Schreibung.
-   table.sort(bad_words_ss, function(a,b) return words_eszett[a] < words_eszett[b] end)
-   -- Gebe fehlende Doppel-s-Schreibungen sortiert aus.
-   for _,word_ss in ipairs(bad_words_ss) do
-      io.stderr:write("Zeile ", words_eszett[word_ss], " fehlende Doppel-s-Schreibung: ", word_ss, "\n")
-   end
+   local cnt_invalid_eszett = check_eszett()
+   cnt_invalid = cnt_invalid + cnt_invalid_eszett
    return {
       cnt_total = cnt_lineno,
       cnt_invalid = cnt_invalid,
