@@ -465,6 +465,8 @@ local function validate_record(record)
    end
    -- Zerlege Datensatz.
    local trec = split(record)
+   -- Sichere Datensatztabelle in Rückgabetabelle.
+   info.trec = trec
    -- Merke Inhalt von Feld 1 für Gleichheitsprüfung der belegten
    -- Felder.
    local field1 = trec[1]
@@ -473,8 +475,6 @@ local function validate_record(record)
       info.errmsg = "leer"
       return false, info
    end
-   -- Sichere Inhalt von Feld 1 in Rückgabetabelle.
-   info.field1 = field1
    -- Merke Eigenschaften von Feld 1 für Eszett-Prüfung (siehe unten).
    local props1
    for i = 1,#trec do
@@ -523,8 +523,7 @@ M.validate_record = validate_record
 
 
 -- Tabelle von Wörtern mit Eszett.  Schlüssel sind
--- Doppel-s-Schreibungen, Werte sind Tabellen mit Informationen zum
--- Datensatz.
+-- Doppel-s-Schreibungen, Werte sind Datensatztabellen.
 local eszett_forms = {}
 -- Tabelle von Wörtern ohne Eszett, aber mit Doppel-s.  Schlüssel sind
 -- Doppel-s-Schreibungen, Werte sind `true`.
@@ -539,14 +538,14 @@ local bad_lineno = {}
 -- aber mit Doppel-s, in Kleinschreibung für nachgelagerte
 -- Prüfung auf vorhandene Eszett-Ersatzschreibung.
 --
--- @param info Info-Tabelle aus Funktion validate_record() mit weiteren
--- Feldern.
-local function prepare_eszett_check(info)
-   if info.has_eszett then
-      local ss_form = Ulower(Ugsub(info.field1, "ß", "ss"))
-      eszett_forms[ss_form] = info
-   elseif Ufind(info.field1, "ss") then
-      ss_forms[Ulower(info.field1)] = true
+-- @param trec (erweiterte) Datensatztabelle
+local function prepare_eszett_check(trec)
+   local word_lower = Ulower(trec[1])
+   if trec.has_eszett then
+      local ss_form = Ugsub(word_lower, "ß", "ss")
+      eszett_forms[ss_form] = trec
+   elseif Ufind(word_lower, "ss") then
+      ss_forms[word_lower] = true
    end
 end
 
@@ -561,13 +560,13 @@ local function check_eszett()
    local bad_ss_forms = {}
    -- Prüfe, ob zu jeder Eszett-Schreibung eine Doppel-s-Schreibung
    -- vorhanden ist.
-   for ss_form,info in pairs(eszett_forms) do
+   for ss_form,trec in pairs(eszett_forms) do
       if not ss_forms[ss_form] then
          cnt_invalid = cnt_invalid + 1
          -- Merke fehlendes Doppel-s-Wort für sortierte Ausgabe.
          table.insert(bad_ss_forms, ss_form)
          -- Merke fehlerhafte Zeilennummer für Commit-Ermittlung.
-         table.insert(bad_lineno, info.lineno)
+         table.insert(bad_lineno, trec.lineno)
       end
    end
    -- Sortiere fehlende Doppel-s-Schreibungen nach Zeilennummer der Eszett-Schreibung.
@@ -621,8 +620,10 @@ local function validate_file(f)
          -- Zähle Vorkommen des Typs.
          cnt_rectypes[info.type] = cnt_rectypes[info.type] + 1
          if not info.is_exception then
-            info.lineno = cnt_lineno
-            prepare_eszett_check(info)
+            local trec = info.trec
+            trec.has_eszett = info.has_eszett
+            trec.lineno = cnt_lineno
+            prepare_eszett_check(trec)
          end
       else-- Datensatz unzulässig.
          cnt_invalid = cnt_invalid + 1
