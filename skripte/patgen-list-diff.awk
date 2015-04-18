@@ -168,7 +168,7 @@ END {
             lword_out = tr_tolower(word_out[word])
             if (lword_in == lword_out) {
                 # Case change only.
-                case[word] = word_in[word]
+                CaSe[word] = word_in[word]
             }
             else {
                 # Hyphenation corrected.
@@ -197,7 +197,7 @@ END {
     n_added = output_word_class(added, "added")
     n_removed = output_word_class(removed, "removed")
     n_hyph = output_word_class(hyph, "hyph")
-    n_case = output_word_class(case, "case")
+    n_case = output_word_class(CaSe, "case")
     # Output entry for table in CHANGES file (in Markdown).
     printf("   %11d   %8d   %10d\n", n_added, n_removed, n_hyph) >> "CHANGES.table.txt"
 }
