@@ -744,7 +744,7 @@ def sprachabgleich(entry, vorbildentry=None):
                     entry[i] = uebertrage(mit_affix, entry[i], strict=False)
                 except TransferError, e:
                     print u'Sprachabgleich:', unicode(e)
-        print mit_affix+u':', unicode(entry)
+        # print mit_affix+u':', unicode(entry)
     elif kategorisiert and unkategorisiert:
         for i in range(1,len(entry)):
             if u'·' in entry[i]:

@@ -9,7 +9,7 @@ zur Arbeit mit der Wortliste.
 
 Siehe Abschnitt `Arbeitsfluss`_ für einen Vorschlag zur Anwendung.
 
-Das Program PyLit_ kann die ausführbaren Dateien ``*.py`` reversibel in
+Das Programm PyLit_ kann die ausführbaren Dateien ``*.py`` reversibel in
 Textdokumente ``*.py.txt`` konvertieren. Mit Docutils_ lassen sich aus den
 in reStructuredText_ geschriebenen Texten Dokumentationen im HTML- oder
 PDF-Format erstellen.
@@ -38,12 +38,12 @@ werkzeug.py
   (Doppeleinträge, Übereinstimmung Schlüssel-Trennmuster).
 
 hyphenation.py
-  Hyphenation, using a pure Python implementation Frank Liang's algorithm.
+  Hyphenation using a pure Python implementation of Frank Liang's algorithm.
 
   This module provides a class to hyphenate words. 
   Verwendet in hyphenate_neueintraege.py
   
-  Command-line usage: ./hyphenation.py [options] [words to be hyphenated]
+  Command-line usage: ``./hyphenation.py [options] [words to be hyphenated]``
 
 
 Skripte zur Trennstellenkategorisierung
@@ -111,6 +111,9 @@ abgleich_sprachvarianten.py
 
   * Zusammenfassen von Feldern mit gleichem Inhalt wenn das Ergebnis ein
     wohlgeformter Eintrag ist.
+    
+  * Ergänzen von Formen mit SS statt ß.
+      
 
 
 abgleich_teilwoerter.py
@@ -124,13 +127,13 @@ abgleich_teilwoerter.py
 
 
 abgleich_praefixe.py
-  Abgleich der Trennstellen zwischen Woertern mit unterschiedlichem Präfix
+  Abgleich der Trennstellen zwischen Wörtern mit unterschiedlichem Präfix
 
   Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
   kann (siehe Arbeitsfluss_).
 
 abgleich_suffixe.py
-  Abgleich der Trennstellen zwischen Woertern mit unterschiedlichem Suffix.
+  Abgleich der Trennstellen zwischen Wörtern mit unterschiedlichem Suffix.
 
   Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
   kann (siehe Arbeitsfluss_).
@@ -157,7 +160,7 @@ hyphenate_neueintraege.py
   
   Verwendet Pattern-Dateien welche über die "make" Ziele
   `make pattern-refo`, `make major pattern-refo` und 
-  `make fugen pattern-refo` im Wurzelverzeichnis der wortliste generiert
+  `make fugen pattern-refo` im Wurzelverzeichnis der Wortliste generiert
   werden können.
 
   Erwartet eine Datei mit 1 Wort/Zeile.
@@ -187,10 +190,18 @@ s2long-s.py
   Automatische Bestimmung der S-Schreibung auf Basis der Silbentrennung
   in der `Wortliste der deutschsprachigen Trennmustermannschaft`.
 
-  Gesamtwortzahl (traditionelle Rechtschreibung): 422398
-  Automatisch konvertiert: 418440
-  Kategorisierung der Trennstellen fehlt: 3903
-  noch offen: 55
+long_s_conversion.py
+  Rund-S nach Lang-S Wandlung über "hyphenation patterns".
+  
+  Aufruf: siehe ``./long_s_conversion.py -h``
+
+de_Latf_quasihyph.py
+  Filter zum Wandeln von Wörtern mit Rund- und Lang-S in
+  Pseudo-Trennbeispiele (ausſagen -> aus-sagen)."""
+
+long_s_quasihyph.py
+  Filter zum Wandeln von Wörtern mit langem S in
+  Pseudo-Trennbeispiele (ausſagen -> auss-agen, eſſen -> es-s-en).
 
 Arbeitsfluss
 ============
@@ -212,18 +223,13 @@ Trennstellenkategorisierung mit Hilfe der Python-Skripte,
   - im Texteditor (suchen/ersetzen, regexp-replace, ...)
 
   - mit Skripten (``abgleich_praefixe.py``,
-<<<<<<< HEAD
                   ``abgleich_suffixe.py``,
                   ``vorsilben_in_teilwoertern.py``)
-=======
-                  ``abgleich_suffixe.py``,
-                  ``vorsilben_in_teilwoertern.py``)
->>>>>>> spell
 
 * Rückübertragen der Korrekturen auf die Wortliste
 
   - in `abgleich_teilwoerter.py` die gewünschte Sprachvariante und
-    Bearbeitungsfunktion ein-/aukommentieren.
+    Bearbeitungsfunktion ein-/auskommentieren.
 
   - ``python abgleich_teilwoerter.py``
 

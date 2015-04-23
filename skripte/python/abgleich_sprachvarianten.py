@@ -58,7 +58,7 @@ if __name__ == '__main__':
     for oldentry in wortliste:
         if len(oldentry) <= 2:
             # Ggf. Ergänzen der GROSS-Variante:
-            if (u'ß' in oldentry[0] 
+            if (u'ß' in oldentry[0]
                 and oldentry[0].replace(u'ß', u'ss') not in words
                 and oldentry[0].replace(u'ß', u'ss').lower() not in words
                 and oldentry[0].replace(u'ß', u'ss').title() not in words
@@ -71,19 +71,22 @@ if __name__ == '__main__':
             continue
         entry = copy.copy(oldentry)
         sprachabgleich(entry)
+        # Sprachabgleich mit ß-Form (Strassenschild vs. Straßenschild)
         if oldentry == entry and u'ss' in entry[0]:
-            for w in entry[1:]:
-                if not w.startswith(u'-'):
-                    break
+            # Vergleichseintrag für Sprachabgleich finden:
+            for field in entry[1:]:
+                if not field.startswith(u'-'):
+                    break # ``field`` ist jetzt erstes nichtleeres Feld
             try:
-                sprachabgleich(entry, words[join_word(w.replace(u'ss', u'ß'))])
+                v_entry = words[join_word(field.replace(u'ss', u'ß'))]
+                sprachabgleich(entry, v_entry)
             except KeyError:
-                # print entry[0].replace(u'ss', u'ß'), "fehlt"
-                if entry.get('de-1901-x-GROSS'):
-                    wort1901 = entry.get('de-1901-x-GROSS')
-                    wort1901 = wort1901.replace(u'ss', u'ß')
-                    if not u'/' in wort1901 and len(wort1901)>3:
-                        print u'%s;-2-;%s;-4-' % (join_word(wort1901), wort1901)
+                print entry[0].replace(u'ss', u'ß'), "fehlt"
+                # if entry.get('de-1901-x-GROSS'):
+                #     wort1901 = entry.get('de-1901-x-GROSS')
+                #     wort1901 = wort1901.replace(u'ss', u'ß')
+                #     if not u'/' in wort1901 and len(wort1901)>3:
+                #         print u'%s;-2-;%s;-4-' % (join_word(wort1901), wort1901)
                 pass  # e.g. "Abfahrtßpezialisten"
         if oldentry == entry and u'ß' in entry[0]:
             try:
@@ -93,7 +96,7 @@ if __name__ == '__main__':
                 if entry.get('de-1996') is None:
                     oldentry = WordEntry(u';'.join(
                                         [entry[0].replace(u'ß', u'ss'),
-                                         u'-2-;-3-', 
+                                         u'-2-;-3-',
                                          entry[2].replace(u'ß', u'ss'),
                                          entry[2].replace(u'ß', u'ss')]))
                 elif entry.get('de-1996') is None:
@@ -105,13 +108,13 @@ if __name__ == '__main__':
                 else:
                     oldentry = WordEntry(u';'.join(
                                         [entry[0].replace(u'ß', u'ss'),
-                                         u'-2-;-3-;-4-;-5-', 
+                                         u'-2-;-3-;-4-;-5-',
                                          entry[2].replace(u'ß', u'ss'),
                                          entry[3].replace(u'ß', u'ss'),
                                          u'-8-']))
-                    
+
                 wortliste_neu.append(oldentry)
-                
+
         wortliste_neu.append(entry)
 
 

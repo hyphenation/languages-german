@@ -3,7 +3,7 @@
 
 # Original from http://nedbatchelder.com/code/modules/hyphenate.py
 
-u""" Hyphenation, using a pure Python implementation Frank Liang's algorithm.
+u"""Hyphenation using a pure Python implementation of Frank Liang's algorithm.
 
     This module provides a class to hyphenate words.
 

@@ -34,14 +34,10 @@ h_Latf = Hyphenator(pfile)
 # ::
 
 exceptions = (u'Abſ', # Abſatz/Abſender
-              u'Ausg', # Aus<gabe
               u'beſ',  # beſonders
               u'coſ',  # Ko<ſinus
             # u'daſ',   # da<ſelbſt (nicht von Artikel "das" zu unterscheiden!)
-              u'desgl', # des<gleichen
               u'Diſſ',  # Diſſertation
-              u'hrsg',  # herausgegeben
-              u'Hrsg',  # Herausgeber
               u'Hſ',    # Handschrift
               u'Maſſ',  # Maſſachuſetts
             # u'Miſſ',  # Miſſiſippi (nicht von Miſs (Frln.) zu unterscheiden)
@@ -96,7 +92,7 @@ if __name__ == '__main__':
     sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 
     if len(args) > 0:
-        lines = [u' '.join(args).decode('utf8')]
+        lines = [' '.join(args).decode('utf8')]
     else:
         lines = (line.decode('utf8') for line in sys.stdin)
 

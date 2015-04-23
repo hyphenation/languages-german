@@ -193,8 +193,6 @@ ausnahmen_lang_s = [
     u'unſ-r',     # unsre, unsrige, ...
     u'ſſl',       # Röſſl
     u'ſl',        # Beiſl, Häuſl
-
-    # Einzelfälle:
     u'kreiſ-le',
     u'Wieſn',
     u'Schiſſ-la-weng',
@@ -215,8 +213,12 @@ ausnahmen_lang_s.extend([
 
 # Alternativtrennung, wo beide Fälle ſ verlangen::
 
-ausnahmen_lang_s.append(u'er<.]ſa') # Kind=er<.satz/Kin-der=satz
-ausnahmen_lang_s.append(u'ſ[-ter=/t') # Tes[-ter=/t=er<.]ken-nung
+ausnahmen_lang_s.extend([
+
+    u'er<.]ſa'   # Kind=er<.satz/Kin-der=satz
+    u'ſ[-ter=/t' # Tes[-ter=/t=er<.]ken-nung
+
+                        ])
 
 # Fremdwörter und Eigennamen
 # --------------------------
@@ -300,7 +302,6 @@ ausnahmen_rund_s = [
     u'Ausg', # Ausgan, Ausgabe
     u'ausſchl',
     u'desgl', # des<gleichen
-    u'Diſſ',  # Diſſertation
     u'hrsg',  # herausgegeben
     u'Hrsg',  # Herausgeber
     u'insb',
@@ -431,7 +432,8 @@ if __name__ == '__main__':
     if options.outfile in ('-', 'stdout'):
         outstream = sys.stdout
     else:
-        outfile = options.outfile or 'words-' + lang + '-Latf.txt'
+        outfile = options.outfile or 'words-' + lang.replace(',','-') 
+                  + '-Latf.txt'
         outstream = file(outfile, 'w')
 
 
