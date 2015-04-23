@@ -83,15 +83,27 @@ Anmerkungen:
 
     em-por<ar-bei-ten   oder   em-por=ar-bei-ten
 
-* Viele Präfixe, die im heutigen Sprachverständnis nicht als eigenständig
-  wahrgenommen werden, sind nicht speziell markiert:
+  Grundidee ist, daß "=" Teile trennt, die als eigenständige Wörter
+  wahrgenommen werden.
 
-    Ant-wort
+* Schwierig ist die Markierung von „historischen“ Präfixen, die im heutigen
+  Sprachverständnis nicht als eigenständig wahrgenommen werden:
 
-  Kriterien sind neben der „Güte“ der Trennstelle (geringe Störung des
-  Leseflusses bei Zeilenumbruch an dieser Stelle) die Lang-s-Schreibung
-  (Schluss-s auch bei s-s, s-t, oder s-p) und der Aufbruch von Ligaturen
-  an dieser Stelle.
+    en<er-gisch, En<er-gie # vgl. Syn<er-gie
+
+  aber
+
+    Ant-wort, In-du-strie # trotz in<du-zie-ren
+
+  Kriterien sind neben dem Sprachgefühl des Bearbeiters die „Güte“ der
+  Trennstelle (geringe Störung des Leseflusses bei Zeilenumbruch an dieser
+  Stelle), die Lang-s-Schreibung (Schluss-s auch bei s-s, s-t, oder s-p) und
+  der Aufbruch von Ligaturen an dieser Stelle.
+
+  Immer markiert wird die Trennstelle, wenn sie von der „Sprechsilbenregel“
+  abweicht, z.B.
+
+    In<sti-tut # de-1996: In<s-ti-tut
 
 * Morphemgrenzen, an denen keine Trennung erfolgt, werden nicht
   gekennzeichnet. Das betrifft einsilbige Präfixe und viele Suffixe.
