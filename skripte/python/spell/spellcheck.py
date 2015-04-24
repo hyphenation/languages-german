@@ -14,7 +14,7 @@
 # ::
 
 import re, sys, codecs, copy
-from werkzeug import WordFile, WordEntry, join_word, udiff
+from wortliste import WordFile, WordEntry, join_word, udiff
 # from abgleich_teilwoerter import wortliste_to_teilwoerter
 
 # Konfiguration

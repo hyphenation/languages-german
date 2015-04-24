@@ -14,7 +14,7 @@
 # ::
 
 import re, sys, codecs, copy
-from werkzeug import (WordFile, WordEntry, join_word, udiff,
+from wortliste import (WordFile, WordEntry, join_word, udiff,
                       uebertrage, TransferError, 
                       sprachabgleich, toggle_case)
 from analyse import read_teilwoerter, teilwoerter
@@ -335,7 +335,7 @@ if __name__ == '__main__':
 
 # `Wortliste` einlesen::
 
-    wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
+    wordfile = WordFile('../../../wortliste') # ≅ 400 000 Einträge/Zeilen
     wortliste = list(wordfile)
     wortliste_neu = []
 

@@ -28,7 +28,7 @@ import re, sys, os, optparse
 
 # path for local Python modules
 sys.path.append(os.path.dirname(__file__))
-from werkzeug import WordFile, WordEntry, join_word
+from wortliste import WordFile, WordEntry, join_word
 
 
 # Trennzeichen

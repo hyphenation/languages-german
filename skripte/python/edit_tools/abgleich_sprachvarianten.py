@@ -19,7 +19,7 @@
 # ::
 
 import re, sys, codecs, copy
-from werkzeug import WordFile, WordEntry, join_word, udiff, sprachabgleich
+from wortliste import WordFile, WordEntry, join_word, udiff, sprachabgleich
 
 
 # Zusammenfassen von Feldern mit gleichem Inhalt z.B.
@@ -27,7 +27,7 @@ from werkzeug import WordFile, WordEntry, join_word, udiff, sprachabgleich
 #      hallo;-2-;hal-lo;hal-o     --> hallo;hal-lo
 #
 # in allen Einträgen von `wortliste`.
-# Siehe ``WordEntry.conflate_fields()`` in werkzeug.py.
+# Siehe ``WordEntry.conflate_fields()`` in wortliste.py.
 #
 # Anwendung 2012-03-13
 # (getestet mit ``texlua validate.lua < ../wortliste``)
@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
     # Die `Wortliste`::
 
-    wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
+    wordfile = WordFile('../../../wortliste') # ≅ 400 000 Einträge/Zeilen
     wortliste = list(wordfile)
     wortliste_neu = []
 

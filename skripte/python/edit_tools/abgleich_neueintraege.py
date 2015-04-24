@@ -24,7 +24,7 @@
 
 import sys, codecs
 from collections import defaultdict  # Wörterbuch mit Default
-from werkzeug import WordFile, WordEntry, join_word, toggle_case, sortkey_duden
+from wortliste import WordFile, WordEntry, join_word, toggle_case, sortkey_duden
 from expand_teilwoerter import expand_wordfile
 
 # Konfiguration
@@ -42,7 +42,7 @@ filtern = False
 
 # Trennmusterliste
 
-wordfile = WordFile('../../wortliste')
+wordfile = WordFile('../../../wortliste')
 
 
 # Funktionen
@@ -671,7 +671,7 @@ def zerlege(s):
 # Zerlege Kompositum in gleichberechtigte Teile::
 
 # >>> from abgleich_neueintraege import split_composits
-# >>> from werkzeug import WordEntry
+# >>> from wortliste import WordEntry
 # >>> split_composits(WordEntry(u'Blockheizkraftwerk;Block===heiz==kraft=werk'))
 # [u'Block', u'heiz', u'kraft', u'werk']
 #

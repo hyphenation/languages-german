@@ -22,32 +22,41 @@ PDF-Format erstellen.
 Unterverzeichnisse
 ==================
 
-wortteile/
-  Verzeichnis für Hilfsdateien (Daten/Text)
+patuse/
+-------
 
-
-Module
-======
-
-werkzeug.py
-  Python-Module für die Arbeit mit der `Wortliste`
-  Wird von den anderen Python-Skripten importiert.
-
-  Aufruf mit ``python werkzeug.py`` startet einen
-  Test der Werkzeuge und der inneren Konsistenz der Wortliste
-  (Doppeleinträge, Übereinstimmung Schlüssel-Trennmuster).
+Anwendungen der mit `patgen` generierten Pattern.
 
 hyphenation.py
   Hyphenation using a pure Python implementation of Frank Liang's algorithm.
 
-  This module provides a class to hyphenate words. 
+  This module provides a class to hyphenate words.
   Verwendet in hyphenate_neueintraege.py
-  
+
   Command-line usage: ``./hyphenation.py [options] [words to be hyphenated]``
 
+long_s_conversion.py
+  Rund-S nach Lang-S Wandlung über "hyphenation patterns".
 
-Skripte zur Trennstellenkategorisierung
-=======================================
+  Aufruf: siehe ``./long_s_conversion.py -h``
+
+
+edit_tools
+----------
+
+wortliste.py
+  Python-Modul für die Arbeit mit der `Wortliste`
+  Wird von den anderen Python-Skripten importiert.
+
+  Aufruf mit ``python wortliste.py`` startet einen
+  Test der Werkzeuge und der inneren Konsistenz der Wortliste
+  (Doppeleinträge, Übereinstimmung Schlüssel-Trennmuster).
+
+
+Skripte zur Arbeit mit der Wortliste
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+(Trennstellenkategorisierung, Neueinträge, Korrekturen)
 
 Siehe auch den Abschnitt `Arbeitsfluss`_ am Ende dieses Dokumentes.
 
@@ -62,18 +71,71 @@ Achtung experimentell:
   ändern nicht direkt die Wortliste sondern erstellen eine Datei
   ``wortliste.patch``.
 
-* Die Änderungen in dieser Datei können nach Korrekturlesen mittels ::
+* Die Änderungen können nach Korrekturlesen mittels ::
 
     patch ../../wortliste < wortliste.patch
 
   auf die Wortliste angewendet werden.
 
-prepare_patch.py
-  Helfer für kleine Editieraufgaben, u.a. entfernen von Doppeleinträgen,
-  Einsortieren neuer Einträge, Überschreiben mit korrigierten Einträgen, ...
-  Erstellt eine Patch-Datei.
 
-  Aufruf: siehe ``./prepare_patch.py -h``
+abgleich_endungen.py
+  Abgleich der Trennstellen für Ableitungen/Varianten mit unterschiedlicher
+  Endung.
+
+  Die zu vergleichenden Endungen sind im Skript in der Liste ``endungen``
+  definiert.
+
+abgleich_neueintraege.py
+  Versuche Trennstellen neuer Wörter aus vorhandenen zu ermitteln
+
+  Übertragen von kategorisierten Trennstellen vorhandener Wörter
+  auf neu aufzunehmende, ungetrennte Wörter.
+
+  Erwartet eine Datei mit 1 Wort/Zeile.
+  Pfad/Dateiname im Abschnitt Konfiguration anpassen!
+
+  Schreibt eine Liste von Einträgen für die Wörter, welche durch Abgleich
+  mit der Datenbasis getrennt werden konnten auf stdout.
+
+  Die Liste kann nach ``neu.todo`` gespeichert und (nach Durchsicht) mit
+  ``prepare_patch.py neu`` in die Wortliste eingepflegt werden.
+
+abgleich_praefixe.py
+  Abgleich der Trennstellen zwischen Wörtern mit unterschiedlichem Präfix
+
+  Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
+  kann (siehe Arbeitsfluss_).
+
+
+  abgleich_sprachvarianten.py
+  Abgleich der Trennstellen zwischen Sprachvarianten
+
+  Aufruf: ``python abgleich_sprachvarianten.py``
+
+  * Übertragen von kategorisierten Trennstellen zwischen Sprachvarianten
+    desselben Wortes, und/oder
+
+  * Zusammenfassen von Feldern mit gleichem Inhalt wenn das Ergebnis ein
+    wohlgeformter Eintrag ist.
+
+  * Ergänzen von Formen mit SS statt ß.
+
+
+abgleich_suffixe.py
+  Abgleich der Trennstellen zwischen Wörtern mit unterschiedlichem Suffix.
+
+  Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
+  kann (siehe Arbeitsfluss_).
+
+
+abgleich_teilwoerter.py
+  Übertragen von kategorisierten Trennstellen von Teilwörtern auf
+  Vorkommen dieser Teilwörter mit unkategorisierten Trennstellen.
+
+  Aufruf: ``python abgleich_teilwoerter.py``
+
+          Vorher in Zeile 26 ff. die gewünschte Sprachvariante
+          durch ein/auskommentieren wählen.
 
 
 analyse.py
@@ -92,74 +154,19 @@ analyse.py
   Auf der Standardausgabe erscheint eine Zusammenfassung zum Stand der
   Präfixauszeichnung.
 
+expand_teilwoerter.py
+  Erweitern der Wortliste um Kombinationen von Teilwörtern
 
-abgleich_endungen.py
-  Abgleich der Trennstellen für Ableitungen/Varianten mit unterschiedlicher
-  Endung.
+  Zerlegen von Composita an den Wortfugen und Übernahme der Teile als
+  eigenständige Einträge.
 
-  Die zu vergleichenden Endungen sind im Skript in der Liste ``endungen``
-  definiert.
-
-
-abgleich_sprachvarianten.py
-  Abgleich der Trennstellen zwischen Sprachvarianten
-
-  Aufruf: ``python abgleich_sprachvarianten.py``
-
-  * Übertragen von kategorisierten Trennstellen zwischen Sprachvarianten
-    desselben Wortes, und/oder
-
-  * Zusammenfassen von Feldern mit gleichem Inhalt wenn das Ergebnis ein
-    wohlgeformter Eintrag ist.
-    
-  * Ergänzen von Formen mit SS statt ß.
-      
-
-
-abgleich_teilwoerter.py
-  Übertragen von kategorisierten Trennstellen von Teilwörtern auf
-  Vorkommen dieser Teilwörter mit unkategorisierten Trennstellen.
-
-  Aufruf: ``python abgleich_teilwoerter.py``
-
-          Vorher in Zeile 26 ff. die gewünschte Sprachvariante
-          durch ein/auskommentieren wählen.
-
-
-abgleich_praefixe.py
-  Abgleich der Trennstellen zwischen Wörtern mit unterschiedlichem Präfix
-
-  Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
-  kann (siehe Arbeitsfluss_).
-
-abgleich_suffixe.py
-  Abgleich der Trennstellen zwischen Wörtern mit unterschiedlichem Suffix.
-
-  Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
-  kann (siehe Arbeitsfluss_).
-
-
-abgleich_neueintraege.py
-  Versuche Trennstellen neuer Wörter aus vorhandenen zu ermitteln
-
-  Übertragen von kategorisierten Trennstellen vorhandener Wörter
-  auf neu aufzunehmende, ungetrennte Wörter.
-
-  Erwartet eine Datei mit 1 Wort/Zeile.
-  Pfad/Dateiname im Abschnitt Konfiguration anpassen!
-
-  Schreibt eine Liste von Einträgen für die Wörter, welche durch Abgleich
-  mit der Datenbasis getrennt werden konnten auf stdout.
-
-  Die Liste kann nach ``neu.todo`` gespeichert und (nach Durchsicht) mit
-  ``prepare_patch.py neu`` in die Wortliste eingepflegt werden.
 
 hyphenate_neueintraege.py
-  Versuche kategorisierte Trennung über "hyphenation"-Algorithmus und 
+  Versuche kategorisierte Trennung über "hyphenation"-Algorithmus und
   patgen-patterns.
-  
+
   Verwendet Pattern-Dateien welche über die "make" Ziele
-  `make pattern-refo`, `make major pattern-refo` und 
+  `make pattern-refo`, `make major pattern-refo` und
   `make fugen pattern-refo` im Wurzelverzeichnis der Wortliste generiert
   werden können.
 
@@ -170,11 +177,36 @@ hyphenate_neueintraege.py
   gespeichert und (nach Durchsicht) mit ``prepare_patch.py neu`` in die
   Wortliste eingepflegt werden.
 
-wortfugen.py
-  Suche nach "Teilwortkandidaten" in der Wortliste.
+prepare_patch.py
+  Helfer für kleine Editieraufgaben, u.a. entfernen von Doppeleinträgen,
+  Einsortieren neuer Einträge, Überschreiben mit korrigierten Einträgen, ...
+  Erstellt eine Patch-Datei.
+
+  Aufruf: siehe ``./prepare_patch.py -h``
 
 test_teilwoerter.py
   Test der Markierung von Komposita in der Wortliste
+
+teilwoerter_*.txt
+  Liste der Teilwörter der Komposita in der Wortliste_.
+  Erstellt mit ``analyse.py`` durch Trennen an "=".
+  Listet Häufigkeiten des Auftretens als:
+  
+  :S: Einzelwort (Solitär)
+  :E: erstes Wort in Verbindungen
+  :M: mittleres Wort in Verbindungen
+  :L: letztes Wort in Verbindungen
+  
+  Format:
+  
+  * Teilwort mit Trennungen. Großschreibung wie Gesamtwort
+  * Leerraum (whitespace)
+  * Häufigkeiten in der Reihenfolge S;E;M;L
+  
+  Beispiel:
+  
+  Ho-se 1;0;0;7
+
 
 vorsilben_in_teilwoertern.py
   Spezialwerkzeug zur Präfixmarkierung.
@@ -182,18 +214,21 @@ vorsilben_in_teilwoertern.py
   Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
   kann.
 
+wortfugen.py
+  Suche nach "Teilwortkandidaten" in der Wortliste.
+
+wortteile/
+  Verzeichnis für Hilfsdateien (Daten/Text)
+
+
+lang_s
+------
 
 Lang-s Schreibung
-=================
 
 s2long-s.py
   Automatische Bestimmung der S-Schreibung auf Basis der Silbentrennung
   in der `Wortliste der deutschsprachigen Trennmustermannschaft`.
-
-long_s_conversion.py
-  Rund-S nach Lang-S Wandlung über "hyphenation patterns".
-  
-  Aufruf: siehe ``./long_s_conversion.py -h``
 
 de_Latf_quasihyph.py
   Filter zum Wandeln von Wörtern mit Rund- und Lang-S in
@@ -202,6 +237,7 @@ de_Latf_quasihyph.py
 long_s_quasihyph.py
   Filter zum Wandeln von Wörtern mit langem S in
   Pseudo-Trennbeispiele (ausſagen -> auss-agen, eſſen -> es-s-en).
+
 
 Arbeitsfluss
 ============
@@ -249,5 +285,3 @@ Trennung unbekannter Wörter (2 Alternativen):
   TeX-Algorithmus bestimmen. Liefert kategorisierte Einträge ohne Wichtung,
   die nach Durchsicht und Korrekturen mit prepare_patch.py eingepflegt
   werden können.
-  
-  

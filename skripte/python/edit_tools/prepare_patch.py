@@ -34,7 +34,7 @@ import optparse, sys, os, codecs
 from copy import copy, deepcopy
 
 
-from werkzeug import WordFile, WordEntry, join_word, udiff, sortkey_duden
+from wortliste import WordFile, WordEntry, join_word, udiff, sortkey_duden
 
 def teste_datei(datei):
     """Teste, ob Datei geöffnet werden kann."""
@@ -196,7 +196,7 @@ def grossklein(wordfile, datei):
     return (wortliste, wortliste_neu)
 
 # Anpassung der Großschreibung der Trennmuster an das erste Feld
-# (ungetrenntes Wort). Siehe "werkzeug.py" für einen Test auf Differenzen.
+# (ungetrenntes Wort). Siehe "wortliste.py" für einen Test auf Differenzen.
 # (Differenzen sind größtenteils auf unvorsichtiges Ersetzen mit Texteditor
 # zurückzuführen.)
 # ::
@@ -393,8 +393,8 @@ if __name__ == '__main__':
 
     parser = optparse.OptionParser(usage=usage)
     parser.add_option('-i', '--file', dest='wortliste',
-                      help='Eingangsdatei, Vorgabe "../../wortliste"',
-                      default='../../wortliste')
+                      help='Eingangsdatei, Vorgabe "../../../wortliste"',
+                      default='../../../wortliste')
     parser.add_option('-k', '--todofile', dest='todo',
                       help='Korrekturdatei, Vorgabe "<AKTION>.todo"')
     parser.add_option('-o', '--outfile', dest='patchfile',

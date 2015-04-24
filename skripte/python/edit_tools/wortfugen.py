@@ -25,7 +25,7 @@ import codecs
 from collections import defaultdict  # Wörterbuch mit Default
 from copy import deepcopy
 
-from werkzeug import WordFile, join_word, udiff
+from wortliste import WordFile, join_word, udiff
 from analyse import read_teilwoerter, teilwoerter
 from abgleich_teilwoerter import wortliste_to_teilwoerter
 
@@ -41,7 +41,7 @@ sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 # Die freie `Wortliste der deutschsprachigen Trennmustermannschaft`_
 # ("Lembergsche Liste")::
 
-wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
+wordfile = WordFile('../../../wortliste') # ≅ 400 000 Einträge/Zeilen
 
 # Sprachvarianten
 # ---------------
@@ -121,7 +121,7 @@ endsilben = set(w for w in wortdatei('wortteile/endsilben'))
 # ------------------------
 # ::
 
-wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
+wordfile = WordFile('../../../wortliste') # ≅ 400 000 Einträge/Zeilen
 wortliste = list(wordfile)
 
 # Sammeln unbekannter Wortteile::

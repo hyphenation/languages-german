@@ -7,7 +7,7 @@
 #             any later  version.
 # :Version:   0.1 (2012-02-07)
 
-# werkzeug.py
+# wortliste.py
 # ***********
 #
 # ::
@@ -100,7 +100,7 @@ class WordFile(file):
 #
 # Beispiel:
 #
-# >>> from werkzeug import WordEntry
+# >>> from wortliste import WordEntry
 #
 # >>> aalbestand = WordEntry(u'Aalbestand;Aal=be<stand # Test')
 # >>> print aalbestand
@@ -515,7 +515,7 @@ def join_word(word, assert_complete=False):
 # Zerlege ein Wort mit Trennzeichen in eine Liste von Silben und eine Liste
 # von Trennzeichen)
 #
-# >>> from werkzeug import zerlege
+# >>> from wortliste import zerlege
 #
 # >>> zerlege(u'Haupt=stel-le')
 # ([u'Haupt', u'stel', u'le'], [u'=', u'-'])
@@ -552,7 +552,7 @@ class TransferError(ValueError):
 #
 # Übertrage die Trennzeichen von `wort1` auf `wort2`:
 #
-# >>> from werkzeug import uebertrage, TransferError
+# >>> from wortliste import uebertrage, TransferError
 #
 # >>> uebertrage(u'Haupt=stel-le', u'Haupt·stel·le')
 # u'Haupt=stel-le'
@@ -768,7 +768,7 @@ def sprachabgleich(entry, vorbildentry=None):
 # Diese Version funktioniert auch für Wörter mit Trennzeichen (während
 # str.title() nach jedem Trennzeichen wieder groß anfängt)
 #
-# >>> from werkzeug import toggle_case
+# >>> from wortliste import toggle_case
 # >>> toggle_case(u'Ha-se')
 # u'ha-se'
 # >>> toggle_case(u'arm')
@@ -809,7 +809,7 @@ def toggle_case(wort):
 #
 # Duden-Sortierung für die Wortliste
 #
-# >>> from werkzeug import sortkey_duden
+# >>> from wortliste import sortkey_duden
 # >>> sortkey_duden([u"Abflußröhren"])
 # u'abflussrohren a*bflu*szroehren'
 # >>> sortkey_duden([u"Abflußrohren"])
@@ -913,7 +913,7 @@ def sortkey_duden(entry):
 #
 # Beispiel:
 #
-# >>> from werkzeug import udiff
+# >>> from wortliste import udiff
 # >>> print udiff([abbeissen, aalbestand], [abbeissen], 'alt', 'neu')
 # --- alt
 # +++ neu
@@ -975,8 +975,7 @@ if __name__ == '__main__':
 
     print u"Test der Werkzeuge und inneren Konsistenz der Wortliste\n"
 
-    # wordfile = WordFile('../../wortliste-binnen-s')
-    wordfile = WordFile('../../wortliste')
+    wordfile = WordFile('../../../wortliste')
     # print 'Dateiobjekt:', wordfile
 
 # Liste der Datenfelder (die Klasseninstanz als Argument für `list` liefert

@@ -26,7 +26,7 @@
 #
 # Ho-se 1;0;0;7
 #
-# .. _wortliste: ../../wortliste
+# .. _wortliste: ../../../wortliste
 #
 # .. contents::
 #
@@ -40,7 +40,7 @@ import sys      # sys.exit() zum Abbruch vor Ende (für Testzwecke)
 import codecs
 from collections import defaultdict  # Wörterbuch mit Default
 
-from werkzeug import WordFile, join_word, udiff, uebertrage, TransferError
+from wortliste import WordFile, join_word, udiff, uebertrage, TransferError
 
 # teilwoerter
 # -----------
@@ -182,7 +182,8 @@ def read_teilwoerter(path):
 def spezialbehandlung(teil):
     if re.search(ur'[\[{/\]}]', teil):
         # print teil,
-        teil = re.sub(ur'\[<(.+)/[^\]]+', ur'\1', teil) # [<b/b
+        teil = re.sub(ur'\[<(.+)/[^\]]+', ur'\1', teil) # [<x/x
+        teil = re.sub(ur'\[-(.+)/[^\]]+', ur'\1', teil) # [-x/x
         teil = re.sub(ur'\{([^/]*)[^}]*$', ur'\1', teil)
         teil = re.sub(ur'\[([^/]*)[^\]]*$', ur'\1', teil)
         teil = re.sub(ur'^(.)}', ur'\1', teil)
@@ -196,7 +197,7 @@ def spezialbehandlung(teil):
 # an der entsprechenden Position als Wert zurück::
 
 
-def analyse(path='../../wortliste', sprachvariante='de-1901',
+def analyse(path='../../../wortliste', sprachvariante='de-1901',
             unfertig=False, halbfertig=True):
 
     wordfile = WordFile(path)
@@ -323,7 +324,8 @@ def statistik_praefixe(teilwoerter):
         print
         markiert.pop(vs, None)
 
-    print u'Markierte Präfixe die nicht in der Präfix-Liste stehen:'
+    print u'\nMarkierte Präfixe die nicht in der Präfix-Liste stehen'
+    print u'\n------------------------------------------------------'
     # markiert.pop('lang', 0) # von "ent<lang<<"
     for vs, i in markiert.items():
         print vs, u' '.join(i)

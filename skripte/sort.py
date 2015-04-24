@@ -26,9 +26,9 @@ usage = u'%prog [Optionen] [Eingangsdatei]\n' + __doc__
 
 
 import unicodedata, sys, optparse, os
-# path for local Python modules
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'python'))
-from werkzeug import WordFile, WordEntry, join_word, udiff, sortkey_duden
+
+from python.edit_tools.wortliste import (WordFile, WordEntry, 
+                                         join_word, udiff, sortkey_duden)
 
 # sortkey_wl
 # ----------

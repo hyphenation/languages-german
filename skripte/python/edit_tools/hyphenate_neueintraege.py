@@ -10,7 +10,7 @@
 # ============================================================
 
 import sys, codecs, glob, copy
-from werkzeug import WordFile, WordEntry, join_word, toggle_case, sortkey_duden
+from wortliste import WordFile, WordEntry, join_word, toggle_case, sortkey_duden
 from abgleich_neueintraege import print_proposal
 from hyphenation import Hyphenator
 

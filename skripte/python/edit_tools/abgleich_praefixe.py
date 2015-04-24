@@ -5,18 +5,18 @@
 #             GNU General Public License (v. 2 or later)
 # :Id: $Id:  $
 
-# Abgleich der Trennstellen zwischen Woertern mit unterschiedlichem Suffix
+# Abgleich der Trennstellen zwischen Woertern mit unterschiedlichem Präfix
 # ========================================================================
 #
 # Übertragen von kategorisierten Trennstellen von "Wortresten" nach Abtrennen
-# der Suffixe auf Vorkommen dieser Wortteile mit anderem Suffix.
+# der Präfixe auf Vorkommen dieser Wortteile mit anderem Präfix.
 # ::
 
 import re, sys, codecs
 import difflib
-from werkzeug import (WordFile, WordEntry, join_word, uebertrage, TransferError, sprachabgleich, toggle_case)
+from wortliste import (WordFile, WordEntry, join_word, uebertrage, TransferError, sprachabgleich, toggle_case)
 from analyse import read_teilwoerter, teilwoerter
-from abgleich_praefixe import udiff
+
 # Sprachvarianten
 # ---------------
 # Sprach-Tag nach [BCP47]_::
@@ -30,7 +30,7 @@ sprachvariante = 'de-1996'         # Reformschreibung
 # Funktionen
 # -----------
 
-# Abtrennen von Suffixen und Eintrag aller (Teil-) Wörter in eine neue
+# Abtrennen von Präfixen und Eintrag aller (Teil-) Wörter in eine neue
 # ``teilwoerter`` Instanz::
 
 def find_stems(words):
@@ -39,27 +39,31 @@ def find_stems(words):
         if u'·' in line:
             continue
         word = line.split()[0]
-        # Wis-sen>schaft>lich>keit -> [Wis-sen, Wis-sen>schaft, Wis-sen>schaft>lich]
+        capitalized = word[0].istitle()
+        # un<an<ge<nehm -> [un<an<ge<nehm, an<ge<nehm, ge<nehm]
         parts = []
-        for part in word.split(u'>'):
-            parts.append(part)
-            teil = u'>'.join(parts)
+        for part in word.split(u'<').__reversed__():
+            parts.insert(0, part)
+            teil = u'<'.join(parts)
+            if capitalized: # Großschreibung übertragen
+                teil = teil[0].title() + teil[1:]
             stems.add(teil)
     return stems
 
-# Vergleich des Wortteiles nach dem ersten '>' mit ``stems``::
+# Vergleich des Wortteiles nach dem letzten '<' mit ``stems``::
 
-def suffixabgleich(wort, grossklein=False):
+def praefixabgleich(wort, grossklein=False):
 
-    teile = wort.split('>')
-    stamm = teile[0]
+    teile = wort.split('<')
+    teile[0] = teile[0].replace(u'·', u'-')
+    stamm = teile[-1]
     key = join_word(stamm)
     # print u' '.join([wort, key])
     if grossklein:
         key = toggle_case(key)
 
     if key in stems.trennvarianten:
-        # print u'fundum', key, teile
+        # print u'fundum', key
         for altstamm in stems.trennvarianten[key]:
             if u'·' in altstamm:
                 continue
@@ -68,12 +72,27 @@ def suffixabgleich(wort, grossklein=False):
             try:
                 neustamm = uebertrage(altstamm, stamm)
                 # print u'alt/neu', wort, altstamm, neustamm
-                teile[0] =  neustamm
+                teile[-1] =  neustamm
                 break
             except TransferError, e:
                 print unicode(e)
 
-    return u'>'.join(teile)
+    return u'<'.join(teile)
+
+# Vergleiche zwei Sequenzen von Strings, gib einen "unified diff" als
+# Byte-String zurück (weil difflib nicht mit Unicode-Strings arbeiten kann).
+
+def udiff(a, b, fromfile='', tofile='', n=1, encoding='utf8'):
+
+    a = [line.encode(encoding) for line in a]
+    b = [line.encode(encoding) for line in b]
+
+    diff = difflib.unified_diff(a, b, fromfile, tofile, n)
+
+    if diff:
+        return ''.join(diff)
+    else:
+        return None
 
 
 
@@ -101,9 +120,9 @@ if __name__ == '__main__':
 
     for line in words:
 
-# Alle Trennstellen kategorisiert oder kein (markierter) Suffix::
+# Alle Trennstellen kategorisiert oder kein (markierter) Präfix::
 
-        if (u'·' not in line) or (u'>' not in line):
+        if (u'·' not in line) or (u'<' not in line):
             words2.append(line)
             continue
 
@@ -112,11 +131,11 @@ if __name__ == '__main__':
         fields = line.split(' ')
         wort = fields[0]
 
-# Suffixabgleich::
+# Präfixabgleich::
 
-        wort2 = suffixabgleich(wort)
+        wort2 = praefixabgleich(wort)
         if wort2 == wort:
-            wort2 = suffixabgleich(wort, grossklein=True)
+            wort2 = praefixabgleich(wort, grossklein=True)
         fields[0] = wort2
         words2.append(' '.join(fields))
 

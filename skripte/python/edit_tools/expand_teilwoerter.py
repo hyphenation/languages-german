@@ -16,7 +16,7 @@
 # ::
 
 import os, re, sys, codecs, copy
-from werkzeug import (WordFile, WordEntry, join_word,
+from wortliste import (WordFile, WordEntry, join_word,
                       sprachabgleich, toggle_case, sortkey_duden)
 
 
@@ -122,7 +122,7 @@ def multisplit(wort):
 
 # Gib eine Liste von allen (sinnvollen) Zerlegungen eines WordEntry zurück
 #
-# >>> from werkzeug import WordEntry
+# >>> from wortliste import WordEntry
 #
 # >>> split_entry(WordEntry(u'Aachen;Aa-chen'))
 # [[u'Aachen', u'Aa-chen']]
@@ -207,7 +207,7 @@ if __name__ == '__main__':
 
 # `Wortliste` einlesen::
 
-    wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
+    wordfile = WordFile('../../../wortliste') # ≅ 400 000 Einträge/Zeilen
 
 # Wichtung::
 

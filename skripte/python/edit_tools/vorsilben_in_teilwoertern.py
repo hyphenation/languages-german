@@ -102,7 +102,7 @@ import re       # Funktionen und Klassen für reguläre Ausdrücke
 import sys      # sys.exit() zum Abbruch vor Ende (für Testzwecke)
 import codecs
 
-from werkzeug import WordFile, join_word
+from wortliste import WordFile, join_word
 from analyse import read_teilwoerter
 from abgleich_praefixe import udiff  # unified diff aus Vergleich zweier Listen
 

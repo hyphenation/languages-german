@@ -26,7 +26,7 @@ import sys      # sys.exit() zum Abbruch vor Ende (für Testzwecke)
 from collections import defaultdict  # Wörterbuch mit Default
 from copy import deepcopy
 
-from werkzeug import WordFile, join_word, udiff
+from wortliste import WordFile, join_word, udiff
 
 # Sprachvarianten
 # ---------------
@@ -44,7 +44,7 @@ sprachvariante = 'de-1901'         # "traditionell"
 # Die freie `Wortliste der deutschsprachigen Trennmustermannschaft`_
 # ("Lembergsche Liste")::
 
-wordfile = WordFile('../../wortliste') # ≅ 400 000 Einträge/Zeilen
+wordfile = WordFile('../../../wortliste') # ≅ 400 000 Einträge/Zeilen
 wortliste = list(wordfile)
 
 # Wörterbucher für die Rechtschreibprüfprogramme Ispell/Aspell

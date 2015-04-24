@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
-
-# Original from http://nedbatchelder.com/code/modules/hyphenate.py
-
 u"""Hyphenation using a pure Python implementation of Frank Liang's algorithm.
 
     This module provides a class to hyphenate words.
@@ -18,12 +15,13 @@ u"""Hyphenation using a pure Python implementation of Frank Liang's algorithm.
     >>> hyphenator.hyphenate_word(u"project")
     u'project'
 
-    version 1: Ned Batchelder, July 2007.
-    This Python code is in the public domain.
+    based on http://nedbatchelder.com/code/modules/hyphenate.py
+    by Ned Batchelder, July 2007.
 
     version 2: Internationalization (external pattern files, Unicode)
     © 2013 Günter Milde
 """
+# See also the independently developed http://pyphen.org/
 
 import re, optparse
 

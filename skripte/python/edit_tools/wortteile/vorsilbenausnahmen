@@ -4,17 +4,17 @@
 # Wortstämme, deren erste Silbe gleichlautend mit einem
 # in ``praefixe`` gelisteten Präfix ist ohne einer zu sein.
 #
-# Die Unterscheidung von Vorsilben (Präfixen) von Teilwörtern in Komposita ist
-# im Deutschen nicht eindeutig.
+# Die Unterscheidung zwischen Vorsilben (Präfixen) und Teilwörtern in
+# Komposita ist im Deutschen nicht eindeutig.
 #
 # Gelistet werden "Einzelworte" (freie Worte und Bestandteile von
-# Wort=verbindungen), ohne markierte Präfixe markierte Suffixe mit
+# Wort=verbindungen), ohne markierte Präfixe oder markierte Suffixe mit
 # Beachtung von Groß- und Kleinschreibung, z.B.
 #
-#  abstrakt     für ab-strakt
-#  Abstrakt     für Ab-strakt>heit
-#  Abstraktion  für Ab-strak-tion (Suffix "-ion" beginnt nicht an Trennstelle)
-#  beißen       für ab<bei-ßen
+#    abstrakt     für ab-strakt
+#    Abstrakt     für Ab-strakt>heit
+#    Abstraktion  für Ab-strak-tion (Suffix "-ion" beginnt nicht an Trennstelle)
+#    beißen       für ab<bei-ßen
 #
 # Korrekturen und Korrekturvorschläge bitte an trennmuster@dante.de.
 Abbasiden
@@ -703,6 +703,9 @@ Erze
 Erzen
 Erzer
 Erzes
+Eurasien
+Euro
+Europäerinnen
 Exodus
 Exoten
 Exotik
@@ -810,6 +813,7 @@ Genom
 Genome
 Genomen
 Genoms
+Genoveva
 Genua
 Genuas
 Genus
@@ -927,6 +931,7 @@ Hinderungs
 Hindi
 Hindu
 Hinduismus
+Hindukusch
 Hindus
 Hinkel
 Hinnerk
@@ -1164,11 +1169,24 @@ Kartonagen
 Katalane
 Katalanen
 Katarina
+Katja
+Katmandu
+Katrin
+Katrins
+Kattegat
+Katto
+Kattun
+Kattuns
+Katze
+Katzel
+Katzen
 Kobe
 Kochens
 Kodex
 Koloristen
+Kolumbiens
 Komikerin
+Kommen
 Komöd
 Komödie
 Komödien
@@ -1405,7 +1423,9 @@ Panne
 Pannen
 Panorama
 Panoramas
+Panscher
 Pansen
+Panter
 Panther
 Panthern
 Panthers
@@ -1416,6 +1436,7 @@ Panzer
 Panzern
 Panzers
 Panzerung
+Panzerungen
 Parabel
 Parabeln
 Parabol
@@ -1637,6 +1658,7 @@ Protesten
 Protests
 Protonen
 Protons
+Protzerei
 Provence
 Prärie
 Präsent
@@ -1930,8 +1952,10 @@ Suchers
 Suchung
 Suchungen
 Sudan
+Sudanese
 Sudans
 Sudel
+Sudelei
 Sudeten
 Suez
 Sufi
@@ -1941,6 +1965,8 @@ Sujet
 Sujets
 Sumo
 Super
+Superiorität
+Supremum
 Sure
 Suren
 Surfen
@@ -1950,6 +1976,7 @@ Surferin
 Surferinnen
 Surfern
 Surfers
+Surinam
 Surium
 Sushi
 Susi
@@ -2020,6 +2047,7 @@ Tribüne
 Tribünen
 Triest
 Triester
+Triestiner
 Trikot
 Tripeln
 Triton
@@ -2069,8 +2097,11 @@ Unze
 Unzen
 Urbanisation
 Urbanisierung
+Urbanisierungs
 Urbanismus
+Urbanisten
 Urbanistik
+Urbanität
 Urne
 Urnen
 Ursen
@@ -2100,6 +2131,7 @@ Willführ
 Willhardt
 Willkür
 Zentristen
+Zerberus
 Zermatt
 Zerrens
 Zerrung
@@ -2109,6 +2141,7 @@ Zertifikate
 Zertifikaten
 Zertifikates
 Zertifikats
+Zertifizierens
 Zertifizierung
 Zertifizierungen
 Zertifizierungs
@@ -3314,6 +3347,16 @@ erziertes
 erziertest
 erziertet
 erzitien
+eugenisch
+eure
+eurigen
+europäische
+europäische
+europäischem
+europäischen
+europäischer
+europäisches
+europäisieren
 exerziertem
 exerzierter
 exerziertes
@@ -3386,6 +3429,7 @@ extremsten
 extremster
 extremstes
 ferone
+fürder
 fürsten
 gebahrt
 gebe
@@ -3860,6 +3904,7 @@ hindertet
 hinderung
 hinderungen
 hinderungs
+hinduismus
 hinduistisch
 hinduistische
 hinduistischem
@@ -3997,6 +4042,7 @@ hinterspritzte
 hinterspritzten
 hinterspritztest
 hinterspritztet
+hinterst
 hinterste
 hinterstem
 hintersten
@@ -4319,6 +4365,7 @@ katalanischem
 katalanischen
 katalanischer
 katalanisches
+katzen
 koche
 kochen
 kochend
@@ -4351,6 +4398,30 @@ kometen
 komischer
 komischstem
 komischster
+komme
+kommen
+kommen
+kommen
+kommen
+kommend
+kommend
+kommende
+kommende
+kommende
+kommendem
+kommendem
+kommenden
+kommender
+kommendes
+kommene
+kommene
+kommenem
+kommenen
+kommener
+kommenes
+kommens
+kommens
+kommensten
 konische
 konsistente
 konter
@@ -4805,6 +4876,7 @@ obertes
 obertest
 obertet
 obre
+omnibus
 onkel
 organisation
 organisationen
@@ -5896,6 +5968,7 @@ sozialsten
 sozialster
 sozialstes
 soziation
+subito
 substanz
 suche
 suchen
@@ -5948,6 +6021,11 @@ sudeltest
 sudeltet
 suden
 sudes
+sular
+sulats
+sulent
+sulin
+sumentin
 sumiere
 sumieren
 sumierend
@@ -5965,7 +6043,9 @@ sumierter
 sumiertes
 sumiertest
 sumiertet
+sumismus
 superb
+superben
 surde
 surdem
 surden
@@ -6223,6 +6303,7 @@ verbaleren
 verbalerer
 verbaleres
 verbales
+verbalisieren
 verbalste
 verbalstem
 verbalsten
@@ -6234,6 +6315,7 @@ verbiale
 verbialem
 verbialen
 verbialer
+verbiales
 verbien
 verdarben
 vergent
@@ -6255,10 +6337,14 @@ vergierendes
 vergierst
 vergiert
 vergierte
+vergiertem
 vergierten
+vergierter
+vergiertes
 vergiertest
 vergiertet
 verkehr
+versa
 versal
 versale
 versalem
@@ -6300,6 +6386,7 @@ versem
 versen
 verser
 verses
+versiade
 versibel
 versible
 versiblem
@@ -6347,6 +6434,7 @@ versus
 verter
 vertern
 verters
+vertibel
 vertibilität
 vertier
 vertiere
@@ -6453,6 +6541,8 @@ zentrisches
 zentristische
 zentristischen
 zentrizität
+zerne
+zernen
 zerre
 zerren
 zerrend
@@ -6464,6 +6554,30 @@ zerrendes
 zerrens
 zerrung
 zerrungen
+zertant
+zertante
+zertanten
+zertanter
+zertantes
+zerten
+zertes
+zertiert
+zertierte
+zertierten
+zertierter
+zertifizier
+zertifiziere
+zertifizieren
+zertifizierend
+zertifizierendem
+zertifizierenden
+zertifizierender
+zertifiziertem
+zertifizierten
+zertifizierter
+zertifiziertes
+zertifiziertest
+zertifiziertet
 zoome
 zoomen
 zoomend
