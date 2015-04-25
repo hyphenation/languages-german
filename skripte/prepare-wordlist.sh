@@ -10,6 +10,7 @@ LC_COLLATE=de_DE.UTF8
 # … prüft sie gegen eine ebenfalls gegebene Prüfliste:
 
 p=$(echo $0 | sed "s|\(.*\)/.*|\1|")  # der Pfad zu den Skripten
+
 sed -f $p/strippunct.sed \
 | sed '/..../!d' \
 | sort -i \
