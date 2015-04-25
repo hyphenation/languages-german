@@ -1,7 +1,7 @@
 # Vorsilbenausnahmen
 # ==================
 #
-# Wortstämme, deren erste Silbe gleichlautend mit einem
+# Wortstämme, deren erste Silbe(n) gleichlautend mit einem
 # in ``praefixe`` gelisteten Präfix ist ohne einer zu sein.
 #
 # Die Unterscheidung zwischen Vorsilben (Präfixen) und Teilwörtern in
@@ -6675,3 +6675,5 @@ zyklopischem
 zyklopischen
 zyklopischer
 zyklopisches
+bissen
+bisse
