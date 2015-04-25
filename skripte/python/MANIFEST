@@ -45,7 +45,7 @@ edit_tools
 ----------
 
 wortliste.py
-  Python-Modul für die Arbeit mit der `Wortliste`
+  Python-Modul für die Arbeit mit der `Wortliste`.
   Wird von den anderen Python-Skripten importiert.
 
   Aufruf mit ``python wortliste.py`` startet einen
@@ -60,9 +60,9 @@ Skripte zur Arbeit mit der Wortliste
 
 Siehe auch den Abschnitt `Arbeitsfluss`_ am Ende dieses Dokumentes.
 
-Achtung experimentell:
+.. Achtung:: Experimentell
 
-* Die Skripte wurden für die eigene Arbeit mit der Wortliste entwickelt und
+  Die Skripte wurden für die eigene Arbeit mit der Wortliste entwickelt und
   erfordern zum Teil Anpassungen im Quelltext, eine gewisse Einarbeitung,
   Lesen der enthaltenen Dokumentation und gegebenenfalls Rücksprachen mit
   dem Autor.
@@ -106,20 +106,16 @@ abgleich_praefixe.py
   Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
   kann (siehe Arbeitsfluss_).
 
-
-  abgleich_sprachvarianten.py
+abgleich_sprachvarianten.py
   Abgleich der Trennstellen zwischen Sprachvarianten
 
   Aufruf: ``python abgleich_sprachvarianten.py``
 
   * Übertragen von kategorisierten Trennstellen zwischen Sprachvarianten
     desselben Wortes, und/oder
-
   * Zusammenfassen von Feldern mit gleichem Inhalt wenn das Ergebnis ein
     wohlgeformter Eintrag ist.
-
   * Ergänzen von Formen mit SS statt ß.
-
 
 abgleich_suffixe.py
   Abgleich der Trennstellen zwischen Wörtern mit unterschiedlichem Suffix.
@@ -188,7 +184,7 @@ test_teilwoerter.py
   Test der Markierung von Komposita in der Wortliste
 
 teilwoerter_*.txt
-  Liste der Teilwörter der Komposita in der Wortliste_.
+  Liste der Teilwörter der Komposita in der `Wortliste`.
   Erstellt mit ``analyse.py`` durch Trennen an "=".
   Listet Häufigkeiten des Auftretens als:
   

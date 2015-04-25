@@ -9,10 +9,16 @@
 # über "hyphenation"-Algorithmus und patgen-patterns.
 # ============================================================
 
-import sys, codecs, glob, copy
+
+import sys, os, codecs, glob, copy
+
+# path for local Python modules (parent dir of this file's dir)
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
 from wortliste import WordFile, WordEntry, join_word, toggle_case, sortkey_duden
 from abgleich_neueintraege import print_proposal
-from hyphenation import Hyphenator
+
+from patuse.hyphenation import Hyphenator
 
 
 # Konfiguration
@@ -20,7 +26,7 @@ from hyphenation import Hyphenator
 
 # Pfad zur Datei mit den neu einzutragenden Wörtern::
 
-neuwortdatei = "spell/zusatz-de-1996-aspell-compact"
+neuwortdatei = "../spell/zusatz-de-1996-aspell-compact"
 # neuwortdatei = "spell/DDR.txt"
 
 
@@ -33,10 +39,10 @@ neuwortdatei = "spell/zusatz-de-1996-aspell-compact"
 #
 # im Wurzelverzeichnis der wortliste generiert werden::
         
-pfile_all = glob.glob('../../dehyphn-x/dehyphn-x-*.pat')[-1]
-pfile_major = glob.glob('../../dehyphn-x-major/dehyphn-x-major-*.pat')[-1]
-pfile_fugen = glob.glob('../../dehyphn-x-fugen/dehyphn-x-fugen-*.pat')[-1]
-pfile_suffix = glob.glob('../../dehyphn-x-suffix/dehyphn-x-suffix-*.pat')[-1]
+pfile_all = glob.glob('../../../dehyphn-x/dehyphn-x-*.pat')[-1]
+pfile_major = glob.glob('../../../dehyphn-x-major/dehyphn-x-major-*.pat')[-1]
+pfile_fugen = glob.glob('../../../dehyphn-x-fugen/dehyphn-x-fugen-*.pat')[-1]
+pfile_suffix = glob.glob('../../../dehyphn-x-suffix/dehyphn-x-suffix-*.pat')[-1]
 
 
 
