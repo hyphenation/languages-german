@@ -24,8 +24,13 @@ neuwortdatei = "spell/zusatz-de-1996-aspell-compact"
 # neuwortdatei = "spell/DDR.txt"
 
 
-# Die neuesten Pattern-Dateien welche über die "make" Ziele
-# `make pattern-refo`, `make major pattern-refo`, `make fugen pattern-refo`
+# Die neuesten Pattern-Dateien, welche über die "make"-Ziele
+#
+#     make pattern-refo
+#     make major pattern-refo
+#     make fugen pattern-refo
+#     make suffix pattern-refo
+#
 # im Wurzelverzeichnis der wortliste generiert werden::
         
 pfile_all = glob.glob('../../dehyphn-x/dehyphn-x-*.pat')[-1]
