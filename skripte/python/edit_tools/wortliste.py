@@ -411,44 +411,57 @@ class WordEntry(list):
 # >>> entry.regelaenderungen()
 # >>> print unicode(entry)
 # Missbrauch;-2-;-3-;Miss<brauch;Miss<brauch
+# >>> entry = WordEntry(u'schlifffest;schliff=fest')
+# >>> entry.regelaenderungen()
+# >>> print unicode(entry)
+# schlifffest;-2-;-3-;schliff=fest
 #
 # ::
 
     def regelaenderungen(self):
-        # Regeländerungen:
+        # Trennregeländerungen:
         r1901 = (u'-st', u'{ck/k-k}')
         r1996 = (u's-t', u'-ck')
-        # kein Schluss-ss und sst in de-1901
-        # aber: 'ßt' und Schluß-ß auch in de-1996 möglich (langer Vokal)
 
         w1901 = self.get('de-1901')
         w1996 = self.get('de-1996')
-
+        w_x_GROSS = None
+        
         if w1901 is None or w1996 is None:
             return
-
+        
         for r1, r2 in zip(r1901, r1996):
             w1901 = w1901.replace(r2,r1)
             w1996 = w1996.replace(r1,r2)
-        if (u'sst' in w1901 or u'ss<' in w1901 
-                or u'ss<' in w1901 or w1901.endswith(u'ss')):
-            w1901 = None
 
+        # kein Schluss-ss und sst in de-1901 (ungetrenntes "ss" nur in Ausnahmen)
+        # aber: 'ßt' und Schluß-ß auch in de-1996 möglich (langer Vokal)
+        if u'ss' in w1901: 
+            w_x_GROSS = w1901
+            w1901 = None
+         
+        # Dreikonsonantenregel:
+        if w1901 and re.search(ur'(.)\1=\1', w1901):
+            w1901 = None
+        
+        # Speichern:
         if w1901 == w1996: # keine Regeländerung im Wort
             if len(self) > 2:
                 self.conflate_fields()
             return
-        elif w1901 is None:
-            self.extend( ['']*(5-len(self)) )
+        
+        if w1901 is None:
+            self.extend( ['']*(4-len(self)) )
             self[1] = u'-2-'
             self[2] = u'-3-'
             self[3] = w1996
-            self[4] = w1996
         else:
             self.extend( ['']*(4-len(self)) )
             self[1] = u'-2-'
             self[2] = w1901
             self[3] = w1996
+        if w_x_GROSS:
+            self.append(w_x_GROSS)
 
 
 
@@ -960,7 +973,7 @@ def test_keys(wortliste):
                 continue
             if key != join_word(wort):
                 is_OK = False
-                print u"\nkey '%s' != '%s'" % (key, wort),
+                print u"\nkey '%s' != join_word('%s')" % (key, wort),
                 if key.lower() == join_word(wort).lower():
                     print(u"  Abgleich der Großschreibung mit"
                           u"`prepare-patch.py grossabgleich`."),
