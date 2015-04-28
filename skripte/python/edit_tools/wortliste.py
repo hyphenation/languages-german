@@ -407,6 +407,10 @@ class WordEntry(list):
 # >>> entry.regelaenderungen()
 # >>> print unicode(entry)
 # fasst;-2-;-3-;fasst;fasst
+# >>> entry = WordEntry(u'Missbrauch;Miss<brauch')
+# >>> entry.regelaenderungen()
+# >>> print unicode(entry)
+# Missbrauch;-2-;-3-;Miss<brauch;Miss<brauch
 #
 # ::
 
@@ -426,7 +430,8 @@ class WordEntry(list):
         for r1, r2 in zip(r1901, r1996):
             w1901 = w1901.replace(r2,r1)
             w1996 = w1996.replace(r1,r2)
-        if u'sst' in w1901 or w1901.endswith(u'ss'):
+        if (u'sst' in w1901 or u'ss<' in w1901 
+                or u'ss<' in w1901 or w1901.endswith(u'ss')):
             w1901 = None
 
         if w1901 == w1996: # keine Regeländerung im Wort
