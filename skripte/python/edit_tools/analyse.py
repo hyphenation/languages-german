@@ -343,7 +343,8 @@ def mehrdeutigkeiten(words):
                     'Mode', 'Made', 'Name',
                     'Page', 'Pole', 'Planes', 'Rate', 'Real',
                     'Spare', 'Station', 'Stations', 'Ville', 'Wales', 'Ware',
-                    'griff' # gri[f-f/{ff/ff=f}]est
+                    'griff', # gri[f-f/{ff/ff=f}]est
+                    'schliff', # schli[f-f/{ff/ff=f}]est
                    ):
             continue
         # Einzelwort und Präfix gleichlautend:
@@ -365,8 +366,8 @@ if __name__ == '__main__':
 # nicht zusammengesetzer Wörter als Einzelwort oder in erster, mittlerer,
 # oder letzter Position in Wortverbindungen::
 
-    # sprachvariante = 'de-1901'         # "traditionell"
-    sprachvariante = 'de-1996'         # Reformschreibung
+    sprachvariante = 'de-1901'         # "traditionell"
+    # sprachvariante = 'de-1996'         # Reformschreibung
     # sprachvariante = 'de-1901-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-1996-x-GROSS' # ohne ß (Schweiz oder GROSS)
     # sprachvariante = 'de-CH-1901'     # ohne ß (Schweiz) ("süssauer")
