@@ -32,18 +32,19 @@
 # dawider
 # dazu 	    (Präfix im DWDS aber nicht im Duden)
 # dazwischen
-# dran
 # drauflos
-# drin
 # entzwei   (Präfix im Duden aber nicht im DWDS)
 # fern
 # gegenüber
 # gleich
-# heim      (Präfix im Duden aber nicht im DWDS)
+dran
+drin
+heim
 # hinterher (Präfix im DWDS aber nicht im Duden)
 ab
 aber
 abo
+aceto
 ad
 aero
 af
@@ -64,8 +65,10 @@ anglo
 ant
 anthropo
 anti
+ap
 aperi
 apo
+aqua
 archaeo
 arche
 archäo
@@ -88,6 +91,7 @@ baro
 be
 bei
 bel
+bene
 benzo
 bi
 biblio
@@ -105,6 +109,7 @@ chromo
 chrono
 con
 cyano
+cyber
 da
 dar
 de
@@ -163,6 +168,7 @@ extro
 femto
 fero
 ferro
+fibro
 fono
 fort
 foto
@@ -216,12 +222,12 @@ hindurch
 hinein
 hint
 hintan
-hintenüber
 hinter
 hinunter
 hinweg
 hinzu
 hinüber
+hippo
 histo
 hoch
 holo
@@ -253,11 +259,11 @@ ir
 iso
 jugo
 juxta
+kalli
 kardio
 karto
 kat
 kata
-kate
 kilo
 klaustro
 klepto
@@ -266,9 +272,9 @@ ko
 kolo
 kom
 kon
+konter
 kontra
 kor
-korre
 kosmo
 krimino
 krino
@@ -306,6 +312,7 @@ mis
 miss
 mit
 miß
+mnemo
 mon
 mono
 morpho
@@ -317,10 +324,12 @@ mytho
 nach
 nano
 neben
+nekro
 neo
 neur
 neuro
 nieder
+nitro
 non
 nor
 nost
@@ -338,7 +347,6 @@ on
 onko
 onto
 opto
-organi
 ortho
 osteo
 oszillo
@@ -346,8 +354,8 @@ out
 over
 oxy
 ozeano
-paläo
 palä
+paläo
 pan
 panto
 par
@@ -423,6 +431,7 @@ steno
 stereo
 stetho
 strato
+strepto
 su
 sub
 super
@@ -477,7 +486,6 @@ von
 vor
 vorab
 voran
-vorauf
 voraus
 vorbei
 vorher
@@ -511,5 +519,7 @@ zyto
 ägypto
 äqui
 öko
+ökono
 öno
+öso
 über
