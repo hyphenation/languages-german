@@ -26,8 +26,8 @@ from patuse.hyphenation import Hyphenator
 
 # Pfad zur Datei mit den neu einzutragenden Wörtern::
 
-neuwortdatei = "../spell/zusatz-de-1996-aspell-compact"
-# neuwortdatei = "spell/DDR.txt"
+# neuwortdatei = "../spell/german-dic-b-z-fail.txt"
+neuwortdatei = "../spell/test.txt"
 
 
 # Die neuesten Pattern-Dateien, welche über die "make"-Ziele
@@ -105,7 +105,7 @@ if __name__ == '__main__':
 
 # Erstellen der neuen Einträge::
 
-    proposals = [WordEntry(line.decode('utf8').strip())
+    proposals = [WordEntry(line.decode('utf8').strip().replace(u'-', u''))
                  for line in open(neuwortdatei)
                  if not line.startswith('#')]
 

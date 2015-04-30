@@ -86,19 +86,19 @@ abgleich_endungen.py
   definiert.
 
 abgleich_neueintraege.py
-  Versuche Trennstellen neuer Wörter aus vorhandenen zu ermitteln
+  Übertragen von Trennstellen aus (Teil-) Wörtern der "Wortliste"
+  auf neu aufzunehmende, ungetrennte Wörter oder
+  Einträge im Format der Wortliste (zum Test auf Mehrdeutigkeiten
+  oder Fehler).
+  
+  Hilfe und Details mit ::
+    
+    python abgleich_neueintraege.py --help
 
-  Übertragen von kategorisierten Trennstellen vorhandener Wörter
-  auf neu aufzunehmende, ungetrennte Wörter.
+  Die Ausgabe kann nach ``neu.todo`` gespeichert und (nach Durchsicht) mit
+  ``prepare_patch.py neu`` in die Wortliste eingepflegt werden, z.B. ::
 
-  Erwartet eine Datei mit 1 Wort/Zeile.
-  Pfad/Dateiname im Abschnitt Konfiguration anpassen!
-
-  Schreibt eine Liste von Einträgen für die Wörter, welche durch Abgleich
-  mit der Datenbasis getrennt werden konnten auf stdout.
-
-  Die Liste kann nach ``neu.todo`` gespeichert und (nach Durchsicht) mit
-  ``prepare_patch.py neu`` in die Wortliste eingepflegt werden.
+    python abgleich_neueintraege.py < neue-woerter.txt > todo.txt
 
 abgleich_praefixe.py
   Abgleich der Trennstellen zwischen Wörtern mit unterschiedlichem Präfix
@@ -187,20 +187,20 @@ teilwoerter_*.txt
   Liste der Teilwörter der Komposita in der `Wortliste`.
   Erstellt mit ``analyse.py`` durch Trennen an "=".
   Listet Häufigkeiten des Auftretens als:
-  
+
   :S: Einzelwort (Solitär)
   :E: erstes Wort in Verbindungen
   :M: mittleres Wort in Verbindungen
   :L: letztes Wort in Verbindungen
-  
+
   Format:
-  
+
   * Teilwort mit Trennungen. Großschreibung wie Gesamtwort
   * Leerraum (whitespace)
   * Häufigkeiten in der Reihenfolge S;E;M;L
-  
+
   Beispiel:
-  
+
   Ho-se 1;0;0;7
 
 

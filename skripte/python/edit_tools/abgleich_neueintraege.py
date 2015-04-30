@@ -7,43 +7,30 @@
 
 # Versuche Trennstellen neuer Wörter aus vorhandenen zu ermitteln
 # ===============================================================
-#
-# Übertragen von kategorisierten Trennstellen vorhandener Wörter
-# auf neu aufzunehmende, ungetrennte Wörter.
-#
-# Erwartet eine Datei mit 1 Wort/Zeile.
-# Pfad/Dateiname im Abschnitt Konfiguration anpassen!
-#
-# Schreibt eine Liste von Einträgen für die Wörter, welche durch Abgleich
-# mit der Datenbasis getrennt werden konnten auf stdout.
-#
-# Die Liste kann nach ``neu.todo`` gespeichert und (nach Durchsicht) mit
-# ``prepare_patch.py neu`` in die Wortliste eingepflegt werden.
-#
+
+u"""Trenne neue Wörter durch Ableitung von Einträgen der Wortliste.
+
+Eingabe: 1 ungetrenntes Wort oder Eintrag im Wortliste-Format pro Zeile.
+
+Ausgabe: Wortliste-Einträge (Vorschläge), sortiert nach:
+  identisch (falls Eingabe bereits Wortliste-Eintrag ist und eindeutig ist), 
+  eindeutig abgeleitet
+  eindeutig abgeleitet (andere Großschreibung),
+  mehrdeutig abgeleitet,
+  Rest.
+  
+Bsp: python abgleich_neueintraege.py < dict-fail.txt > todo.txt
+
+     (``neu.todo`` kann (nach Durchsicht!!) mit `prepare_patch.py neu` 
+     in die Wortliste eingepflegt werden.)
+"""
+
 # ::
 
-import sys, codecs
+import sys, os, codecs, optparse
 from collections import defaultdict  # Wörterbuch mit Default
 from wortliste import WordFile, WordEntry, join_word, toggle_case, sortkey_duden
 from expand_teilwoerter import expand_wordfile
-
-# Konfiguration
-# -------------
-
-# Pfad zur Datei mit den neu einzutragenden Wörtern::
-
-neuwortdatei = "spell/zusatz-de-1996-aspell-compact"
-# neuwortdatei = "spell/DDR.txt"
-
-# Vorhandene identische Einträge aus Neueinträgen aussortieren::
-
-filtern = False
-# filtern = True
-
-# Trennmusterliste
-
-wordfile = WordFile('../../../wortliste')
-
 
 # Funktionen
 # -----------
@@ -655,7 +642,6 @@ endungen = [
             (u'ös', u'ö-se'),
            ]
 
-
 # Zerlege einen String mit von vorn bis hinten wandernder Bruchstelle::
 #
 # >>> from abgleich_neueintraege import zerlege
@@ -733,24 +719,58 @@ def trenne_key(key, grossklein = False):
                     entries[0][1] = entries[0][1].replace((level+1)*sep, level*sep)
     return entries
 
-
-def filter_neuliste(neuwortdatei, words):
-    neue = []
-    for line in open(neuwortdatei):
+def filter_neuliste(liste, words):
+    for line in liste:
         line = line.decode('utf8').strip()
         if line.startswith('#'):
-            neue.append(line)
+            yield line
             continue
         neukey = line.split(u';')[0]
         if neukey in words:
-            print 'vorhanden:', line
-        elif neukey.title() in words:
-            print 'Vorhanden:', line
-        elif neukey.lower() in words:
-            print 'vorhanden (kleingeschrieben):', line
-        else:
-            neue.append(line)
-    return neue
+            # print 'vorhanden:', line
+            continue
+        if neukey.title() in words:
+            # print 'Vorhanden:', line
+            continue
+        if neukey.lower() in words:
+            # print 'vorhanden (kleingeschrieben):', line
+            continue
+        yield line
+
+class SortableDict(dict):
+    """Dictionary with additional sorting methods
+
+    Tip: use key starting with with '_' for sorting before small letters
+         and with '~' for sorting after small letters.
+    """
+    def sortedkeys(self):
+        """Return sorted list of keys"""
+        keys = self.keys()
+        keys.sort()
+        return keys
+
+    def sortedvalues(self):
+        """Return list of values sorted by keys"""
+        return [self[key] for key in self.sortedkeys()]
+
+def filter_ableitungen(liste):
+    words = SortableDict()
+    words['#'] = '# Ableitungen entfernt'
+    for line in liste:
+        line = line.decode('utf8').strip()
+        if line.startswith('#'):
+            words['#'] += '\n' + line
+            continue
+        key = line.split(u';')[0]
+        gibts_schon = False
+        for alt, neu in endungen:
+            altkey = key[:-len(join_word(neu))] + join_word(alt)
+            if altkey in words:
+                gibts_schon = True
+                break
+        if not gibts_schon:
+            words[key] = line
+    return words.sortedvalues()    
 
 def print_proposal(entry):
     proposal = getattr(entry, "proposal", u'')
@@ -762,39 +782,71 @@ def print_proposal(entry):
 
 if __name__ == '__main__':
 
+# Pfad zu "../../../wortliste" unabhängig vom Arbeitsverzeichnis::
+
+    default_wortliste = os.path.relpath(os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
+            os.path.abspath(__file__))))),
+        'wortliste'))
+    # 
+    #     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+
+# Optionen::
+
+    usage = '%prog [Optionen]\n' + __doc__
+
+    parser = optparse.OptionParser(usage=usage)
+    parser.add_option('-i', '--file', dest='wortliste',
+                      help='Vergleichsdatei, Vorgabe "%s"'%default_wortliste,
+                      default=default_wortliste)
+    parser.add_option('-f', '--filter', action="store_true",
+                      help=u'in WORTLISTE vorhandene Wörter aussortieren',
+                      default=False)
+    parser.add_option('-a', '--filter-ableitungen', action="store_true",
+                      help=u'Ableitungen von Wörtern der Eingabe aussortieren',
+                      default=False)
+    (options, args) = parser.parse_args()
+
+    wordfile = WordFile(options.wortliste)
+
     # sys.stdout mit UTF8 encoding.
     sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
 # Filtern::
 
-    if filtern:
+    if options.filter:
         words = wordfile.asdict()
-        for line in filter_neuliste(neuwortdatei, words):
+        for line in filter_neuliste(sys.stdin, words):
+            print line
+        sys.exit()
+
+    if options.filter_ableitungen:
+        for line in filter_ableitungen(sys.stdin):
             print line
         sys.exit()
 
 # `Wortliste` einlesen::
 
+    # Wörter, Teilwörter und Kombinationen (siehe expand_teilwoerter.py)
     words = expand_wordfile(wordfile)
+    
+# Aussortieren von Wörtern, die zu "false positives" führen::
 
+    # Wörter, die oft als Endungen auftauchen:
     for alt, neu in endungen:
         words.pop(join_word(neu), None)
 
-    for unwort in [u'Em']:
+    for unwort in [u'Em', u'Gen']:
         words.pop(unwort, None)
 
-    # # schon expandierte Liste:
-    # wordfile = WordFile('wortliste-expandiert') # + Teilwort-Entries
-    # words = wordfile.asdict()
+# Erstellen der neuen Einträge::
 
     neue = []
     neue_grossklein = []
     rest = []
 
-# Erstellen der neuen Einträge::
-
     proposals = [WordEntry(line.decode('utf8').strip())
-                 for line in open(neuwortdatei)
+                 for line in sys.stdin
                  if not line.startswith('#')]
 
     for newentry in proposals:
