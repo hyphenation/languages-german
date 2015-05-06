@@ -1,5 +1,5 @@
 1. Vorbereiten der temporären Wortliste
-   $ sh merge-wordlist.sh ../wortliste [../pre-1901 …] [path/to/namen] > tmp.wl  <-- brauchen wir ab Pt. 3.
+   $ sh merge-wordlists.sh ../wortliste [../pre-1901 …] [path/to/namen] > tmp.wl  <-- brauchen wir ab Pt. 3.
 
 2. Listen aller Worte einer Textdatei (sortiert, uniq, case independent)
    $ sh ./prepare-wordlist.sh < Textdatei
