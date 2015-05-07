@@ -249,7 +249,7 @@ def reformschreibung(wordfile, datei):
             if u'ss' in wort:
                 entry = WordEntry('%s;-2-;-3-;%s;%s' % (key, wort, wort))
             else:
-                entry = WordEntry('%s;-2-;-3-;%s;-4-' % (key, wort))
+                entry = WordEntry('%s;-2-;-3-;%s;-5-' % (key, wort))
             korrekturen.discard(key) # erledigt
         wortliste_neu.append(entry)
 
