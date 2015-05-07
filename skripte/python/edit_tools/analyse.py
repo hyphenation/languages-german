@@ -178,12 +178,13 @@ def read_teilwoerter(path):
 # er.be
 # >>> print spezialbehandlung(u'er[<b/b')
 # erb
+# >>> print spezialbehandlung(u'ver<ein[>s/s')
+# ver<eins
 
 def spezialbehandlung(teil):
     if re.search(ur'[\[{/\]}]', teil):
         # print teil,
-        teil = re.sub(ur'\[<(.+)/[^\]]+', ur'\1', teil) # [<x/x
-        teil = re.sub(ur'\[-(.+)/[^\]]+', ur'\1', teil) # [-x/x
+        teil = re.sub(ur'\[[-<>](.+)/[^\]]+', ur'\1', teil) # [<x/x
         teil = re.sub(ur'\{([^/]*)[^}]*$', ur'\1', teil)
         teil = re.sub(ur'\[([^/]*)[^\]]*$', ur'\1', teil)
         teil = re.sub(ur'^(.)}', ur'\1', teil)
@@ -312,8 +313,9 @@ def statistik_praefixe(teilwoerter):
     print (u'\nPräfixe aus der Liste "wortteile/praefixe" und '
            u'gleiche Wortanfangssilben\nmarkiert mit:')
     for vs in sorted(praefixe):
-        einzel = (teilwoerter.E[vs] + teilwoerter.M[vs]
-                  + teilwoerter.E[vs.title()] + teilwoerter.M[vs.title()])
+        einzel = (teilwoerter.E[vs] + teilwoerter.M[vs])
+        if vs.title() != vs:
+            einzel += teilwoerter.E[vs.title()] + teilwoerter.M[vs.title()]
         print u'%-10s %5d = %5d < %5d - %5d · %5d offen' % (vs, einzel,
             len(markiert[vs]), ausnahmefaelle[vs], 
             len(unkategorisiert[vs]), len(kandidaten[vs])),

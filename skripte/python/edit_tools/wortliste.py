@@ -217,7 +217,18 @@ class WordEntry(list):
 # None
 # >>> abbeissen.lang_index('de-CH-1901')
 # 7
-#
+# >>> urlaubstipp = WordEntry(u'Urlaubstipp;-2-;-3-;Ur<laubs=tipp')
+# >>> print urlaubstipp.lang_index('de')
+# None
+# >>> print urlaubstipp.lang_index('de-1901')
+# None
+# >>> print urlaubstipp.lang_index('de-1996')
+# 3
+# >>> print urlaubstipp.lang_index('de-x-GROSS')
+# None
+# >>> print urlaubstipp.lang_index('de-1901-x-GROSS')
+# None
+
 # ::
 
     def lang_index(self, lang):

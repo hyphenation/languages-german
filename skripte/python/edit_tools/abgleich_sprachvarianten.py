@@ -77,15 +77,15 @@ if __name__ == '__main__':
             for field in entry[1:]:
                 if not field.startswith(u'-'):
                     break # ``field`` ist jetzt erstes nichtleeres Feld
+            sz_key = join_word(field.replace(u'ss', u'ß'))
             try:
-                vergleichseintrag = words[
-                            join_word(field.replace(u'ss', u'ß'))]
+                vergleichseintrag = words[sz_key]
                 sprachabgleich(entry, vergleichseintrag)
             except KeyError: # sz-Variante fehlt
                 wort1901 = entry.get('de-x-GROSS,de-1901-x-GROSS')
-                if wort1901 and 'ss' in wort1901:
+                if (wort1901 and 'ss' in wort1901
+                    and not sz_key.title() in words):
                     sz_wort = wort1901.replace(u'ss', u'ß')
-                    sz_key = join_word(sz_wort)
                     if not u'/' in sz_wort and len(sz_key) > 3:
                         # print wort1901, "sz-Variante fehlt", sz_key
                         print u'%s;-2-;%s;-4-' % (join_word(sz_wort), sz_wort)

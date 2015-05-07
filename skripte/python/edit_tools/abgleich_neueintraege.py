@@ -640,6 +640,7 @@ endungen = [
             (u'ß', u'-ße'),
             (u'ß', u's-se'),
             (u'ös', u'ö-se'),
+            (u'=öl', u'=öle'),
            ]
 
 # Zerlege einen String mit von vorn bis hinten wandernder Bruchstelle::
