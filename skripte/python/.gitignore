@@ -13,3 +13,6 @@ teilwort-*
 wortliste-*
 zusatz-*
 spell*
+histogramm/*.tsv
+histogramm/*.png
+lang_s/words-*-Latf.txt

@@ -78,16 +78,17 @@ if __name__ == '__main__':
                 if not field.startswith(u'-'):
                     break # ``field`` ist jetzt erstes nichtleeres Feld
             try:
-                v_entry = words[join_word(field.replace(u'ss', u'ß'))]
-                sprachabgleich(entry, v_entry)
-            except KeyError:
-                print entry[0].replace(u'ss', u'ß'), "fehlt"
-                # if entry.get('de-1901-x-GROSS'):
-                #     wort1901 = entry.get('de-1901-x-GROSS')
-                #     wort1901 = wort1901.replace(u'ss', u'ß')
-                #     if not u'/' in wort1901 and len(wort1901)>3:
-                #         print u'%s;-2-;%s;-4-' % (join_word(wort1901), wort1901)
-                pass  # e.g. "Abfahrtßpezialisten"
+                vergleichseintrag = words[
+                            join_word(field.replace(u'ss', u'ß'))]
+                sprachabgleich(entry, vergleichseintrag)
+            except KeyError: # sz-Variante fehlt
+                wort1901 = entry.get('de-x-GROSS,de-1901-x-GROSS')
+                if wort1901 and 'ss' in wort1901:
+                    sz_wort = wort1901.replace(u'ss', u'ß')
+                    sz_key = join_word(sz_wort)
+                    if not u'/' in sz_wort and len(sz_key) > 3:
+                        # print wort1901, "sz-Variante fehlt", sz_key
+                        print u'%s;-2-;%s;-4-' % (join_word(sz_wort), sz_wort)
         if oldentry == entry and u'ß' in entry[0]:
             try:
                 sprachabgleich(entry, words[entry[0].replace(u'ß', u'ss')])
@@ -114,11 +115,11 @@ if __name__ == '__main__':
                                          u'-8-']))
 
                 wortliste_neu.append(oldentry)
-
+        entry.conflate_fields()
         wortliste_neu.append(entry)
 
-
-
+    words = None # Speicher freigeben
+    
     # Patch erstellen::
 
     patch = udiff(wortliste, wortliste_neu, 'wortliste', 'wortliste-neu',
@@ -127,5 +128,6 @@ if __name__ == '__main__':
         # print patch
         patchfile = open('wortliste.patch', 'w')
         patchfile.write(patch + '\n')
+        print '"wortliste.patch" geschrieben'
     else:
-        print "empty patch"
+        print 'empty patch'

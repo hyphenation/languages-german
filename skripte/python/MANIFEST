@@ -41,8 +41,11 @@ long_s_conversion.py
   Aufruf: siehe ``./long_s_conversion.py -h``
 
 
-edit_tools
-----------
+skripte/python/edit_tools
+-------------------------
+
+Skripte zur Arbeit mit der Wortliste
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 wortliste.py
   Python-Modul für die Arbeit mit der `Wortliste`.
@@ -52,9 +55,6 @@ wortliste.py
   Test der Werkzeuge und der inneren Konsistenz der Wortliste
   (Doppeleinträge, Übereinstimmung Schlüssel-Trennmuster).
 
-
-Skripte zur Arbeit mit der Wortliste
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 (Trennstellenkategorisierung, Neueinträge, Korrekturen)
 

@@ -1,10 +1,7 @@
 auto/
 *~
 /skripte/*.pyc
-/skripte/python/histogramm/*.tsv
-/skripte/python/histogramm/*.png
 ????-??-??+??-??-??-[0-9a-f]*/
-/wortliste-lang-s
 /german.dic
 /pre-1901.wl
 /dehyph*-x*/*
@@ -15,3 +12,7 @@ tmp*
 temp*
 *#*
 *swp
+/skripte/python/lang_s/words-de-1901-de-1996-Latf.txt
+/skripte/python/lang_s/words-de-1901-Latf.txt
+/skripte/python/lang_s/words-de-1996-Latf.txt
+/skripte/python/edit_tools/wortteile/vorsilben.pdf

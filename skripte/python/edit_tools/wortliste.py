@@ -426,30 +426,30 @@ class WordEntry(list):
         w1901 = self.get('de-1901')
         w1996 = self.get('de-1996')
         w_x_GROSS = None
-        
+
         if w1901 is None or w1996 is None:
             return
-        
+
         for r1, r2 in zip(r1901, r1996):
             w1901 = w1901.replace(r2,r1)
             w1996 = w1996.replace(r1,r2)
 
         # kein Schluss-ss und sst in de-1901 (ungetrenntes "ss" nur in Ausnahmen)
         # aber: 'ßt' und Schluß-ß auch in de-1996 möglich (langer Vokal)
-        if u'ss' in w1901: 
+        if u'ss' in w1901:
             w_x_GROSS = w1901
             w1901 = None
-         
+
         # Dreikonsonantenregel:
         if w1901 and re.search(ur'(.)\1=\1', w1901):
             w1901 = None
-        
+
         # Speichern:
         if w1901 == w1996: # keine Regeländerung im Wort
             if len(self) > 2:
                 self.conflate_fields()
             return
-        
+
         if w1901 is None:
             self.extend( ['']*(4-len(self)) )
             self[1] = u'-2-'
@@ -652,6 +652,8 @@ class TransferError(ValueError):
 # u'As-to-ria'
 # >>> uebertrage(u'So-fa=ecke', u'So·fa=e{ck/k-k}e', strict=False)
 # u'So-fa=e{ck/k-k}e'
+# >>> uebertrage(u'Drei=ecks=ecke', u'Drei=ecks==e{ck/k-k}e', strict=False)
+# u'Drei=ecks==e{ck/k-k}e'
 #
 # Mit ``upgrade=False`` werden nur unspezifische Trennstellen überschrieben:
 #
@@ -687,7 +689,8 @@ def uebertrage(wort1, wort2, strict=True, upgrade=True):
         for s in selbstlaute:
             if (wort2.find(s+u'{ck/k·k}') != -1 or
                 wort2.find(s+u'{ck/k-k}') != -1):
-                wort1 = wort1.replace(s+u'ck', s+u'-ck')
+                wort1 = re.sub(u'%sck([%s])'%(s,selbstlaute),
+                               ur'%s-ck\1'%s, wort1)
                 silben1, trennzeichen1 = zerlege(wort1)
             if wort2.find(s+u's·t') != -1:
                 wort1 = wort1.replace(s+u'st', s+u's-t')
@@ -734,6 +737,8 @@ def sprachabgleich(entry, vorbildentry=None):
     for field in entry[1:]:
         if field.startswith('-'): # -2-, -3-, ...
             continue
+        if u'{' in field and u'[' in field: # Bi-ber==be[t=t/{tt/tt=t}]uch
+            continue # zu komplex
         if u'·' in field:
             unkategorisiert = field
         elif u'<' in field or u'>' in field:
@@ -746,6 +751,8 @@ def sprachabgleich(entry, vorbildentry=None):
         for field in vorbildentry[1:]:
             if field.startswith('-'): # -2-, -3-, ...
                 continue
+            if u'{' in field and u'[' in field: # Bi-ber==be[t=t/{tt/tt=t}]uch
+                continue # zu komplex
             if not mit_affix and u'<' in field or u'>' in field :
                 mit_affix = field
             elif not kategorisiert and unkategorisiert and u'·' not in field:
@@ -761,7 +768,8 @@ def sprachabgleich(entry, vorbildentry=None):
                 try:
                     entry[i] = uebertrage(mit_affix, entry[i], strict=False)
                 except TransferError, e:
-                    print u'Sprachabgleich:', unicode(e)
+                    if not '/' in entry[i]:
+                        print u'Sprachabgleich:', unicode(e)
         # print mit_affix+u':', unicode(entry)
     elif kategorisiert and unkategorisiert:
         for i in range(1,len(entry)):
@@ -773,7 +781,8 @@ def sprachabgleich(entry, vorbildentry=None):
         # print kategorisiert, unicode(entry)
     elif gewichtet:
         for i in range(1,len(entry)):
-            if u'=' in entry[i]:
+            if u'=' in entry[i] and not (
+                                u'{' in entry[i] and u'[' in entry[i]):
                 try:
                     entry[i] = uebertrage(gewichtet, entry[i], strict=False)
                 except TransferError, e:

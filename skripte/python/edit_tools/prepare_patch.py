@@ -246,7 +246,10 @@ def reformschreibung(wordfile, datei):
         if entry[0] in korrekturen:
             key = entry[0]
             wort = entry.get('de-1996')
-            entry = WordEntry('%s;-2-;-3-;%s;%s' % (key, wort, wort))
+            if u'ss' in wort:
+                entry = WordEntry('%s;-2-;-3-;%s;%s' % (key, wort, wort))
+            else:
+                entry = WordEntry('%s;-2-;-3-;%s;-4-' % (key, wort))
             korrekturen.discard(key) # erledigt
         wortliste_neu.append(entry)
 
@@ -398,8 +401,8 @@ if __name__ == '__main__':
     parser.add_option('-k', '--todofile', dest='todo',
                       help='Korrekturdatei, Vorgabe "<AKTION>.todo"')
     parser.add_option('-o', '--outfile', dest='patchfile',
-                      help='Ausgangsdatei (Patch), Vorgabe "wortliste.patch"',
-                      default='wortliste.patch')
+                      help='Ausgangsdatei, Vorgabe "../../../wortliste.patch"',
+                      default='../../../wortliste.patch')
 
     (options, args) = parser.parse_args()
 
