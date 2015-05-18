@@ -133,9 +133,9 @@ def multisplit(wort):
 # >>> godi = WordEntry(u'Abendgottesdienste;-2-;Abend==got-tes=dien-ste;Abend==got-tes=diens-te')
 # >>> for entry in split_entry(godi):
 # ...     print entry
-# Abend;-2-;Abend;Abend
+# Abend;Abend
 # Abendgottesdienste;-2-;Abend==got-tes=dien-ste;Abend==got-tes=diens-te
-# Gottes;-2-;Got-tes;Got-tes
+# Gottes;Got-tes
 # Gottesdienste;-2-;Got-tes=dien-ste;Got-tes=diens-te
 # Dienste;-2-;Dien-ste;Diens-te
 #
@@ -174,7 +174,8 @@ def split_entry(entry):
     else:
         return [entry]
 
-# Gib ein Dictionary mit Einträgen der Wortliste und Teilwortkombinationen zurück:
+# Gib ein Dictionary mit Einträgen der Wortliste und Teilwortkombinationen
+# zurück:
 
 def expand_wordfile(wordfile):
     words = {}  # Wörter aus der Liste

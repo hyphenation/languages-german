@@ -390,7 +390,7 @@ praefixe.reverse()
 def endungsabgleich(key, alt, neu, grossklein=False):
 
     if not key.endswith(join_word(neu)):
-        return ''
+        return None
     OK = True
     altkey = key[:-len(join_word(neu))] + join_word(alt)
     if grossklein:
@@ -399,26 +399,32 @@ def endungsabgleich(key, alt, neu, grossklein=False):
     try:
         altentry = words[altkey]
     except KeyError:
-        return ''
-
+        return None
+    
     entry = WordEntry(key)
     # print "fundum", key, unicode(entry)
     for wort in altentry[1:]:
-        if not wort.startswith(u'-'):
-            if alt:
-                wort = wort[:-len(alt)]
-            wort += neu
-            if grossklein:
-                wort = toggle_case(wort)
-            if join_word(wort) != key:
-                OK = False
+        if wort.startswith(u'-'):
+            continue
+        if not wort.endswith(neu):
+            continue
+        if alt:
+            wort = wort[:-len(alt)]
+        wort += neu
+        if grossklein:
+            wort = toggle_case(wort)
+        if join_word(wort) != key:
+            OK = False
         entry.append(wort)
+        
     if OK is False:
         print u"# Übertragungsproblem: %s -> %s (%s,%s) %s" % (
                                             altkey, key, alt, neu, unicode(entry))
-        return ''
+        return None
+    if len(entry) == 1: # keine Übertragung möglich
+        return None
 
-    entry.regelaenderungen()
+    entry.regelaenderungen() # Sprachabgleich
     return entry
 
 
@@ -668,7 +674,7 @@ def split_composits(entry):
     return [w for w in entry[1].split(u'=') if w]
 
 # Zerlege String, wenn die Teile in der Wortliste vorhanden sind, setze
-# sie neu zusammen und übernehme die Trennmarkierer:
+# sie neu zusammen und übernimm die Trennmarkierer:
 
 
 def trenne_key(key, grossklein = False):
@@ -808,10 +814,10 @@ if __name__ == '__main__':
                       default=False)
     (options, args) = parser.parse_args()
 
-    wordfile = WordFile(options.wortliste)
-
     # sys.stdout mit UTF8 encoding.
     sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
+    
+    wordfile = WordFile(options.wortliste)
 
 # Filtern::
 
@@ -826,10 +832,21 @@ if __name__ == '__main__':
             print line
         sys.exit()
 
-# `Wortliste` einlesen::
+# `Wortliste` einlesen
 
-    # Wörter, Teilwörter und Kombinationen (siehe expand_teilwoerter.py)
-    words = expand_wordfile(wordfile)
+# Wörter, Teilwörter und Kombinationen (siehe expand_teilwoerter.py)
+# entweder vom "cache", oder "live" expandiert::
+
+    cache = "wortliste-expandiert"
+    try:
+        cache_mtime = os.path.getmtime(cache)
+    except OSError:
+        cache_mtime = 0
+
+    if os.path.getmtime(options.wortliste) <= cache_mtime:
+        words = WordFile(cache).asdict()
+    else:
+        words = expand_wordfile(wordfile)
     
 # Aussortieren von Wörtern, die zu "false positives" führen::
 
