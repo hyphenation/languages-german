@@ -19,7 +19,7 @@ Ausgabe: Wortliste-Einträge (Vorschläge), sortiert nach:
   mehrdeutig abgeleitet,
   Rest.
   
-Bsp: python abgleich_neueintraege.py < dict-fail.txt > todo.txt
+Bsp: python abgleich_neueintraege.py < dict-fail.txt > neu.todo
 
      (``neu.todo`` kann (nach Durchsicht!!) mit `prepare_patch.py neu` 
      in die Wortliste eingepflegt werden.)

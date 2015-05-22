@@ -86,9 +86,13 @@ if __name__ == '__main__':
                 if (wort1901 and 'ss' in wort1901
                     and not sz_key.title() in words):
                     sz_wort = wort1901.replace(u'ss', u'ß')
-                    if not u'/' in sz_wort and len(sz_key) > 3:
+                    if (not u'/' in sz_wort and len(sz_key) > 3
+                        and not u'Abk.' in entry.comment):
                         # print wort1901, "sz-Variante fehlt", sz_key
-                        print u'%s;-2-;%s;-4-' % (join_word(sz_wort), sz_wort)
+                        # print u'%s;-2-;%s;-4-' % (join_word(sz_wort), sz_wort)
+                        oldentry = WordEntry(u'%s;-2-;%s;-4-' % 
+                                             (join_word(sz_wort), sz_wort))
+                        
         if oldentry == entry and u'ß' in entry[0]:
             try:
                 sprachabgleich(entry, words[entry[0].replace(u'ß', u'ss')])
@@ -126,7 +130,7 @@ if __name__ == '__main__':
                   encoding=wordfile.encoding)
     if patch:
         # print patch
-        patchfile = open('wortliste.patch', 'w')
+        patchfile = open('../../../wortliste.patch', 'w')
         patchfile.write(patch + '\n')
         print '"wortliste.patch" geschrieben'
     else:

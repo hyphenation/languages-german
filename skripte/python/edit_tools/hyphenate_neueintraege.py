@@ -5,54 +5,55 @@
 #             GNU General Public License (v. 2 or later)
 # :Id: $Id:  $
 
-# hyphenate_neueintraege.py: Versuche kategorisierte Trennung
-# über "hyphenation"-Algorithmus und patgen-patterns.
-# ============================================================
+# hyphenate_neueintraege.py: kategorisierte Trennung mit patgen-patterns.
+# =======================================================================
 
+u"""Trenne Wörter mittels "hyphenation"-Algorithmus und patgen-patterns¹.
 
-import sys, os, codecs, glob, copy
+Eingabe: Ein ungetrenntes Wort oder Eintrag im Wortliste-Format pro Zeile.²
+
+Ausgabe: Wortliste-Einträge (Neueintrag;Neu=ein-trag)
+         ohne Unterscheidung von Sprachvarianten (!)³
+         getrennt nach:
+         
+         identisch rekonstruiert 
+           wenn die vorhandene Trennmarkierung der ermittelten
+           entspricht.
+         mit Pattern getrennt
+           wenn die Eingabe ungetrennt ist oder eine abweichende
+           Trennmarkierung aufweist
+
+Bsp: python hyphenate_neueintraege.py < missing-words.txt > neu.todo
+
+     ``neu.todo`` kann (nach Durchsicht!!) mit `prepare_patch.py neu`
+     in die Wortliste eingepflegt werden.³
+
+¹ Verwendet Pattern-Dateien welche über die "make" Ziele
+  `make pattern-refo`, `make major pattern-refo`, `make fugen pattern-refo`
+  und `make suffix pattern-refo` im Wurzelverzeichnis der Wortliste generiert
+  werden können (die Fehler bei `make fugen pattern-refo` und `make suffix
+  pattern-refo` können ignoriert werden).
+
+² Tip: mit `abgleich_neueintraege.py --filter < neue.txt > wirklich-neue.txt`
+  können in der WORTLISTE vorhandene Wörter aussortiert werden.
+
+³ `prepare_patch.py neu` nimmt auch eine Unterscheidung nach de-1901/de-1996
+  anhand der wesentlichen Regeländerungen (-st/s-t, ck/c-k, ss/ß)
+  vor. (Schweizer Spezialitäten und andere Grenzfälle müssen per Hand
+  eingepflegt werden.)
+"""
+
+import sys, os, codecs, glob, copy, optparse
 
 # path for local Python modules (parent dir of this file's dir)
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+sys.path.insert(0, 
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 from wortliste import WordFile, WordEntry, join_word, toggle_case, sortkey_duden
 from abgleich_neueintraege import print_proposal
-
+import patuse
 from patuse.hyphenation import Hyphenator
-
-
-# Konfiguration
-# -------------
-
-# Pfad zur Datei mit den neu einzutragenden Wörtern::
-
-# neuwortdatei = "../spell/german-dic-b-z-fail.txt"
-neuwortdatei = "../spell/test.txt"
-
-
-# Die neuesten Pattern-Dateien, welche über die "make"-Ziele
-#
-#     make pattern-refo
-#     make major pattern-refo
-#     make fugen pattern-refo
-#     make suffix pattern-refo
-#
-# im Wurzelverzeichnis der wortliste generiert werden::
-        
-pfile_all = glob.glob('../../../dehyphn-x/dehyphn-x-*.pat')[-1]
-pfile_major = glob.glob('../../../dehyphn-x-major/dehyphn-x-major-*.pat')[-1]
-pfile_fugen = glob.glob('../../../dehyphn-x-fugen/dehyphn-x-fugen-*.pat')[-1]
-pfile_suffix = glob.glob('../../../dehyphn-x-suffix/dehyphn-x-suffix-*.pat')[-1]
-
-
-
-# Trenner-Instanzen::
-
-h_all = Hyphenator(pfile_all)
-h_major = Hyphenator(pfile_major)
-h_fugen = Hyphenator(pfile_fugen)
-h_suffix = Hyphenator(pfile_suffix)
-        
 
 # Trenne mit Hyphenator::
 
@@ -62,7 +63,7 @@ def trenne(entry):
     parts_major = h_major.split_word(key)
     parts_suffix = h_suffix.split_word(key)
     parts_all = h_all.split_word(key)
-    
+
     parts = [] # Liste von Silben und Trennzeichen, wird am Ende zusammengefügt.
     p_major = '' # zum Vergleich mit parts_major
     p_fugen = ''
@@ -89,30 +90,77 @@ def trenne(entry):
             parts.append(u'-')
     parts.append(parts_all[-1])
     word = u''.join(parts)
-    
+
     # Alternative Kategorisierung über Zerlegung der Teilwörter/Wortteile:
-    # word = u'='.join([u'<'.join([h_all.hyphenate_word(part, '-') 
+    # word = u'='.join([u'<'.join([h_all.hyphenate_word(part, '-')
     #                              for part in h_major.split_word(teilwort)])
     #                   for teilwort in h_fugen.split_word(key)])
-    return WordEntry(key + u';' + word)
+    newentry = WordEntry(key + u';' + word)
+    newentry.comment = entry.comment
+    return newentry
+
+
+# Hauptfunktion::
 
 if __name__ == '__main__':
+
+# Optionen::
+
+# Die neuesten Pattern-Dateien, welche über die "make"-Ziele
+#
+#     make pattern-refo
+#     make major pattern-refo
+#     make fugen pattern-refo
+#     make suffix pattern-refo
+#
+# im Wurzelverzeichnis der wortliste generiert werden::
+
+    p_all = glob.glob('../../../dehyphn-x/dehyphn-x-*.pat')[-1]
+    p_major = glob.glob('../../../dehyphn-x-major/dehyphn-x-major-*.pat')[-1]
+    p_fugen = glob.glob('../../../dehyphn-x-fugen/dehyphn-x-fugen-*.pat')[-1]
+    p_suffix = glob.glob('../../../dehyphn-x-suffix/dehyphn-x-suffix-*.pat')[-1]
+
+
+    usage = '%prog [Optionen]\n' + __doc__
+    parser = optparse.OptionParser(usage=usage)
+    parser.add_option('-p', '--patterns',
+                      help='Pattern-Datei (alle Trennstellen), '
+                      'Vorgabe "%s"'%p_all, default=p_all)
+    parser.add_option('--patterns_major',
+                      help='Pattern-Datei (Trennstellen an Morphemgrenzen), '
+                      'Vorgabe "%s"'%p_major, default=p_major)
+    parser.add_option('--patterns_fugen',
+                      help='Pattern-Datei (Trennstellen an Wortfugen), '
+                      'Vorgabe "%s"'%p_fugen, default=p_fugen)
+    parser.add_option('--patterns_suffix',
+                      help='Pattern-Datei (Trennstellen vor Suffixen), '
+                      'Vorgabe "%s"'%p_suffix, default=p_suffix)
+    (options, args) = parser.parse_args()
 
     # sys.stdout mit UTF8 encoding.
     sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
-    neue = []
+# Trenner-Instanzen::
+
+    h_all = Hyphenator(options.patterns)
+    h_major = Hyphenator(options.patterns_major)
+    h_fugen = Hyphenator(options.patterns_fugen)
+    h_suffix = Hyphenator(options.patterns_suffix)
+    
+
 
 # Erstellen der neuen Einträge::
 
     proposals = [WordEntry(line.decode('utf8').strip().replace(u'-', u''))
-                 for line in open(neuwortdatei)
+                 for line in sys.stdin
                  if not line.startswith('#')]
+
+    neue = []
 
     for newentry in proposals:
 
 # Trennen::
-    
+
         entry = trenne(copy.copy(newentry))
         if entry:
             neue.append(entry)
@@ -131,7 +179,7 @@ if __name__ == '__main__':
         else:
             if newentry:
                 newentry.proposal = proposal
-                
+
 # Ausgabe::
 
     print u'\n# identisch rekonstruiert:'

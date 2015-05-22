@@ -115,14 +115,13 @@ abgleich_sprachvarianten.py
     desselben Wortes, und/oder
   * Zusammenfassen von Feldern mit gleichem Inhalt wenn das Ergebnis ein
     wohlgeformter Eintrag ist.
-  * Ergänzen von Formen mit SS statt ß.
+  * Ergänzen der Alternative bei Schluss ss/ß und sst/ßt.
 
 abgleich_suffixe.py
   Abgleich der Trennstellen zwischen Wörtern mit unterschiedlichem Suffix.
 
   Benötigt eine Liste der Teilwörter, die mit ``analyse.py`` erstellt werden
   kann (siehe Arbeitsfluss_).
-
 
 abgleich_teilwoerter.py
   Übertragen von kategorisierten Trennstellen von Teilwörtern auf
@@ -156,22 +155,17 @@ expand_teilwoerter.py
   Zerlegen von Composita an den Wortfugen und Übernahme der Teile als
   eigenständige Einträge.
 
-
 hyphenate_neueintraege.py
-  Versuche kategorisierte Trennung über "hyphenation"-Algorithmus und
-  patgen-patterns.
+  Kategorisierte Trennung mit "hyphenation"-Algorithmus.
 
-  Verwendet Pattern-Dateien welche über die "make" Ziele
-  `make pattern-refo`, `make major pattern-refo` und
-  `make fugen pattern-refo` im Wurzelverzeichnis der Wortliste generiert
-  werden können.
+  Benötigt Pattern-Dateien welche über die "make" Ziele
+  `make pattern-refo`, 
+  `make major pattern-refo`, 
+  `make fugen pattern-refo` und 
+  `make suffix pattern-refo` 
+  generiert werden können.
 
-  Erwartet eine Datei mit 1 Wort/Zeile.
-  Pfad/Dateiname im Abschnitt Konfiguration anpassen!
-
-  Schreibt eine Liste auf stdout. Die Liste kann nach ``neu.todo``
-  gespeichert und (nach Durchsicht) mit ``prepare_patch.py neu`` in die
-  Wortliste eingepflegt werden.
+  Aufruf: siehe ``./hyphenate_neueintraege.py -h``
 
 prepare_patch.py
   Helfer für kleine Editieraufgaben, u.a. entfernen von Doppeleinträgen,
