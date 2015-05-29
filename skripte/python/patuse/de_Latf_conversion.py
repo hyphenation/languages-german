@@ -17,13 +17,11 @@ from hyphenation import Hyphenator
 # Konfiguration
 # -------------
 
-# Lang-s Pseudo-Trennmuster mit "s-" statt "ſ" (ausſagen -> auss-agen)
-# (mit "make de-x-long-s" im Wurzelverzeichnis der wortliste generiert)::
+# Die Lang-S Pattern-Dateien welche über "make" Ziele
+# im Wurzelverzeichnis der wortliste generiert werden::
 
-default_pfile = '../../../de-long-s/de-x-long-s.pat'
+default_pfile = '../../../de-Latf/de-Latf.pat'
 
-# Ausnahmen
-# ---------
 
 # ſ steht auch am Ende von Abkürzungen, wenn es im abgekürzten Wort steht
 # (Abſ. - Abſatz/Abſender, (de)creſc. - (de)creſcendo, daſ. - daſelbst ...)
@@ -52,11 +50,12 @@ def transformiere(wort, hyphenator):
     if wort in exceptions:
         return exceptions[wort]
 
-    wort = hyphenator.hyphenate_word(wort, hyphen=u'-', lmin=1, rmin=1)
+    parts = hyphenator.split_word(wort, rmin=1)
 
-    # Wandle "s-" in "ſ" (auss-agen -> ausſagen):
-    
-    return wort.replace(u's-', u'ſ').replace(u'S-', u'S')
+    # Wandle in jedem Teil alle klein S zu Lang-S, außer am Schluss:
+    parts = [part[:-1].replace(u's', u'ſ') + part[-1] for part in parts]
+
+    return u''.join(parts)
 
 def transformiere_text(text, hyphenator):
     # Text zerlegen: finde (ggf. leere) Folgen von nicht-Wort-Zeichen
@@ -99,7 +98,6 @@ if __name__ == '__main__':
             line2 = transformiere_text(line.replace(u'ſ', u's'), h_Latf)
             if line2 != line:
                 print line.strip(), '->', line2,
-        sys.exit()
-        
-    for line in lines:
-        print transformiere_text(line, h_Latf),
+    else:
+        for line in lines:
+            print transformiere_text(line, h_Latf),

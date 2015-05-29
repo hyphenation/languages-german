@@ -24,11 +24,12 @@ in der `Wortliste der deutschsprachigen Trennmustermannschaft`."""
 #
 # Lade Funktionen und Klassen für reguläre Ausdrücke::
 
-import re, sys, os, optparse
+import codecs, os, optparse, re, sys
 
-# path for local Python modules
-sys.path.append(os.path.dirname(__file__))
-from wortliste import WordFile, WordEntry, join_word
+# path for local Python modules (parent dir of this file's dir)
+sys.path.insert(0,
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from edit_tools.wortliste import WordFile, WordEntry, join_word
 
 
 # Trennzeichen
@@ -64,8 +65,10 @@ def s_ersetzen(word):
 # Diese und weitere spezielle Fälle, welche Lang-S vor Trennstellen verlangen
 # sind in `Ausnahmen Lang-S`_ gelistet::
 
-    for fall in ausnahmen_lang_s:
-        word = word.replace(fall.replace(u'ſ', u's'), fall)
+    for (ausnahme, ersetzung) in ausnahmen_lang_s:
+        if ausnahme in word:
+            word = word.replace(ausnahme, ersetzung)
+            # print u"ſ-Ausnahme", ersetzung, word
 
 # Allgemeine Regeln
 # ~~~~~~~~~~~~~~~~~
@@ -92,7 +95,7 @@ def s_ersetzen(word):
 # Wir übernehmen diese Schreibung am Wort-/Silbenende::
 
     word = re.sub(u'ss($|[-=<>.])', ur'ſs\1', word)
-    
+
 # Vor t schreiben wir nach kurzem Vokal Doppel-ſ::
 
     word = word.replace(u'sst', u'ſſt')
@@ -141,7 +144,7 @@ def s_ersetzen(word):
 
     word = re.sub(ur'([^iE])ss-l', ur'\1ſſ-l', word) # Droſſ-lung, ...
 
-# "s-l" (Baſ-ler, pinſ-le, Kapſ-lung, Wechſ-ler, wechſ-le, Ries-ling),
+# "s-l" (Baſ-ler, pinſ-le, Kapſ-lung, Wechſ-ler, wechſ-le, Rieſ-ling),
 # aber nicht bei
 #   M.s-l:    Mus-lim, Mos-lem, ...
 #   [iys]s-l: Gris-ly, is-lam, Crys-ler, ... (ss-l siehe obige Regel)
@@ -215,10 +218,11 @@ ausnahmen_lang_s.extend([
 
 ausnahmen_lang_s.extend([
 
-    u'er<.]ſa'   # Kind=er<.satz/Kin-der=satz
+    u'er<.]ſat',   # Kin[-der=/d=er<.]satz, ..-zes
     u'ſ[-ter=/t' # Tes[-ter=/t=er<.]ken-nung
 
                         ])
+
 
 # Fremdwörter und Eigennamen
 # --------------------------
@@ -253,23 +257,26 @@ ausnahmen_lang_s.extend([
 
 # In vielen (aber nicht allen) Fremdwörtern steht ſz trotz Trennzeichen::
 
+    u'ſ-ce-',     # Fluo-res-ce-in
+    u'ſ-ze-',     # Aszese, aszetisch, Damaszener, vis-ze-ral, ...
     u'ſ-zen',     # Adoleszenz, Aszendent, ...
-    u'ſ-ze-n',    # Damaszener, ...
-    u'ſ-ze-r',    # vis-ze-ral...
+    u'ſ-zet',     # As-zet
+    # ſ-zi (aber Dis-zi-plin):
+    u'Aſ-zi',     # Aszites, ...
     u'aſ-zi',     # [Ll]asziv, laszive, ...
-    u'viſ-zi-do', # Mukoviszidose
     u'ſ-zil-l' ,  # Oszillation, Oszilloskop, ...
     u'asſ-zi',    # faszinieren, fasziniert, ...
     u'gnoſ-zie',  # rekognoszieren,
-    u'o-reſ-z',   # fluoreszieren, phosporeszieren, ...
-    u'-reſ-c',    # Fluo-res-ce-in
+    u'reſ-zi',    # fluoreszieren, phosporeszieren, Fluo-res-cin, ...
     u'le-biſ-zi', # Plebiszit, ...
+    u'viſ-zi',    # Mukoviszidose
 
 # ſ steht in der Endung sk in Wörtern und Namen slawischen Ursprungs
 #
 # ::
 
     u'Gdanſk',
+    u'owſk', # Litowſk
     u'Minſk',
     u'Mur-manſk',
     u'ſi-birſk',
@@ -282,6 +289,10 @@ ausnahmen_lang_s.extend([
     u'Diſ<ſ',    # dissonant, ...
 
                        ])
+
+# Wandel in liste mit (Ausnahme, Ersetzung)::
+
+ausnahmen_lang_s = [(ex.replace(u'ſ', u's'), ex) for ex in ausnahmen_lang_s]
 
 # s-Regeln
 # --------
@@ -334,7 +345,9 @@ def is_complete(word):
 # Einzelfälle mit rundem S (substrings)::
 
     for fall in ausnahmen_rund_s:
-        word = word.replace(fall, fall.replace('s', '~'))
+        if fall in word:
+            # print u's-Ausnahme', fall, word
+            word = word.replace(fall, fall.replace('s', '~'))
 
 # s steht am Wortende, auch in Zusammensetzungen (vor Haupttrennstellen)::
 
@@ -360,19 +373,19 @@ def is_complete(word):
 
     word = word.replace(u's<', u'~<')
 
-# s steht vor Trennstellen am Suffixanfang (wie >sen, >son),
-# auch wenn s, p, t, oder z folgt::
+# s steht vor Trennstellen am Suffixanfang (wie)
+# auch wenn s, p, t, oder z folgt (Ols>sen, Jonas>son, Wachs>tum)::
 
     word = word.replace(u's>', u'~>')
 
-# s steht im Inlaut vor k, n, w::
+# s steht meist im Inlaut vor k, n, w (aber: siehe Lang-ſ-Ausnahmen)::
 
     word = re.sub(ur's([knw])', ur'~\1', word)
 
 # s steht in der Verbindung sst, die in der Schweiz und
 # bei fehlendem ß (GROSS) für ßt steht::
 
-    # TODO: nur nach Zielaut und langem Vokal.
+    # TODO: nur nach Zwielaut und langem Vokal.
     # word = word.replace(u'ſst', u'ſ~t')
     # word = word.replace(u'ſs-t', u'ſ~-t')
 
@@ -398,8 +411,8 @@ if __name__ == '__main__':
     parser = optparse.OptionParser(usage=usage)
     parser.add_option('-i', '--infile', dest='infile',
                       help=u'Eingangsdatei ("-" oder "stdin" für '
-                      u'Standardeingabe), Vorgabe "../../wortliste"',
-                      default='../../wortliste')
+                      u'Standardeingabe), Vorgabe "../../../wortliste"',
+                      default='../../../wortliste')
     parser.add_option('-o', '--outfile', dest='outfile',
                       help=u'Ausgangsdatei, ("-" oder "stdout" für '
                       u'Standardausgabe) Vorgabe: "words-<language>-Latf.txt"',
@@ -414,6 +427,10 @@ if __name__ == '__main__':
                       'Lang-S-Schreibung unterscheiden, nimm nur das erste.')
 
     (options, args) = parser.parse_args()
+
+# sys.stdout mit UTF8 encoding::
+
+    sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
 
 # Angabe der Sprachvariante nach [BCP47]_ (Reformschreibung 'de' oder
 # 'de-1996', Schweiz 'de-CH', ...)::
@@ -432,8 +449,8 @@ if __name__ == '__main__':
     if options.outfile in ('-', 'stdout'):
         outstream = sys.stdout
     else:
-        outfile = options.outfile or 'words-' + lang.replace(',','-') 
-                  + '-Latf.txt'
+        outfile = options.outfile or (
+                    'words-' + lang.replace(',','-') + '-Latf.txt')
         outstream = file(outfile, 'w')
 
 

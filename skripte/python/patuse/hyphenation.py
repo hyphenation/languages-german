@@ -23,9 +23,9 @@ u"""Hyphenation using a pure Python implementation of Frank Liang's algorithm.
 """
 # See also the independently developed http://pyphen.org/
 
-import re, optparse
+import re, optparse, sys, os, codecs
 
-__version__ = '2.0 2014-07-04'
+__version__ = '2.1 2015-05-26'
 
 class Hyphenator:
     def __init__(self, pattern_file, exceptions=''):
@@ -83,7 +83,7 @@ class Hyphenator:
             hyphenation points.
         """
         # Short words aren't hyphenated.
-        if len(word) <= (lmin + rmin):
+        if len(word) < (lmin + rmin):
             return [word]
         # If the word is an exception, get the stored points.
         if word.lower() in self.exceptions:
@@ -124,33 +124,56 @@ class Hyphenator:
         return hyphen.join(self.split_word(word, lmin, rmin))
 
 
-pattern_file = 'en-US.pat'
-# pattern_file = '../../dehyphn-x/dehyphn-x-2014-06-25.pat'
-# pattern_file = '../../dehyphn-x-fugen/dehyphn-x-fugen-2014-07-01.pat'
+    def hyphenate_text(self, text, hyphen=u'­', lmin=2, rmin=2):
+        # Text zerlegen: finde (ggf. leere) Folgen von nicht-Wort-Zeichen
+        # gefolgt von Wort-Zeichen. Der Iterator liefert Match-Objekte, mit
+        # den Untergruppen 0: nicht-Wort und 1: Wort.
+        it = re.finditer(r"([\W0-9_]*)(\w*)", text, flags=re.UNICODE)
+        # Konvertierung und Zusammenfügen
+        parts = [match.groups()[0] # nicht-Wort Zeichen
+                + self.hyphenate_word(match.groups()[1], hyphen, lmin, rmin)
+                for match in it]
+        return u''.join(parts)
 
+
+default_pattern_file = os.path.join(os.path.dirname(__file__), 'en-US.pat')
+# default_pattern_file = '../../../dehyphn-x/dehyphn-x-*.pat'
+# default_pattern_file = '../../../dehyphn-x-fugen/dehyphn-x-fugen-*.pat'
 
 if __name__ == '__main__':
 
-    usage = u'%prog [options] [words to be hyphenated]\n\n' + __doc__
+    # sys.stdout mit UTF8 encoding:
+    sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
+
+    usage = (u'%prog [options] [words to be hyphenated]\n' 
+             u'%prog [options] <input-file >output-file'
+            )
 
     parser = optparse.OptionParser(usage=usage)
-    parser.add_option('-f', '--pattern-file', dest='pattern_file',
+    parser.add_option('-f', '--pattern-file',
                       help='Pattern file, Default "en-US.pat"',
-                      default='en-US.pat')
-    parser.add_option('-e', '--exception-file', dest='exception_file',
+                      default=default_pattern_file)
+    parser.add_option('-e', '--exception-file',
                       help='File of hyphenated words (exceptions), '
                       'Default None', default='')
-    parser.add_option('-i', '--input-file', dest='input_file',
-                      help='Eingabedatei (ein Wort/Zeile)',
-                      default='')
+    parser.add_option('--hyphen',
+                      help=r'hyphenation marker, default SOFT HYPHEN (\u00AD)',
+                      default='­')
     parser.add_option('', '--lmin',
                       help='Unhyphenated characters at start of word, default 2',
                       default='2')
     parser.add_option('', '--rmin',
                       help='Unhyphenated characters at end of word, default 2',
                       default='2')
+    parser.add_option('-t', '--test', action="store_true", default=False,
+                      help='Compare input and reconstruction, '
+                      'report differences.')
+    parser.add_option('--self-test', action="store_true", default=False,
+                      help='Short, self-contained self-test ')
+
     (options, args) = parser.parse_args()
 
+    hyphen = options.hyphen.decode('utf8')
     lmin = int(options.lmin)
     rmin = int(options.rmin)
 
@@ -158,21 +181,38 @@ if __name__ == '__main__':
         ex_file = open(exception_file)
         exceptions = ex_file.read().decode('utf8')
         ex_file.close()
+    elif options.self_test:
+        exceptions = u"present presents project projects reci-procity"
     else:
         exceptions = ''
-    if len(args) == 0: # self test
-        exceptions = u"""
-            as-so-ciate as-so-ciates dec-li-na-tion oblig-a-tory
-            phil-an-thropic present presents project projects reci-procity
-            re-cog-ni-zance ref-or-ma-tion ret-ri-bu-tion ta-ble
-            """
+
     hyphenator = Hyphenator(options.pattern_file, exceptions)
     del exceptions
-
+    
+    if len(args) == 0:
+        lines = sys.stdin
     if len(args) > 0:
-        words = [word.decode('utf8') for word in args]
-        for word in words:
-            print hyphenator.hyphenate_word(word, lmin=lmin, rmin=rmin)
-    else:
+        lines = args
+
+    lines = (line.decode('utf8') for line in lines)
+
+    if options.self_test:
         import doctest
         doctest.testmod(verbose=True)
+        sys.exit()
+
+    if options.test:
+        pairs = [(line.strip(),
+                  hyphenator.hyphenate_text(line.replace('-', '').strip(),
+                                        hyphen=u'-', lmin=lmin, rmin=rmin))
+                  for line in lines]
+
+        for (line, line2) in pairs:
+            if line2 != line:
+                # print repr(line), '->', repr(line2)
+                print line, '->', line2
+        sys.exit()
+
+    for line in lines:
+        print hyphenator.hyphenate_text(line, hyphen=hyphen,
+                                        lmin=lmin, rmin=rmin)

@@ -1,0 +1,216 @@
+geg.: Text "moderner" Orthographie für Antiquasatz, alle kleinen s rund.
+
+      Liste von 470 000 Wörtern mit korrekter Lang-S-Schreibung,
+      davon 190 000 Wörter mit mindestens einem langem ſ
+      und 130 000 Wörter mit mindestens einem kleinem runden s
+      (davon 80 000 Wörter mit rundem s im Wortinneren).
+
+ges.: Text in Orthographie für den Satz mit gebrochenen Schriften (Latin
+      alphabet, Fraktur) mit korrekter Nutzung des runden und langen S)
+
+Problem:
+      Während die Wandlung "de-Latf" -> "de" eindeutig ist (replace('ſ',
+      's')), muß jedes 's' im Ausgangstext je nach Lage im Wort entweder in
+      'ſ' gewandelt werden oder als 's' stehenbleiben.
+
+
+Implementierungsvarianten:
+
+1 Dictionary
+============
+
+1a) Die Wortliste wird in ein "dictionary/assoziatives Array" gelesen::
+
+      words = dict()
+      for word in open('words_de-1901-Latf'):
+         s_word = word.replace(u'ſ', u's')
+         words[s_word] = word
+
+    Die Wörter werden ersetzt::
+
+      for word in text:
+             ...
+         word = words[word]
+         ...
+
+    Einfach aber ineffizient und problematisch für Wörter die nicht in der
+    Liste sind.
+
+1b) Die Wortliste wird in zwei Dictionaries
+    gelesen, eines für Wörter mit langem S, das andere für Wörter mit
+        rundem S::
+
+      words_lang = dict()
+      words_rund = dict()
+      for word in open('words_de-1901-Latf'):
+         s_word = word.replace(u'ſ', u's')
+         if 'ſ' in word:
+             words_lang[s_word] = word
+         elif 's' in word:
+             words_rund[s_word] = word
+
+     Die Wörter werden ersetzt::
+
+      for word in text:
+         ...
+             if 's' in word:
+                w_Latf = words_lang[word]
+                if (w_Latf == word):
+                   assert (word in words_rund, "Achtung: Wort unbekannt!")
+
+         ...
+
+     Etwas effizienter. Rückmeldung für nicht erfaßte Wörter.
+
+Auch mit dem komplexeren Ansatz hat die Implementierung mit Dictionary
+das entscheidende Problem, daß nur explizit erfaßte Wörter korrekt gewandelt
+werden. Neben einem Speicherproblem bedeutet das auch, daß
+Neubildungen und "vergessene" Wörter "Handarbeit" erfordern.
+
+Ein nachgeschalteter Test auf Zusammensetzungen bekannter Wörter (ggf. mit
+Fugen-s) kann das Problem mindern, aber nicht beheben.
+
+2 *spell Rechtschreibprüfung
+============================
+
+Für die Rechtschreibprüfprogramme ispell/aspell/hunspell wurden effektive
+Darstellungen gefunden, um aus ca. 371 000 Einträgen der expandierten Liste
+(dump) eine kompakte Liste mit 83 000 Einträgen zu generieren.
+
+Rechtschreibprüfprogramme haben bereits die Fähigkeit zum Ersetzen einzelner
+Wörter im Text (under Beibehaltung der Satz- und Steuerzeichen).
+
+Mit einem Wörterbuch "de-1901-Latf" könnte (nach vorheriger Prüfung des
+Texts mit "de-1901") automatisch die Wandlung in korrekte Lang-S-Schreibung
+mittels "alle Fehler ohne Nachfrage korrigieren" erfolgen.
+
+Es bleibt das Problem der nicht erfaßten Wörter bzw. der Einträge in privaten
+Wörterbüchern.
+
+In jedem Fall ist ein solches Wörterbuch für die Kontrolle vorhandener oder
+selbst mit Langem-S erstellter Texte äußerst wünschenswert.
+
+
+Was ist dafür noch nötig?
+-------------------------
+
+* Prüfen der ca. 400 Wörter und Abkürzungen mit weniger als 4 Buchstaben.
+
+  Problem:
+    es gibt viele Ausnahme für Abkürzungen, da diese so geschrieben werden
+    wie die Langform, z.B.  "und ſo weiter" -> "uſw." Doppeldeutigkeiten
+    (Miſſ. (Missisipi) vs. Misſ (Fräulein)).
+
+* Skript zum Übertragen der Lang-S-Schreibung auf die kompakte Liste
+
+* Umstellen der "Expansionsregeln" auf Lang-S Orthographie.
+
+* Kontakt zu Björn Jacke, dem Maintainer der deutschen *spell-Listen.
+
+
+3 patgen-generierte Muster
+==========================
+
+Die von Frank Liang entwickelte Datenstruktur "packed trie" ist äußerst
+effizient für die Aufgabe, in Zeichenketten an durch Beispiele bestimmte
+Stellen (Trenn-) Zeichen einzufügen.
+
+Ein wesentlicher Vorteil der patgen-Muster ist ihre "Assoziativität": da die
+Bildungsgesetze und Reglemäßigkeiten natürlicher Sprachen gut mit dem
+Kompressionsalgorithmus von patgen zusammenpassen, ist für viele nicht
+explizit angelernte Wörter die Ausgabe der Trennstellen korrekt.
+
+Da die Lang-S schreibung hauptsächlich auf der Grundannahme
+
+  langes S im Wort
+  rundes S am Wort- und Silbenende
+
+beruht, können wir patgen für die oben gestellte Aufgabe der automatischen
+Textkonversion nutzen:
+
+1. Mustererstellung
+
+   Aus der Liste von 470 000 Wörtern mit korrekter Lang-S-Schreibung
+   eine Pseudo-Trennliste erzeugt. Dabei gibt es zwei
+   "Kodierungsmöglchkeiten":
+
+   a) Trennstellen folgen auf Rund-S:
+
+        "s"  ->  "s-"  # am Wortende "s"
+        "ſ"  ->  "s"
+
+      Vorteil: "logische" Pseudo-Trennmuster: Trennstrich an Morphemgrenzen.
+
+      Bsp.: `words-de-*-Latf.txt` ::
+
+        ...
+        Aals
+        Aals-meer
+        Aalst
+        ...
+        aus-drucks-stark
+        ...
+
+   b) Trennstellen folgen auf Lang-S und (wegen der
+      Nichtunterscheidung von Groß- und Kleinschreibung) Großes S:
+
+        "ſ"  ->  "s-"
+        "S"  ->  "s-"
+
+      Bsp.: `words-de-*-x-lang-s.txt` ::
+
+        ...
+        Aalbes-tand
+        Aalbes-tände
+        ...
+        Aalfangergebnis-s-e
+        ...
+        s-onderauss-chüs-s-e
+
+   Diese Listen werden mit "patgen" zu Mustersätzen komprimiert:
+
+   =======  ======================  ======  ====================  ======
+   Sprache  Wortliste               Wörter  Musterdatei           Muster     
+   =======  ======================  ======  ====================  ======
+   de-1901  words-de-1901-Latf.txt  443151  de-1901-Latf.pat      2383	     
+   de-1996  words-de-1996-Latf.txt  443319  de-1996-Latf.pat      2517	     
+   beide    words-de-Latf.txt       450106  de-Latf.pat           6783	     
+				          
+   de-1901  words-de-1901-Latf.txt  443151  de-1901-x-long-s.pat  2105	     
+   de-1996  words-de-1996-Latf.txt  443319  de-1996-x-long-s.pat  2254	     
+   beide    words-de-Latf.txt       450106  de-x-long-s.pat       4179	     
+   =======  ======================  ======  ====================  ======
+
+2. Konversion auf Basis der "Lang-S-Mustersätze"
+
+   Mit dem "TeX hyphenation algorithm" (oder einer der Portierungen auf
+   Perl, Ruby, Python, PHP, ...) werden für die Wörter des Textes
+   "Lang-S-Trennstellen" bestimmt.
+
+   Darauf erfolgt die Rückwandlung in ein "Lang-S-Wort".
+
+   Siehe `skripte/python/patuse/de_Latf_conversion.py` (- nach rund-S)
+   und `skripte/python/patuse/lang_s_conversion.py` (- nach Lang-S)
+
+Vorteile:
+  Effizienz
+
+  Behandlung von nicht erfaßten Wörtern über die Generalisierung der
+  verarbeiteten Stichprobe.
+
+Nachteile:
+  Unbestimmtes Ergebnis bei nicht gelernten Wörtern.
+
+  Falsch konvertierte gelernte Wörter:
+
+   =======  ====================  ====================
+   Sprache  Musterdatei           Konvertierungsfehler
+   =======  ====================  ====================
+   de-1901  de-1901-Latf.pat      0
+   de-1996  de-1996-Latf.pat      0
+   beide    de-Latf.pat           344
+
+   de-1901  de-1901-x-long-s.pat  0
+   de-1996  de-1996-x-long-s.pat  0
+   beide    de-x-long-s.pat	  254
+   =======  ====================  ====================
