@@ -14,7 +14,7 @@
 # entsprechenden abgekürzten alphanumerischen Commit-Hashes
 # verwendet.
 #
-# Aufruf:  sh patgen-list-diff.sh <start commit> [<ziel commit>]
+# Aufruf:  sh diff-patgen-input.sh <start commit> [<ziel commit>]
 #
 #
 # Eingabe:  <start commit>      Ein Start-Commit.
@@ -28,7 +28,7 @@
 #
 if test $# -eq 0
 then
-  echo 'usage: patgen-list-diff <start commit> [<target commit>]'
+  echo 'usage: diff-patgen-input <start commit> [<target commit>]'
   echo ''
   echo 'Create diffs for patgen input lists between <start commit> and'
   echo '<target commit> (by default "master") and save them as files'
@@ -48,7 +48,7 @@ FROMDATE=${GITDATA:0:10}+${GITDATA:11:2}-${GITDATA:14:2}-${GITDATA:17:2}
 FROMHASH=${GITDATA:26}
 if test -z $FROMHASH
 then
-  echo 'patgen-list-diff.sh: error identifying start commit hash: ' $FROMCOMMIT
+  echo 'diff-patgen-input.sh: error identifying start commit hash: ' $FROMCOMMIT
   exit 1
 fi
 typeset GITDATA=`git log -1 --format=%ci-%H $TOCOMMIT --`
@@ -56,7 +56,7 @@ TODATE=${GITDATA:0:10}+${GITDATA:11:2}-${GITDATA:14:2}-${GITDATA:17:2}
 TOHASH=${GITDATA:26}
 if test -z $TOHASH
 then
-  echo 'patgen-list-diff.sh: error identifying target commit hash: ' $TOCOMMIT
+  echo 'diff-patgen-input.sh: error identifying target commit hash: ' $TOCOMMIT
   exit 1
 fi
 
@@ -94,7 +94,7 @@ diff_patgen_list() {
     create_patgen_list $tocommit $tocommitdate $patgenlist
     if test ! -d $dehyph; then mkdir $dehyph; fi
     diff $fromcommitdir/$patgenlist $tocommitdir/$patgenlist > $dehyph/$difffile
-    gawk -f skripte/patgen-list-diff.awk -v ftr=daten/german.tr $dehyph/$difffile
+    gawk -f skripte/diff-patgen-input.awk -v ftr=daten/german.tr $dehyph/$difffile
 }
 
 

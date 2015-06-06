@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 #
 # Dieses Skript liest eine DIFF-Datei der Patgen-Eingabelisten (siehe
-# Skript patgen-list-diff.sh) und zerlegt sie in Wörter,
+# Skript diff-patgen-input.sh) und zerlegt sie in Wörter,
 #
 #  * die neu hinzugefügt,
 #  * die entfernt,
