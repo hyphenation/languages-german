@@ -305,7 +305,7 @@ pidiff:
 # Listen und Patterns de-Latf (deutsch, Latin script, fraktur;
 # Orthographie für Satz mit gebrochenen Schriften und rundem und langem S)
 
-# Wortlisten mit Langem-S: gemischt, de-1901 (alt), de-1996 (reform) 
+# Wortlisten mit Langem-S: gemischt, de-1901 (alt), de-1996 (reform)
 
 $(LATF)/words-de-Latf.txt: wortliste $(LANGSDIR)/s2long-s.py
 	$(MKDIR) $(LATF)
@@ -358,7 +358,7 @@ $(LATF)/de-1996-Latf.pat: $(LATF)/words-de-1996-Latf.hyphenated
 # long-s: Variante mit Quasi-Trennstellen nach Lang-S (auss-agen)
 
 .PHONY: de-x-long-s de-1901-x-long-s de-1996-x-long-s
-	
+
 de-x-long-s: $(LONG_S)/de-x-long-s.pat
 
 $(LONG_S)/words-de-x-long-s.hyphenated: $(LATF)/words-de-Latf.txt
