@@ -62,6 +62,8 @@ fi
 # Change to repository root directory.  Double quotes are intentional to
 # avoid an empty argument to cd.
 cd "`git rev-parse --show-toplevel`"
+# Write all output to a single top-level directory.
+typeset OUTPUTDIR="+++diff-patgen-input+++"
 
 
 
@@ -69,7 +71,7 @@ cd "`git rev-parse --show-toplevel`"
 # commit's working copy in a directory 'wl-<commit hash>'.
 get_working_copy() {
     typeset commit=$1 commitdate=$2
-    typeset commitdir=$commitdate-$commit
+    typeset commitdir=${OUTPUTDIR}/$commitdate-$commit
     if test ! -d $commitdir
     then
         git archive --format=tar --prefix=$commitdir/ $commit | tar xf -
@@ -79,7 +81,7 @@ get_working_copy() {
 # Function definition.
 create_patgen_list() {
     typeset commit=$1 commitdate=$2 patgenlist=$3
-    typeset commitdir=$commitdate-$commit
+    typeset commitdir=${OUTPUTDIR}/$commitdate-$commit
     echo "Making ${commit:0:7} file $patgenlist."
     if test ! -e $commitdir/$patgenlist
     then
@@ -92,23 +94,23 @@ create_patgen_list() {
 # Function definition.
 diff_patgen_list() {
     typeset fromcommit=$1 fromcommitdate=$2 tocommit=$3 tocommitdate=$4 dehyph=$5 spell=$6
-    typeset fromcommitdir=$fromcommitdate-$fromcommit tocommitdir=$tocommitdate-$tocommit patgenlist=$dehyph/words.hyphenated.$spell difffile=${fromcommit:0:7}-${tocommit:0:7}.diff
+    typeset fromcommitdir=${OUTPUTDIR}/$fromcommitdate-$fromcommit tocommitdir=${OUTPUTDIR}/$tocommitdate-$tocommit patgenlist=$dehyph/words.hyphenated.$spell difffile=${fromcommit:0:7}-${tocommit:0:7}.diff
     create_patgen_list $fromcommit $fromcommitdate $patgenlist
     create_patgen_list $tocommit $tocommitdate $patgenlist
-    if test ! -d $dehyph; then mkdir $dehyph; fi
-    diff $fromcommitdir/$patgenlist $tocommitdir/$patgenlist > $dehyph/$difffile
-    gawk -f skripte/diff-patgen-input.awk -v ftr=daten/german.tr $dehyph/$difffile
+    if test ! -d ${OUTPUTDIR}/$dehyph; then mkdir ${OUTPUTDIR}/$dehyph; fi
+    diff $fromcommitdir/$patgenlist $tocommitdir/$patgenlist > ${OUTPUTDIR}/$dehyph/$difffile
+    gawk -f skripte/diff-patgen-input.awk -v ftr=daten/german.tr ${OUTPUTDIR}/$dehyph/$difffile
 }
 
 # Function definition.
 count_differences() {
     typeset fromcommit=$1 tocommit=$2 dehyph=$3 variety=$4 summaryfile=$5
     typeset difffile=${fromcommit:0:7}-${tocommit:0:7}.diff
-    n_added=`wc -l $dehyph/$difffile.added`
+    n_added=`wc -l ${OUTPUTDIR}/$dehyph/$difffile.added`
     n_added=${n_added%% *}
-    n_removed=`wc -l $dehyph/$difffile.removed`
+    n_removed=`wc -l ${OUTPUTDIR}/$dehyph/$difffile.removed`
     n_removed=${n_removed%% *}
-    n_hyph=`wc -l $dehyph/$difffile.hyph`
+    n_hyph=`wc -l ${OUTPUTDIR}/$dehyph/$difffile.hyph`
     n_hyph=${n_hyph%% *}
     printf "      %-21s   %11d   %8d   %10d\n" "${variety}" $n_added $n_removed $n_hyph >> ${summaryfile}
 }
@@ -127,7 +129,7 @@ diff_patgen_list $FROMHASH $FROMDATE $TOHASH $TODATE dehypht-x trad
 diff_patgen_list $FROMHASH $FROMDATE $TOHASH $TODATE dehyphts-x swiss
 diff_patgen_list $FROMHASH $FROMDATE $TOHASH $TODATE dehyphn-x refo
 # Write summary file.
-typeset SUMMARYFILE=CHANGES.table.txt
+typeset SUMMARYFILE=${OUTPUTDIR}/CHANGES.table.txt
 echo "      Rechtschreibung         hinzugefügt   entfernt   korrigiert" > $SUMMARYFILE
 echo "    ---------------------------------------------------------------" >> $SUMMARYFILE
 count_differences $FROMHASH $TOHASH dehypht-x "traditionell (DE, AT)" $SUMMARYFILE
