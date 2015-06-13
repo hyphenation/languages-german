@@ -100,6 +100,20 @@ diff_patgen_list() {
     gawk -f skripte/diff-patgen-input.awk -v ftr=daten/german.tr $dehyph/$difffile
 }
 
+# Function definition.
+count_differences() {
+    typeset fromcommit=$1 tocommit=$2 dehyph=$3 variety=$4 summaryfile=$5
+    typeset difffile=${fromcommit:0:7}-${tocommit:0:7}.diff
+    n_added=`wc -l $dehyph/$difffile.added`
+    n_added=${n_added%% *}
+    n_removed=`wc -l $dehyph/$difffile.removed`
+    n_removed=${n_removed%% *}
+    n_hyph=`wc -l $dehyph/$difffile.hyph`
+    n_hyph=${n_hyph%% *}
+    printf "      %-21s   %11d   %8d   %10d\n" "${variety}" $n_added $n_removed $n_hyph >> ${summaryfile}
+}
+
+
 
 
 echo "Diff'ing patgen input files."
@@ -108,14 +122,14 @@ printf "to:   %7s  %10s  %s\n" ${TOHASH:0:7}   ${TODATE:0:10}   $TOCOMMIT
 # Get commit's working copies.
 get_working_copy $FROMHASH $FROMDATE
 get_working_copy $TOHASH $TODATE
-# Write header to summary table file.
-PLDTABLE=CHANGES.table.txt
-echo "      Rechtschreibung         hinzugefügt   entfernt   korrigiert" > $PLDTABLE
-echo "    ---------------------------------------------------------------" >> $PLDTABLE
-# Diff patgen lists and write results to summary table file.
-echo -n "      traditionell (DE, AT)" >> $PLDTABLE
+# Diff patgen lists.
 diff_patgen_list $FROMHASH $FROMDATE $TOHASH $TODATE dehypht-x trad
-echo -n "      traditionell (CH)    " >> $PLDTABLE
 diff_patgen_list $FROMHASH $FROMDATE $TOHASH $TODATE dehyphts-x swiss
-echo -n "      reformiert           " >> $PLDTABLE
 diff_patgen_list $FROMHASH $FROMDATE $TOHASH $TODATE dehyphn-x refo
+# Write summary file.
+typeset SUMMARYFILE=CHANGES.table.txt
+echo "      Rechtschreibung         hinzugefügt   entfernt   korrigiert" > $SUMMARYFILE
+echo "    ---------------------------------------------------------------" >> $SUMMARYFILE
+count_differences $FROMHASH $TOHASH dehypht-x "traditionell (DE, AT)" $SUMMARYFILE
+count_differences $FROMHASH $TOHASH dehyphts-x "traditionell (CH)" $SUMMARYFILE
+count_differences $FROMHASH $TOHASH dehyphn-x "reformiert" $SUMMARYFILE

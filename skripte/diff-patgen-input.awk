@@ -61,7 +61,6 @@ function output_word_class(clarr, clname) {
     # Sort output file on shell.
     system("LC_COLLATE=de_DE.ISO8859-15 LC_CTYPE=de_DE.ISO8859-15 sort -f " fname ".unsort > " fname)
     system("rm -f " fname ".unsort")
-    return i
 }
 
 
@@ -198,10 +197,8 @@ END {
     fdiff = FILENAME
     # Output results.
     print("Processed file " fdiff ".")
-    n_added = output_word_class(added, "added")
-    n_removed = output_word_class(removed, "removed")
-    n_hyph = output_word_class(hyph, "hyph")
-    n_case = output_word_class(CaSe, "case")
-    # Output entry for table in CHANGES file (in Markdown).
-    printf("   %11d   %8d   %10d\n", n_added, n_removed, n_hyph) >> "CHANGES.table.txt"
+    output_word_class(added, "added")
+    output_word_class(removed, "removed")
+    output_word_class(hyph, "hyph")
+    output_word_class(CaSe, "case")
 }
