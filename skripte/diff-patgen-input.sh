@@ -59,6 +59,9 @@ then
   echo 'diff-patgen-input.sh: error identifying target commit hash: ' $TOCOMMIT
   exit 1
 fi
+# Change to repository root directory.  Double quotes are intentional to
+# avoid an empty argument to cd.
+cd "`git rev-parse --show-toplevel`"
 
 
 
